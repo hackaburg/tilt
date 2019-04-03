@@ -12,6 +12,10 @@
     "start": "webpack-dev-server --inline --hot --mode development"
   },
   "devDependencies": {
+    "@types/react": "^16.8.11",
+    "@types/react-dom": "^16.8.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "rimraf": "^2.6.3",
     "tslib": "^1.9.3",
     "tslint": "^5.15.0",
