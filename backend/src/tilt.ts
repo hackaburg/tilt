@@ -1,2 +1,6 @@
-// tslint:disable-next-line: no-console
-console.log("tilt");
+import "reflect-metadata";
+import { Container } from "typedi";
+import { Tilt } from "./services/tilt";
+
+const tilt = Container.get(Tilt);
+tilt.bootstrap();
