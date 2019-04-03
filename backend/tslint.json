@@ -4,6 +4,34 @@
         "tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+      "completed-docs": [
+        true,
+        {
+          "enums": true,
+          "functions": {
+            "visibilities": [
+              "exported"
+            ]
+          },
+          "interfaces": {
+            "visibilities": [
+              "exported"
+            ]
+          },
+          "methods": true,
+          "types": {
+            "visibilities": [
+              "exported"
+            ]
+          },
+          "variables": {
+            "visibilities": [
+              "exported"
+            ]
+          }
+        }
+      ]
+    },
     "rulesDirectory": []
 }
