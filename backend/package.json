@@ -28,7 +28,9 @@
     "convict": "^4.4.1",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
+    "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.7.7",
-    "tslib": "^1.9.3"
+    "tslib": "^1.9.3",
+    "typedi": "^0.8.0"
   }
 }
