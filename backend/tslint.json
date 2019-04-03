@@ -31,7 +31,9 @@
             ]
           }
         }
-      ]
+      ],
+      "member-ordering": false,
+      "variable-name": false
     },
     "rulesDirectory": []
 }
