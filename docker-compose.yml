@@ -1,0 +1,54 @@
+version: "3"
+
+services:
+  proxy:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      tilt_network:
+        ipv4_address: 172.50.0.2
+
+  frontend:
+    build: ./frontend
+    image: tilt_frontend
+    networks:
+      tilt_network:
+        ipv4_address: 172.50.0.3
+
+  backend:
+    build: ./backend
+    image: tilt_backend
+    networks:
+      tilt_network:
+        ipv4_address: 172.50.0.4
+
+  db:
+    image: mariadb:latest
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=wowsuchpassword
+    networks:
+      tilt_network:
+        ipv4_address: 172.50.0.5
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=wowsuchpassword
+    ports:
+      - 8081:80
+    networks:
+      tilt_network:
+        ipv4_address: 172.50.0.6
+
+networks:
+  tilt_network:
+    ipam:
+      config:
+        - subnet: 172.50.0.0/16
