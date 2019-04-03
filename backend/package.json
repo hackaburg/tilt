@@ -9,7 +9,7 @@
     "lint": "tslint --project .",
     "build": "tsc",
     "clean": "rimraf dist/",
-    "start": "ts-node src/tilt.ts"
+    "start": "nodemon"
   },
   "devDependencies": {
     "@types/convict": "^4.2.1",
@@ -17,6 +17,7 @@
     "@types/express": "^4.16.1",
     "@types/jest": "^24.0.11",
     "jest": "^24.7.0",
+    "nodemon": "^1.18.10",
     "rimraf": "^2.6.3",
     "ts-jest": "^24.0.1",
     "ts-node": "^8.0.3",
