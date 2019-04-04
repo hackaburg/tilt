@@ -1,7 +1,8 @@
 import { genSalt, hash } from "bcrypt";
-import { BadRequestError, Body, HttpCode, JsonController, Post } from "routing-controllers";
+import { BadRequestError, Body, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
 import { Repository } from "typeorm";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
+import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { User } from "../entities/user";
 import { DatabaseService } from "../services/database";
 import { LoggerService } from "../services/log";
@@ -45,6 +46,32 @@ export class UsersController {
       };
     } catch (error) {
       throw new BadRequestError("email already registered");
+    }
+  }
+
+  /**
+   * Verifies a user using their token.
+   * @param token The token to verify.
+   */
+  @Get("/verify")
+  public async verify(@QueryParam("token") token: string): Promise<IUserVerifyResponseBody> {
+    try {
+      const user = await this._users.findOneOrFail({
+        where: {
+          verifyToken: token,
+        },
+      });
+
+      user.didVerifyEmail = true;
+      user.verifyToken = "";
+
+      await this._users.save(user);
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      throw new BadRequestError("invalid token");
     }
   }
 }
