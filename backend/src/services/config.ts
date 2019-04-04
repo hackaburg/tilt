@@ -4,9 +4,14 @@ import { Service } from "typedi";
 import { IService } from ".";
 
 interface ITiltConfiguration {
+  app: IAppConfiguration;
   database: IDatabaseConfiguration;
   http: IHttpConfiguration;
   log: ILoggerConfiguration;
+}
+
+interface IAppConfiguration {
+  nodeEnv: string;
 }
 
 interface IHttpConfiguration {
@@ -27,11 +32,23 @@ interface IDatabaseConfiguration {
 }
 
 /**
+ * The environment this process currently runs in.
+ */
+export enum NodeEnvironment {
+  Production = "production",
+  Development = "development",
+}
+
+/**
  * Provides access to tilt's configuration.
  */
 @Service()
 export class ConfigurationService implements IService {
   private _config?: ITiltConfiguration;
+
+  public get isProductionEnabled(): boolean {
+    return this.config.app.nodeEnv === NodeEnvironment.Production;
+  }
 
   public get config(): ITiltConfiguration {
     if (!this._config) {
@@ -62,6 +79,13 @@ export class ConfigurationService implements IService {
     await this.loadEnvFile();
 
     const schema = convict<ITiltConfiguration>({
+      app: {
+        nodeEnv: {
+          default: NodeEnvironment.Development,
+          env: "NODE_ENV",
+          format: String,
+        },
+      },
       database: {
         databaseName: {
           default: "tilt",
