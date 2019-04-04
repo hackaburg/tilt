@@ -5,10 +5,16 @@ import { IService } from ".";
 
 interface ITiltConfiguration {
   http: IHttpConfiguration;
+  log: ILoggerConfiguration;
 }
 
 interface IHttpConfiguration {
   port: number;
+}
+
+interface ILoggerConfiguration {
+  filename: string;
+  level: string;
 }
 
 /**
@@ -52,6 +58,18 @@ export class ConfigurationService implements IService {
           default: 3000,
           env: "PORT",
           format: "int",
+        },
+      },
+      log: {
+        filename: {
+          default: "tilt.log",
+          env: "LOG_FILENAME",
+          format: String,
+        },
+        level: {
+          default: "info",
+          env: "LOG_LEVEL",
+          format: String,
         },
       },
     });
