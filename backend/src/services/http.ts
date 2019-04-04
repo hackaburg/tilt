@@ -24,6 +24,14 @@ export class HttpService implements IService {
       controllers: [
         join(__dirname, "../controllers/*"),
       ],
+      defaultErrorHandler: false,
+      development: !this._config.isProductionEnabled,
+      interceptors: [
+        join(__dirname, "../interceptors/*"),
+      ],
+      middlewares: [
+        join(__dirname, "../middlewares/*"),
+      ],
       routePrefix: "/api",
     });
 
