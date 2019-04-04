@@ -4,6 +4,7 @@ import { Service } from "typedi";
 import { IService } from ".";
 
 interface ITiltConfiguration {
+  database: IDatabaseConfiguration;
   http: IHttpConfiguration;
   log: ILoggerConfiguration;
 }
@@ -15,6 +16,14 @@ interface IHttpConfiguration {
 interface ILoggerConfiguration {
   filename: string;
   level: string;
+}
+
+interface IDatabaseConfiguration {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  databaseName: string;
 }
 
 /**
@@ -53,6 +62,33 @@ export class ConfigurationService implements IService {
     await this.loadEnvFile();
 
     const schema = convict<ITiltConfiguration>({
+      database: {
+        databaseName: {
+          default: "tilt",
+          env: "DATABASE_NAME",
+          format: String,
+        },
+        host: {
+          default: "",
+          env: "DATABASE_HOST",
+          format: String,
+        },
+        password: {
+          default: "",
+          env: "DATABASE_PASSWORD",
+          format: String,
+        },
+        port: {
+          default: 0,
+          env: "DATABASE_PORT",
+          format: "port",
+        },
+        username: {
+          default: "",
+          env: "DATABASE_USERNAME",
+          format: String,
+        },
+      },
       http: {
         port: {
           default: 3000,
