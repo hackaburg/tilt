@@ -1,5 +1,6 @@
 import { Service } from "typedi";
 import { IService } from ".";
+import { ActivityService } from "./activity";
 import { ConfigurationService } from "./config";
 import { DatabaseService } from "./database";
 import { HttpService } from "./http";
@@ -16,12 +17,14 @@ export class Tilt implements IService {
     config: ConfigurationService,
     logger: LoggerService,
     database: DatabaseService,
+    activity: ActivityService,
     http: HttpService,
   ) {
     this._services = [
       config,
       logger,
       database,
+      activity,
       http,
     ];
   }
