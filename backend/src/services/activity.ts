@@ -3,7 +3,7 @@ import { Repository } from "typeorm";
 import { IService } from ".";
 import { ActivityEvent } from "../../../types/activity";
 import { Activity } from "../entities/activity";
-import { User, deletePrivateUserFields } from "../entities/user";
+import { deletePrivateUserFields, User } from "../entities/user";
 import { DatabaseService } from "./database";
 
 /**
