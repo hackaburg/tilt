@@ -2,6 +2,7 @@ import { Service } from "typedi";
 import { IService } from ".";
 import { ConfigurationService } from "./config";
 import { HttpService } from "./http";
+import { LoggerService } from "./log";
 
 /**
  * The tilt service in a nutshell. Contains all services required to run tilt.
@@ -12,10 +13,12 @@ export class Tilt implements IService {
 
   public constructor(
     config: ConfigurationService,
+    logger: LoggerService,
     http: HttpService,
   ) {
     this._services = [
       config,
+      logger,
       http,
     ];
   }
