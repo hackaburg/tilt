@@ -8,7 +8,7 @@ export class User {
   @Column({ unique: true })
   public email!: string;
 
-  @Column()
+  @Column({ select: false })
   public password!: string;
 
   @Column()
@@ -23,3 +23,14 @@ export class User {
   @Column()
   public updatedAt!: Date;
 }
+
+/**
+ * Removes all private fields from a given user.
+ * @param user The user to clean
+ */
+export const deletePrivateUserFields = (user: User): User => {
+  delete user.password;
+  delete user.verifyToken;
+
+  return user;
+};
