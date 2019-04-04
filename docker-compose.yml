@@ -31,6 +31,9 @@ services:
       - ./db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=wowsuchpassword
+      - MYSQL_DATABASE=tilt
+    ports:
+      - 3306:3306
     networks:
       tilt_network:
         ipv4_address: 172.50.0.5
