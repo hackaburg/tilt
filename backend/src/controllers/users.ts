@@ -1,9 +1,11 @@
 import { genSalt, hash } from "bcrypt";
 import { BadRequestError, Body, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
 import { Repository } from "typeorm";
+import { ActivityEvent } from "../../../types/activity";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { User } from "../entities/user";
+import { ActivityService } from "../services/activity";
 import { DatabaseService } from "../services/database";
 import { LoggerService } from "../services/log";
 import { UserSignupApiRequest } from "../validation/user-signup";
@@ -17,6 +19,7 @@ export class UsersController {
 
   public constructor(
     private readonly _logger: LoggerService,
+    private readonly _activity: ActivityService,
     database: DatabaseService,
   ) {
     this._users = database.getRepository(User);
@@ -40,6 +43,7 @@ export class UsersController {
     try {
       await this._users.save(user);
       this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
+      this._activity.addActivity(user, ActivityEvent.Signup);
 
       return {
         email: user.email,
@@ -66,6 +70,8 @@ export class UsersController {
       user.verifyToken = "";
 
       await this._users.save(user);
+      this._logger.debug(`${user.email} verified their email`);
+      this._activity.addActivity(user, ActivityEvent.EmailVerified);
 
       return {
         success: true,
