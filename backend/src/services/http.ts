@@ -4,11 +4,13 @@ import { useContainer, useExpressServer } from "routing-controllers";
 import { Container, Service } from "typedi";
 import { IService } from ".";
 import { ConfigurationService } from "./config";
+import { LoggerService } from "./log";
 
 @Service()
 export class HttpService implements IService {
   public constructor(
     private readonly _config: ConfigurationService,
+    private readonly _logger: LoggerService,
   ) { }
 
   /**
@@ -26,11 +28,14 @@ export class HttpService implements IService {
     });
 
     return new Promise<void>((resolve, reject) => {
-      routedServer.listen(this._config.config.http.port, (error: Error) => {
+      const port = this._config.config.http.port;
+
+      routedServer.listen(port, (error: Error) => {
         if (error) {
           reject(error);
         }
 
+        this._logger.info(`http server running on ${port}`);
         resolve();
       });
     });
