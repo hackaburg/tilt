@@ -26,7 +26,6 @@ export class HttpService implements IService {
     });
 
     return new Promise<void>((resolve, reject) => {
-      console.log(this._config.config.http.port);
       routedServer.listen(this._config.config.http.port, (error: Error) => {
         if (error) {
           reject(error);
