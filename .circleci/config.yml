@@ -28,6 +28,11 @@ jobs:
           working_directory: backend
           command: |
             yarn test
+      - run:
+          name: codecov
+          working_directory: backend
+          command: |
+            yarn codecov
 
   frontend:
     docker:
@@ -56,6 +61,11 @@ jobs:
           working_directory: frontend
           command: |
             yarn test
+      - run:
+          name: codecov
+          working_directory: backend
+          command: |
+            yarn codecov
 
 workflows:
   version: 2
