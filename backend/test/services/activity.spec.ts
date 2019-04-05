@@ -28,12 +28,9 @@ describe("ActivityService", () => {
   });
 
   beforeEach(async () => {
+    await activities.clear();
     activity = new ActivityService(database);
     await activity.bootstrap();
-  });
-
-  afterEach(() => {
-    activities.clear();
   });
 
   it("adds new activities", async () => {
