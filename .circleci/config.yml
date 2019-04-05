@@ -4,20 +4,23 @@ jobs:
   backend:
     docker:
       - image: node:latest
-    working_directory: $CIRCLE_WORKING_DIRECTORY/backend
     steps:
       - checkout
       - restore_cache:
           keys:
             - backend-dependencies-{{ checksum "package.json" }}
             - backend-dependencies-
-      - run: yarn install
+      - run:
+          working_directory: backend
+          command: |
+            yarn install
       - save_cache:
           paths:
-            - node_modules
+            - backend/node_modules
           key: backend-dependencies-{{ checksum "package.json" }}
       - run:
           name: yarn
+          working_directory: backend
           command: |
             yarn install
             yarn lint
