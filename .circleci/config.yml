@@ -26,8 +26,34 @@ jobs:
             yarn lint
             yarn test
 
+  frontend:
+    docker:
+      - image: node:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - frontend-dependencies-{{ checksum "frontend/package.json" }}
+            - frontend-dependencies-
+      - run:
+          working_directory: frontend
+          command: |
+            yarn install
+      - save_cache:
+          paths:
+            - frontend/node_modules
+          key: frontend-dependencies-{{ checksum "frontend/package.json" }}
+      - run:
+          name: yarn
+          working_directory: frontend
+          command: |
+            yarn install
+            yarn lint
+            yarn test
+
 workflows:
   version: 2
-  build_and_test:
+  tilt:
     jobs:
       - backend
+      - frontend
