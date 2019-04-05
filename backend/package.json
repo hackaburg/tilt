@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --coverage",
+    "codecov": "codecov --file coverage/*.json --flags backend",
     "lint": "tslint --project tsconfig.prod.json",
     "build": "tsc --project tsconfig.prod.json",
     "clean": "rimraf dist/",
@@ -19,6 +20,7 @@
     "@types/jest": "^24.0.11",
     "@types/node": "^11.13.0",
     "@types/winston": "^2.4.4",
+    "codecov": "^3.3.0",
     "jest": "^24.7.0",
     "nodemon": "^1.18.10",
     "rimraf": "^2.6.3",
