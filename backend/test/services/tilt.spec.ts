@@ -1,9 +1,10 @@
 import { Tilt } from "../../src/services/tilt";
-import { MockConfigurationService } from "./mock/config";
 import { MockActivityService } from "./mock/activity";
-import { MockLoggerService } from "./mock/logger";
+import { MockConfigurationService } from "./mock/config";
 import { MockDatabaseService } from "./mock/database";
 import { MockHttpService } from "./mock/http";
+import { MockLoggerService } from "./mock/logger";
+import { MockUserService } from "./mock/users";
 
 describe("TiltService", () => {
   it("bootstraps all services", async () => {
@@ -11,6 +12,7 @@ describe("TiltService", () => {
     const config = new MockConfigurationService({ });
     const database = new MockDatabaseService();
     const activity = new MockActivityService();
+    const users = new MockUserService();
     const http = new MockHttpService();
 
     const services = [
@@ -18,6 +20,7 @@ describe("TiltService", () => {
       logger,
       database,
       activity,
+      users,
       http,
     ];
 
