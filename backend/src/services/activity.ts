@@ -57,7 +57,7 @@ export class ActivityService implements IService {
       activity.data = additionalData;
     }
 
-    await this._activities!.save(activity);
+    await this._activities!.insert(activity);
   }
 
   /**
