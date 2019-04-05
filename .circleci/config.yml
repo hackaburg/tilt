@@ -63,7 +63,7 @@ jobs:
             yarn test
       - run:
           name: codecov
-          working_directory: backend
+          working_directory: frontend
           command: |
             yarn codecov
 
