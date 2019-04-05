@@ -1,7 +1,7 @@
-import { Service } from "typedi";
+import { Inject, Service, Token } from "typedi";
 import { createLogger, format, Logger, transports } from "winston";
 import { IService } from ".";
-import { ConfigurationService } from "./config";
+import { ConfigurationServiceToken, IConfigurationService } from "./config";
 
 const loggerFormat = format.printf(({ level, message, ...meta }) => {
   const timestamp = new Date().toISOString();
@@ -15,12 +15,43 @@ const loggerFormat = format.printf(({ level, message, ...meta }) => {
   return logMessage;
 });
 
-@Service()
-export class LoggerService implements IService {
+/**
+ * An interface describing the logger service.
+ */
+export interface ILoggerService extends IService {
+  /**
+   * Logs a debug message.
+   * @param message The message to log
+   * @param meta Additional data to log
+   */
+  debug(message: string, ...meta: any[]): void;
+
+  /**
+   * Logs an info message.
+   * @param message The message to log
+   * @param meta Additional data to log
+   */
+  info(message: string, ...meta: any[]): void;
+
+  /**
+   * Logs an error message.
+   * @param message The message to log
+   * @param meta Additional data to log
+   */
+  error(message: string, ...meta: any[]): void;
+}
+
+/**
+ * A token used to inject a concrete logger service.
+ */
+export const LoggerServiceToken = new Token<ILoggerService>();
+
+@Service(LoggerServiceToken)
+export class LoggerService implements ILoggerService {
   private _logger?: Logger;
 
   public constructor(
-    private readonly _config: ConfigurationService,
+    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
   ) { }
 
   /**

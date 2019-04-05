@@ -1,8 +1,9 @@
 import { ValidationError } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 import { ExpressErrorMiddlewareInterface, Middleware } from "routing-controllers";
+import { Inject } from "typedi";
 import { IApiResponse } from "../../../types/api";
-import { LoggerService } from "../services/log";
+import { ILoggerService, LoggerServiceToken } from "../services/log";
 
 /**
  * Get the first validation error message from an array of validation errors.
@@ -36,7 +37,7 @@ const findFirstValidationError = (errors: ValidationError[]): string => {
 @Middleware({ type: "after" })
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public constructor(
-    private readonly _logger: LoggerService,
+    @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
   ) { }
 
   /**

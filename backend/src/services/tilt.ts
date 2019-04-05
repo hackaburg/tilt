@@ -1,10 +1,10 @@
-import { Service } from "typedi";
+import { Inject, Service } from "typedi";
 import { IService } from ".";
-import { ActivityService } from "./activity";
-import { ConfigurationService } from "./config";
-import { DatabaseService } from "./database";
-import { HttpService } from "./http";
-import { LoggerService } from "./log";
+import { ActivityServiceToken, IActivityService } from "./activity";
+import { ConfigurationServiceToken, IConfigurationService } from "./config";
+import { DatabaseServiceToken, IDatabaseService } from "./database";
+import { HttpServiceToken, IHttpService } from "./http";
+import { ILoggerService, LoggerServiceToken } from "./log";
 
 /**
  * The tilt service in a nutshell. Contains all services required to run tilt.
@@ -14,11 +14,11 @@ export class Tilt implements IService {
   private readonly _services: IService[];
 
   public constructor(
-    config: ConfigurationService,
-    logger: LoggerService,
-    database: DatabaseService,
-    activity: ActivityService,
-    http: HttpService,
+    @Inject(ConfigurationServiceToken) config: IConfigurationService,
+    @Inject(LoggerServiceToken) logger: ILoggerService,
+    @Inject(DatabaseServiceToken) database: IDatabaseService,
+    @Inject(ActivityServiceToken) activity: IActivityService,
+    @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
       config,

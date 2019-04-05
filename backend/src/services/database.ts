@@ -1,22 +1,38 @@
 import { join } from "path";
-import { Container, Service } from "typedi";
+import { Container, Inject, Service, Token } from "typedi";
 import { Connection, createConnection, Repository, useContainer } from "typeorm";
 import { IService } from ".";
-import { ConfigurationService } from "./config";
-import { LoggerService } from "./log";
+import { ConfigurationServiceToken, IConfigurationService } from "./config";
+import { ILoggerService, LoggerServiceToken } from "./log";
 
 type Entity<T> = new () => T;
 
 /**
+ * An interface describing database access.
+ */
+export interface IDatabaseService extends IService {
+  /**
+   * Gets a repository for the given entity.
+   * @param entity The entity to retrieve a repository for
+   */
+  getRepository<T>(entity: Entity<T>): Repository<T>;
+}
+
+/**
+ * A token used to inject a database service implementation.
+ */
+export const DatabaseServiceToken = new Token<IDatabaseService>();
+
+/**
  * A service providing access to a database.
  */
-@Service()
-export class DatabaseService implements IService {
+@Service(DatabaseServiceToken)
+export class DatabaseService implements IDatabaseService {
   private _connection?: Connection;
 
   public constructor(
-    private readonly _config: ConfigurationService,
-    private readonly _logger: LoggerService,
+    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
+    @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
   ) { }
 
   /**

@@ -1,13 +1,14 @@
 import { genSalt, hash } from "bcrypt";
 import { BadRequestError, Body, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
+import { Inject } from "typedi";
 import { Repository } from "typeorm";
 import { ActivityEvent } from "../../../types/activity";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { User } from "../entities/user";
-import { ActivityService } from "../services/activity";
-import { DatabaseService } from "../services/database";
-import { LoggerService } from "../services/log";
+import { ActivityServiceToken, IActivityService } from "../services/activity";
+import { DatabaseServiceToken, IDatabaseService } from "../services/database";
+import { ILoggerService, LoggerServiceToken } from "../services/log";
 import { UserSignupApiRequest } from "../validation/user-signup";
 
 /**
@@ -18,9 +19,9 @@ export class UsersController {
   private readonly _users: Repository<User>;
 
   public constructor(
-    private readonly _logger: LoggerService,
-    private readonly _activity: ActivityService,
-    database: DatabaseService,
+    @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
+    @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
+    @Inject(DatabaseServiceToken) database: IDatabaseService,
   ) {
     this._users = database.getRepository(User);
   }

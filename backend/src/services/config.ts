@@ -1,6 +1,6 @@
 import * as convict from "convict";
 import * as dotenv from "dotenv";
-import { Service } from "typedi";
+import { Service, Token } from "typedi";
 import { IService } from ".";
 
 interface ITiltConfiguration {
@@ -40,10 +40,23 @@ export enum NodeEnvironment {
 }
 
 /**
+ * An interface describing the configuration service.
+ */
+export interface IConfigurationService extends IService {
+  readonly isProductionEnabled: boolean;
+  readonly config: ITiltConfiguration;
+}
+
+/**
+ * A token used to inject a configuration service implementation.
+ */
+export const ConfigurationServiceToken = new Token<IConfigurationService>();
+
+/**
  * Provides access to tilt's configuration.
  */
-@Service()
-export class ConfigurationService implements IService {
+@Service(ConfigurationServiceToken)
+export class ConfigurationService implements IConfigurationService {
   private _config?: ITiltConfiguration;
 
   public get isProductionEnabled(): boolean {

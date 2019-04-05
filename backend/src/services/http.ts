@@ -1,16 +1,30 @@
 import * as express from "express";
 import { join } from "path";
 import { useContainer, useExpressServer } from "routing-controllers";
-import { Container, Service } from "typedi";
+import { Container, Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { ConfigurationService } from "./config";
-import { LoggerService } from "./log";
+import { ConfigurationServiceToken, IConfigurationService } from "./config";
+import { ILoggerService, LoggerServiceToken } from "./log";
 
-@Service()
-export class HttpService implements IService {
+/**
+ * An interface describing the http service.
+ */
+// tslint:disable-next-line: no-empty-interface
+export interface IHttpService extends IService { }
+
+/**
+ * A token used to inject a concrete http service.
+ */
+export const HttpServiceToken = new Token<IHttpService>();
+
+/**
+ * A concrete http service.
+ */
+@Service(HttpServiceToken)
+export class HttpService implements IHttpService {
   public constructor(
-    private readonly _config: ConfigurationService,
-    private readonly _logger: LoggerService,
+    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
+    @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
   ) { }
 
   /**
