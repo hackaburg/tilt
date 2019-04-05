@@ -1,4 +1,5 @@
 import { Tilt } from "../../src/services/tilt";
+import { MockedService } from "./mock";
 import { MockActivityService } from "./mock/activity";
 import { MockConfigurationService } from "./mock/config";
 import { MockDatabaseService } from "./mock/database";
@@ -8,25 +9,30 @@ import { MockUserService } from "./mock/users";
 
 describe("TiltService", () => {
   it("bootstraps all services", async () => {
-    const logger = new MockLoggerService();
-    const config = new MockConfigurationService({ });
-    const database = new MockDatabaseService();
-    const activity = new MockActivityService();
-    const users = new MockUserService();
-    const http = new MockHttpService();
+    const services: Array<MockedService<any>> = [];
+    const addService = <T extends MockedService<any>>(service: T) => {
+      services.push(service);
+      return service;
+    };
 
-    const services = [
-      config,
-      logger,
-      database,
-      activity,
-      users,
-      http,
+    const logger = addService(new MockLoggerService());
+    const config = addService(new MockConfigurationService({ }));
+    const database = addService(new MockDatabaseService());
+    const activity = addService(new MockActivityService());
+    const users = addService(new MockUserService());
+    const http = addService(new MockHttpService());
+
+    const instances: ConstructorParameters<typeof Tilt> = [
+      config.instance,
+      logger.instance,
+      database.instance,
+      activity.instance,
+      users.instance,
+      http.instance,
     ];
 
-    expect.assertions(services.length);
+    expect.assertions(instances.length);
 
-    const instances = services.map((service) => service.instance) as ConstructorParameters<typeof Tilt>;
     const tilt = new Tilt(...instances);
     await tilt.bootstrap();
 
