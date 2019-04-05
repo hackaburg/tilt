@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --coverage",
+    "codecov": "codecov --file coverage/*.json --flags backend",
     "lint": "tslint --project .",
     "typecheck": "tsc --noEmit",
     "build": "NODE_ENV=production webpack --mode production",
@@ -20,6 +21,7 @@
     "@types/react-dom": "^16.8.3",
     "@types/styled-components": "4.1.8",
     "awesome-typescript-loader": "^5.2.1",
+    "codecov": "^3.3.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
     "file-loader": "^3.0.1",
