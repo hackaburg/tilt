@@ -1,4 +1,4 @@
-import { genSalt, hash } from "bcrypt";
+import { compare, genSalt, hash } from "bcrypt";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -37,6 +37,13 @@ export interface IUserService extends IService {
    * @param token A user's login token
    */
   findUserByLoginToken(token: string): Promise<User | undefined>;
+
+  /**
+   * Checks the user's credentials and returns the user.
+   * @param email The user's email
+   * @param password The user's password
+   */
+  findUserWithCredentials(email: string, password: string): Promise<User | undefined>;
 }
 
 /**
@@ -130,6 +137,33 @@ export class UserService implements IUserService {
       return await this._users!.findOne(id);
     } catch (error) {
       return;
+    }
+  }
+
+  /**
+   * Checks the user's credentials and returns the user.
+   * @param email The user's email
+   * @param password The user's password
+   */
+  public async findUserWithCredentials(email: string, password: string): Promise<User | undefined> {
+    const user = await this._users!.findOne({
+      select: [
+        "id",
+        "password",
+      ],
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return;
+    }
+
+    const passwordsMatch = await compare(password, user.password);
+
+    if (passwordsMatch) {
+      return user;
     }
   }
 }

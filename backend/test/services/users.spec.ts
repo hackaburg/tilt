@@ -137,4 +137,30 @@ describe("UserService", () => {
     const user = await userService.findUserByLoginToken("token");
     expect(user).not.toBeDefined();
   });
+
+  it("finds users with correct credentials", async () => {
+    expect.assertions(2);
+
+    const email = "test@foo.bar";
+    const password = "password";
+    const user = await userService.signup(email, password);
+    const loggedInUser = await userService.findUserWithCredentials(email, password);
+
+    expect(loggedInUser).toBeDefined();
+    expect(loggedInUser!.id).toBe(user.id);
+  });
+
+  it("won't return a user with wrong credentials", async () => {
+    expect.assertions(2);
+
+    const email = "test@foo.bar";
+    const password = "password";
+    await userService.signup(email, password);
+
+    const userWithWrongPassword = await userService.findUserWithCredentials(email, "nope");
+    expect(userWithWrongPassword).not.toBeDefined();
+
+    const userWithWrongEmail = await userService.findUserWithCredentials("other@foo.bar", password);
+    expect(userWithWrongEmail).not.toBeDefined();
+  });
 });
