@@ -7,6 +7,7 @@ import { User } from "../entities/user";
 import { ActivityServiceToken, IActivityService } from "./activity";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 import { ILoggerService, LoggerServiceToken } from "./log";
+import { ITokenService, TokenServiceToken } from "./tokens";
 
 /**
  * An interface describing user handling.
@@ -24,12 +25,28 @@ export interface IUserService extends IService {
    * @param verifyToken The token sent to the user
    */
   verifyUserByVerifyToken(verifyToken: string): Promise<void>;
+
+  /**
+   * Generate a login token for the given user.
+   * @param user The user to generate a token for
+   */
+  generateLoginToken(user: User): string;
+
+  /**
+   * Find a user with their login token.
+   * @param token A user's login token
+   */
+  findUserByLoginToken(token: string): Promise<User | undefined>;
 }
 
 /**
  * A token used to inject a concrete user service.
  */
 export const UserServiceToken = new Token<IUserService>();
+
+interface ITokenContent {
+  id: User["id"];
+}
 
 /**
  * A service to handle users.
@@ -42,6 +59,7 @@ export class UserService implements IUserService {
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
+    @Inject(TokenServiceToken) private readonly _tokens: ITokenService<ITokenContent>,
   ) { }
 
   /**
@@ -90,5 +108,28 @@ export class UserService implements IUserService {
     await this._users!.save(user);
     this._logger.debug(`${user.email} verified their email`);
     this._activity.addActivity(user, ActivityEvent.EmailVerified);
+  }
+
+  /**
+   * Generate a login token for the given user.
+   * @param user The user to generate a token for
+   */
+  public generateLoginToken(user: User): string {
+    return this._tokens.sign({
+      id: user.id,
+    });
+  }
+
+  /**
+   * Find a user with their login token.
+   * @param token A user's login token
+   */
+  public async findUserByLoginToken(token: string): Promise<User | undefined> {
+    try {
+      const { id } = this._tokens.decode(token);
+      return await this._users!.findOne(id);
+    } catch (error) {
+      return;
+    }
   }
 }

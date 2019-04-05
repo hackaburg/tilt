@@ -4,6 +4,8 @@ import { IUserService } from "../../../src/services/user";
 export const MockUserService = jest.fn(() =>
   new MockedService<IUserService>({
     bootstrap: jest.fn(),
+    findUserByLoginToken: jest.fn(),
+    generateLoginToken: jest.fn(),
     signup: jest.fn(),
     verifyUserByVerifyToken: jest.fn(),
   }),

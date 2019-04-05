@@ -4,17 +4,20 @@ import { User } from "../../src/entities/user";
 import { IActivityService } from "../../src/services/activity";
 import { IDatabaseService } from "../../src/services/database";
 import { ILoggerService } from "../../src/services/log";
+import { ITokenService } from "../../src/services/tokens";
 import { IUserService, UserService } from "../../src/services/user";
 import { MockedService } from "./mock";
 import { MockActivityService } from "./mock/activity";
 import { TestDatabaseService } from "./mock/database";
 import { MockLoggerService } from "./mock/logger";
+import { MockTokenService } from "./mock/tokens";
 
 describe("UserService", () => {
   let database: IDatabaseService;
   let userRepo: Repository<User>;
   let logger: MockedService<ILoggerService>;
   let activity: MockedService<IActivityService>;
+  let tokens: MockedService<ITokenService<any>>;
   let userService: IUserService;
 
   beforeAll(async () => {
@@ -29,7 +32,8 @@ describe("UserService", () => {
 
     logger = new MockLoggerService();
     activity = new MockActivityService();
-    userService = new UserService(database, logger.instance, activity.instance);
+    tokens = new MockTokenService();
+    userService = new UserService(database, logger.instance, activity.instance, tokens.instance);
 
     await userService.bootstrap();
   });
@@ -101,5 +105,36 @@ describe("UserService", () => {
     await userService.verifyUserByVerifyToken(user.verifyToken);
     const [verifiedUser] = await userRepo.find();
     expect(activity.mocks.addActivity).toBeCalledWith(verifiedUser, ActivityEvent.EmailVerified);
+  });
+
+  it("creates login tokens", async () => {
+    expect.assertions(1);
+
+    const user = await userService.signup("test@foo.bar", "password");
+    userService.generateLoginToken(user);
+    expect(tokens.mocks.sign).toBeCalled();
+  });
+
+  it("decodes login tokens", async () => {
+    expect.assertions(3);
+
+    const user = await userService.signup("test@foo.bar", "password");
+    tokens.mocks.decode.mockReturnValue({
+      id: user.id,
+    });
+    const token = "token";
+    const foundUser = await userService.findUserByLoginToken(token);
+
+    expect(tokens.mocks.decode).toBeCalledWith(token);
+    expect(foundUser).toBeDefined();
+    expect(foundUser!.id).toBe(user.id);
+  });
+
+  it("returns no user for invalid login tokens", async () => {
+    expect.assertions(1);
+
+    tokens.mocks.decode.mockImplementation(() => { throw new Error("invalid token"); });
+    const user = await userService.findUserByLoginToken("token");
+    expect(user).not.toBeDefined();
   });
 });
