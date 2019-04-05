@@ -1,14 +1,8 @@
-import { genSalt, hash } from "bcrypt";
 import { BadRequestError, Body, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
 import { Inject } from "typedi";
-import { Repository } from "typeorm";
-import { ActivityEvent } from "../../../types/activity";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
-import { User } from "../entities/user";
-import { ActivityServiceToken, IActivityService } from "../services/activity";
-import { DatabaseServiceToken, IDatabaseService } from "../services/database";
-import { ILoggerService, LoggerServiceToken } from "../services/log";
+import { IUserService, UserServiceToken } from "../services/user";
 import { UserSignupApiRequest } from "../validation/user-signup";
 
 /**
@@ -16,35 +10,18 @@ import { UserSignupApiRequest } from "../validation/user-signup";
  */
 @JsonController("/user")
 export class UsersController {
-  private readonly _users: Repository<User>;
-
   public constructor(
-    @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-    @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
-    @Inject(DatabaseServiceToken) database: IDatabaseService,
-  ) {
-    this._users = database.getRepository(User);
-  }
+    @Inject(UserServiceToken) private readonly _users: IUserService,
+  ) { }
 
   /**
    * Create a user.
    */
   @HttpCode(201)
   @Post("/signup")
-  public async signup(@Body() body: UserSignupApiRequest): Promise<IUserSignupResponseBody> {
-    const user = new User();
-    user.email = body.data.email;
-    user.password = await hash(body.data.password, 10);
-    user.verifyToken = await genSalt(10);
-
-    const now = new Date();
-    user.createdAt = now;
-    user.updatedAt = now;
-
+  public async signup(@Body() { data: { email, password } }: UserSignupApiRequest): Promise<IUserSignupResponseBody> {
     try {
-      await this._users.save(user);
-      this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
-      this._activity.addActivity(user, ActivityEvent.Signup);
+      const user = await this._users.signup(email, password);
 
       return {
         email: user.email,
@@ -61,18 +38,7 @@ export class UsersController {
   @Get("/verify")
   public async verify(@QueryParam("token") token: string): Promise<IUserVerifyResponseBody> {
     try {
-      const user = await this._users.findOneOrFail({
-        where: {
-          verifyToken: token,
-        },
-      });
-
-      user.didVerifyEmail = true;
-      user.verifyToken = "";
-
-      await this._users.save(user);
-      this._logger.debug(`${user.email} verified their email`);
-      this._activity.addActivity(user, ActivityEvent.EmailVerified);
+      await this._users.verifyUserByVerifyToken(token);
 
       return {
         success: true,

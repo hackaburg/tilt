@@ -5,6 +5,7 @@ import { ConfigurationServiceToken, IConfigurationService } from "./config";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 import { HttpServiceToken, IHttpService } from "./http";
 import { ILoggerService, LoggerServiceToken } from "./log";
+import { IUserService, UserServiceToken } from "./user";
 
 /**
  * The tilt service in a nutshell. Contains all services required to run tilt.
@@ -18,6 +19,7 @@ export class Tilt implements IService {
     @Inject(LoggerServiceToken) logger: ILoggerService,
     @Inject(DatabaseServiceToken) database: IDatabaseService,
     @Inject(ActivityServiceToken) activity: IActivityService,
+    @Inject(UserServiceToken) users: IUserService,
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
@@ -25,6 +27,7 @@ export class Tilt implements IService {
       logger,
       database,
       activity,
+      users,
       http,
     ];
   }
