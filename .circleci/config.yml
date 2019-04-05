@@ -8,7 +8,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - backend-dependencies-{{ checksum "package.json" }}
+            - backend-dependencies-{{ checksum "backend/package.json" }}
             - backend-dependencies-
       - run:
           working_directory: backend
@@ -17,7 +17,7 @@ jobs:
       - save_cache:
           paths:
             - backend/node_modules
-          key: backend-dependencies-{{ checksum "package.json" }}
+          key: backend-dependencies-{{ checksum "backend/package.json" }}
       - run:
           name: yarn
           working_directory: backend
