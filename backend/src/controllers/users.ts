@@ -1,8 +1,10 @@
 import { BadRequestError, Body, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
 import { Inject } from "typedi";
+import { IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { IUserService, UserServiceToken } from "../services/user";
+import { UserLoginApiRequest } from "../validation/user-login";
 import { UserSignupApiRequest } from "../validation/user-signup";
 
 /**
@@ -46,5 +48,22 @@ export class UsersController {
     } catch (error) {
       throw new BadRequestError("invalid token");
     }
+  }
+
+  /**
+   * Generates a login token for the given credentials.
+   * @param body The user's login credentials
+   */
+  @Post("/login")
+  public async login(@Body() { data: { email, password } }: UserLoginApiRequest): Promise<IUserLoginResponseBody> {
+    const user = await this._users.findUserWithCredentials(email, password);
+
+    if (!user) {
+      throw new BadRequestError("invalid email or password");
+    }
+
+    return {
+      token: this._users.generateLoginToken(user),
+    };
   }
 }

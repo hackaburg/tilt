@@ -62,4 +62,37 @@ describe("UsersController", () => {
     const promise = controller.verify("");
     await expect(promise).rejects.toBeDefined();
   });
+
+  it("generates tokens for valid credentials", async () => {
+    expect.assertions(1);
+
+    const user = new User();
+    user.id = 1;
+    userService.mocks.findUserWithCredentials.mockResolvedValue(user);
+
+    const token = "token";
+    userService.mocks.generateLoginToken.mockReturnValue(token);
+    const response = await controller.login({
+      data: {
+        email: "test@foo.bar",
+        password: "password",
+      },
+    });
+
+    expect(response.token).toBe(token);
+  });
+
+  it("throws on invalid credentials", async () => {
+    expect.assertions(1);
+
+    userService.mocks.findUserWithCredentials.mockResolvedValue(undefined);
+    const promise = controller.login({
+      data: {
+        email: "test@foo.bar",
+        password: "password",
+      },
+    });
+
+    expect(promise).rejects.toBeDefined();
+  });
 });
