@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Activity } from "./activity";
 
 @Entity()
 export class User {
@@ -22,6 +23,9 @@ export class User {
 
   @Column()
   public updatedAt!: Date;
+
+  @OneToMany(() => Activity, (activity) => activity.user)
+  public activity!: Activity[];
 }
 
 /**

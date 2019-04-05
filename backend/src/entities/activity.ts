@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ActivityEvent } from "../../../types/activity";
 import { User } from "./user";
 
@@ -7,8 +7,7 @@ export class Activity {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @OneToOne(() => User)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.activity)
   public user!: User;
 
   @Column()
