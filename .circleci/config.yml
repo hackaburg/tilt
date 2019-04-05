@@ -19,11 +19,14 @@ jobs:
             - backend/node_modules
           key: backend-dependencies-{{ checksum "backend/package.json" }}
       - run:
-          name: yarn
+          name: lint
           working_directory: backend
           command: |
-            yarn install
             yarn lint
+      - run:
+          name: test
+          working_directory: backend
+          command: |
             yarn test
 
   frontend:
@@ -44,11 +47,14 @@ jobs:
             - frontend/node_modules
           key: frontend-dependencies-{{ checksum "frontend/package.json" }}
       - run:
-          name: yarn
+          name: lint
           working_directory: frontend
           command: |
-            yarn install
             yarn lint
+      - run:
+          name: test
+          working_directory: frontend
+          command: |
             yarn test
 
 workflows:
