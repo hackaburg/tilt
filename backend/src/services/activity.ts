@@ -17,6 +17,11 @@ export interface IActivityService extends IService {
    * @param additionalData Additional data
    */
   addActivity(user: User, event: ActivityEvent, additionalData?: string): Promise<void>;
+
+  /**
+   * Gets all previous activity.
+   */
+  getActivities(): Promise<Activity[]>;
 }
 
 /**
@@ -61,9 +66,9 @@ export class ActivityService implements IService {
   }
 
   /**
-   * Gets all the previous activity.
+   * Gets all previous activity.
    */
-  public async getActivity(): Promise<Activity[]> {
+  public async getActivities(): Promise<Activity[]> {
     const activities = await this._activities!.find({
       relations: [
         "user",
