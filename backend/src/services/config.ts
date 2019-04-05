@@ -1,3 +1,4 @@
+import { genSalt } from "bcrypt";
 import * as convict from "convict";
 import * as dotenv from "dotenv";
 import { Service, Token } from "typedi";
@@ -8,6 +9,7 @@ interface ITiltConfiguration {
   database: IDatabaseConfiguration;
   http: IHttpConfiguration;
   log: ILoggerConfiguration;
+  secrets: ISecretsConfiguration;
 }
 
 interface IAppConfiguration {
@@ -29,6 +31,10 @@ interface IDatabaseConfiguration {
   username: string;
   password: string;
   databaseName: string;
+}
+
+interface ISecretsConfiguration {
+  jwtSecret: string;
 }
 
 /**
@@ -142,6 +148,13 @@ export class ConfigurationService implements IConfigurationService {
         level: {
           default: "info",
           env: "LOG_LEVEL",
+          format: String,
+        },
+      },
+      secrets: {
+        jwtSecret: {
+          default: await genSalt(3),
+          env: "SECRET_JWT",
           format: String,
         },
       },
