@@ -111,6 +111,7 @@ export class UserService implements IUserService {
 
     user.didVerifyEmail = true;
     user.verifyToken = "";
+    user.updatedAt = new Date();
 
     await this._users!.save(user);
     this._logger.debug(`${user.email} verified their email`);
