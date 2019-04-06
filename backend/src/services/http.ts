@@ -1,16 +1,24 @@
 import * as express from "express";
 import { join } from "path";
-import { useContainer, useExpressServer } from "routing-controllers";
+import { Action, useContainer, useExpressServer } from "routing-controllers";
 import { Container, Inject, Service, Token } from "typedi";
 import { IService } from ".";
+import { User } from "../entities/user";
 import { ConfigurationServiceToken, IConfigurationService } from "./config";
 import { ILoggerService, LoggerServiceToken } from "./log";
+import { IUserService, UserServiceToken } from "./user";
 
 /**
  * An interface describing the http service.
  */
 // tslint:disable-next-line: no-empty-interface
-export interface IHttpService extends IService { }
+export interface IHttpService extends IService {
+  /**
+   * Gets the current user from the incoming request.
+   * @param action The currently performed action
+   */
+  getCurrentUser(action: Action): Promise<User | undefined>;
+}
 
 /**
  * A token used to inject a concrete http service.
@@ -25,6 +33,7 @@ export class HttpService implements IHttpService {
   public constructor(
     @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
+    @Inject(UserServiceToken) private readonly _users: IUserService,
   ) { }
 
   /**
@@ -38,6 +47,7 @@ export class HttpService implements IHttpService {
       controllers: [
         join(__dirname, "../controllers/*"),
       ],
+      currentUserChecker: async (action) => await this.getCurrentUser(action),
       defaultErrorHandler: false,
       development: !this._config.isProductionEnabled,
       interceptors: [
@@ -61,5 +71,30 @@ export class HttpService implements IHttpService {
         resolve();
       });
     });
+  }
+
+  /**
+   * Gets the current user from the incoming request.
+   * @param action The currently performed action
+   */
+  public async getCurrentUser(action: Action): Promise<User | undefined> {
+    const token: string | undefined = action.request.headers.authorization;
+    const prefix = "bearer ";
+
+    if (!token) {
+      return;
+    }
+
+    if (!token.toLowerCase().startsWith(prefix)) {
+      return;
+    }
+
+    const tokenWithoutPrefix = token.substring(prefix.length);
+
+    try {
+      return await this._users.findUserByLoginToken(tokenWithoutPrefix);
+    } catch (error) {
+      return;
+    }
   }
 }
