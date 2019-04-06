@@ -4,7 +4,11 @@ import { Activity } from "../../src/entities/activity";
 import { User } from "../../src/entities/user";
 import { ActivityService, IActivityService } from "../../src/services/activity";
 import { IDatabaseService } from "../../src/services/database";
+import { UserService } from "../../src/services/user";
+import { MockActivityService } from "./mock/activity";
 import { TestDatabaseService } from "./mock/database";
+import { MockLoggerService } from "./mock/logger";
+import { MockTokenService } from "./mock/tokens";
 
 describe("ActivityService", () => {
   let database: IDatabaseService;
@@ -16,13 +20,14 @@ describe("ActivityService", () => {
     database = new TestDatabaseService();
     await database.bootstrap();
 
-    user = new User();
-    user.email = "test@foo.bar";
-    user.password = "password";
-    user.createdAt = new Date();
-    user.updatedAt = new Date();
-    user.verifyToken = "token";
-    await database.getRepository(User).save(user);
+    const users = new UserService(
+      database,
+      new MockLoggerService().instance,
+      new MockActivityService().instance,
+      new MockTokenService().instance,
+    );
+    await users.bootstrap();
+    user = await users.signup("test@foo.bar", "password");
 
     activities = database.getRepository(Activity);
   });
