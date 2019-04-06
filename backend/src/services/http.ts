@@ -49,6 +49,11 @@ export class HttpService implements IHttpService {
       ],
       currentUserChecker: async (action) => await this.getCurrentUser(action),
       defaultErrorHandler: false,
+      defaults: {
+        paramOptions: {
+          required: true,
+        },
+      },
       development: !this._config.isProductionEnabled,
       interceptors: [
         join(__dirname, "../interceptors/*"),
