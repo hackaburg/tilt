@@ -59,7 +59,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     }
 
     if (!error.httpCode) {
-      this._logger.error(error.message, { error });
+      this._logger.error(error.message, { stack: error.stack });
     }
 
     res.status(error.httpCode || 500);
