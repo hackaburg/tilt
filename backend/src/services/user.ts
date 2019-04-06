@@ -137,7 +137,9 @@ export class UserService implements IUserService {
   public async findUserByLoginToken(token: string): Promise<User | undefined> {
     try {
       const { id } = this._tokens.decode(token);
-      return await this._users!.findOne(id);
+      return await this._users!.findOne(id, {
+        cache: 20 * 1000,
+      });
     } catch (error) {
       return;
     }

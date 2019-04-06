@@ -7,6 +7,7 @@ import { MockedService } from "./mock";
 import { MockConfigurationService } from "./mock/config";
 import { MockLoggerService } from "./mock/logger";
 import { MockUserService } from "./mock/users";
+import { UserRole } from "../../../types/roles";
 
 describe("HttpService", () => {
   let config: MockedService<IConfigurationService>;
@@ -65,5 +66,46 @@ describe("HttpService", () => {
     } as any);
 
     expect(userWithInvalidToken).not.toBeDefined();
+  });
+
+  it("checks authorization correctly", async () => {
+    expect.assertions(9);
+
+    const user = new User();
+    users.mocks.findUserByLoginToken.mockResolvedValue(user);
+
+    const action: any = {
+      request: {
+        headers: {
+          authorization: "Bearer token",
+        },
+      },
+    };
+
+    const table = [
+      [
+        [UserRole.User, UserRole.User, true],
+        [UserRole.User, UserRole.Moderator, false],
+        [UserRole.User, UserRole.Owner, false],
+      ],
+      [
+        [UserRole.Moderator, UserRole.User, true],
+        [UserRole.Moderator, UserRole.Moderator, true],
+        [UserRole.Moderator, UserRole.Owner, false],
+      ],
+      [
+        [UserRole.Owner, UserRole.User, true],
+        [UserRole.Owner, UserRole.Moderator, true],
+        [UserRole.Owner, UserRole.Owner, true],
+      ],
+    ];
+
+    for (const row of table) {
+      for (const [actual, expected, value] of row) {
+        user.role = actual as UserRole;
+        const result = await httpService.isActionAuthorized(action, [expected as UserRole]);
+        expect(result).toBe(value);
+      }
+    }
   });
 });

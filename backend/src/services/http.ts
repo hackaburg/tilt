@@ -3,6 +3,7 @@ import { join } from "path";
 import { Action, useContainer, useExpressServer } from "routing-controllers";
 import { Container, Inject, Service, Token } from "typedi";
 import { IService } from ".";
+import { UserRole } from "../../../types/roles";
 import { User } from "../entities/user";
 import { ConfigurationServiceToken, IConfigurationService } from "./config";
 import { ILoggerService, LoggerServiceToken } from "./log";
@@ -18,6 +19,13 @@ export interface IHttpService extends IService {
    * @param action The currently performed action
    */
   getCurrentUser(action: Action): Promise<User | undefined>;
+
+  /**
+   * Checks whether the user from the incoming request is allowed to perform an action
+   * @param action The currently performed action
+   * @param roles The roles required for the action
+   */
+  isActionAuthorized(action: Action, roles?: UserRole[]): Promise<boolean>;
 }
 
 /**
@@ -44,6 +52,7 @@ export class HttpService implements IHttpService {
 
     const server = express();
     const routedServer = useExpressServer(server, {
+      authorizationChecker: async (action, roles?: UserRole[]) => await this.isActionAuthorized(action, roles),
       controllers: [
         join(__dirname, "../controllers/*"),
       ],
@@ -101,5 +110,62 @@ export class HttpService implements IHttpService {
     } catch (error) {
       return;
     }
+  }
+
+  /**
+   * Checks whether the given role can perform an action with an expected role.
+   * @param expectedRole The role required to perform the action
+   * @param actualRole The actual role
+   */
+  private isActionAllowed(expectedRole: UserRole, actualRole: UserRole): boolean {
+    switch (actualRole) {
+      case UserRole.User:
+        switch (expectedRole) {
+          case UserRole.User:
+            return true;
+          default:
+            return false;
+        }
+
+      case UserRole.Moderator:
+        switch (expectedRole) {
+          case UserRole.User:
+          case UserRole.Moderator:
+            return true;
+          default:
+            return false;
+        }
+
+      case UserRole.Owner:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Checks whether the user from the incoming request is allowed to perform an action
+   * @param action The currently performed action
+   * @param roles The roles required for the action
+   */
+  public async isActionAuthorized(action: Action, roles?: UserRole[]): Promise<boolean> {
+    if (!roles || !roles.length) {
+      return false;
+    }
+
+    const user = await this.getCurrentUser(action);
+
+    if (!user) {
+      return false;
+    }
+
+    for (const role of roles) {
+      if (!this.isActionAllowed(role, user.role)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
