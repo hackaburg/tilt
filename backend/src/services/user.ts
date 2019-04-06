@@ -3,6 +3,7 @@ import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
 import { ActivityEvent } from "../../../types/activity";
+import { UserRole } from "../../../types/roles";
 import { User } from "../entities/user";
 import { ActivityServiceToken, IActivityService } from "./activity";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
@@ -86,6 +87,7 @@ export class UserService implements IUserService {
     user.email = email;
     user.password = await hash(password, 10);
     user.verifyToken = await genSalt(10);
+    user.role = UserRole.User;
 
     const now = new Date();
     user.createdAt = now;

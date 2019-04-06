@@ -1,4 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { UserRole } from "../../../types/roles";
 import { Activity } from "./activity";
 
 @Entity()
@@ -26,6 +27,9 @@ export class User {
 
   @OneToMany(() => Activity, (activity) => activity.user)
   public activity!: Activity[];
+
+  @Column()
+  public role!: UserRole;
 }
 
 /**
