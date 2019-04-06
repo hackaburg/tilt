@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --coverage",
-    "codecov": "codecov --file coverage/*.json --flags backend",
+    "codecov": "codecov -f coverage/*.json --flags backend",
     "lint": "tslint --project .",
     "typecheck": "tsc --noEmit",
     "build": "NODE_ENV=production webpack --mode production",
