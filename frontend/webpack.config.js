@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const { EnvironmentPlugin } = require("webpack");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -66,6 +67,9 @@ module.exports = {
   },
 
   plugins: [
+    new EnvironmentPlugin({
+      NODE_ENV: "development",
+    }),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),
