@@ -1,11 +1,13 @@
 import { shallow } from "enzyme";
 import * as React from "react";
 import { App } from "../../src/components/app";
+import { initialSettingsState } from "../../src/reducers/settings";
 
 describe("App", () => {
   it("renders", () => {
+    const fetchSettings = jest.fn();
     const app = shallow((
-      <App />
+      <App settings={initialSettingsState.data.frontend} fetchSettings={fetchSettings} />
     ));
 
     expect(app).toMatchSnapshot();

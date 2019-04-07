@@ -1,7 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`App renders 1`] = `
-<h1>
-  It works!
-</h1>
+<ThemeProvider
+  theme={
+    Object {
+      "colorGradientEnd": "#333",
+      "colorGradientStart": "#333",
+    }
+  }
+>
+  <Component />
+</ThemeProvider>
 `;
