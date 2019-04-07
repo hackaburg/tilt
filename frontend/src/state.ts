@@ -1,6 +1,14 @@
+import { ISettings } from "../../types/settings";
+
 /**
  * Describes the frontend state.
  */
-// tslint:disable-next-line: no-empty-interface
 export interface IState {
+  settings: IFetchable<ISettings>;
+}
+
+interface IFetchable<T> {
+  data: T;
+  fetchInProgress: boolean;
+  error: string;
 }
