@@ -1,5 +1,6 @@
 import { IApi } from ".";
 import { IApiRequest, IApiResponse, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
+import { ISettings } from "../../../types/settings";
 import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
@@ -59,7 +60,7 @@ export class BackendApi implements IApi {
    * Sends a GET request to the given resource.
    * @param url The resource to get
    */
-  protected async get<TResponse>(url: string): Promise<TResponse> {
+  protected async get<TResponse>(url: string): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
     const response = await fetch(`${this._apiBaseUrl}${url}`, {
       headers: this.headers,
       method: "get",
@@ -83,6 +84,13 @@ export class BackendApi implements IApi {
     });
 
     return this.unpackApiResponse(await response.json());
+  }
+
+  /**
+   * Sends a settings api request.
+   */
+  public async getSettings(): Promise<ISettings> {
+    return await this.get<ISettings>("/settings");
   }
 
   /**

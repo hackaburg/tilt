@@ -1,4 +1,5 @@
 import { IApi } from ".";
+import { ISettings } from "../../../types/settings";
 
 /**
  * Async equivalent of a sleep/wait call.
@@ -10,6 +11,22 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * An api which yields static data.
  */
 export class StaticApi implements IApi {
+  /**
+   * Simulates the settings.
+   */
+  public async getSettings(): Promise<ISettings> {
+    await sleep(100);
+
+    return {
+      frontend: {
+        colorGradientEnd: "red",
+        colorGradientStart: "green",
+        loginImage: "http://placehold.it/300x300",
+        signupImage: "http://placehold.it/300x300",
+      },
+    };
+  }
+
   /**
    * Simulates a signup api call.
    * @param email The user's email

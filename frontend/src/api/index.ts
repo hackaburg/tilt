@@ -1,3 +1,4 @@
+import { ISettings } from "../../../types/settings";
 import { apiBaseUrl } from "../config";
 import { BackendApi } from "./backend-api";
 import { StaticApi } from "./static-api";
@@ -6,6 +7,11 @@ import { StaticApi } from "./static-api";
  * Describes API methods provided by tilt.
  */
 export interface IApi {
+  /**
+   * Gets the application settings.
+   */
+  getSettings(): Promise<ISettings>;
+
   /**
    * Creates an account.
    * @param email The user's email
