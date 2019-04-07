@@ -57,6 +57,11 @@ jobs:
           command: |
             yarn lint
       - run:
+          name: typecheck
+          working_directory: frontend
+          command: |
+            yarn typecheck
+      - run:
           name: test
           working_directory: frontend
           command: |
