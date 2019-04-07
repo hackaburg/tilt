@@ -1,3 +1,4 @@
+import * as cors from "cors";
 import * as express from "express";
 import { join } from "path";
 import { Action, useContainer, useExpressServer } from "routing-controllers";
@@ -51,11 +52,17 @@ export class HttpService implements IHttpService {
     useContainer(Container);
 
     const server = express();
+
+    if (!this._config.isProductionEnabled) {
+      server.use(cors());
+    }
+
     const routedServer = useExpressServer(server, {
       authorizationChecker: async (action, roles?: UserRole[]) => await this.isActionAuthorized(action, roles),
       controllers: [
         join(__dirname, "../controllers/*"),
       ],
+      cors: !this._config.isProductionEnabled,
       currentUserChecker: async (action) => await this.getCurrentUser(action),
       defaultErrorHandler: false,
       defaults: {
