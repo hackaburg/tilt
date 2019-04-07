@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { EnvironmentPlugin } = require("webpack");
+const { join } = require("path");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -55,6 +56,12 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: "awesome-typescript-loader",
+        options:
+          isProduction
+            ? undefined
+            : {
+              getCustomTransformers: join(__dirname, "webpack.styled-components.js"),
+            },
       },
       {
         test: /\.(png|jpg|svg)$/,
