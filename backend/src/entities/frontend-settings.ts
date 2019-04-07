@@ -7,10 +7,10 @@ export class FrontendSettings implements IFrontendSettings {
   public id!: number;
 
   @Column()
-  public colorGradientStart: string = "green";
+  public colorGradientStart: string = "#53bd9a";
 
   @Column()
-  public colorGradientEnd: string = "cyan";
+  public colorGradientEnd: string = "#56d175";
 
   @Column()
   public loginImage: string = "http://placehold.it/300x300";
