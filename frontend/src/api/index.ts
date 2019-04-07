@@ -1,4 +1,4 @@
-import { apiBaseUrl, isProductionEnabled } from "../config";
+import { apiBaseUrl } from "../config";
 import { BackendApi } from "./backend-api";
 import { StaticApi } from "./static-api";
 
@@ -31,6 +31,6 @@ export interface IApi {
  * An api client, configured to either run against static data, or a tilt backend.
  */
 export const api: IApi =
-  (isProductionEnabled && apiBaseUrl)
+  apiBaseUrl
     ? new BackendApi(apiBaseUrl)
     : new StaticApi();
