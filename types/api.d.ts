@@ -13,3 +13,4 @@ interface IErrorApiResponse {
 }
 
 export type IApiResponse<T> = ISuccessfulApiResponse<T> | IErrorApiResponse;
+export type ISuccessfullyUnpackedApiResponse<T> = ISuccessfulApiResponse<T>["data"];
