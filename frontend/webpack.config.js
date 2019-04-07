@@ -68,6 +68,7 @@ module.exports = {
 
   plugins: [
     new EnvironmentPlugin({
+      API_BASE_URL: "/api",
       NODE_ENV: "development",
     }),
     new HtmlWebpackPlugin({
