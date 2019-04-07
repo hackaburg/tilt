@@ -5,6 +5,7 @@ import { MockConfigurationService } from "./mock/config";
 import { MockDatabaseService } from "./mock/database";
 import { MockHttpService } from "./mock/http";
 import { MockLoggerService } from "./mock/logger";
+import { MockSettingsService } from "./mock/settings";
 import { MockTokenService } from "./mock/tokens";
 import { MockUserService } from "./mock/users";
 
@@ -23,6 +24,7 @@ describe("TiltService", () => {
     const users = addService(new MockUserService());
     const http = addService(new MockHttpService());
     const tokens = addService(new MockTokenService());
+    const settings = addService(new MockSettingsService());
 
     const instances: ConstructorParameters<typeof Tilt> = [
       config.instance,
@@ -31,6 +33,7 @@ describe("TiltService", () => {
       activity.instance,
       tokens.instance,
       users.instance,
+      settings.instance,
       http.instance,
     ];
 

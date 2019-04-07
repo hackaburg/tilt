@@ -5,6 +5,7 @@ import { ConfigurationServiceToken, IConfigurationService } from "./config";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 import { HttpServiceToken, IHttpService } from "./http";
 import { ILoggerService, LoggerServiceToken } from "./log";
+import { ISettingsService, SettingsServiceToken } from "./settings";
 import { ITokenService, TokenServiceToken } from "./tokens";
 import { IUserService, UserServiceToken } from "./user";
 
@@ -22,6 +23,7 @@ export class Tilt implements IService {
     @Inject(ActivityServiceToken) activity: IActivityService,
     @Inject(TokenServiceToken) tokens: ITokenService<any>,
     @Inject(UserServiceToken) users: IUserService,
+    @Inject(SettingsServiceToken) settings: ISettingsService,
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
@@ -31,6 +33,7 @@ export class Tilt implements IService {
       activity,
       tokens,
       users,
+      settings,
       http,
     ];
   }
