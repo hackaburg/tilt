@@ -44,6 +44,7 @@ export class SettingsService implements ISettingsService {
     try {
       return await this._settings!.findOneOrFail({
         relations: [
+          "email",
           "frontend",
         ],
       });
