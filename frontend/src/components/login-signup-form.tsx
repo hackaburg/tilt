@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { transitionDuration } from "../config";
 import { InnerCenteredContainer, OuterCenteredContainer } from "./centering";
 import { LoginForm } from "./login-form";
-import { SignupForm } from "./signup-form";
+import { ConnectedSignupForm } from "./signup-form";
 
 /**
  * Represents the different variations of the login and signup form.
@@ -17,7 +17,7 @@ enum DisplayState {
 const FullSizeContainer = styled.div`
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
 `;
 
 const PageContainer = styled.div`
@@ -64,7 +64,7 @@ export const LoginSignupForm = () => {
         <InnerCenteredContainer>
           <PageContainer>
             <Page shown={displayState === DisplayState.SignupForm} direction="left">
-              <SignupForm onOpenLogin={() => setDisplayState(DisplayState.LoginForm)} />
+              <ConnectedSignupForm onOpenLogin={() => setDisplayState(DisplayState.LoginForm)} />
             </Page>
 
             <Page shown={displayState === DisplayState.LoginForm} direction="right">
