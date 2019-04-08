@@ -50,6 +50,16 @@ services:
       tilt_network:
         ipv4_address: 172.50.0.6
 
+  maildev:
+    image: djfarrelly/maildev
+    command: bin/maildev --incoming-user root@localhost --incoming-pass password --hide-extensions STARTTLS
+    ports:
+      - 8082:1080
+      - "2525:1025"
+    networks:
+      tilt_network:
+        ipv4_address: 172.50.0.7
+
 networks:
   tilt_network:
     ipam:
