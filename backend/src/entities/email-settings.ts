@@ -7,8 +7,8 @@ export class EmailSettings implements IEmailSettings {
   public id!: number;
 
   @Column()
-  public templateVerifyEmail!: string;
+  public templateVerifyEmail: string = "";
 
   @Column()
-  public templateForgotPassword!: string;
+  public templateForgotPassword: string = "";
 }
