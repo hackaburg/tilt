@@ -9,6 +9,7 @@ interface ITiltConfiguration {
   database: IDatabaseConfiguration;
   http: IHttpConfiguration;
   log: ILoggerConfiguration;
+  mail: IMailConfiguration;
   secrets: ISecretsConfiguration;
 }
 
@@ -23,6 +24,13 @@ interface IHttpConfiguration {
 interface ILoggerConfiguration {
   filename: string;
   level: string;
+}
+
+interface IMailConfiguration {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
 }
 
 interface IDatabaseConfiguration {
@@ -148,6 +156,28 @@ export class ConfigurationService implements IConfigurationService {
         level: {
           default: "info",
           env: "LOG_LEVEL",
+          format: String,
+        },
+      },
+      mail: {
+        host: {
+          default: "",
+          env: "MAIL_HOST",
+          format: String,
+        },
+        password: {
+          default: "",
+          env: "MAIL_PASSWORD",
+          format: String,
+        },
+        port: {
+          default: 467,
+          env: "MAIL_PORT",
+          format: "port",
+        },
+        username: {
+          default: "",
+          env: "MAIL_USERNAME",
           format: String,
         },
       },
