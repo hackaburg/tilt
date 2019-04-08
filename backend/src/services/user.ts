@@ -111,7 +111,6 @@ export class UserService implements IUserService {
       },
     });
 
-    user.didVerifyEmail = true;
     user.verifyToken = "";
     user.updatedAt = new Date();
 
@@ -162,6 +161,10 @@ export class UserService implements IUserService {
     });
 
     if (!user) {
+      return;
+    }
+
+    if (user.verifyToken) {
       return;
     }
 

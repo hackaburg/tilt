@@ -17,9 +17,6 @@ export class User {
   public verifyToken!: string;
 
   @Column()
-  public didVerifyEmail: boolean = false;
-
-  @Column()
   public createdAt!: Date;
 
   @Column()
