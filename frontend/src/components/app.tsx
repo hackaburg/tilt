@@ -7,7 +7,7 @@ import { IFrontendSettings } from "../../../types/settings";
 import { fetchSettings as fetchSettingsRaw } from "../actions/settings";
 import { IState } from "../state";
 import { ITheme } from "../theme";
-import { LoginSignupForm } from "./login-signup-form";
+import { ConnectedLoginSignupForm } from "./login-signup-form";
 
 interface IAppProps {
   settings: IFrontendSettings;
@@ -31,7 +31,7 @@ export const App = ({ settings, fetchSettings }: IAppProps) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <LoginSignupForm />
+      <ConnectedLoginSignupForm />
     </ThemeProvider>
   );
 };
