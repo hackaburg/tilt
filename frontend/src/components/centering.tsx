@@ -20,3 +20,12 @@ export const OuterCenteredContainer = styled.div`
     transform: translate(-50%, -50%);
   }
 `;
+
+/**
+ * A page sized container.
+ */
+export const PageSizedContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+`;
