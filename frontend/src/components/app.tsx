@@ -37,7 +37,7 @@ export const App = ({ settings, fetchSettings }: IAppProps) => {
 };
 
 const mapStateToProps = (state: IState) => ({
-  settings: state.settings.data.frontend,
+  settings: state.settings.frontend,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

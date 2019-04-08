@@ -155,7 +155,7 @@ export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, 
 const mapStateToProps = (state: IState) => ({
   error: state.request.error,
   formType: state.form.type,
-  imageUrl: state.settings.data.frontend.loginSignupImage,
+  imageUrl: state.settings.frontend.loginSignupImage,
   requestInProgress: state.request.requestInProgress,
 });
 

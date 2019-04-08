@@ -12,17 +12,13 @@ const initialColor = "#333";
  * The initial settings state.
  */
 export const initialSettingsState: IStateType = {
-  data: {
-    frontend: {
-      colorGradientEnd: initialColor,
-      colorGradientStart: initialColor,
-      colorLink: initialColor,
-      colorLinkHover: initialColor,
-      loginSignupImage: "",
-    },
+  frontend: {
+    colorGradientEnd: initialColor,
+    colorGradientStart: initialColor,
+    colorLink: initialColor,
+    colorLinkHover: initialColor,
+    loginSignupImage: "",
   },
-  error: "",
-  fetchInProgress: false,
 };
 
 /**
@@ -32,24 +28,9 @@ export const initialSettingsState: IStateType = {
  */
 export const settingsReducer = (state: IStateType = initialSettingsState, action: IActionType): IStateType => {
   switch (action.type) {
-    case SettingsAction.StartFetchSettings:
+    case SettingsAction.SetSettings:
       return {
-        ...state,
-        fetchInProgress: true,
-      };
-
-    case SettingsAction.ReceiveSettings:
-      return {
-        ...state,
-        data: action.value,
-        fetchInProgress: false,
-      };
-
-    case SettingsAction.FailReceiveSettings:
-      return {
-        ...state,
-        error: action.value,
-        fetchInProgress: false,
+        ...action.value,
       };
 
     default:

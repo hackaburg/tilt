@@ -5,7 +5,7 @@ import { ISettings } from "../../types/settings";
  */
 export interface IState {
   request: IRequest;
-  settings: IFetchable<ISettings>;
+  settings: ISettings;
   form: IForm;
 }
 
@@ -25,10 +25,4 @@ export enum FormType {
   None = "none",
   Login = "login",
   Signup = "signup",
-}
-
-interface IFetchable<T> {
-  data: T;
-  fetchInProgress: boolean;
-  error: string;
 }
