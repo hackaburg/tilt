@@ -3,6 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "./button";
 import { Heading } from "./headings";
+import { LinkLike } from "./link";
 import { TextInput } from "./text-input";
 
 const Container = styled.div`
@@ -36,7 +37,7 @@ interface ISignupFormProps {
 /**
  * A form to create an account.
  */
-export const SignupForm = ({ }: ISignupFormProps) => {
+export const SignupForm = ({ onOpenLogin }: ISignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = (event: React.FormEvent) => {
@@ -74,7 +75,7 @@ export const SignupForm = ({ }: ISignupFormProps) => {
       </Form>
 
       <p>
-        Already have an account?
+        Already have an account? <LinkLike onClick={onOpenLogin}>Log in</LinkLike>
       </p>
     </Container>
   );
