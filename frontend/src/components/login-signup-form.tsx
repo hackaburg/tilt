@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { BarLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
 import styled, { keyframes } from "styled-components";
 import { transitionDuration } from "../config";
 import { IState } from "../state";
@@ -42,7 +42,7 @@ const Image = styled.img`
   animation-iteration-count: 1;
 `;
 
-const Form = styled.form`
+const Form = styled.div`
   margin: 2rem 0rem;
 `;
 
@@ -66,9 +66,6 @@ interface ILoginSignupFormProps {
 export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-  };
 
   return (
     <PageSizedContainer>
@@ -81,19 +78,22 @@ export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
               )}
 
               {!imageUrl && (
-                <BarLoader
-                  css={`
-                    display: inline-block;
-                    margin: auto;
-                    height: 4rem;
-                  `}
+                <ScaleLoader
+                  height={1}
+                  heightUnit="rem"
+                  color="currentColor"
+                  css={{
+                    display: "inline-block",
+                    margin: "auto",
+                    padding: "1rem 0rem",
+                  } as any}
                 />
               )}
             </ImageContainer>
             <Heading>Apply</Heading>
             <p>Create an account or login.</p>
 
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={(event) => event.preventDefault()}>
               <Fields>
                 <TextInput
                   title="E-Mail"
@@ -112,9 +112,9 @@ export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
                 />
               </Fields>
 
-              <Button primary fluid tabIndex={3}>Create my account</Button>
+              <Button primary fluid>Create my account</Button>
               <Divider>Already have an account?</Divider>
-              <Button fluid tabIndex={4}>Let me in</Button>
+              <Button fluid>Let me in</Button>
             </Form>
           </FormContainer>
         </InnerCenteredContainer>
