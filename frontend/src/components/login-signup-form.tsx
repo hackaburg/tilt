@@ -2,12 +2,16 @@ import * as React from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
 import { ScaleLoader } from "react-spinners";
+import { bindActionCreators, Dispatch } from "redux";
 import styled, { keyframes } from "styled-components";
+import { login as loginRaw } from "../actions/login";
+import { signup as signupRaw } from "../actions/signup";
 import { transitionDuration } from "../config";
-import { IState } from "../state";
+import { FormType, IState } from "../state";
 import { Button } from "./button";
 import { InnerCenteredContainer, OuterCenteredContainer, PageSizedContainer } from "./centering";
 import { Heading } from "./headings";
+import { Message } from "./message";
 import { TextInput } from "./text-input";
 
 const FormContainer = styled.div`
@@ -58,12 +62,17 @@ const Divider = styled.p`
 
 interface ILoginSignupFormProps {
   imageUrl: string;
+  error?: string;
+  requestInProgress: boolean;
+  formType: FormType;
+  signup: typeof signupRaw;
+  login: typeof loginRaw;
 }
 
 /**
  * A form to create an account.
  */
-export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
+export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, signup, login }: ILoginSignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -90,8 +99,17 @@ export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
                 />
               )}
             </ImageContainer>
-            <Heading>Apply</Heading>
-            <p>Create an account or login.</p>
+
+            {!error && (
+              <>
+                <Heading>Apply</Heading>
+                <p>Create an account or login.</p>
+              </>
+            )}
+
+            {error && (
+              <Message error><b>Error:</b> {error}</Message>
+            )}
 
             <Form onSubmit={(event) => event.preventDefault()}>
               <Fields>
@@ -112,9 +130,20 @@ export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
                 />
               </Fields>
 
-              <Button primary fluid>Create my account</Button>
+              <Button
+                onClick={() => signup(email, password)}
+                loading={formType === FormType.Signup && requestInProgress}
+                disable={formType === FormType.Login && requestInProgress}
+                primary
+                fluid
+              >Create my account</Button>
               <Divider>Already have an account?</Divider>
-              <Button fluid>Let me in</Button>
+              <Button
+                onClick={() => login(email, password)}
+                loading={formType === FormType.Login && requestInProgress}
+                disable={formType === FormType.Signup && requestInProgress}
+                fluid
+              >Let me in</Button>
             </Form>
           </FormContainer>
         </InnerCenteredContainer>
@@ -124,10 +153,20 @@ export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
 };
 
 const mapStateToProps = (state: IState) => ({
+  error: state.request.error,
+  formType: state.form.type,
   imageUrl: state.settings.data.frontend.loginSignupImage,
+  requestInProgress: state.request.requestInProgress,
 });
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return bindActionCreators({
+    login: loginRaw,
+    signup: signupRaw,
+  }, dispatch);
+};
 
 /**
  * The signup form connected to the redux store.
  */
-export const ConnectedLoginSignupForm = connect(mapStateToProps)(LoginSignupForm);
+export const ConnectedLoginSignupForm = connect(mapStateToProps, mapDispatchToProps)(LoginSignupForm);

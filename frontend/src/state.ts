@@ -6,13 +6,25 @@ import { ISettings } from "../../types/settings";
 export interface IState {
   request: IRequest;
   settings: IFetchable<ISettings>;
-  signup: IFetchable<string>;
-  login: IFetchable<string>;
+  form: IForm;
 }
 
 interface IRequest {
   requestInProgress: boolean;
   error?: string;
+}
+
+interface IForm {
+  type: FormType;
+}
+
+/**
+ * The currently displayed form action type.
+ */
+export enum FormType {
+  None = "none",
+  Login = "login",
+  Signup = "signup",
 }
 
 interface IFetchable<T> {

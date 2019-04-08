@@ -1,3 +1,4 @@
+import { Dispatch } from "redux";
 import { IAction, IEmptyAction } from ".";
 
 /**
@@ -31,3 +32,18 @@ export const failRequest = (error: string): IAction<RequestAction.FailRequest, s
   type: RequestAction.FailRequest,
   value: error,
 });
+
+/**
+ * Asynchronously performs the given action as a request.
+ * @param action An async action to perform as a request
+ */
+export const performRequest = (action: (dispatch: Dispatch) => Promise<void>) => async (dispatch: Dispatch) => {
+  dispatch(startRequest());
+
+  try {
+    await action(dispatch);
+    dispatch(finishRequest());
+  } catch (error) {
+    dispatch(failRequest(error.message));
+  }
+};

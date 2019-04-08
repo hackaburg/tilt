@@ -1,21 +1,20 @@
-import { finishLogin, login, startLogin } from "../../src/actions/login";
-import { StaticApi } from "../../src/api/static-api";
+import { setFormType } from "../../src/actions/form";
+import { login } from "../../src/actions/login";
+import { finishRequest, startRequest } from "../../src/actions/request";
+import { FormType } from "../../src/state";
 
 describe("login actions", () => {
-  const api = new StaticApi();
-
   it("asynchronously logs the user in", async () => {
-    expect.assertions(2);
+    expect.assertions(3);
 
     const email = "email";
     const password = "password";
-    await api.login(email, password);
-
     const dispatch = jest.fn();
     const actions = login(email, password);
     await actions(dispatch);
 
-    expect(dispatch).toBeCalledWith(startLogin());
-    expect(dispatch).toBeCalledWith(finishLogin());
+    expect(dispatch).toBeCalledWith(startRequest());
+    expect(dispatch).toBeCalledWith(setFormType(FormType.Login));
+    expect(dispatch).toBeCalledWith(finishRequest());
   });
 });
