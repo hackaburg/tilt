@@ -9,3 +9,8 @@ export interface IFrontendSettings {
   colorLinkHover: string;
   loginSignupImage: string;
 }
+
+export interface IEmailSettings {
+  templateVerifyEmail: string;
+  templateForgotPassword: string;
+}
