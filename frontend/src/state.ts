@@ -6,6 +6,7 @@ import { ISettings } from "../../types/settings";
 export interface IState {
   settings: IFetchable<ISettings>;
   signup: IFetchable<string>;
+  login: IFetchable<string>;
 }
 
 interface IFetchable<T> {
