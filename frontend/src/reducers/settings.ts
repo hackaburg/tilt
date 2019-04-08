@@ -42,12 +42,14 @@ export const settingsReducer = (state: IStateType = initialSettingsState, action
       return {
         ...state,
         data: action.value,
+        fetchInProgress: false,
       };
 
     case SettingsAction.FailReceiveSettings:
       return {
         ...state,
         error: action.value,
+        fetchInProgress: false,
       };
 
     default:
