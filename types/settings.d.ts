@@ -5,6 +5,8 @@ export interface ISettings {
 export interface IFrontendSettings {
   colorGradientStart: string;
   colorGradientEnd: string;
+  colorLink: string;
+  colorLinkHover: string;
   loginImage: string;
   signupImage: string;
 }

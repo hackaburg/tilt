@@ -25,6 +25,8 @@ export const App = ({ settings, fetchSettings }: IAppProps) => {
   const theme: ITheme = {
     colorGradientEnd: settings.colorGradientEnd,
     colorGradientStart: settings.colorGradientStart,
+    colorLink: settings.colorLink,
+    colorLinkHover: settings.colorLinkHover,
   };
 
   return (

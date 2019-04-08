@@ -21,6 +21,8 @@ export class StaticApi implements IApi {
       frontend: {
         colorGradientEnd: "red",
         colorGradientStart: "green",
+        colorLink: "blue",
+        colorLinkHover: "cyan",
         loginImage: "http://placehold.it/300x300",
         signupImage: "http://placehold.it/300x300",
       },

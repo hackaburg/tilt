@@ -13,6 +13,12 @@ export class FrontendSettings implements IFrontendSettings {
   public colorGradientEnd: string = "#56d175";
 
   @Column()
+  public colorLink: string = "#007bff";
+
+  @Column()
+  public colorLinkHover: string = "#0056b3";
+
+  @Column()
   public loginImage: string = "http://placehold.it/300x300";
 
   @Column()

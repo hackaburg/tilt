@@ -6,14 +6,18 @@ import { IState } from "../state";
 type IStateType = IState["settings"];
 type IActionType = IActionReturnTypes<typeof settingsActions>;
 
+const initialColor = "#333";
+
 /**
  * The initial settings state.
  */
 export const initialSettingsState: IStateType = {
   data: {
     frontend: {
-      colorGradientEnd: "#333",
-      colorGradientStart: "#333",
+      colorGradientEnd: initialColor,
+      colorGradientStart: initialColor,
+      colorLink: initialColor,
+      colorLinkHover: initialColor,
       loginImage: "http://placehold.it/300x300",
       signupImage: "http://placehold.it/300x300",
     },
