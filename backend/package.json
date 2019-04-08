@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --coverage",
-    "codecov": "codecov -f coverage/*.json --flags backend -p ..",
+    "codecov": "codecov -f coverage/*.json -F backend -p ..",
     "lint": "tslint --project tsconfig.prod.json",
     "build": "tsc --project tsconfig.prod.json",
     "clean": "rimraf dist/",
