@@ -7,6 +7,5 @@ export interface IFrontendSettings {
   colorGradientEnd: string;
   colorLink: string;
   colorLinkHover: string;
-  loginImage: string;
-  signupImage: string;
+  loginSignupImage: string;
 }

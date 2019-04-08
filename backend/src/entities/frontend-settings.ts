@@ -19,8 +19,5 @@ export class FrontendSettings implements IFrontendSettings {
   public colorLinkHover: string = "#0056b3";
 
   @Column()
-  public loginImage: string = "http://placehold.it/300x300";
-
-  @Column()
-  public signupImage: string = "http://placehold.it/300x300";
+  public loginSignupImage: string = "http://placehold.it/300x300";
 }

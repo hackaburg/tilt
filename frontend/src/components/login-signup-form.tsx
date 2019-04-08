@@ -124,7 +124,7 @@ export const LoginSignupForm = ({ imageUrl }: ILoginSignupFormProps) => {
 };
 
 const mapStateToProps = (state: IState) => ({
-  imageUrl: state.settings.data.frontend.signupImage,
+  imageUrl: state.settings.data.frontend.loginSignupImage,
 });
 
 /**
