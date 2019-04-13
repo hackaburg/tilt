@@ -1,4 +1,7 @@
+import { UserRole } from "../../types/roles";
 import { ISettings } from "../../types/settings";
+
+type Nullable<T> = T | null;
 
 /**
  * Describes the frontend state.
@@ -7,6 +10,7 @@ export interface IState {
   request: IRequest;
   settings: ISettings;
   form: IForm;
+  role: Nullable<UserRole>;
 }
 
 interface IRequest {
