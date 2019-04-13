@@ -1,16 +1,15 @@
 import * as React from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { ScaleLoader } from "react-spinners";
 import { bindActionCreators, Dispatch } from "redux";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { login as loginRaw } from "../actions/login";
 import { signup as signupRaw } from "../actions/signup";
-import { transitionDuration } from "../config";
 import { FormType, IState } from "../state";
 import { Button } from "./button";
 import { CenteredContainer, PageSizedContainer } from "./centering";
 import { Heading } from "./headings";
+import { ConnectedLoginImage } from "./login-image";
 import { Message } from "./message";
 import { TextInput } from "./text-input";
 
@@ -18,32 +17,6 @@ const Container = styled.div`
   margin: 2rem 0rem;
   width: 300px;
   max-height: 100vh;
-`;
-
-const ImageContainer = styled.div`
-  text-align: center;
-  margin-bottom: 2rem;
-`;
-
-const ImageFadeInKeyframes = keyframes`
-  0% {
-    max-height: 2rem;
-    opacity: 0;
-  }
-
-  100% {
-    max-height: 8rem;
-    opacity: 1;
-  }
-`;
-
-const Image = styled.img`
-  max-height: 8rem;
-  max-width: 100%;
-  animation-name: ${ImageFadeInKeyframes};
-  animation-duration: ${transitionDuration};
-  animation-timing-function: ease-out;
-  animation-iteration-count: 1;
 `;
 
 const FormContainer = styled.div`
@@ -61,7 +34,6 @@ const Divider = styled.p`
 `;
 
 interface ILoginSignupFormProps {
-  imageUrl: string;
   error?: string;
   requestInProgress: boolean;
   formType: FormType;
@@ -72,32 +44,22 @@ interface ILoginSignupFormProps {
 /**
  * A form to create an account.
  */
-export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, signup, login }: ILoginSignupFormProps) => {
+export const LoginSignupForm = ({ formType, requestInProgress, error, signup, login }: ILoginSignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const signupInProgress = formType === FormType.Signup && requestInProgress;
+  const loginInProgress = formType === FormType.Login && requestInProgress;
+
+  const signupDone = formType === FormType.Signup && !requestInProgress && !error;
+  const loginDone = formType === FormType.Login && !requestInProgress && !error;
+  const formDone = signupDone || loginDone;
 
   return (
     <PageSizedContainer>
       <CenteredContainer>
         <Container>
-          <ImageContainer>
-            {imageUrl && (
-              <Image src={imageUrl} />
-            )}
-
-            {!imageUrl && (
-              <ScaleLoader
-                height={1}
-                heightUnit="rem"
-                color="currentColor"
-                css={{
-                  display: "inline-block",
-                  margin: "auto",
-                  padding: "1rem 0rem",
-                } as any}
-              />
-            )}
-          </ImageContainer>
+          <ConnectedLoginImage />
 
           {!error && (
             <>
@@ -131,16 +93,16 @@ export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, 
 
             <Button
               onClick={() => signup(email, password)}
-              loading={formType === FormType.Signup && requestInProgress}
-              disable={formType === FormType.Login && requestInProgress}
+              loading={signupInProgress}
+              disable={loginInProgress || formDone}
               primary
               fluid
             >Create my account</Button>
             <Divider>Already have an account?</Divider>
             <Button
               onClick={() => login(email, password)}
-              loading={formType === FormType.Login && requestInProgress}
-              disable={formType === FormType.Signup && requestInProgress}
+              loading={loginInProgress}
+              disable={signupInProgress || formDone}
               fluid
             >Let me in</Button>
           </FormContainer>
@@ -153,7 +115,6 @@ export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, 
 const mapStateToProps = (state: IState) => ({
   error: state.request.error,
   formType: state.form.type,
-  imageUrl: state.settings.frontend.loginSignupImage,
   requestInProgress: state.request.requestInProgress,
 });
 
