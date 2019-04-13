@@ -14,7 +14,7 @@ import { Heading } from "./headings";
 import { Message } from "./message";
 import { TextInput } from "./text-input";
 
-const FormContainer = styled.div`
+const Container = styled.div`
   margin: 2rem 0rem;
   width: 300px;
   max-height: 100vh;
@@ -46,7 +46,7 @@ const Image = styled.img`
   animation-iteration-count: 1;
 `;
 
-const Form = styled.div`
+const FormContainer = styled.div`
   margin: 2rem 0rem;
 `;
 
@@ -79,7 +79,7 @@ export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, 
   return (
     <PageSizedContainer>
       <CenteredContainer>
-        <FormContainer>
+        <Container>
           <ImageContainer>
             {imageUrl && (
               <Image src={imageUrl} />
@@ -110,7 +110,7 @@ export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, 
             <Message error><b>Error:</b> {error}</Message>
           )}
 
-          <Form>
+          <FormContainer>
             <Fields>
               <TextInput
                 title="E-Mail"
@@ -143,8 +143,8 @@ export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, 
               disable={formType === FormType.Signup && requestInProgress}
               fluid
             >Let me in</Button>
-          </Form>
-        </FormContainer>
+          </FormContainer>
+        </Container>
       </CenteredContainer>
     </PageSizedContainer>
   );
