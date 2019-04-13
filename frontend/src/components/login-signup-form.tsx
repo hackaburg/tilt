@@ -9,7 +9,7 @@ import { signup as signupRaw } from "../actions/signup";
 import { transitionDuration } from "../config";
 import { FormType, IState } from "../state";
 import { Button } from "./button";
-import { InnerCenteredContainer, OuterCenteredContainer, PageSizedContainer } from "./centering";
+import { CenteredContainer, PageSizedContainer } from "./centering";
 import { Heading } from "./headings";
 import { Message } from "./message";
 import { TextInput } from "./text-input";
@@ -78,76 +78,74 @@ export const LoginSignupForm = ({ imageUrl, formType, requestInProgress, error, 
 
   return (
     <PageSizedContainer>
-      <OuterCenteredContainer>
-        <InnerCenteredContainer>
-          <FormContainer>
-            <ImageContainer>
-              {imageUrl && (
-                <Image src={imageUrl} />
-              )}
-
-              {!imageUrl && (
-                <ScaleLoader
-                  height={1}
-                  heightUnit="rem"
-                  color="currentColor"
-                  css={{
-                    display: "inline-block",
-                    margin: "auto",
-                    padding: "1rem 0rem",
-                  } as any}
-                />
-              )}
-            </ImageContainer>
-
-            {!error && (
-              <>
-                <Heading>Apply</Heading>
-                <p>Create an account or login.</p>
-              </>
+      <CenteredContainer>
+        <FormContainer>
+          <ImageContainer>
+            {imageUrl && (
+              <Image src={imageUrl} />
             )}
 
-            {error && (
-              <Message error><b>Error:</b> {error}</Message>
+            {!imageUrl && (
+              <ScaleLoader
+                height={1}
+                heightUnit="rem"
+                color="currentColor"
+                css={{
+                  display: "inline-block",
+                  margin: "auto",
+                  padding: "1rem 0rem",
+                } as any}
+              />
             )}
+          </ImageContainer>
 
-            <Form onSubmit={(event) => event.preventDefault()}>
-              <Fields>
-                <TextInput
-                  title="E-Mail"
-                  placeholder="me@foo.bar"
-                  value={email}
-                  onChange={(value) => setEmail(value)}
-                  focus
-                />
+          {!error && (
+            <>
+              <Heading>Apply</Heading>
+              <p>Create an account or login.</p>
+            </>
+          )}
 
-                <TextInput
-                  title="Password"
-                  placeholder="please don't use 'password'"
-                  value={password}
-                  onChange={(value) => setPassword(value)}
-                  password={true}
-                />
-              </Fields>
+          {error && (
+            <Message error><b>Error:</b> {error}</Message>
+          )}
 
-              <Button
-                onClick={() => signup(email, password)}
-                loading={formType === FormType.Signup && requestInProgress}
-                disable={formType === FormType.Login && requestInProgress}
-                primary
-                fluid
-              >Create my account</Button>
-              <Divider>Already have an account?</Divider>
-              <Button
-                onClick={() => login(email, password)}
-                loading={formType === FormType.Login && requestInProgress}
-                disable={formType === FormType.Signup && requestInProgress}
-                fluid
-              >Let me in</Button>
-            </Form>
-          </FormContainer>
-        </InnerCenteredContainer>
-      </OuterCenteredContainer>
+          <Form>
+            <Fields>
+              <TextInput
+                title="E-Mail"
+                placeholder="me@foo.bar"
+                value={email}
+                onChange={(value) => setEmail(value)}
+                focus
+              />
+
+              <TextInput
+                title="Password"
+                placeholder="please don't use 'password'"
+                value={password}
+                onChange={(value) => setPassword(value)}
+                password={true}
+              />
+            </Fields>
+
+            <Button
+              onClick={() => signup(email, password)}
+              loading={formType === FormType.Signup && requestInProgress}
+              disable={formType === FormType.Login && requestInProgress}
+              primary
+              fluid
+            >Create my account</Button>
+            <Divider>Already have an account?</Divider>
+            <Button
+              onClick={() => login(email, password)}
+              loading={formType === FormType.Login && requestInProgress}
+              disable={formType === FormType.Signup && requestInProgress}
+              fluid
+            >Let me in</Button>
+          </Form>
+        </FormContainer>
+      </CenteredContainer>
     </PageSizedContainer>
   );
 };

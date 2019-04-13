@@ -1,14 +1,8 @@
+import * as React from "react";
 import styled from "styled-components";
 
-/**
- * A centered container. Requires an @see OuterCenteredContainer around this one.
- */
-export const InnerCenteredContainer = styled.div``;
-
-/**
- * The outer container to center an @see InnerCenteredContainer
- */
-export const OuterCenteredContainer = styled.div`
+const InnerCenteredContainer = styled.div``;
+const OuterCenteredContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -20,6 +14,19 @@ export const OuterCenteredContainer = styled.div`
     transform: translate(-50%, -50%);
   }
 `;
+
+interface ICenteredProps {
+  children: React.ReactChild;
+}
+
+/**
+ * Centers the contents in the parent container.
+ */
+export const CenteredContainer = ({ children }: ICenteredProps) => (
+  <OuterCenteredContainer>
+    <InnerCenteredContainer>{children}</InnerCenteredContainer>
+  </OuterCenteredContainer>
+);
 
 /**
  * A page sized container.
