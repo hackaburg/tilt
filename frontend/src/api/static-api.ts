@@ -1,4 +1,5 @@
 import { IApi } from ".";
+import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 
 /**
@@ -51,7 +52,8 @@ export class StaticApi implements IApi {
    * @param email The user's email
    * @param password The user's password
    */
-  public async login(_email: string, _password: string): Promise<void> {
+  public async login(_email: string, _password: string): Promise<UserRole> {
     await sleep(100);
+    return UserRole.User;
   }
 }

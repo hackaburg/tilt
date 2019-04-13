@@ -1,3 +1,4 @@
+import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { apiBaseUrl } from "../config";
 import { BackendApi } from "./backend-api";
@@ -29,8 +30,9 @@ export interface IApi {
    * Logs a user in.
    * @param email The user's email
    * @param password The user's password
+   * @return The user's role
    */
-  login(email: string, password: string): Promise<void>;
+  login(email: string, password: string): Promise<UserRole>;
 }
 
 /**

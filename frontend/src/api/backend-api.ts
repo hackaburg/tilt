@@ -1,5 +1,6 @@
 import { IApi } from ".";
 import { IApiRequest, IApiResponse, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
+import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
@@ -120,12 +121,13 @@ export class BackendApi implements IApi {
    * @param email The user's email
    * @param password The user's password
    */
-  public async login(email: string, password: string): Promise<void> {
+  public async login(email: string, password: string): Promise<UserRole> {
     const response = await this.post<IUserLoginRequestBody, IUserLoginResponseBody>("/user/login", {
       email,
       password,
     });
 
     this.token = response.token;
+    return response.role;
   }
 }
