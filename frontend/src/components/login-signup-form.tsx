@@ -6,8 +6,10 @@ import styled from "styled-components";
 import { login as loginRaw } from "../actions/login";
 import { signup as signupRaw } from "../actions/signup";
 import { FormType, IState } from "../state";
+import { BlurContainer } from "./blur-container";
 import { Button } from "./button";
 import { CenteredContainer, PageSizedContainer } from "./centering";
+import { FadeContainer } from "./fade-container";
 import { Heading } from "./headings";
 import { ConnectedLoginImage } from "./login-image";
 import { Message } from "./message";
@@ -17,6 +19,10 @@ const Container = styled.div`
   margin: 2rem 0rem;
   width: 300px;
   max-height: 100vh;
+`;
+
+const SignupDoneMessage = styled(FadeContainer)`
+  position: absolute;
 `;
 
 const FormContainer = styled.div`
@@ -61,51 +67,59 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
         <Container>
           <ConnectedLoginImage />
 
-          {!error && (
-            <>
-              <Heading>Apply</Heading>
-              <p>Create an account or login.</p>
-            </>
-          )}
+          <SignupDoneMessage show={formDone}>
+            <Heading>Done.</Heading>
+            <p>We've sent you an email with a button to verify yourself.</p>
+            <p>It might take a minute or two to arrive, and to be safe, please also check your junk mail.</p>
+          </SignupDoneMessage>
 
-          {error && (
-            <Message error><b>Error:</b> {error}</Message>
-          )}
+          <BlurContainer blur={formDone}>
+            {!error && (
+              <>
+                <Heading>Apply</Heading>
+                <p>Create an account or login.</p>
+              </>
+            )}
 
-          <FormContainer>
-            <Fields>
-              <TextInput
-                title="E-Mail"
-                placeholder="me@foo.bar"
-                value={email}
-                onChange={(value) => setEmail(value)}
-                focus
-              />
+            {error && (
+              <Message error><b>Error:</b> {error}</Message>
+            )}
 
-              <TextInput
-                title="Password"
-                placeholder="please don't use 'password'"
-                value={password}
-                onChange={(value) => setPassword(value)}
-                password={true}
-              />
-            </Fields>
+            <FormContainer>
+              <Fields>
+                <TextInput
+                  title="E-Mail"
+                  placeholder="me@foo.bar"
+                  value={email}
+                  onChange={(value) => setEmail(value)}
+                  focus
+                />
 
-            <Button
-              onClick={() => signup(email, password)}
-              loading={signupInProgress}
-              disable={loginInProgress || formDone}
-              primary
-              fluid
-            >Create my account</Button>
-            <Divider>Already have an account?</Divider>
-            <Button
-              onClick={() => login(email, password)}
-              loading={loginInProgress}
-              disable={signupInProgress || formDone}
-              fluid
-            >Let me in</Button>
-          </FormContainer>
+                <TextInput
+                  title="Password"
+                  placeholder="please don't use 'password'"
+                  value={password}
+                  onChange={(value) => setPassword(value)}
+                  password={true}
+                />
+              </Fields>
+
+              <Button
+                onClick={() => signup(email, password)}
+                loading={signupInProgress}
+                disable={loginInProgress || formDone}
+                primary
+                fluid
+              >Create my account</Button>
+              <Divider>Already have an account?</Divider>
+              <Button
+                onClick={() => login(email, password)}
+                loading={loginInProgress}
+                disable={signupInProgress || formDone}
+                fluid
+              >Let me in</Button>
+            </FormContainer>
+          </BlurContainer>
         </Container>
       </CenteredContainer>
     </PageSizedContainer>
