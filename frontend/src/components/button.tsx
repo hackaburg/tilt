@@ -42,11 +42,8 @@ const StyledButton = styled.button<IStyledButtonProps>`
   ${(props) =>
     (props.disable || props.loading)
     ? `
+      cursor: default;
       opacity: 0.7;
-
-      &:hover {
-        cursor: default;
-      }
     `
     : `
       opacity: 1;
