@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import { api } from "../api";
 import { FormType } from "../state";
-import { resetFormType, setFormType } from "./form";
+import { setFormType } from "./form";
 import { performRequest } from "./request";
 
 /**
@@ -12,5 +12,4 @@ import { performRequest } from "./request";
 export const signup = (email: string, password: string) => performRequest(async (dispatch: Dispatch) => {
   dispatch(setFormType(FormType.Signup));
   await api.signup(email, password);
-  dispatch(resetFormType());
 });
