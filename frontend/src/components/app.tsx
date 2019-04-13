@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { ThemeProvider } from "styled-components";
 import { IFrontendSettings } from "../../../types/settings";
+import { fetchRole as fetchRoleRaw } from "../actions/role";
 import { fetchSettings as fetchSettingsRaw } from "../actions/settings";
 import { IState } from "../state";
 import { ITheme } from "../theme";
@@ -11,14 +12,16 @@ import { ConnectedLoginSignupForm } from "./login-signup-form";
 
 interface IAppProps {
   settings: IFrontendSettings;
+  fetchRole: typeof fetchRoleRaw;
   fetchSettings: typeof fetchSettingsRaw;
 }
 
 /**
  * The main app component.
  */
-export const App = ({ settings, fetchSettings }: IAppProps) => {
+export const App = ({ settings, fetchRole, fetchSettings }: IAppProps) => {
   useEffect(() => {
+    fetchRole();
     fetchSettings();
   }, []);
 
@@ -42,6 +45,7 @@ const mapStateToProps = (state: IState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators({
+    fetchRole: fetchRoleRaw,
     fetchSettings: fetchSettingsRaw,
   }, dispatch);
 };

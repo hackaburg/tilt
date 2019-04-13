@@ -33,6 +33,11 @@ export interface IApi {
    * @return The user's role
    */
   login(email: string, password: string): Promise<UserRole>;
+
+  /**
+   * Gets the user's role.
+   */
+  getRole(): Promise<UserRole>;
 }
 
 /**

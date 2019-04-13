@@ -5,9 +5,10 @@ import { initialSettingsState } from "../../src/reducers/settings";
 
 describe("App", () => {
   it("renders", () => {
+    const fetchRole = jest.fn();
     const fetchSettings = jest.fn();
     const app = shallow((
-      <App settings={initialSettingsState.frontend} fetchSettings={fetchSettings} />
+      <App settings={initialSettingsState.frontend} fetchSettings={fetchSettings} fetchRole={fetchRole} />
     ));
 
     expect(app).toMatchSnapshot();

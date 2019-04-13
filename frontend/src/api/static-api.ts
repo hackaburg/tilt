@@ -56,4 +56,12 @@ export class StaticApi implements IApi {
     await sleep(100);
     return UserRole.User;
   }
+
+  /**
+   * Simulates a role api call.
+   */
+  public async getRole(): Promise<UserRole> {
+    await sleep(100);
+    return UserRole.User;
+  }
 }

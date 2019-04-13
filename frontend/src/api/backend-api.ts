@@ -3,6 +3,7 @@ import { IApiRequest, IApiResponse, ISuccessfullyUnpackedApiResponse } from "../
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
+import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 
@@ -128,6 +129,14 @@ export class BackendApi implements IApi {
     });
 
     this.token = response.token;
+    return response.role;
+  }
+
+  /**
+   * Gets the user's role.
+   */
+  public async getRole(): Promise<UserRole> {
+    const response = await this.get<IUserRoleResponseBody>("/user/role");
     return response.role;
   }
 }
