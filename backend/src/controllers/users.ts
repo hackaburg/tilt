@@ -1,8 +1,11 @@
-import { BadRequestError, Body, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
+import { Authorized, BadRequestError, Body, CurrentUser, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
 import { Inject } from "typedi";
+import { UserRole } from "../../../types/roles";
 import { IUserLoginResponseBody } from "../../../types/user-login";
+import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
+import { User } from "../entities/user";
 import { IUserService, UserServiceToken } from "../services/user";
 import { UserLoginApiRequest } from "../validation/user-login";
 import { UserSignupApiRequest } from "../validation/user-signup";
@@ -65,6 +68,18 @@ export class UsersController {
     return {
       role: user.role,
       token: this._users.generateLoginToken(user),
+    };
+  }
+
+  /**
+   * Gets the current user's role.
+   * @param user The current user
+   */
+  @Get("/role")
+  @Authorized(UserRole.User)
+  public async getRole(@CurrentUser() user: User): Promise<IUserRoleResponseBody> {
+    return {
+      role: user.role,
     };
   }
 }

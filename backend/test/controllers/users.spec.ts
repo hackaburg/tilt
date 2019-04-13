@@ -114,4 +114,15 @@ describe("UsersController", () => {
 
     expect(promise).rejects.toBeDefined();
   });
+
+  it("returns the current user's role", async () => {
+    expect.assertions(1);
+
+    const user = new User();
+    const role = UserRole.Moderator;
+    user.role = role;
+
+    const response = await controller.getRole(user);
+    expect(response.role).toBe(role);
+  });
 });
