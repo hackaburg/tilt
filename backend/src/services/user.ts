@@ -154,6 +154,7 @@ export class UserService implements IUserService {
       select: [
         "id",
         "password",
+        "role",
       ],
       where: {
         email,

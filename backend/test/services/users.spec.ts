@@ -163,4 +163,15 @@ describe("UserService", () => {
     const userWithWrongEmail = await userService.findUserWithCredentials("other@foo.bar", password);
     expect(userWithWrongEmail).not.toBeDefined();
   });
+
+  it("fetches the user role for correct credentials", async () => {
+    expect.assertions(1);
+
+    const email = "test@foo.bar";
+    const password = "password";
+    await userService.signup(email, password);
+
+    const loggedInUser = await userService.findUserWithCredentials(email, password);
+    expect(loggedInUser!.role).toBeDefined();
+  });
 });
