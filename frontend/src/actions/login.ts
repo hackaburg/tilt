@@ -3,6 +3,7 @@ import { api } from "../api";
 import { FormType } from "../state";
 import { setFormType } from "./form";
 import { performRequest } from "./request";
+import { setRole } from "./role";
 
 /**
  * Asynchronously logs the user in.
@@ -11,5 +12,6 @@ import { performRequest } from "./request";
  */
 export const login = (email: string, password: string) => performRequest(async (dispatch: Dispatch) => {
   dispatch(setFormType(FormType.Login));
-  await api.login(email, password);
+  const role = await api.login(email, password);
+  dispatch(setRole(role));
 });
