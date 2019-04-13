@@ -63,6 +63,7 @@ export class UsersController {
     }
 
     return {
+      role: user.role,
       token: this._users.generateLoginToken(user),
     };
   }

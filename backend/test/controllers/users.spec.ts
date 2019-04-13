@@ -1,3 +1,4 @@
+import { UserRole } from "../../../types/roles";
 import { UsersController } from "../../src/controllers/users";
 import { User } from "../../src/entities/user";
 import { IUserService } from "../../src/services/user";
@@ -80,6 +81,24 @@ describe("UsersController", () => {
     });
 
     expect(response.token).toBe(token);
+  });
+
+  it("returns the user's role on login", async () => {
+    expect.assertions(1);
+
+    const user = new User();
+    user.id = 1;
+    user.role = UserRole.Moderator;
+    userService.mocks.findUserWithCredentials.mockResolvedValue(user);
+    userService.mocks.generateLoginToken.mockReturnValue("token");
+    const response = await controller.login({
+      data: {
+        email: "test@foo.bar",
+        password: "password",
+      },
+    });
+
+    expect(response.role).toBe(UserRole.Moderator);
   });
 
   it("throws on invalid credentials", async () => {
