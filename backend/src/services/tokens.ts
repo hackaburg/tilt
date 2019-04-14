@@ -45,7 +45,9 @@ export class TokenService<T> implements ITokenService<T> {
    * @param data The data to encrypt
    */
   public sign(data: any): string {
-    return sign(data, this._config.config.secrets.jwtSecret);
+    return sign(data, this._config.config.secrets.jwtSecret, {
+      expiresIn: "2w",
+    });
   }
 
   /**
