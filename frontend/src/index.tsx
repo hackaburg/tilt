@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
-import { ConnectedApp } from "./components/app";
+import { RoutedConnectedApp } from "./components/app";
 import { isProductionEnabled } from "./config";
 import { rootReducer } from "./reducers";
 
@@ -19,7 +19,7 @@ const container = document.getElementById("app");
 const app = (
   <Provider store={store}>
     <BrowserRouter>
-      <ConnectedApp />
+      <RoutedConnectedApp />
     </BrowserRouter>
   </Provider>
 );

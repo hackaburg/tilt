@@ -1,28 +1,34 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { connect } from "react-redux";
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router";
 import { bindActionCreators, Dispatch } from "redux";
 import { ThemeProvider } from "styled-components";
 import { IFrontendSettings } from "../../../types/settings";
-import { fetchRole as fetchRoleRaw } from "../actions/role";
-import { fetchSettings as fetchSettingsRaw } from "../actions/settings";
+import { boot as bootRaw } from "../actions/boot";
+import { isLoginTokenSet } from "../authentication";
+import { Routes } from "../routes";
 import { IState } from "../state";
 import { ITheme } from "../theme";
 import { ConnectedLoginSignupForm } from "./login-signup-form";
 
-interface IAppProps {
+interface IAppProps extends RouteComponentProps<any> {
   settings: IFrontendSettings;
-  fetchRole: typeof fetchRoleRaw;
-  fetchSettings: typeof fetchSettingsRaw;
+  boot: typeof bootRaw;
 }
 
 /**
  * The main app component.
  */
-export const App = ({ settings, fetchRole, fetchSettings }: IAppProps) => {
+export const App = ({ settings, boot, history }: IAppProps) => {
   useEffect(() => {
-    fetchRole();
-    fetchSettings();
+    boot();
+
+    if (isLoginTokenSet()) {
+      history.push(Routes.Index);
+    } else {
+      history.push(Routes.Login);
+    }
   }, []);
 
   const theme: ITheme = {
@@ -34,7 +40,9 @@ export const App = ({ settings, fetchRole, fetchSettings }: IAppProps) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <ConnectedLoginSignupForm />
+      <Switch>
+        <Route path={Routes.Login} component={ConnectedLoginSignupForm} />
+      </Switch>
     </ThemeProvider>
   );
 };
@@ -45,8 +53,7 @@ const mapStateToProps = (state: IState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators({
-    fetchRole: fetchRoleRaw,
-    fetchSettings: fetchSettingsRaw,
+    boot: bootRaw,
   }, dispatch);
 };
 
@@ -54,3 +61,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
  * The main app component, connected to the redux store.
  */
 export const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
+
+/**
+ * The main app component, connected to the redux store and react-router.
+ */
+export const RoutedConnectedApp = withRouter(ConnectedApp);
