@@ -54,7 +54,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /src\/.+\.tsx?$/,
         loader: "awesome-typescript-loader",
         options:
           isProduction
