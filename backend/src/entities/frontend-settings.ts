@@ -20,4 +20,7 @@ export class FrontendSettings implements IFrontendSettings {
 
   @Column()
   public loginSignupImage: string = "http://placehold.it/300x300";
+
+  @Column()
+  public sidebarImage: string = "http://placehold.it/300x300";
 }

@@ -25,6 +25,7 @@ export class StaticApi implements IApi {
         colorLink: "blue",
         colorLinkHover: "cyan",
         loginSignupImage: "http://placehold.it/300x300",
+        sidebarImage: "http://placehold.it/300x300",
       },
     };
   }

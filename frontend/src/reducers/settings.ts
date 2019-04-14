@@ -18,6 +18,7 @@ export const initialSettingsState: IStateType = {
     colorLink: initialColor,
     colorLinkHover: initialColor,
     loginSignupImage: "",
+    sidebarImage: "",
   },
 };
 

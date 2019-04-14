@@ -8,6 +8,7 @@ export interface IFrontendSettings {
   colorLink: string;
   colorLinkHover: string;
   loginSignupImage: string;
+  sidebarImage: string;
 }
 
 export interface IEmailSettings {
