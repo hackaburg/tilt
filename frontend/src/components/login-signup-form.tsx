@@ -67,7 +67,7 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
         <Container>
           <ConnectedLoginImage />
 
-          <SignupDoneMessage show={formDone}>
+          <SignupDoneMessage show={signupDone}>
             <Heading>Done.</Heading>
             <p>We've sent you an email with a button to verify yourself.</p>
             <p>It might take a minute or two to arrive, and to be safe, please also check your junk mail.</p>
