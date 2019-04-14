@@ -17,3 +17,8 @@ export const transitionDuration = "0.2s";
  * The default border radius.
  */
 export const borderRadius = "5px";
+
+/**
+ * The sidebar width.
+ */
+export const sidebarWidth = "300px";
