@@ -6,27 +6,17 @@ import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/us
 import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
-
-const tokenLocalStorageName = "tilt_login_token";
+import { getLoginToken, isLoginTokenSet, setLoginToken } from "../authentication";
 
 /**
  * An api client connected to a backend. Stores the login token in `localStorage`.
  */
 export class BackendApi implements IApi {
-  private get token(): string {
-    return localStorage.getItem(tokenLocalStorageName) as string;
-  }
-
-  private set token(value: string) {
-    localStorage.setItem(tokenLocalStorageName, value);
-  }
-
   private get headers(): Headers {
     const headers = new Headers();
-    const token = this.token;
 
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+    if (isLoginTokenSet()) {
+      headers.set("Authorization", `Bearer ${getLoginToken()}`);
     }
 
     return headers;
@@ -128,7 +118,7 @@ export class BackendApi implements IApi {
       password,
     });
 
-    this.token = response.token;
+    setLoginToken(response.token);
     return response.role;
   }
 
