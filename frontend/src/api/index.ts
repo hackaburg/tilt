@@ -38,6 +38,11 @@ export interface IApi {
    * Gets the user's role.
    */
   getRole(): Promise<UserRole>;
+
+  /**
+   * Refreshes the login token.
+   */
+  refreshLoginToken(): Promise<void>;
 }
 
 /**

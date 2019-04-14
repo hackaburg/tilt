@@ -64,4 +64,11 @@ export class StaticApi implements IApi {
     await sleep(100);
     return UserRole.User;
   }
+
+  /**
+   * Simulates a refresh token api call.
+   */
+  public async refreshLoginToken(): Promise<void> {
+    await sleep(100);
+  }
 }

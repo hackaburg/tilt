@@ -3,6 +3,7 @@ import { IApiRequest, IApiResponse, ISuccessfullyUnpackedApiResponse } from "../
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
+import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
 import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
@@ -128,5 +129,13 @@ export class BackendApi implements IApi {
   public async getRole(): Promise<UserRole> {
     const response = await this.get<IUserRoleResponseBody>("/user/role");
     return response.role;
+  }
+
+  /**
+   * Refreshes the login token.
+   */
+  public async refreshLoginToken(): Promise<void> {
+    const response = await this.get<IUserRefreshTokenResponseBody>("/user/refreshtoken");
+    setLoginToken(response.token);
   }
 }
