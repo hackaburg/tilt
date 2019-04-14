@@ -10,6 +10,7 @@ import { isLoginTokenSet } from "../authentication";
 import { Routes } from "../routes";
 import { IState } from "../state";
 import { ITheme } from "../theme";
+import { Dashboard } from "./dashboard";
 import { ConnectedLoginSignupForm } from "./login-signup-form";
 
 interface IAppProps extends RouteComponentProps<any> {
@@ -23,13 +24,16 @@ interface IAppProps extends RouteComponentProps<any> {
 export const App = ({ settings, boot, history }: IAppProps) => {
   useEffect(() => {
     boot();
-
-    if (isLoginTokenSet()) {
-      history.push(Routes.Index);
-    } else {
-      history.push(Routes.Login);
-    }
   }, []);
+
+  const isLoggedIn = isLoginTokenSet();
+  useEffect(() => {
+    if (!isLoggedIn) {
+      history.push(Routes.Login);
+    } else if (history.location.pathname === Routes.Login) {
+      history.push(Routes.Dashboard);
+    }
+  }, [isLoggedIn]);
 
   const theme: ITheme = {
     colorGradientEnd: settings.colorGradientEnd,
@@ -42,6 +46,7 @@ export const App = ({ settings, boot, history }: IAppProps) => {
     <ThemeProvider theme={theme}>
       <Switch>
         <Route path={Routes.Login} component={ConnectedLoginSignupForm} />
+        <Route component={Dashboard} />
       </Switch>
     </ThemeProvider>
   );

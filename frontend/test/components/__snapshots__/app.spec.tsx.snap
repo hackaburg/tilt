@@ -16,6 +16,9 @@ exports[`App renders 1`] = `
       component={[Function]}
       path="/login"
     />
+    <Route
+      component={[Function]}
+    />
   </Switch>
 </ThemeProvider>
 `;

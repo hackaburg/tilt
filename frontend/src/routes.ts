@@ -2,6 +2,6 @@
  * The routes in the frontend.
  */
 export enum Routes {
-  Index = "/",
+  Dashboard = "/",
   Login = "/login",
 }
