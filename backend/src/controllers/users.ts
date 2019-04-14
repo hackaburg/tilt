@@ -2,6 +2,7 @@ import { Authorized, BadRequestError, Body, CurrentUser, Get, HttpCode, JsonCont
 import { Inject } from "typedi";
 import { UserRole } from "../../../types/roles";
 import { IUserLoginResponseBody } from "../../../types/user-login";
+import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
 import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
@@ -80,6 +81,18 @@ export class UsersController {
   public async getRole(@CurrentUser() user: User): Promise<IUserRoleResponseBody> {
     return {
       role: user.role,
+    };
+  }
+
+  /**
+   * Regenerates the current user's token.
+   * @param user The current user
+   */
+  @Get("/refreshtoken")
+  @Authorized(UserRole.User)
+  public async refreshLoginToken(@CurrentUser() user: User): Promise<IUserRefreshTokenResponseBody> {
+    return {
+      token: this._users.generateLoginToken(user),
     };
   }
 }

@@ -125,4 +125,13 @@ describe("UsersController", () => {
     const response = await controller.getRole(user);
     expect(response.role).toBe(role);
   });
+
+  it("returns a new token for the given user", async () => {
+    expect.assertions(1);
+
+    const token = "token";
+    userService.mocks.generateLoginToken.mockReturnValue(token);
+    const response = await controller.refreshLoginToken(new User());
+    expect(response.token).toBe(token);
+  });
 });
