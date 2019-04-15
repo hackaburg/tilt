@@ -36,3 +36,10 @@ export const PageSizedContainer = styled.div`
   height: 100vh;
   overflow: auto;
 `;
+
+/**
+ * A container with 100vh.
+ */
+export const PageHeightContainer = styled.div`
+  height: 100vh;
+`;

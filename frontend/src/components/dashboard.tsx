@@ -34,7 +34,7 @@ const SidebarContainer = styled.div<ISidebarAwareProps>`
 
 const SidebarBurgerContainer = styled.div<ISidebarAwareProps>`
   position: fixed;
-  top: 1rem;
+  top: 0.75rem;
   left: 1rem;
 
   transition-property: left;
@@ -70,6 +70,7 @@ const ContentContainer = styled.div`
   max-width: 960px;
   min-height: 100vh;
   margin: auto;
+  flex-direction: column;
 `;
 
 /**
