@@ -15,7 +15,7 @@ const Container = styled.div`
   height: 100%;
 
   ${(props) => `
-    background: linear-gradient(to right, ${props.theme.colorGradientStart}, ${props.theme.colorGradientEnd});
+    background: linear-gradient(to top right, ${props.theme.colorGradientStart}, ${props.theme.colorGradientEnd});
   `}
 
   &::after {
