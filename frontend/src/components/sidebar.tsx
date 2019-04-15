@@ -4,6 +4,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import { UserRole } from "../../../types/roles";
 import { logout as logoutRaw } from "../actions/login";
+import { Routes } from "../routes";
 import { IState } from "../state";
 import { ConnectedSidebarLogo } from "./sidebar-logo";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
@@ -44,15 +45,15 @@ export const Sidebar = ({ role, logout }: ISidebarProps) => (
     <ConnectedSidebarLogo />
 
     <SidebarMenu>
-        <SidebarMenuItem to="/">Dashboard</SidebarMenuItem>
+        <SidebarMenuItem to={Routes.Dashboard}>Dashboard</SidebarMenuItem>
 
         {role === UserRole.Owner && (
           <>
-            <SidebarMenuItem to="/settings">Settings</SidebarMenuItem>
+            <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
           </>
         )}
 
-        <SidebarMenuItem to="/logout" onClick={logout}>Logout</SidebarMenuItem>
+        <SidebarMenuItem to={Routes.Logout} onClick={logout}>Logout</SidebarMenuItem>
     </SidebarMenu>
   </Container>
 );
