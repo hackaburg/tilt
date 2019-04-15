@@ -1,5 +1,6 @@
 import { shallow } from "enzyme";
 import * as React from "react";
+import { UserRole } from "../../../types/roles";
 import { App } from "../../src/components/app";
 import { initialSettingsState } from "../../src/reducers/settings";
 
@@ -10,6 +11,7 @@ describe("App", () => {
       <App
         settings={initialSettingsState.frontend}
         boot={boot}
+        role={UserRole.User}
         history={{} as any}
         location={{} as any}
         match={{} as any}

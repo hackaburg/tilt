@@ -15,13 +15,14 @@ import { ConnectedLoginSignupForm } from "./login-signup-form";
 
 interface IAppProps extends RouteComponentProps<any> {
   settings: IFrontendSettings;
+  role: IState["role"];
   boot: typeof bootRaw;
 }
 
 /**
  * The main app component.
  */
-export const App = ({ settings, boot, history }: IAppProps) => {
+export const App = ({ settings, boot, role, history, location }: IAppProps) => {
   useEffect(() => {
     boot();
   }, []);
@@ -30,10 +31,10 @@ export const App = ({ settings, boot, history }: IAppProps) => {
   useEffect(() => {
     if (!isLoggedIn) {
       history.push(Routes.Login);
-    } else if (history.location.pathname === Routes.Login) {
+    } else if (location.pathname === Routes.Login) {
       history.push(Routes.Dashboard);
     }
-  }, [isLoggedIn]);
+  }, [role]);
 
   const theme: ITheme = {
     colorGradientEnd: settings.colorGradientEnd,
@@ -53,6 +54,7 @@ export const App = ({ settings, boot, history }: IAppProps) => {
 };
 
 const mapStateToProps = (state: IState) => ({
+  role: state.role,
   settings: state.settings.frontend,
 });
 
