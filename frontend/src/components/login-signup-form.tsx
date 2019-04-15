@@ -56,10 +56,8 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
 
   const signupInProgress = formType === FormType.Signup && requestInProgress;
   const loginInProgress = formType === FormType.Login && requestInProgress;
-
+  const formInProgress = signupInProgress || loginInProgress;
   const signupDone = formType === FormType.Signup && !requestInProgress && !error;
-  const loginDone = formType === FormType.Login && !requestInProgress && !error;
-  const formDone = signupDone || loginDone;
 
   return (
     <PageSizedContainer>
@@ -73,7 +71,7 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
             <p>It might take a minute or two to arrive, and to be safe, please also check your junk mail.</p>
           </SignupDoneMessage>
 
-          <BlurContainer blur={formDone}>
+          <BlurContainer blur={signupDone}>
             {!error && (
               <>
                 <Heading>Apply</Heading>
@@ -107,7 +105,7 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
               <Button
                 onClick={() => signup(email, password)}
                 loading={signupInProgress}
-                disable={loginInProgress || formDone}
+                disable={formInProgress}
                 primary
                 fluid
               >Create my account</Button>
@@ -115,7 +113,7 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
               <Button
                 onClick={() => login(email, password)}
                 loading={loginInProgress}
-                disable={signupInProgress || formDone}
+                disable={formInProgress}
                 fluid
               >Let me in</Button>
             </FormContainer>
