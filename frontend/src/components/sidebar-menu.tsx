@@ -19,7 +19,7 @@ const Item = styled.li`
 
 const Link = styled(NavLink)`
   display: block;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
 
   transition-property: background-color;
   transition-duration: ${transitionDuration};
