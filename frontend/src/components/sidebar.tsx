@@ -47,8 +47,17 @@ export const Sidebar = ({ role, logout }: ISidebarProps) => (
     <SidebarMenu>
         <SidebarMenuItem to={Routes.Dashboard}>Dashboard</SidebarMenuItem>
 
+        {[UserRole.Moderator, UserRole.Owner].includes(role) && (
+          <>
+            <SidebarMenuItem to={Routes.Users}>Users</SidebarMenuItem>
+            <SidebarMenuItem to={Routes.Statistics}>Statistics</SidebarMenuItem>
+          </>
+        )}
+
         {role === UserRole.Owner && (
           <>
+            <SidebarMenuItem to={Routes.Activity}>Activity</SidebarMenuItem>
+            <SidebarMenuItem to={Routes.Questions}>Questions</SidebarMenuItem>
             <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
           </>
         )}
