@@ -1,7 +1,10 @@
 import { UserRole } from "../../types/roles";
 import { ISettings } from "../../types/settings";
 
-type Nullable<T> = T | null;
+/**
+ * T or null
+ */
+export type Nullable<T> = T | null;
 
 /**
  * Describes the frontend state.

@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 import { api } from "../api";
+import { clearLoginToken } from "../authentication";
 import { FormType } from "../state";
 import { setFormType } from "./form";
 import { performRequest } from "./request";
@@ -15,3 +16,11 @@ export const login = (email: string, password: string) => performRequest(async (
   const role = await api.login(email, password);
   dispatch(setRole(role));
 });
+
+/**
+ * Logs the user out.
+ */
+export const logout = () => async (dispatch: Dispatch) => {
+  clearLoginToken();
+  dispatch(setRole(null));
+};

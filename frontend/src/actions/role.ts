@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import { IAction } from ".";
 import { UserRole } from "../../../types/roles";
 import { api } from "../api";
+import { Nullable } from "../state";
 import { performRequest } from "./request";
 
 /**
@@ -15,7 +16,7 @@ export enum RoleAction {
  * Creates an @see RoleAction.SetRole action.
  * @param role The role to set
  */
-export const setRole = (role: UserRole): IAction<RoleAction.SetRole, UserRole> => ({
+export const setRole = (role: Nullable<UserRole>): IAction<RoleAction.SetRole, Nullable<UserRole>> => ({
   type: RoleAction.SetRole,
   value: role,
 });

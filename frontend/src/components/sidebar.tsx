@@ -1,8 +1,9 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import { UserRole } from "../../../types/roles";
-import { clearLoginToken } from "../authentication";
+import { logout as logoutRaw } from "../actions/login";
 import { IState } from "../state";
 import { ConnectedSidebarLogo } from "./sidebar-logo";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
@@ -32,12 +33,13 @@ const Container = styled.div`
 
 interface ISidebarProps {
   role: UserRole;
+  logout: typeof logoutRaw;
 }
 
 /**
  * The sidebar containing the menu and a logo
  */
-export const Sidebar = ({ role }: ISidebarProps) => (
+export const Sidebar = ({ role, logout }: ISidebarProps) => (
   <Container>
     <ConnectedSidebarLogo />
 
@@ -50,7 +52,7 @@ export const Sidebar = ({ role }: ISidebarProps) => (
           </>
         )}
 
-        <SidebarMenuItem to="/logout" onClick={() => clearLoginToken()}>Logout</SidebarMenuItem>
+        <SidebarMenuItem to="/logout" onClick={logout}>Logout</SidebarMenuItem>
     </SidebarMenu>
   </Container>
 );
@@ -59,7 +61,13 @@ const mapStateToProps = (state: IState) => ({
   role: state.role || UserRole.User,
 });
 
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return bindActionCreators({
+    logout: logoutRaw,
+  }, dispatch);
+};
+
 /**
  * The sidebar connected to the redux store.
  */
-export const ConnectedSidebar = connect(mapStateToProps)(Sidebar);
+export const ConnectedSidebar = connect(mapStateToProps, mapDispatchToProps)(Sidebar);
