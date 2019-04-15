@@ -7,6 +7,7 @@ import { UserRole } from "../../../types/roles";
 import { User } from "../entities/user";
 import { ActivityServiceToken, IActivityService } from "./activity";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
+import { HaveibeenpwnedServiceToken, IHaveibeenpwnedService, PasswordReuseError } from "./haveibeenpwned";
 import { ILoggerService, LoggerServiceToken } from "./log";
 import { ITokenService, TokenServiceToken } from "./tokens";
 
@@ -64,6 +65,7 @@ export class UserService implements IUserService {
   private _users?: Repository<User>;
 
   public constructor(
+    @Inject(HaveibeenpwnedServiceToken) private readonly _haveibeenpwned: IHaveibeenpwnedService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
@@ -83,6 +85,12 @@ export class UserService implements IUserService {
    * @param password The user's password
    */
   public async signup(email: string, password: string): Promise<User> {
+    const passwordReuseCount = await this._haveibeenpwned.getPasswordUsedCount(password);
+
+    if (passwordReuseCount > 0) {
+      throw new PasswordReuseError(passwordReuseCount);
+    }
+
     const user = new User();
     user.email = email;
     user.password = await hash(password, 10);
@@ -93,7 +101,12 @@ export class UserService implements IUserService {
     user.createdAt = now;
     user.updatedAt = now;
 
-    await this._users!.save(user);
+    try {
+      await this._users!.save(user);
+    } catch {
+      throw new Error("email already registered");
+    }
+
     this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
     this._activity.addActivity(user, ActivityEvent.Signup);
 

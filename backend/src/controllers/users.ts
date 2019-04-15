@@ -33,7 +33,7 @@ export class UsersController {
         email: user.email,
       };
     } catch (error) {
-      throw new BadRequestError("email already registered");
+      throw new BadRequestError(error.message);
     }
   }
 

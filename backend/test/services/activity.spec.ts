@@ -7,6 +7,7 @@ import { IDatabaseService } from "../../src/services/database";
 import { UserService } from "../../src/services/user";
 import { MockActivityService } from "./mock/activity";
 import { TestDatabaseService } from "./mock/database";
+import { MockHaveibeenpwnedService } from "./mock/haveibeenpwned";
 import { MockLoggerService } from "./mock/logger";
 import { MockTokenService } from "./mock/tokens";
 
@@ -21,6 +22,7 @@ describe("ActivityService", () => {
     await database.bootstrap();
 
     const users = new UserService(
+      new MockHaveibeenpwnedService().instance,
       database,
       new MockLoggerService().instance,
       new MockActivityService().instance,

@@ -3,12 +3,14 @@ import { ActivityEvent } from "../../../types/activity";
 import { User } from "../../src/entities/user";
 import { IActivityService } from "../../src/services/activity";
 import { IDatabaseService } from "../../src/services/database";
+import { IHaveibeenpwnedService } from "../../src/services/haveibeenpwned";
 import { ILoggerService } from "../../src/services/log";
 import { ITokenService } from "../../src/services/tokens";
 import { IUserService, UserService } from "../../src/services/user";
 import { MockedService } from "./mock";
 import { MockActivityService } from "./mock/activity";
 import { TestDatabaseService } from "./mock/database";
+import { MockHaveibeenpwnedService } from "./mock/haveibeenpwned";
 import { MockLoggerService } from "./mock/logger";
 import { MockTokenService } from "./mock/tokens";
 
@@ -18,6 +20,7 @@ describe("UserService", () => {
   let logger: MockedService<ILoggerService>;
   let activity: MockedService<IActivityService>;
   let tokens: MockedService<ITokenService<any>>;
+  let haveibeenpwned: MockedService<IHaveibeenpwnedService>;
   let userService: IUserService;
 
   beforeAll(async () => {
@@ -33,7 +36,8 @@ describe("UserService", () => {
     logger = new MockLoggerService();
     activity = new MockActivityService();
     tokens = new MockTokenService();
-    userService = new UserService(database, logger.instance, activity.instance, tokens.instance);
+    haveibeenpwned = new MockHaveibeenpwnedService();
+    userService = new UserService(haveibeenpwned.instance, database, logger.instance, activity.instance, tokens.instance);
 
     await userService.bootstrap();
   });
@@ -173,5 +177,18 @@ describe("UserService", () => {
 
     const loggedInUser = await userService.findUserWithCredentials(email, password);
     expect(loggedInUser!.role).toBeDefined();
+  });
+
+  it("checks for passwords in haveibeenpwned.com", async () => {
+    expect.assertions(2);
+
+    const password = "password";
+    haveibeenpwned.mocks.getPasswordUsedCount.mockResolvedValue(0);
+    await userService.signup("test@foo.bar", password);
+    expect(haveibeenpwned.mocks.getPasswordUsedCount).toHaveBeenCalledWith(password);
+
+    haveibeenpwned.mocks.getPasswordUsedCount.mockResolvedValue(1337);
+    const promise = userService.signup("test@foo.bar", password);
+    expect(promise).rejects.toBeDefined();
   });
 });
