@@ -1,7 +1,8 @@
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { EnvironmentPlugin } = require("webpack");
-const { join } = require("path");
+const { join, resolve } = require("path");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -70,10 +71,23 @@ module.exports = {
           outputPath: "assets/",
         },
       },
+      {
+        test: /\.css$/,
+        include: resolve(__dirname, "./node_modules/monaco-editor"),
+        use: [
+          "style-loader",
+          "css-loader",
+        ],
+      },
     ],
   },
 
   plugins: [
+    new MonacoWebpackPlugin({
+      languages: [
+        "html",
+      ],
+    }),
     new EnvironmentPlugin({
       API_BASE_URL: "/api",
       NODE_ENV: "development",
