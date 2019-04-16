@@ -28,7 +28,9 @@ describe("SettingsService", () => {
   it("gets existing settings", async () => {
     expect.assertions(1);
 
-    const settings = await settingsRepo.save(new Settings());
+    await settingsRepo.save(new Settings());
+    const settings = await settingsRepo.findOne()!;
+
     const retrievedSettings = await settingsService.getSettings();
     expect(retrievedSettings).toEqual(settings);
   });
