@@ -13,11 +13,11 @@ export class Settings implements ISettings {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @OneToOne(() => FrontendSettings, { cascade: true })
+  @OneToOne(() => FrontendSettings, { cascade: true, eager: true })
   @JoinColumn()
   public frontend!: FrontendSettings;
 
-  @OneToOne(() => EmailSettings, { cascade: true })
+  @OneToOne(() => EmailSettings, { cascade: true, eager: true })
   @JoinColumn()
   public email!: EmailSettings;
 }

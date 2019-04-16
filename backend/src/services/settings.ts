@@ -42,12 +42,7 @@ export class SettingsService implements ISettingsService {
    */
   public async getSettings(): Promise<ISettings> {
     try {
-      return await this._settings!.findOneOrFail({
-        relations: [
-          "email",
-          "frontend",
-        ],
-      });
+      return await this._settings!.findOneOrFail();
     } catch (error) {
       this._logger.info("no settings found. creating defaults");
 
