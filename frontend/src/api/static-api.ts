@@ -1,12 +1,7 @@
 import { IApi } from ".";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
-
-/**
- * Async equivalent of a sleep/wait call.
- * @param ms The duration to sleep
- */
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { sleep } from "../util";
 
 /**
  * An api which yields static data.
