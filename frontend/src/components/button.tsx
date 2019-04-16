@@ -56,7 +56,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
     `}
 
   ${(props: IThemeProps & IStyledButtonProps) => props.primary && props.theme.colorGradientStart && `
-    background: linear-gradient(to right, ${props.theme.colorGradientStart}, ${props.theme.colorGradientEnd});
+    background: linear-gradient(to top right, ${props.theme.colorGradientStart}, ${props.theme.colorGradientEnd});
   `}
 `;
 
