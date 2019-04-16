@@ -1,3 +1,4 @@
+import { IEmailTemplate } from "../../../types/settings";
 import { IActionReturnTypes } from "../actions";
 import * as settingsActions from "../actions/settings";
 import { SettingsAction } from "../actions/settings";
@@ -7,14 +8,18 @@ type IStateType = IState["settings"];
 type IActionType = IActionReturnTypes<typeof settingsActions>;
 
 const initialColor = "#333";
+const initialEmailTemplate: IEmailTemplate = {
+  htmlTemplate: "Loading...",
+  textTemplate: "Loading...",
+};
 
 /**
  * The initial settings state.
  */
 export const initialSettingsState: IStateType = {
   email: {
-    templateForgotPassword: "",
-    templateVerifyEmail: "",
+    forgotPasswordEmail: initialEmailTemplate,
+    verifyEmail: initialEmailTemplate,
   },
   frontend: {
     colorGradientEnd: initialColor,

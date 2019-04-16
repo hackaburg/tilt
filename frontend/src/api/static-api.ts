@@ -20,8 +20,14 @@ export class StaticApi implements IApi {
 
     return {
       email: {
-        templateForgotPassword: "",
-        templateVerifyEmail: "",
+        forgotPasswordEmail: {
+          htmlTemplate: "",
+          textTemplate: "",
+        },
+        verifyEmail: {
+          htmlTemplate: "",
+          textTemplate: "",
+        },
       },
       frontend: {
         colorGradientEnd: "red",

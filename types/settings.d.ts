@@ -13,6 +13,11 @@ export interface IFrontendSettings {
 }
 
 export interface IEmailSettings {
-  templateVerifyEmail: string;
-  templateForgotPassword: string;
+  verifyEmail: IEmailTemplate;
+  forgotPasswordEmail: IEmailTemplate;
+}
+
+export interface IEmailTemplate {
+  textTemplate: string;
+  htmlTemplate: string;
 }
