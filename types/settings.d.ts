@@ -1,5 +1,6 @@
 export interface ISettings {
   frontend: IFrontendSettings;
+  email: IEmailSettings;
 }
 
 export interface IFrontendSettings {

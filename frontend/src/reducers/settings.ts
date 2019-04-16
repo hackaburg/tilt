@@ -12,6 +12,10 @@ const initialColor = "#333";
  * The initial settings state.
  */
 export const initialSettingsState: IStateType = {
+  email: {
+    templateForgotPassword: "",
+    templateVerifyEmail: "",
+  },
   frontend: {
     colorGradientEnd: initialColor,
     colorGradientStart: initialColor,

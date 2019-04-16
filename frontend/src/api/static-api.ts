@@ -19,6 +19,10 @@ export class StaticApi implements IApi {
     await sleep(100);
 
     return {
+      email: {
+        templateForgotPassword: "",
+        templateVerifyEmail: "",
+      },
       frontend: {
         colorGradientEnd: "red",
         colorGradientStart: "green",
