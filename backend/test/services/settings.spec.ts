@@ -23,6 +23,7 @@ describe("SettingsService", () => {
     logger = new MockLoggerService();
     settingsService = new SettingsService(database, logger.instance);
     await settingsService.bootstrap();
+    await settingsRepo.clear();
   });
 
   it("gets existing settings", async () => {
