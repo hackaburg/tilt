@@ -22,3 +22,8 @@ export const borderRadius = "5px";
  * The sidebar width.
  */
 export const sidebarWidth = "300px";
+
+/**
+ * The duration to show notifications.
+ */
+export const notificationDuration = 3000;

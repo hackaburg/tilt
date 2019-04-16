@@ -14,6 +14,7 @@ export interface IState {
   settings: ISettings;
   form: IForm;
   role: Nullable<UserRole>;
+  notification: INotification;
 }
 
 interface IRequest {
@@ -32,4 +33,9 @@ export enum FormType {
   None = "none",
   Login = "login",
   Signup = "signup",
+}
+
+interface INotification {
+  show: boolean;
+  text: string;
 }
