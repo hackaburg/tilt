@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router";
 import styled from "styled-components";
 import { sidebarWidth, transitionDuration } from "../config";
 import { PageSizedContainer } from "./centering";
+import { ConnectedNotification } from "./notification";
 import { PageNotFound } from "./page-not-found";
 import { ConnectedSidebar } from "./sidebar";
 import { SidebarBurger } from "./sidebar-burger";
@@ -90,6 +91,7 @@ export const Dashboard = () => {
           </SidebarBurgerContainer>
 
           <ContentContainer>
+            <ConnectedNotification />
             <Switch>
               <Route component={PageNotFound} />
             </Switch>
