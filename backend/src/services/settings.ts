@@ -1,7 +1,8 @@
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { ISettings } from "../../../types/settings";
+import { IEmailSettings, ISettings } from "../../../types/settings";
+import { EmailSettings } from "../entities/email-settings";
 import { Settings } from "../entities/settings";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 import { ILoggerService, LoggerServiceToken } from "./log";
@@ -14,6 +15,12 @@ export interface ISettingsService extends IService {
    * Gets the application settings.
    */
   getSettings(): Promise<ISettings>;
+
+  /**
+   * Updates the email settings with the given settings.
+   * @param emailSettings The updated email settings
+   */
+  updateEmailSettings(emailSettings: Partial<IEmailSettings>): Promise<void>;
 }
 
 /**
@@ -53,5 +60,26 @@ export class SettingsService implements ISettingsService {
 
       return defaultSettings;
     }
+  }
+
+  /**
+   * Updates the email settings with the given templates.
+   * @param settings The settings to use for the update
+   */
+  public async updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void> {
+    const settingsKeys = Object.keys(new EmailSettings()) as Array<keyof IEmailSettings>;
+    const existingSettings = await this.getSettings();
+
+    for (const key of settingsKeys) {
+      const existingTemplate = existingSettings.email[key];
+      const updatedTemplate = settings[key];
+
+      if (updatedTemplate) {
+        existingTemplate.htmlTemplate = updatedTemplate.htmlTemplate || existingTemplate.htmlTemplate;
+        existingTemplate.textTemplate = updatedTemplate.textTemplate || existingTemplate.textTemplate;
+      }
+    }
+
+    await this._settings!.save(existingSettings);
   }
 }

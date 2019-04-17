@@ -1,4 +1,5 @@
 import { Repository } from "typeorm";
+import { IEmailSettings } from "../../../types/settings";
 import { Settings } from "../../src/entities/settings";
 import { IDatabaseService } from "../../src/services/database";
 import { ILoggerService } from "../../src/services/log";
@@ -44,5 +45,49 @@ describe("SettingsService", () => {
 
     const settingsInTable = await settingsRepo.find();
     expect(settingsInTable).toHaveLength(1);
+  });
+
+  it("updates email settings", async () => {
+    expect.assertions(2);
+
+    const updatedSettings: Partial<IEmailSettings> = {
+      verifyEmail: {
+        htmlTemplate: "foo",
+        textTemplate: "bar",
+      },
+    };
+
+    await settingsService.updateEmailSettings(updatedSettings);
+    const settings = await settingsService.getSettings();
+
+    expect(settings.email.verifyEmail.htmlTemplate).toBe(updatedSettings.verifyEmail!.htmlTemplate);
+    expect(settings.email.verifyEmail.textTemplate).toBe(updatedSettings.verifyEmail!.textTemplate);
+  });
+
+  it("doesn't pollute other settings by updating email settings", async () => {
+    expect.assertions(2);
+
+    type PollutedEmailSettings = Partial<IEmailSettings> & {
+      foo: string;
+      verifyEmail: {
+        bar: string;
+      }
+    };
+
+    const updatedSettings: PollutedEmailSettings = {
+      foo: "test",
+      verifyEmail: {
+        bar: "test",
+        htmlTemplate: "foo",
+        textTemplate: "bar",
+      },
+    };
+
+    await settingsService.updateEmailSettings(updatedSettings);
+    const settings = await settingsService.getSettings();
+    const emailSettings = settings.email as PollutedEmailSettings;
+
+    expect(emailSettings.foo).not.toBeDefined();
+    expect(emailSettings.verifyEmail.bar).not.toBeDefined();
   });
 });
