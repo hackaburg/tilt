@@ -1,18 +1,23 @@
 import * as React from "react";
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { css} from "styled-components";
 import { IEmailTemplate } from "../../../types/settings";
 import { borderRadius } from "../config";
 import { Editor } from "./editor";
+import { Placeholder } from "./placeholder";
 import { SegmentButton } from "./segment-button";
 
-const DropShadowContainer = styled.div`
+const editorContainerStyle = css`
   margin: 1rem 0rem;
-  padding: 1rem;
 
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
   border-radius: ${borderRadius};
   overflow: hidden;
+`;
+
+const DropShadowContainer = styled.div`
+  ${editorContainerStyle}
+  padding: 1rem;
 `;
 
 const Title = styled.h3`
@@ -86,3 +91,14 @@ export const EmailTemplateEditor = ({ title, template, onTemplateChange }: IEmai
     </DropShadowContainer>
   );
 };
+
+const PlaceholderContainer = styled(Placeholder)`
+  ${editorContainerStyle}
+`;
+
+/**
+ * A placeholder version of an email tempalte editor. Essentially a gray block the size of the editor.
+ */
+export const EmailTemplateEditorPlaceholder = () => (
+  <PlaceholderContainer width="100%" height="45vh" />
+);

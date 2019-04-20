@@ -7,7 +7,7 @@ import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
 import { updateEmailSettings } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
 import { IState } from "../state";
-import { EmailTemplateEditor } from "./email-template-editor";
+import { EmailTemplateEditor, EmailTemplateEditorPlaceholder } from "./email-template-editor";
 import { Subheading } from "./headings";
 
 const Code = styled.span`
@@ -44,6 +44,13 @@ export const EmailSettings = ({ dispatchUpdateEmailSettings, settings }: IEmailS
         <br />
         You may use Handlebars syntax to access variables injected into the template like <Code>verifyUrl</Code>, <Code>email</Code> or <Code>questions.id</Code>.
       </p>
+
+      {!settings && (
+        <>
+          <EmailTemplateEditorPlaceholder />
+          <EmailTemplateEditorPlaceholder />
+        </>
+      )}
 
       {settings && (
         <>
