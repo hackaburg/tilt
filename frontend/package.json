@@ -53,6 +53,7 @@
     "tslint": "^5.15.0",
     "typescript": "^3.4.1",
     "typescript-plugin-styled-components": "^1.4.2",
+    "use-debounce": "^1.1.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1"

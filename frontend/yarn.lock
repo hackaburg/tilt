@@ -7053,6 +7053,11 @@ urlgrey@^0.4.4:
   resolved "https://registry.yarnpkg.com/urlgrey/-/urlgrey-0.4.4.tgz#892fe95960805e85519f1cd4389f2cb4cbb7652f"
   integrity sha1-iS/pWWCAXoVRnxzUOJ8stMu3ZS8=
 
+use-debounce@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-1.1.2.tgz#36e95d2f36df8da00b63329150eee78776fe88f8"
+  integrity sha512-9YmIqyFBwC686BN2qt2sZ1Y4cSs4dOnWGv19/jWEL64GMC3Aeb+SGFuqrzXGSL9qpH9z1EWsVWFqXKfhunVS1g==
+
 use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
