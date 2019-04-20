@@ -37,3 +37,13 @@ export const debounceDuration = 1000;
  * The default theme color, used while the theme is still loading.
  */
 export const defaultThemeColor = "#333";
+
+/**
+ * The background color of the loading placeholder shimmer.
+ */
+export const shimmerBackgroundColor = "#f7f7f7";
+
+/**
+ * The color of the loading placeholder shimmer.
+ */
+export const shimmerColor = "#fefefe";
