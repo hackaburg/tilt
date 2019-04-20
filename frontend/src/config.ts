@@ -27,3 +27,8 @@ export const sidebarWidth = "300px";
  * The duration to show notifications.
  */
 export const notificationDuration = 3000;
+
+/**
+ * The duration to use for debouncing events.
+ */
+export const debounceDuration = 1000;
