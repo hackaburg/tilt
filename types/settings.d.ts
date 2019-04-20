@@ -13,6 +13,11 @@ export interface IFrontendSettings {
 }
 
 export interface IEmailSettings {
+  sender: string;
+  templates: IEmailTemplates;
+}
+
+export interface IEmailTemplates {
   verifyEmail: IEmailTemplate;
   forgotPasswordEmail: IEmailTemplate;
 }
