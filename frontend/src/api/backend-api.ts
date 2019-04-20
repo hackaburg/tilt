@@ -154,4 +154,12 @@ export class BackendApi implements IApi {
     const response = await this.get<IUserRefreshTokenResponseBody>("/user/refreshtoken");
     setLoginToken(response.token);
   }
+
+  /**
+   * Updates the email settings with the given settings.
+   * @param settings The settings to use for updating
+   */
+  public async updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void> {
+    await this.put<Partial<IEmailSettings>, void>("/settings/email", settings);
+  }
 }

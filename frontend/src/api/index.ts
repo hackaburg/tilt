@@ -1,5 +1,5 @@
 import { UserRole } from "../../../types/roles";
-import { ISettings } from "../../../types/settings";
+import { IEmailSettings, ISettings } from "../../../types/settings";
 import { apiBaseUrl } from "../config";
 import { BackendApi } from "./backend-api";
 import { StaticApi } from "./static-api";
@@ -43,6 +43,12 @@ export interface IApi {
    * Refreshes the login token.
    */
   refreshLoginToken(): Promise<void>;
+
+  /**
+   * Updates the email settings.
+   * @param settings The updated email settings
+   */
+  updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void>;
 }
 
 /**

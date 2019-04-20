@@ -77,4 +77,11 @@ export class StaticApi implements IApi {
   public async refreshLoginToken(): Promise<void> {
     await sleep(100);
   }
+
+  /**
+   * Simulates an update email api call.
+   */
+  public async updateEmailSettings(): Promise<void> {
+    await sleep(100);
+  }
 }
