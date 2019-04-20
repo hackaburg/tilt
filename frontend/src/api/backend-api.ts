@@ -1,7 +1,7 @@
 import { IApi } from ".";
 import { IApiRequest, IApiResponse, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
 import { UserRole } from "../../../types/roles";
-import { ISettings } from "../../../types/settings";
+import { IEmailSettings, ISettings } from "../../../types/settings";
 import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
 import { IUserRoleResponseBody } from "../../../types/user-role";
@@ -50,16 +50,33 @@ export class BackendApi implements IApi {
   }
 
   /**
+   * Performs a request to the given url.
+   * @param url The resource to perform the request on
+   * @param method The method to use
+   * @param body An optional body to send with the request
+   */
+  private async request<TBody, TResponse>(url: string, method: RequestInit["method"], body?: TBody): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
+    const headers = this.headers;
+    const options: RequestInit = {
+      headers,
+      method,
+    };
+
+    if (body) {
+      headers.set("Content-Type", "application/json");
+      options.body = JSON.stringify(this.packApiRequest(body));
+    }
+
+    const response = await fetch(`${this._apiBaseUrl}${url}`, options);
+    return this.unpackApiResponse(await response.json());
+  }
+
+  /**
    * Sends a GET request to the given resource.
    * @param url The resource to get
    */
   protected async get<TResponse>(url: string): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
-    const response = await fetch(`${this._apiBaseUrl}${url}`, {
-      headers: this.headers,
-      method: "get",
-    });
-
-    return this.unpackApiResponse(await response.json());
+    return await this.request<undefined, TResponse>(url, "get");
   }
 
   /**
@@ -67,16 +84,15 @@ export class BackendApi implements IApi {
    * @param url The resource to get
    */
   protected async post<TBody, TResponse>(url: string, body: TBody): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
-    const headers = this.headers;
-    headers.set("Content-Type", "application/json");
+    return await this.request<TBody, TResponse>(url, "post", body);
+  }
 
-    const response = await fetch(`${this._apiBaseUrl}${url}`, {
-      body: JSON.stringify(this.packApiRequest(body)),
-      headers,
-      method: "post",
-    });
-
-    return this.unpackApiResponse(await response.json());
+  /**
+   * Sends a PUT request to the given resource.
+   * @param url The resource to get
+   */
+  protected async put<TBody, TResponse>(url: string, body: TBody): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
+    return await this.request<TBody, TResponse>(url, "put", body);
   }
 
   /**
