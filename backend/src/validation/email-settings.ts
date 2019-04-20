@@ -14,12 +14,10 @@ class ValidatedEmailTemplate implements IEmailTemplate {
 }
 
 class ValidatedEmailSettings implements IEmailSettings {
-  @IsDefined()
   @ValidateNested()
   @Type(() => ValidatedEmailTemplate)
   public verifyEmail!: IEmailTemplate;
 
-  @IsDefined()
   @ValidateNested()
   @Type(() => ValidatedEmailTemplate)
   public forgotPasswordEmail!: IEmailTemplate;
