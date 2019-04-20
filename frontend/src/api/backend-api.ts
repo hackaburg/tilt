@@ -120,7 +120,7 @@ export class BackendApi implements IApi {
    * Verifies a user's email address.
    * @param token The email verification token
    */
-  public async verfiyEmail(token: string): Promise<void> {
+  public async verifyEmail(token: string): Promise<void> {
     await this.get<IUserVerifyResponseBody>(`/user/verify?token=${token}`);
   }
 

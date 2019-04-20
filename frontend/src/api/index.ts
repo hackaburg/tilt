@@ -24,7 +24,7 @@ export interface IApi {
    * Verifies a user's email.
    * @param token The verify token from the email
    */
-  verfiyEmail(token: string): Promise<void>;
+  verifyEmail(token: string): Promise<void>;
 
   /**
    * Logs a user in.

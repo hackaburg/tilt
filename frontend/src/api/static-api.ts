@@ -49,7 +49,7 @@ export class StaticApi implements IApi {
    * Simulates an email verification api call.
    * @param token The verify token from the email
    */
-  public async verfiyEmail(_token: string): Promise<void> {
+  public async verifyEmail(_token: string): Promise<void> {
     await sleep(100);
   }
 
