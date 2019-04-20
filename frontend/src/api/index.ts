@@ -1,5 +1,6 @@
 import { UserRole } from "../../../types/roles";
-import { IEmailSettings, ISettings } from "../../../types/settings";
+import { ISettings } from "../../../types/settings";
+import { IUpdateEmailSettingsRequestBody } from "../../../types/settings-email";
 import { apiBaseUrl } from "../config";
 import { BackendApi } from "./backend-api";
 import { StaticApi } from "./static-api";
@@ -48,7 +49,7 @@ export interface IApi {
    * Updates the email settings.
    * @param settings The updated email settings
    */
-  updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void>;
+  updateEmailTemplates(settings: Partial<IUpdateEmailSettingsRequestBody>): Promise<void>;
 }
 
 /**

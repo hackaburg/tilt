@@ -1,6 +1,6 @@
 import { Dispatch } from "redux";
 import { IAction } from ".";
-import { IEmailSettings, ISettings } from "../../../types/settings";
+import { IEmailTemplates, ISettings } from "../../../types/settings";
 import { api } from "../api";
 import { notifyChangesSaved } from "./notify";
 import { performRequest } from "./request";
@@ -30,10 +30,10 @@ export const fetchSettings = () => performRequest(async (dispatch: Dispatch) => 
 });
 
 /**
- * Asynchronously update email settings.
- * @param settings The settings to update
+ * Asynchronously update email templates.
+ * @param templates The templates to update
  */
-export const updateEmailSettings = (settings: Partial<IEmailSettings>) => performRequest(async (dispatch: Dispatch) => {
-  await api.updateEmailSettings(settings);
+export const updateEmailTemplates = (templates: Partial<IEmailTemplates>) => performRequest(async (dispatch: Dispatch) => {
+  await api.updateEmailTemplates(templates);
   notifyChangesSaved()(dispatch);
 });

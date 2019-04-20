@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
-import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
-import { updateEmailSettings } from "../actions/settings";
+import { IEmailTemplate, IEmailTemplates } from "../../../types/settings";
+import { updateEmailTemplates } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
 import { IState } from "../state";
 import { EmailTemplateEditor, EmailTemplateEditorPlaceholder } from "./email-template-editor";
@@ -20,7 +20,7 @@ const Code = styled.span`
 `;
 
 interface IEmailSettingsProps {
-  dispatchUpdateEmailSettings: typeof updateEmailSettings;
+  dispatchUpdateEmailSettings: typeof updateEmailTemplates;
   settings: IState["settings"];
 }
 
@@ -28,7 +28,7 @@ interface IEmailSettingsProps {
  * Settings to configure mail templates.
  */
 export const EmailSettings = ({ dispatchUpdateEmailSettings, settings }: IEmailSettingsProps) => {
-  const handleChange = (templateName: keyof IEmailSettings, template: IEmailTemplate) => {
+  const handleChange = (templateName: keyof IEmailTemplates, template: IEmailTemplate) => {
     dispatchUpdateEmailSettings({
       [templateName]: template,
     });
@@ -56,12 +56,12 @@ export const EmailSettings = ({ dispatchUpdateEmailSettings, settings }: IEmailS
         <>
           <EmailTemplateEditor
             title="Verification"
-            template={settings.email.verifyEmail}
+            template={settings.email.templates.verifyEmail}
             onTemplateChange={(template) => debouncedHandleChange("verifyEmail", template)}
           />
           <EmailTemplateEditor
             title="Forgot password"
-            template={settings.email.forgotPasswordEmail}
+            template={settings.email.templates.forgotPasswordEmail}
             onTemplateChange={(template) => debouncedHandleChange("forgotPasswordEmail", template)}
           />
         </>
@@ -76,7 +76,7 @@ const mapStateToProps = (state: IState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators({
-    dispatchUpdateEmailSettings: updateEmailSettings,
+    dispatchUpdateEmailSettings: updateEmailTemplates,
   }, dispatch);
 };
 
