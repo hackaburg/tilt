@@ -1,4 +1,3 @@
-import { IEmailTemplate } from "../../../types/settings";
 import { IActionReturnTypes } from "../actions";
 import * as settingsActions from "../actions/settings";
 import { SettingsAction } from "../actions/settings";
@@ -7,29 +6,10 @@ import { IState } from "../state";
 type IStateType = IState["settings"];
 type IActionType = IActionReturnTypes<typeof settingsActions>;
 
-const initialColor = "#333";
-const initialEmailTemplate: IEmailTemplate = {
-  htmlTemplate: "Loading...",
-  textTemplate: "Loading...",
-};
-
 /**
  * The initial settings state.
  */
-export const initialSettingsState: IStateType = {
-  email: {
-    forgotPasswordEmail: initialEmailTemplate,
-    verifyEmail: initialEmailTemplate,
-  },
-  frontend: {
-    colorGradientEnd: initialColor,
-    colorGradientStart: initialColor,
-    colorLink: initialColor,
-    colorLinkHover: initialColor,
-    loginSignupImage: "",
-    sidebarImage: "",
-  },
-};
+export const initialSettingsState: IStateType = null;
 
 /**
  * The settings reducer.

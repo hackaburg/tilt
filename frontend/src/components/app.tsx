@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router";
 import { bindActionCreators, Dispatch } from "redux";
 import { ThemeProvider } from "styled-components";
-import { IFrontendSettings } from "../../../types/settings";
 import { boot as bootRaw } from "../actions/boot";
 import { isLoginTokenSet } from "../authentication";
+import { defaultThemeColor } from "../config";
 import { Routes } from "../routes";
 import { IState } from "../state";
 import { ITheme } from "../theme";
@@ -14,7 +14,7 @@ import { Dashboard } from "./dashboard";
 import { ConnectedLoginSignupForm } from "./login-signup-form";
 
 interface IAppProps extends RouteComponentProps<any> {
-  settings: IFrontendSettings;
+  settings: IState["settings"];
   role: IState["role"];
   boot: typeof bootRaw;
 }
@@ -36,12 +36,21 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
     }
   }, [role]);
 
-  const theme: ITheme = {
-    colorGradientEnd: settings.colorGradientEnd,
-    colorGradientStart: settings.colorGradientStart,
-    colorLink: settings.colorLink,
-    colorLinkHover: settings.colorLinkHover,
+  let theme: ITheme = {
+    colorGradientEnd: defaultThemeColor,
+    colorGradientStart: defaultThemeColor,
+    colorLink: defaultThemeColor,
+    colorLinkHover: defaultThemeColor,
   };
+
+  if (settings) {
+    theme = {
+      colorGradientEnd: settings.frontend.colorGradientEnd,
+      colorGradientStart: settings.frontend.colorGradientStart,
+      colorLink: settings.frontend.colorLink,
+      colorLinkHover: settings.frontend.colorLinkHover,
+    };
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -55,7 +64,7 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
 
 const mapStateToProps = (state: IState) => ({
   role: state.role,
-  settings: state.settings.frontend,
+  settings: state.settings,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

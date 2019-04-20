@@ -32,3 +32,8 @@ export const notificationDuration = 3000;
  * The duration to use for debouncing events.
  */
 export const debounceDuration = 1000;
+
+/**
+ * The default theme color, used while the theme is still loading.
+ */
+export const defaultThemeColor = "#333";

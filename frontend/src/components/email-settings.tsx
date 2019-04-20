@@ -21,14 +21,14 @@ const Code = styled.span`
 
 interface IEmailSettingsProps {
   dispatchUpdateEmailSettings: typeof updateEmailSettings;
-  email: IEmailSettings;
+  settings: IState["settings"];
 }
 
 /**
  * Settings to configure mail templates.
  */
-export const EmailSettings = ({ dispatchUpdateEmailSettings, email }: IEmailSettingsProps) => {
-  const handleChange = (templateName: keyof typeof email, template: IEmailTemplate) => {
+export const EmailSettings = ({ dispatchUpdateEmailSettings, settings }: IEmailSettingsProps) => {
+  const handleChange = (templateName: keyof IEmailSettings, template: IEmailTemplate) => {
     dispatchUpdateEmailSettings({
       [templateName]: template,
     });
@@ -44,22 +44,27 @@ export const EmailSettings = ({ dispatchUpdateEmailSettings, email }: IEmailSett
         <br />
         You may use Handlebars syntax to access variables injected into the template like <Code>verifyUrl</Code>, <Code>email</Code> or <Code>questions.id</Code>.
       </p>
-      <EmailTemplateEditor
-        title="Verification"
-        template={email.verifyEmail}
-        onTemplateChange={(template) => debouncedHandleChange("verifyEmail", template)}
-      />
-      <EmailTemplateEditor
-        title="Forgot password"
-        template={email.forgotPasswordEmail}
-        onTemplateChange={(template) => debouncedHandleChange("forgotPasswordEmail", template)}
-      />
+
+      {settings && (
+        <>
+          <EmailTemplateEditor
+            title="Verification"
+            template={settings.email.verifyEmail}
+            onTemplateChange={(template) => debouncedHandleChange("verifyEmail", template)}
+          />
+          <EmailTemplateEditor
+            title="Forgot password"
+            template={settings.email.forgotPasswordEmail}
+            onTemplateChange={(template) => debouncedHandleChange("forgotPasswordEmail", template)}
+          />
+        </>
+      )}
     </>
   );
 };
 
 const mapStateToProps = (state: IState) => ({
-  email: state.settings.email,
+  settings: state.settings,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

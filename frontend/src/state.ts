@@ -11,7 +11,7 @@ export type Nullable<T> = T | null;
  */
 export interface IState {
   request: IRequest;
-  settings: ISettings;
+  settings: Nullable<ISettings>;
   form: IForm;
   role: Nullable<UserRole>;
   notification: INotification;

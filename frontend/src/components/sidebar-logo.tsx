@@ -27,7 +27,7 @@ export const SidebarLogo = ({ sidebarImageUrl }: ISidebarLogoProps) => (
 );
 
 const mapStateToProps = (state: IState) => ({
-  sidebarImageUrl: state.settings.frontend.sidebarImage,
+  sidebarImageUrl: state.settings ? state.settings.frontend.sidebarImage : "",
 });
 
 /**

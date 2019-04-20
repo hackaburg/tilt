@@ -2,14 +2,13 @@ import { shallow } from "enzyme";
 import * as React from "react";
 import { UserRole } from "../../../types/roles";
 import { App } from "../../src/components/app";
-import { initialSettingsState } from "../../src/reducers/settings";
 
 describe("App", () => {
   it("renders", () => {
     const boot = jest.fn();
     const app = shallow((
       <App
-        settings={initialSettingsState.frontend}
+        settings={null}
         boot={boot}
         role={UserRole.User}
         history={{} as any}

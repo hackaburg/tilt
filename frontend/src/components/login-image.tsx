@@ -60,7 +60,7 @@ export const LoginImage = ({ imageUrl }: ILoginImageProps) => (
 );
 
 const mapStateToProps = (state: IState) => ({
-  imageUrl: state.settings.frontend.loginSignupImage,
+  imageUrl: state.settings ? state.settings.frontend.loginSignupImage : "",
 });
 
 /**
