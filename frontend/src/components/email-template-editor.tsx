@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import { IEmailTemplate } from "../../../types/settings";
 import { borderRadius } from "../config";
 import { Editor } from "./editor";
 import { SegmentButton } from "./segment-button";
@@ -28,38 +29,60 @@ const ButtonContainer = styled.div`
 `;
 
 /**
- * The mode the editor currently is in.
+ * The language the editor currently is in.
  */
-enum EditorMode {
+enum EditorLanguage {
   HTML = "html",
   Text = "text",
 }
 
 interface IEmailTemplateEditor {
   title: string;
-  htmlTemplate: string;
-  onHtmlTemplateChange: (value: string) => any;
-  textTemplate: string;
-  onTextTemplateChange: (value: string) => any;
+  template: IEmailTemplate;
+  onTemplateChange: (template: IEmailTemplate) => any;
 }
 
 /**
  * An editor to modify email templates.
  */
-export const EmailTemplateEditor = ({ title, htmlTemplate, onHtmlTemplateChange, textTemplate, onTextTemplateChange }: IEmailTemplateEditor) => {
-  const [editor, setEditor] = useState(EditorMode.HTML);
-  const value = editor === EditorMode.HTML ? htmlTemplate : textTemplate;
-  const onChange = editor === EditorMode.HTML ? onHtmlTemplateChange : onTextTemplateChange;
+export const EmailTemplateEditor = ({ title, template, onTemplateChange }: IEmailTemplateEditor) => {
+  const [htmlTemplate, setHtmlTemplate] = useState(template.htmlTemplate);
+  const [textTemplate, setTextTemplate] = useState(template.textTemplate);
+  const [language, setLanguage] = useState(EditorLanguage.HTML);
+
+  const displayedValue = language === EditorLanguage.HTML ? htmlTemplate : textTemplate;
+  const onChange = (value: string) => {
+    if (language === EditorLanguage.HTML) {
+      setHtmlTemplate(value);
+      onTemplateChange({
+        htmlTemplate: value,
+        textTemplate,
+      });
+    } else {
+      setTextTemplate(value);
+      onTemplateChange({
+        htmlTemplate,
+        textTemplate: value,
+      });
+    }
+  };
 
   return (
     <DropShadowContainer>
       <Title>
         {title}
         <ButtonContainer>
-          <SegmentButton choices={[EditorMode.HTML, EditorMode.Text]} onChoiceChanged={(choice) => setEditor(choice as EditorMode)} />
+          <SegmentButton
+            choices={[EditorLanguage.HTML, EditorLanguage.Text]}
+            onChoiceChanged={(choice) => setLanguage(choice as EditorLanguage)}
+          />
         </ButtonContainer>
       </Title>
-      <Editor language={editor} value={value} onChange={onChange} />
+      <Editor
+        language={language}
+        value={displayedValue}
+        onChange={onChange}
+      />
     </DropShadowContainer>
   );
 };
