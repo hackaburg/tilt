@@ -14,7 +14,7 @@ export const Editor = ({ language, value, onChange }: IEditorProps) => (
   <MonacoEditor
     language={language}
     value={value}
-    onChange={onChange}
+    onChange={(text) => onChange(text)}
     width="100%"
     height="40vh"
     options={{
