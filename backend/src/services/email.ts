@@ -13,9 +13,10 @@ export interface IEmailService extends IService {
    * @param from The sender email
    * @param to The receiver email
    * @param subject The subject
-   * @param body The body
+   * @param htmlBody The body in HTML
+   * @param textBody The body in plaintext
    */
-  sendEmail(from: string, to: string, subject: string, body: string): Promise<void>;
+  sendEmail(from: string, to: string, subject: string, htmlBody: string, textBody: string): Promise<void>;
 }
 
 /**
@@ -55,13 +56,15 @@ export class EmailService implements IEmailService {
    * @param from The sender email
    * @param to The receiver email
    * @param subject The subject
-   * @param body The body
+   * @param htmlBody The body in HTML
+   * @param textBody The body in plaintext
    */
-  public async sendEmail(from: string, to: string, subject: string, body: string): Promise<void> {
+  public async sendEmail(from: string, to: string, subject: string, htmlBody: string, textBody: string): Promise<void> {
     const info = await this._transporter!.sendMail({
       from,
-      html: body,
+      html: htmlBody,
       subject,
+      text: textBody,
       to,
     });
 
