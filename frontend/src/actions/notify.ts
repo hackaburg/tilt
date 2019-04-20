@@ -36,3 +36,8 @@ export const notify = (text: string) => async (dispatch: Dispatch) => {
   await sleep(notificationDuration);
   dispatch(hideNotification());
 };
+
+/**
+ * Shorthand for `notify("Changes saved")`.
+ */
+export const notifyChangesSaved = () => notify("Changes saved");
