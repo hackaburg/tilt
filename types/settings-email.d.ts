@@ -1,4 +1,4 @@
 import { IApiRequest } from "./api";
-import { IEmailSettings } from "./settings";
+import { IEmailTemplates } from "./settings";
 
-export interface IUpdateEmailSettingsApiRequest extends IApiRequest<IEmailSettings> { }
+export interface IUpdateEmailSettingsApiRequest extends IApiRequest<IEmailTemplates> { }

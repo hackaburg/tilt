@@ -20,11 +20,11 @@ export class SettingsController {
   }
 
   /**
-   * Updates the email settings.
+   * Updates the email templates.
    */
-  @Put("/email")
+  @Put("/email/templates")
   @Authorized(UserRole.Owner)
-  public async updateEmailSettings(@Body() { data: settings }: UpdateEmailSettingsApiRequest): Promise<void> {
-    await this._settings.updateEmailSettings(settings);
+  public async updateEmailSettings(@Body() { data: templates }: UpdateEmailSettingsApiRequest): Promise<void> {
+    await this._settings.updateEmailTemplates(templates);
   }
 }

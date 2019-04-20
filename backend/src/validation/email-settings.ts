@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDefined, IsString, ValidateNested } from "class-validator";
-import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
+import { IEmailTemplate, IEmailTemplates } from "../../../types/settings";
 import { IUpdateEmailSettingsApiRequest } from "../../../types/settings-email";
 
 class ValidatedEmailTemplate implements IEmailTemplate {
@@ -13,7 +13,7 @@ class ValidatedEmailTemplate implements IEmailTemplate {
   public htmlTemplate!: string;
 }
 
-class ValidatedEmailSettings implements IEmailSettings {
+class ValidatedEmailTemplates implements IEmailTemplates {
   @ValidateNested()
   @Type(() => ValidatedEmailTemplate)
   public verifyEmail!: IEmailTemplate;
@@ -26,6 +26,6 @@ class ValidatedEmailSettings implements IEmailSettings {
 export class UpdateEmailSettingsApiRequest implements IUpdateEmailSettingsApiRequest {
   @IsDefined()
   @ValidateNested()
-  @Type(() => ValidatedEmailSettings)
-  public data!: IEmailSettings;
+  @Type(() => ValidatedEmailTemplates)
+  public data!: IEmailTemplates;
 }

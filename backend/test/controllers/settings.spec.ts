@@ -28,7 +28,7 @@ describe("SettingsController", () => {
     expect.assertions(1);
 
     const settings = new EmailSettings();
-    await controller.updateEmailSettings({ data: settings });
-    expect(service.mocks.updateEmailSettings).toBeCalledWith(settings);
+    await controller.updateEmailSettings({ data: settings.templates });
+    expect(service.mocks.updateEmailTemplates).toBeCalledWith(settings.templates);
   });
 });

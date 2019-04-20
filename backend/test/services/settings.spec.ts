@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { IEmailSettings } from "../../../types/settings";
+import { IEmailTemplates } from "../../../types/settings";
 import { Settings } from "../../src/entities/settings";
 import { IDatabaseService } from "../../src/services/database";
 import { ILoggerService } from "../../src/services/log";
@@ -47,34 +47,34 @@ describe("SettingsService", () => {
     expect(settingsInTable).toHaveLength(1);
   });
 
-  it("updates email settings", async () => {
+  it("updates email templates", async () => {
     expect.assertions(2);
 
-    const updatedSettings: Partial<IEmailSettings> = {
+    const updatedTemplates: Partial<IEmailTemplates> = {
       verifyEmail: {
         htmlTemplate: "foo",
         textTemplate: "bar",
       },
     };
 
-    await settingsService.updateEmailSettings(updatedSettings);
+    await settingsService.updateEmailTemplates(updatedTemplates);
     const settings = await settingsService.getSettings();
 
-    expect(settings.email.verifyEmail.htmlTemplate).toBe(updatedSettings.verifyEmail!.htmlTemplate);
-    expect(settings.email.verifyEmail.textTemplate).toBe(updatedSettings.verifyEmail!.textTemplate);
+    expect(settings.email.templates.verifyEmail.htmlTemplate).toBe(updatedTemplates.verifyEmail!.htmlTemplate);
+    expect(settings.email.templates.verifyEmail.textTemplate).toBe(updatedTemplates.verifyEmail!.textTemplate);
   });
 
-  it("doesn't pollute other settings by updating email settings", async () => {
+  it("doesn't pollute other settings by updating email templates", async () => {
     expect.assertions(2);
 
-    type PollutedEmailSettings = Partial<IEmailSettings> & {
+    type PollutedEmailSettings = Partial<IEmailTemplates> & {
       foo: string;
       verifyEmail: {
         bar: string;
       }
     };
 
-    const updatedSettings: PollutedEmailSettings = {
+    const updatedTemplates: PollutedEmailSettings = {
       foo: "test",
       verifyEmail: {
         bar: "test",
@@ -83,9 +83,9 @@ describe("SettingsService", () => {
       },
     };
 
-    await settingsService.updateEmailSettings(updatedSettings);
+    await settingsService.updateEmailTemplates(updatedTemplates);
     const settings = await settingsService.getSettings();
-    const emailSettings = settings.email as PollutedEmailSettings;
+    const emailSettings = settings.email.templates as PollutedEmailSettings;
 
     expect(emailSettings.foo).not.toBeDefined();
     expect(emailSettings.verifyEmail.bar).not.toBeDefined();

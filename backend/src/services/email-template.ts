@@ -1,7 +1,7 @@
 import * as Handlebars from "handlebars";
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { IEmailSettings } from "../../../types/settings";
+import { IEmailTemplates } from "../../../types/settings";
 import { User } from "../entities/user";
 import { EmailServiceToken, IEmailService } from "./email";
 import { ISettingsService, SettingsServiceToken } from "./settings";
@@ -53,9 +53,9 @@ export class EmailTemplateService implements IEmailTemplateService {
    * Gets a template by its name.
    * @param name The name of the template to retrieve
    */
-  private async getTemplate<TContext>(name: keyof IEmailSettings): Promise<ICompiledEmailTemplate<TContext>> {
+  private async getTemplate<TContext>(name: keyof IEmailTemplates): Promise<ICompiledEmailTemplate<TContext>> {
     const { email } = await this._settings.getSettings();
-    const emailTemplate = email[name];
+    const emailTemplate = email.templates[name];
 
     return {
       htmlTemplate: Handlebars.compile(emailTemplate.htmlTemplate),

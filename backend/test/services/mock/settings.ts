@@ -5,6 +5,6 @@ export const MockSettingsService = jest.fn(() =>
   new MockedService<ISettingsService>({
     bootstrap: jest.fn(),
     getSettings: jest.fn(),
-    updateEmailSettings: jest.fn(),
+    updateEmailTemplates: jest.fn(),
   }),
 );
