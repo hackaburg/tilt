@@ -7,6 +7,7 @@ import { UserRole } from "../../../types/roles";
 import { User } from "../entities/user";
 import { ActivityServiceToken, IActivityService } from "./activity";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
+import { EmailTemplateServiceToken, IEmailTemplateService } from "./email-template";
 import { HaveibeenpwnedServiceToken, IHaveibeenpwnedService, PasswordReuseError } from "./haveibeenpwned";
 import { ILoggerService, LoggerServiceToken } from "./log";
 import { ITokenService, TokenServiceToken } from "./tokens";
@@ -70,6 +71,7 @@ export class UserService implements IUserService {
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
     @Inject(TokenServiceToken) private readonly _tokens: ITokenService<ITokenContent>,
+    @Inject(EmailTemplateServiceToken) private readonly _email: IEmailTemplateService,
   ) { }
 
   /**
@@ -108,7 +110,9 @@ export class UserService implements IUserService {
     }
 
     this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
-    this._activity.addActivity(user, ActivityEvent.Signup);
+
+    await this._email.sendVerifyEmail(user);
+    await this._activity.addActivity(user, ActivityEvent.Signup);
 
     return user;
   }

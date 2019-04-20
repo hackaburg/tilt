@@ -3,6 +3,7 @@ import { ActivityEvent } from "../../../types/activity";
 import { User } from "../../src/entities/user";
 import { IActivityService } from "../../src/services/activity";
 import { IDatabaseService } from "../../src/services/database";
+import { IEmailTemplateService } from "../../src/services/email-template";
 import { IHaveibeenpwnedService } from "../../src/services/haveibeenpwned";
 import { ILoggerService } from "../../src/services/log";
 import { ITokenService } from "../../src/services/tokens";
@@ -10,6 +11,7 @@ import { IUserService, UserService } from "../../src/services/user";
 import { MockedService } from "./mock";
 import { MockActivityService } from "./mock/activity";
 import { TestDatabaseService } from "./mock/database";
+import { MockEmailTemplateService } from "./mock/email-template";
 import { MockHaveibeenpwnedService } from "./mock/haveibeenpwned";
 import { MockLoggerService } from "./mock/logger";
 import { MockTokenService } from "./mock/tokens";
@@ -21,6 +23,7 @@ describe("UserService", () => {
   let activity: MockedService<IActivityService>;
   let tokens: MockedService<ITokenService<any>>;
   let haveibeenpwned: MockedService<IHaveibeenpwnedService>;
+  let emailTemplates: MockedService<IEmailTemplateService>;
   let userService: IUserService;
 
   beforeAll(async () => {
@@ -37,7 +40,15 @@ describe("UserService", () => {
     activity = new MockActivityService();
     tokens = new MockTokenService();
     haveibeenpwned = new MockHaveibeenpwnedService();
-    userService = new UserService(haveibeenpwned.instance, database, logger.instance, activity.instance, tokens.instance);
+    emailTemplates = new MockEmailTemplateService();
+    userService = new UserService(
+      haveibeenpwned.instance,
+      database,
+      logger.instance,
+      activity.instance,
+      tokens.instance,
+      emailTemplates.instance,
+    );
 
     await userService.bootstrap();
   });
@@ -82,6 +93,13 @@ describe("UserService", () => {
 
     const user = await userService.signup("test@foo.bar", "password");
     expect(activity.mocks.addActivity).toBeCalledWith(user, ActivityEvent.Signup);
+  });
+
+  it("sends a 'verify your email address' email", async () => {
+    expect.assertions(1);
+
+    await userService.signup("test@foo.bar", "password");
+    expect(emailTemplates.mocks.sendVerifyEmail).toHaveBeenCalled();
   });
 
   it("verifies users using their token", async () => {

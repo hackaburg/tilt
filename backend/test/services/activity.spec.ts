@@ -7,6 +7,7 @@ import { IDatabaseService } from "../../src/services/database";
 import { UserService } from "../../src/services/user";
 import { MockActivityService } from "./mock/activity";
 import { TestDatabaseService } from "./mock/database";
+import { MockEmailTemplateService } from "./mock/email-template";
 import { MockHaveibeenpwnedService } from "./mock/haveibeenpwned";
 import { MockLoggerService } from "./mock/logger";
 import { MockTokenService } from "./mock/tokens";
@@ -27,6 +28,7 @@ describe("ActivityService", () => {
       new MockLoggerService().instance,
       new MockActivityService().instance,
       new MockTokenService().instance,
+      new MockEmailTemplateService().instance,
     );
     await users.bootstrap();
     user = await users.signup("test@foo.bar", "password");
