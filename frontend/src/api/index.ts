@@ -1,6 +1,6 @@
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
-import { IUpdateEmailSettingsRequestBody } from "../../../types/settings-email";
+import { IUpdateEmailTemplatesRequestBody } from "../../../types/settings-email";
 import { apiBaseUrl } from "../config";
 import { BackendApi } from "./backend-api";
 import { StaticApi } from "./static-api";
@@ -46,10 +46,10 @@ export interface IApi {
   refreshLoginToken(): Promise<void>;
 
   /**
-   * Updates the email settings.
-   * @param settings The updated email settings
+   * Updates the email templates.
+   * @param templates The updated email templates
    */
-  updateEmailTemplates(settings: Partial<IUpdateEmailSettingsRequestBody>): Promise<void>;
+  updateEmailTemplates(templates: Partial<IUpdateEmailTemplatesRequestBody>): Promise<void>;
 }
 
 /**
