@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
-import { IEmailTemplate, IEmailTemplates } from "../../../types/settings";
-import { updateEmailTemplates } from "../actions/settings";
+import { IEmailSettings, IEmailTemplate, IEmailTemplates } from "../../../types/settings";
+import { updateEmailSettings, updateEmailTemplates } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
 import { IState } from "../state";
 import { EmailTemplateEditor, EmailTemplateEditorPlaceholder } from "./email-template-editor";
 import { Subheading } from "./headings";
+import { Placeholder } from "./placeholder";
+import { StatefulTextInput } from "./text-input";
 
 const Code = styled.span`
   padding: 0.1rem 0.2rem;
@@ -20,27 +22,48 @@ const Code = styled.span`
 `;
 
 interface IEmailSettingsProps {
-  dispatchUpdateEmailSettings: typeof updateEmailTemplates;
+  dispatchUpdateEmailTemplates: typeof updateEmailTemplates;
+  dispatchUpdateEmailSettings: typeof updateEmailSettings;
   settings: IState["settings"];
 }
 
 /**
  * Settings to configure mail templates.
  */
-export const EmailSettings = ({ dispatchUpdateEmailSettings, settings }: IEmailSettingsProps) => {
-  const handleChange = (templateName: keyof IEmailTemplates, template: IEmailTemplate) => {
-    dispatchUpdateEmailSettings({
+export const EmailSettings = ({ dispatchUpdateEmailTemplates, dispatchUpdateEmailSettings, settings }: IEmailSettingsProps) => {
+  const handleTemplateChange = (templateName: keyof IEmailTemplates, template: IEmailTemplate) => {
+    dispatchUpdateEmailTemplates({
       [templateName]: template,
     });
   };
 
-  const [debouncedHandleChange] = useDebouncedCallback(handleChange, debounceDuration, []);
+  const handleSettingsChange = (field: keyof IEmailSettings, value: string) => {
+    dispatchUpdateEmailSettings({
+      [field]: value,
+    });
+  };
+
+  const [debouncedHandleTemplateChange] = useDebouncedCallback(handleTemplateChange, debounceDuration, []);
+  const [debouncedHandleSettingsChange] = useDebouncedCallback(handleSettingsChange, debounceDuration, []);
 
   return (
     <>
       <Subheading>Mail settings</Subheading>
+      <p>Emails sent out will contain the following sender address:</p>
+      {!settings && (
+        <Placeholder width="100%" height="3rem" />
+      )}
+      {settings && (
+        <StatefulTextInput
+          initialValue={settings.email.sender}
+          onChange={(value) => debouncedHandleSettingsChange("sender", value)}
+          title="From"
+          placeholder="applications@your-hackathon.org"
+        />
+      )}
+
       <p>
-        Here you can configure the email templates used to send to applicants. Both the HTML and plain text templates will be sent in a single mail.
+        Use the editors to configure the email templates sent to applicants. The HTML and plain text templates will be sent in the same mail.
         <br />
         You may use Handlebars syntax to access variables injected into the template like <Code>verifyUrl</Code>, <Code>email</Code> or <Code>questions.id</Code>.
       </p>
@@ -57,12 +80,12 @@ export const EmailSettings = ({ dispatchUpdateEmailSettings, settings }: IEmailS
           <EmailTemplateEditor
             title="Verification"
             template={settings.email.templates.verifyEmail}
-            onTemplateChange={(template) => debouncedHandleChange("verifyEmail", template)}
+            onTemplateChange={(template) => debouncedHandleTemplateChange("verifyEmail", template)}
           />
           <EmailTemplateEditor
             title="Forgot password"
             template={settings.email.templates.forgotPasswordEmail}
-            onTemplateChange={(template) => debouncedHandleChange("forgotPasswordEmail", template)}
+            onTemplateChange={(template) => debouncedHandleTemplateChange("forgotPasswordEmail", template)}
           />
         </>
       )}
@@ -76,7 +99,8 @@ const mapStateToProps = (state: IState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators({
-    dispatchUpdateEmailSettings: updateEmailTemplates,
+    dispatchUpdateEmailSettings: updateEmailSettings,
+    dispatchUpdateEmailTemplates: updateEmailTemplates,
   }, dispatch);
 };
 
