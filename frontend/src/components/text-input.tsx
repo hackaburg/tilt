@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { transitionDuration } from "../config";
 import { IThemeProps } from "../theme";
@@ -70,8 +71,7 @@ const Field = styled.input`
   }
 `;
 
-interface ITextInputProps {
-  value: string;
+interface ICommonInputProps {
   onChange: (value: string) => any;
   placeholder: string;
   password?: boolean;
@@ -79,22 +79,48 @@ interface ITextInputProps {
   focus?: boolean;
 }
 
+interface ITextInputProps extends ICommonInputProps {
+  value: string;
+}
+
 /**
  * An input.
  */
-export const TextInput = ({ value, onChange, title, placeholder, password, focus }: ITextInputProps) => {
+export const TextInput = ({ value, onChange, title, placeholder, password, focus }: ITextInputProps) => (
+  <Container>
+    <Field
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      placeholder={placeholder}
+      type={password ? "password" : "text"}
+      autoFocus={focus}
+    />
+    {title && (
+      <Title>{title}</Title>
+    )}
+  </Container>
+);
+
+interface IStatefulTextInputProps extends ICommonInputProps {
+  initialValue: string;
+}
+
+/**
+ * An input, which contains state inside, i.e. can be used to use hooks "conditionally".
+ * Due to state being inside the component, you can render it conditionally, making the state hook conditonal as well.
+ */
+export const StatefulTextInput = ({ initialValue, onChange, ...props }: IStatefulTextInputProps) => {
+  const [text, setText] = useState(initialValue);
+  const handleChange = (value: string) => {
+    setText(value);
+    onChange(value);
+  };
+
   return (
-    <Container>
-      <Field
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        type={password ? "password" : "text"}
-        autoFocus={focus}
-      />
-      {title && (
-        <Title>{title}</Title>
-      )}
-    </Container>
+    <TextInput
+      value={text}
+      onChange={handleChange}
+      {...props}
+    />
   );
 };
