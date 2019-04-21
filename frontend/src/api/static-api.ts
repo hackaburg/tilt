@@ -84,6 +84,13 @@ export class StaticApi implements IApi {
   }
 
   /**
+   * Simulates an update email settings api call.
+   */
+  public async updateEmailSettings(): Promise<void> {
+    await sleep(100);
+  }
+
+  /**
    * Simulates an update email api call.
    */
   public async updateEmailTemplates(): Promise<void> {

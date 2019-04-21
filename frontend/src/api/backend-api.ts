@@ -2,7 +2,7 @@ import { IApi } from ".";
 import { IApiRequest, IApiResponse, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
-import { IUpdateEmailTemplatesRequestBody } from "../../../types/settings-email";
+import { IUpdateEmailSettingsRequestBody, IUpdateEmailTemplatesRequestBody } from "../../../types/settings-email";
 import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
 import { IUserRoleResponseBody } from "../../../types/user-role";
@@ -154,6 +154,14 @@ export class BackendApi implements IApi {
   public async refreshLoginToken(): Promise<void> {
     const response = await this.get<IUserRefreshTokenResponseBody>("/user/refreshtoken");
     setLoginToken(response.token);
+  }
+
+  /**
+   * Updates the email settings.
+   * @param settings The settings to use for updating
+   */
+  public async updateEmailSettings(settings: Partial<IUpdateEmailSettingsRequestBody>): Promise<void> {
+    await this.put<Partial<IUpdateEmailSettingsRequestBody>, void>("/settings/email", settings);
   }
 
   /**
