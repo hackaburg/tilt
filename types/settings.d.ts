@@ -23,6 +23,7 @@ export interface IEmailTemplates {
 }
 
 export interface IEmailTemplate {
+  subject: string;
   textTemplate: string;
   htmlTemplate: string;
 }

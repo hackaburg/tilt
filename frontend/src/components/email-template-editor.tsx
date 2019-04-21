@@ -6,6 +6,7 @@ import { borderRadius } from "../config";
 import { Editor } from "./editor";
 import { Placeholder } from "./placeholder";
 import { SegmentButton } from "./segment-button";
+import { TextInput } from "./text-input";
 
 const editorContainerStyle = css`
   margin: 1rem 0rem;
@@ -18,6 +19,7 @@ const editorContainerStyle = css`
 const DropShadowContainer = styled.div`
   ${editorContainerStyle}
   padding: 1rem;
+  position: relative;
 `;
 
 const Title = styled.h3`
@@ -27,10 +29,9 @@ const Title = styled.h3`
 `;
 
 const ButtonContainer = styled.div`
-  display: inline-block;
-  margin-left: 1rem;
-  position: relative;
-  top: 0.15rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 `;
 
 /**
@@ -51,31 +52,48 @@ interface IEmailTemplateEditor {
  * An editor to modify email templates.
  */
 export const EmailTemplateEditor = ({ title, template, onTemplateChange }: IEmailTemplateEditor) => {
+  const [subject, setSubject] = useState(template.subject);
   const [htmlTemplate, setHtmlTemplate] = useState(template.htmlTemplate);
   const [textTemplate, setTextTemplate] = useState(template.textTemplate);
   const [language, setLanguage] = useState(EditorLanguage.HTML);
 
   const displayedValue = language === EditorLanguage.HTML ? htmlTemplate : textTemplate;
-  const onChange = (value: string) => {
+  const onBodyChange = (value: string) => {
     if (language === EditorLanguage.HTML) {
       setHtmlTemplate(value);
       onTemplateChange({
         htmlTemplate: value,
+        subject,
         textTemplate,
       });
     } else {
       setTextTemplate(value);
       onTemplateChange({
         htmlTemplate,
+        subject,
         textTemplate: value,
       });
     }
   };
 
+  const onSubjectChange = (value: string) => {
+    setSubject(value);
+    onTemplateChange({
+      htmlTemplate,
+      subject: value,
+      textTemplate,
+    });
+  };
+
   return (
     <DropShadowContainer>
       <Title>
-        {title}
+        <TextInput
+          value={subject}
+          onChange={onSubjectChange}
+          title={`${title} subject`}
+          placeholder="e.g. 'win free money'"
+        />
         <ButtonContainer>
           <SegmentButton
             choices={[EditorLanguage.HTML, EditorLanguage.Text]}
@@ -86,7 +104,7 @@ export const EmailTemplateEditor = ({ title, template, onTemplateChange }: IEmai
       <Editor
         language={language}
         value={displayedValue}
-        onChange={onChange}
+        onChange={onBodyChange}
       />
     </DropShadowContainer>
   );

@@ -19,10 +19,12 @@ export class StaticApi implements IApi {
         templates: {
           forgotPasswordEmail: {
             htmlTemplate: "",
+            subject: "",
             textTemplate: "",
           },
           verifyEmail: {
             htmlTemplate: "",
+            subject: "",
             textTemplate: "",
           },
         },

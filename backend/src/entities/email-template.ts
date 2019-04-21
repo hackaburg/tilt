@@ -7,6 +7,9 @@ export class EmailTemplate implements IEmailTemplate {
   public id!: number;
 
   @Column()
+  public subject: string = "";
+
+  @Column()
   public htmlTemplate: string = "";
 
   @Column()

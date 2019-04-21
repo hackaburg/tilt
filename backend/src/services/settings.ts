@@ -77,6 +77,7 @@ export class SettingsService implements ISettingsService {
       if (updatedTemplate) {
         existingTemplate.htmlTemplate = updatedTemplate.htmlTemplate;
         existingTemplate.textTemplate = updatedTemplate.textTemplate;
+        existingTemplate.subject = updatedTemplate.subject;
       }
     }
 

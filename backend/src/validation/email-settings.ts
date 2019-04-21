@@ -6,6 +6,10 @@ import { IUpdateEmailSettingsApiRequest } from "../../../types/settings-email";
 class ValidatedEmailTemplate implements IEmailTemplate {
   @IsDefined()
   @IsString()
+  public subject!: string;
+
+  @IsDefined()
+  @IsString()
   public textTemplate!: string;
 
   @IsDefined()

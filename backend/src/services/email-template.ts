@@ -9,6 +9,7 @@ import { ISettingsService, SettingsServiceToken } from "./settings";
 interface ICompiledEmailTemplate<TContext> {
   htmlTemplate: Handlebars.TemplateDelegate<TContext>;
   textTemplate: Handlebars.TemplateDelegate<TContext>;
+  subject: Handlebars.TemplateDelegate<TContext>;
 }
 
 interface IDefaultEmailContext {
@@ -59,6 +60,7 @@ export class EmailTemplateService implements IEmailTemplateService {
 
     return {
       htmlTemplate: Handlebars.compile(emailTemplate.htmlTemplate),
+      subject: Handlebars.compile(emailTemplate.subject),
       textTemplate: Handlebars.compile(emailTemplate.textTemplate),
     };
   }
@@ -74,9 +76,10 @@ export class EmailTemplateService implements IEmailTemplateService {
       verifyUrl: user.verifyToken,
     };
 
+    const subject = template.subject(context);
     const htmlBody = template.htmlTemplate(context);
     const textBody = template.textTemplate(context);
 
-    await this._email.sendEmail("", user.email, "Verify your email address", htmlBody, textBody);
+    await this._email.sendEmail("", user.email, subject, htmlBody, textBody);
   }
 }

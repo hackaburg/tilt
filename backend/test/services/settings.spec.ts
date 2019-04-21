@@ -48,11 +48,12 @@ describe("SettingsService", () => {
   });
 
   it("updates email templates", async () => {
-    expect.assertions(2);
+    expect.assertions(3);
 
     const updatedTemplates: Partial<IEmailTemplates> = {
       verifyEmail: {
         htmlTemplate: "foo",
+        subject: "foobar",
         textTemplate: "bar",
       },
     };
@@ -62,6 +63,7 @@ describe("SettingsService", () => {
 
     expect(settings.email.templates.verifyEmail.htmlTemplate).toBe(updatedTemplates.verifyEmail!.htmlTemplate);
     expect(settings.email.templates.verifyEmail.textTemplate).toBe(updatedTemplates.verifyEmail!.textTemplate);
+    expect(settings.email.templates.verifyEmail.subject).toBe(updatedTemplates.verifyEmail!.subject);
   });
 
   it("doesn't pollute other settings by updating email templates", async () => {
@@ -79,6 +81,7 @@ describe("SettingsService", () => {
       verifyEmail: {
         bar: "test",
         htmlTemplate: "foo",
+        subject: "foobar",
         textTemplate: "bar",
       },
     };
