@@ -1,9 +1,41 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "../backend/tslint.json"
+      "tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+      "completed-docs": [
+        true,
+        {
+          "enums": true,
+          "functions": {
+            "visibilities": [
+              "exported"
+            ]
+          },
+          "interfaces": {
+            "visibilities": [
+              "exported"
+            ]
+          },
+          "methods": true,
+          "types": {
+            "visibilities": [
+              "exported"
+            ]
+          },
+          "variables": {
+            "visibilities": [
+              "exported"
+            ]
+          }
+        }
+      ],
+      "max-classes-per-file": false,
+      "max-line-length": false,
+      "member-ordering": false,
+      "variable-name": false
+    },
     "rulesDirectory": []
 }
