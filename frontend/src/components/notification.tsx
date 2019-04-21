@@ -30,6 +30,8 @@ const Container = styled.div<IContainerProps>`
   transition-property: right, opacity;
   transition-duration: ${transitionDuration};
 
+  z-index: 100;
+
   ${(props) => props.show && `
     right: 1rem;
     opacity: 1;
