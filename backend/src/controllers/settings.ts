@@ -3,7 +3,8 @@ import { Inject } from "typedi";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { ISettingsService, SettingsServiceToken } from "../services/settings";
-import { UpdateEmailSettingsApiRequest, UpdateEmailTemplatesApiRequest } from "../validation/email-settings";
+import { UpdateEmailSettingsApiRequest } from "../validation/email-settings";
+import { UpdateEmailTemplatesApiRequest } from "../validation/email-templates";
 
 @JsonController("/settings")
 export class SettingsController {
