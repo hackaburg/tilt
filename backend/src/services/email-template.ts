@@ -1,16 +1,10 @@
 import * as Handlebars from "handlebars";
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { IEmailTemplates } from "../../../types/settings";
+import { IEmailTemplate } from "../../../types/settings";
 import { User } from "../entities/user";
 import { EmailServiceToken, IEmailService } from "./email";
 import { ISettingsService, SettingsServiceToken } from "./settings";
-
-interface ICompiledEmailTemplate<TContext> {
-  htmlTemplate: Handlebars.TemplateDelegate<TContext>;
-  textTemplate: Handlebars.TemplateDelegate<TContext>;
-  subject: Handlebars.TemplateDelegate<TContext>;
-}
 
 interface IDefaultEmailContext {
   email: string;
@@ -51,17 +45,15 @@ export class EmailTemplateService implements IEmailTemplateService {
   }
 
   /**
-   * Gets a template by its name.
-   * @param name The name of the template to retrieve
+   * Compiles a template with the given context.
+   * @param template The template to use for compilation
+   * @param context The context to inject into the template
    */
-  private async getTemplate<TContext>(name: keyof IEmailTemplates): Promise<ICompiledEmailTemplate<TContext>> {
-    const { email } = await this._settings.getSettings();
-    const emailTemplate = email.templates[name];
-
+  private compileTemplate<TContext>(template: IEmailTemplate, context: TContext): IEmailTemplate {
     return {
-      htmlTemplate: Handlebars.compile(emailTemplate.htmlTemplate),
-      subject: Handlebars.compile(emailTemplate.subject),
-      textTemplate: Handlebars.compile(emailTemplate.textTemplate),
+      htmlTemplate: Handlebars.compile(template.htmlTemplate)(context),
+      subject: Handlebars.compile(template.subject)(context),
+      textTemplate: Handlebars.compile(template.textTemplate)(context),
     };
   }
 
@@ -70,16 +62,12 @@ export class EmailTemplateService implements IEmailTemplateService {
    * @param user The user expecting the verification email
    */
   public async sendVerifyEmail(user: User): Promise<void> {
-    const template = await this.getTemplate<IVerifyEmailContext>("verifyEmail");
-    const context: IVerifyEmailContext = {
+    const { email } = await this._settings.getSettings();
+    const template = this.compileTemplate<IVerifyEmailContext>(email.templates.verifyEmail, {
       email: user.email,
       verifyUrl: user.verifyToken,
-    };
+    });
 
-    const subject = template.subject(context);
-    const htmlBody = template.htmlTemplate(context);
-    const textBody = template.textTemplate(context);
-
-    await this._email.sendEmail("", user.email, subject, htmlBody, textBody);
+    await this._email.sendEmail(email.sender, user.email, template.subject, template.htmlTemplate, template.textTemplate);
   }
 }
