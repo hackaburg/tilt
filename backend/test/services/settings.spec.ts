@@ -93,4 +93,16 @@ describe("SettingsService", () => {
     expect(emailSettings.foo).not.toBeDefined();
     expect(emailSettings.verifyEmail.bar).not.toBeDefined();
   });
+
+  it("updates email settings", async () => {
+    expect.assertions(1);
+
+    const sender = "test";
+    await settingsService.updateEmailSettings({
+      sender,
+    });
+
+    const settings = await settingsService.getSettings();
+    expect(settings.email.sender).toBe(sender);
+  });
 });

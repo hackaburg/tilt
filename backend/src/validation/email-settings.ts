@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
-import { IsDefined, IsString, ValidateNested } from "class-validator";
+import { IsDefined, IsEmail, IsEmpty, IsString, ValidateNested } from "class-validator";
 import { IEmailTemplate, IEmailTemplates } from "../../../types/settings";
-import { IUpdateEmailTemplatesApiRequest, IUpdateEmailTemplatesRequestBody } from "../../../types/settings-email";
+import { IUpdateEmailSettingsApiRequest, IUpdateEmailSettingsRequestBody, IUpdateEmailTemplatesApiRequest, IUpdateEmailTemplatesRequestBody } from "../../../types/settings-email";
 
 class ValidatedEmailTemplate implements IEmailTemplate {
   @IsDefined()
@@ -27,9 +27,26 @@ class ValidatedEmailTemplates implements IUpdateEmailTemplatesRequestBody {
   public forgotPasswordEmail!: IEmailTemplate;
 }
 
-export class UpdateEmailSettingsApiRequest implements IUpdateEmailTemplatesApiRequest {
+export class UpdateEmailTemplatesApiRequest implements IUpdateEmailTemplatesApiRequest {
   @IsDefined()
   @ValidateNested()
   @Type(() => ValidatedEmailTemplates)
-  public data!: IEmailTemplates;
+  public data!: IUpdateEmailTemplatesRequestBody;
+}
+
+class ValidatedEmailSettings implements IUpdateEmailSettingsRequestBody {
+  @IsDefined()
+  @IsEmail()
+  @IsString()
+  public sender!: string;
+
+  @IsEmpty()
+  public templates!: IEmailTemplates;
+}
+
+export class UpdateEmailSettingsApiRequest implements IUpdateEmailSettingsApiRequest {
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => ValidatedEmailSettings)
+  public data!: IUpdateEmailSettingsRequestBody;
 }

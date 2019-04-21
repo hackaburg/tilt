@@ -3,7 +3,7 @@ import { Inject } from "typedi";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { ISettingsService, SettingsServiceToken } from "../services/settings";
-import { UpdateEmailSettingsApiRequest } from "../validation/email-settings";
+import { UpdateEmailSettingsApiRequest, UpdateEmailTemplatesApiRequest } from "../validation/email-settings";
 
 @JsonController("/settings")
 export class SettingsController {
@@ -20,11 +20,20 @@ export class SettingsController {
   }
 
   /**
+   * Updates the email settings, e.g. the email sender.
+   */
+  @Put("/email")
+  @Authorized(UserRole.Owner)
+  public async updateEmailSettings(@Body() { data: settings }: UpdateEmailSettingsApiRequest): Promise<void> {
+    await this._settings.updateEmailSettings(settings);
+  }
+
+  /**
    * Updates the email templates.
    */
   @Put("/email/templates")
   @Authorized(UserRole.Owner)
-  public async updateEmailTemplates(@Body() { data: templates }: UpdateEmailSettingsApiRequest): Promise<void> {
+  public async updateEmailTemplates(@Body() { data: templates }: UpdateEmailTemplatesApiRequest): Promise<void> {
     await this._settings.updateEmailTemplates(templates);
   }
 }

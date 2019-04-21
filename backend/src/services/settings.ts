@@ -1,7 +1,7 @@
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { IEmailTemplates, ISettings } from "../../../types/settings";
+import { IEmailSettings, IEmailTemplates, ISettings } from "../../../types/settings";
 import { EmailTemplates } from "../entities/email-templates";
 import { Settings } from "../entities/settings";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
@@ -17,10 +17,16 @@ export interface ISettingsService extends IService {
   getSettings(): Promise<ISettings>;
 
   /**
-   * Updates the email settings with the given settings.
-   * @param emailSettings The updated email settings
+   * Updates the email settings.
+   * @param settings The updated email settings
    */
-  updateEmailTemplates(emailSettings: Partial<IEmailTemplates>): Promise<void>;
+  updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void>;
+
+  /**
+   * Updates the email templates.
+   * @param templates The updated email templates
+   */
+  updateEmailTemplates(templates: Partial<IEmailTemplates>): Promise<void>;
 }
 
 /**
@@ -63,8 +69,18 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
-   * Updates the email settings with the given templates.
-   * @param templates The templates to use for the update
+   * Updates the email settings.
+   * @param settings The updated email settings
+   */
+  public async updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void> {
+    const existingSettings = await this.getSettings();
+    existingSettings.email.sender = settings.sender || existingSettings.email.sender;
+    await this._settings!.save(existingSettings);
+  }
+
+  /**
+   * Updates the email templates.
+   * @param templates The updated email templates
    */
   public async updateEmailTemplates(templates: Partial<IEmailTemplates>): Promise<void> {
     const settingsKeys = Object.keys(new EmailTemplates()) as Array<keyof IEmailTemplates>;
