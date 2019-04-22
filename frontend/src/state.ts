@@ -33,6 +33,7 @@ export enum FormType {
   None = "none",
   Login = "login",
   Signup = "signup",
+  MailSettings = "mail_settings",
 }
 
 interface INotification {

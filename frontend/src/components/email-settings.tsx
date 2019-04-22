@@ -6,9 +6,10 @@ import { useDebouncedCallback } from "use-debounce";
 import { IEmailSettings, IEmailTemplate, IEmailTemplates } from "../../../types/settings";
 import { updateEmailSettings, updateEmailTemplates } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
-import { IState } from "../state";
+import { FormType, IState } from "../state";
 import { EmailTemplateEditor, EmailTemplateEditorPlaceholder } from "./email-template-editor";
 import { Subheading } from "./headings";
+import { Message } from "./message";
 import { Placeholder } from "./placeholder";
 import { StatefulTextInput } from "./text-input";
 
@@ -25,12 +26,13 @@ interface IEmailSettingsProps {
   dispatchUpdateEmailTemplates: typeof updateEmailTemplates;
   dispatchUpdateEmailSettings: typeof updateEmailSettings;
   settings: IState["settings"];
+  error?: string | false;
 }
 
 /**
  * Settings to configure mail templates.
  */
-export const EmailSettings = ({ dispatchUpdateEmailTemplates, dispatchUpdateEmailSettings, settings }: IEmailSettingsProps) => {
+export const EmailSettings = ({ dispatchUpdateEmailTemplates, dispatchUpdateEmailSettings, settings, error }: IEmailSettingsProps) => {
   const handleTemplateChange = (templateName: keyof IEmailTemplates, template: IEmailTemplate) => {
     dispatchUpdateEmailTemplates({
       [templateName]: template,
@@ -49,6 +51,10 @@ export const EmailSettings = ({ dispatchUpdateEmailTemplates, dispatchUpdateEmai
   return (
     <>
       <Subheading>Mail settings</Subheading>
+      {error && (
+        <Message error><b>Error:</b> {error}</Message>
+      )}
+
       <p>Emails sent out will contain the following sender address:</p>
       {!settings && (
         <Placeholder width="100%" height="3rem" />
@@ -94,6 +100,7 @@ export const EmailSettings = ({ dispatchUpdateEmailTemplates, dispatchUpdateEmai
 };
 
 const mapStateToProps = (state: IState) => ({
+  error: state.form.type === FormType.MailSettings && state.request.error,
   settings: state.settings,
 });
 

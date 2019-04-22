@@ -2,6 +2,8 @@ import { Dispatch } from "redux";
 import { IAction } from ".";
 import { IEmailSettings, IEmailTemplates, ISettings } from "../../../types/settings";
 import { api } from "../api";
+import { FormType } from "../state";
+import { setFormType } from "./form";
 import { notifyChangesSaved } from "./notify";
 import { performRequest } from "./request";
 
@@ -34,6 +36,7 @@ export const fetchSettings = () => performRequest(async (dispatch: Dispatch) => 
  * @param settings The settings to update
  */
 export const updateEmailSettings = (settings: Partial<IEmailSettings>) => performRequest(async (dispatch: Dispatch) => {
+  dispatch(setFormType(FormType.MailSettings));
   await api.updateEmailSettings(settings);
   notifyChangesSaved()(dispatch);
 });
@@ -43,6 +46,7 @@ export const updateEmailSettings = (settings: Partial<IEmailSettings>) => perfor
  * @param templates The templates to update
  */
 export const updateEmailTemplates = (templates: Partial<IEmailTemplates>) => performRequest(async (dispatch: Dispatch) => {
+  dispatch(setFormType(FormType.MailSettings));
   await api.updateEmailTemplates(templates);
   notifyChangesSaved()(dispatch);
 });
