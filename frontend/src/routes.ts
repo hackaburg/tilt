@@ -2,12 +2,12 @@
  * The routes in the frontend.
  */
 export enum Routes {
+  Activity = "/activity",
   Dashboard = "/",
   Login = "/login",
   Logout = "/logout",
-  Settings = "/settings",
-  Activity = "/activity",
-  Users = "/users",
-  Statistics = "/statistics",
   Questions = "/questions",
+  Settings = "/settings",
+  Statistics = "/statistics",
+  Users = "/users",
 }
