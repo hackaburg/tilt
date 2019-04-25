@@ -17,7 +17,7 @@ interface ICommonInputProps {
   onChange: (value: string) => any;
   placeholder: string;
   password?: boolean;
-  title?: string;
+  title?: React.ReactChild;
   focus?: boolean;
 }
 

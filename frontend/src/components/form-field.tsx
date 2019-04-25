@@ -58,7 +58,7 @@ const Title = styled.label<ITitleProps>`
 interface IFormFieldProps {
   active: boolean;
   empty: boolean;
-  title?: string;
+  title?: React.ReactChild;
   children: React.ReactChild;
   borderBottom?: boolean;
 }

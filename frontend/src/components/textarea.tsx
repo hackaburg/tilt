@@ -19,7 +19,7 @@ interface ITextAreaProps {
   value: string;
   onChange: (value: string) => any;
   placeholder: string;
-  title?: string;
+  title?: React.ReactChild;
 }
 
 /**

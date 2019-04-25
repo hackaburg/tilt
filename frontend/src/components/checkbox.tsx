@@ -21,7 +21,7 @@ interface ICheckboxesProps {
   values: string[];
   selected: string[];
   onChange: (selected: string[]) => any;
-  title?: string;
+  title?: React.ReactChild;
 }
 
 /**

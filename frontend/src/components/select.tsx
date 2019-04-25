@@ -26,7 +26,7 @@ interface ISelectProps {
   values: string[];
   value: string;
   onChange: (value: string) => any;
-  title?: string;
+  title?: React.ReactChild;
   placeholder?: string;
 }
 
