@@ -5,6 +5,7 @@ import { IThemeProps } from "../theme";
 
 interface IContainerProps {
   active: boolean;
+  borderBottom: boolean;
 }
 
 const Container = styled.div<IContainerProps>`
@@ -12,7 +13,10 @@ const Container = styled.div<IContainerProps>`
   margin: 1rem 0rem;
   padding-top: 1rem;
 
-  border-bottom: 1.5px solid #aaa;
+  ${({ borderBottom }) => borderBottom && `
+    border-bottom: 1.5px solid #aaa;
+  `}
+
   transition-property: border-color;
   transition-duration: ${transitionDuration};
 
@@ -56,13 +60,17 @@ interface IFormFieldProps {
   empty: boolean;
   title?: string;
   children: React.ReactChild;
+  borderBottom?: boolean;
 }
 
 /**
  * A form field, whose label moves up when the field is active.
  */
-export const FormField = ({ active, empty, title, children }: IFormFieldProps) => (
-  <Container active={active}>
+export const FormField = ({ active, empty, title, children, borderBottom }: IFormFieldProps) => (
+  <Container
+    active={active}
+    borderBottom={borderBottom === undefined || borderBottom}
+  >
     {title && (
       <Title
         active={active}
