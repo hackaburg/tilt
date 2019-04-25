@@ -13,7 +13,7 @@ import { FadeContainer } from "./fade-container";
 import { Heading } from "./headings";
 import { ConnectedLoginImage } from "./login-image";
 import { Message } from "./message";
-import { TextInput } from "./text-input";
+import { TextInput, TextInputType } from "./text-input";
 
 const Container = styled.div`
   margin: 2rem 0rem;
@@ -98,7 +98,7 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
                   placeholder="please don't use 'password'"
                   value={password}
                   onChange={(value) => setPassword(value)}
-                  password={true}
+                  type={TextInputType.Password}
                 />
               </Fields>
 
