@@ -47,3 +47,16 @@ export const shimmerBackgroundColor = "#f7f7f7";
  * The color of the loading placeholder shimmer.
  */
 export const shimmerColor = "#fefefe";
+
+/**
+ * The size of the column's padding.
+ */
+export const gridColumnPadding = "0.5rem";
+
+/**
+ * The CSS breakpoints to determine whether a device is a tablet or a phone.
+ */
+export const mediaBreakpoints = {
+  phone: "767px",
+  tablet: "1024px",
+};
