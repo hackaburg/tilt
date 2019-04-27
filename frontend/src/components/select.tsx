@@ -6,7 +6,7 @@ import { FormField, IPlaceholderAwareProps } from "./form-field";
 
 const Field = styled.select<IPlaceholderAwareProps>`
   width: 100%;
-  padding: 0.75rem 0rem;
+  padding: 0.5rem 0rem 0.25rem 0rem;
 
   -webkit-appearance: none;
   background-color: transparent;

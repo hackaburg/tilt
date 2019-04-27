@@ -10,8 +10,8 @@ interface IContainerProps {
 
 const Container = styled.div<IContainerProps>`
   position: relative;
-  margin: 1rem 0rem;
-  padding-top: 1rem;
+  margin: 0.75rem 0rem;
+  padding-top: 0.5rem;
 
   ${({ borderBottom }) => borderBottom && `
     border-bottom: 1.5px solid #aaa;
@@ -32,7 +32,7 @@ interface ITitleProps {
 
 const Title = styled.label<ITitleProps>`
   position: absolute;
-  top: 2rem;
+  top: 1.25rem;
   display: block;
 
   color: currentColor;

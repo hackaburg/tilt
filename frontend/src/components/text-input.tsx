@@ -5,7 +5,7 @@ import { FormField, getPlaceholderStyle, IPlaceholderAwareProps } from "./form-f
 
 const FieldStyle = css`
   width: 100%;
-  padding: 0.75rem 0rem;
+  padding: 0.5rem 0rem 0.25rem 0rem;
 
   font-size: 14px;
   border: none;
