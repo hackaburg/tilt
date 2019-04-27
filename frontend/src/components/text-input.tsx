@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import styled, { css } from "styled-components";
+import { useFocus } from "../hooks/use-focus";
 import { FormField, getPlaceholderStyle, IPlaceholderAwareProps } from "./form-field";
 
 const FieldStyle = css`
@@ -49,7 +50,7 @@ interface ITextInputProps extends ICommonInputProps {
  * An input, that can also be a textarea, depending on its `type`.
  */
 export const TextInput = ({ value, onChange, title, placeholder, type, focus }: ITextInputProps) => {
-  const [isFocused, setIsFocused] = useState(!!focus);
+  const [isFocused, onFocus, onBlur] = useFocus();
   const isEmpty = !value;
   const fieldType = type || TextInputType.Text;
   const fieldProps = {
@@ -61,8 +62,8 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus }: 
     placeholder,
     value,
 
-    onBlur: () => setIsFocused(false),
-    onFocus: () => setIsFocused(true),
+    onBlur,
+    onFocus,
   };
 
   const field =
