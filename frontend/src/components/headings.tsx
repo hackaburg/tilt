@@ -19,3 +19,11 @@ export const Subheading = styled.h2`
  * Highlight something in a heading.
  */
 export const Highlight = styled.b``;
+
+/**
+ * A heading under @see Subheading
+ */
+export const Sectionheading = styled.h3`
+  font-size: 1.1rem;
+  font-weight: lighter;
+`;
