@@ -34,9 +34,12 @@ export const Checkboxes = ({ radio, values, selected, onChange, title, mandatory
   const valuesAsChecked = values.map((value) => selected.includes(value));
   const [checked, setChecked] = useState(valuesAsChecked);
   const toggleChecked = (checkedIndex: number) => {
-    const updatedChecked = [
-      ...checked,
-    ];
+    const updatedChecked =
+      radio
+        ? new Array(values.length).fill(false)
+        : [
+          ...checked,
+        ];
 
     updatedChecked[checkedIndex] = !updatedChecked[checkedIndex];
     setChecked(updatedChecked);
@@ -57,7 +60,7 @@ export const Checkboxes = ({ radio, values, selected, onChange, title, mandatory
     <Item key={checkboxesIds[index]}>
       <Input
         id={checkboxesIds[index]}
-        radioGroup={radio ? groupId : undefined}
+        name={radio ? groupId : undefined}
         checked={selected.includes(checkboxValue)}
         type={radio ? "radio" : "checkbox"}
         onChange={() => toggleChecked(index)}
