@@ -57,7 +57,6 @@ export const Sidebar = ({ role, logout }: ISidebarProps) => (
         {role === UserRole.Owner && (
           <>
             <SidebarMenuItem to={Routes.Activity}>Activity</SidebarMenuItem>
-            <SidebarMenuItem to={Routes.Questions}>Questions</SidebarMenuItem>
             <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
           </>
         )}

@@ -6,7 +6,6 @@ export enum Routes {
   Dashboard = "/",
   Login = "/login",
   Logout = "/logout",
-  Questions = "/questions",
   Settings = "/settings",
   Statistics = "/statistics",
   Users = "/users",
