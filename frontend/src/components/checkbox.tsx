@@ -21,13 +21,14 @@ interface ICheckboxesProps {
   values: string[];
   selected: string[];
   onChange: (selected: string[]) => any;
-  title?: React.ReactChild;
+  title?: string;
+  mandatory?: boolean;
 }
 
 /**
  * A checkbox group, which can also be displayed as a radio group.
  */
-export const Checkboxes = ({ radio, values, selected, onChange, title }: ICheckboxesProps) => {
+export const Checkboxes = ({ radio, values, selected, onChange, title, mandatory }: ICheckboxesProps) => {
   const groupId = useUniqueId();
   const checkboxesIds = useUniqueIds(values.length);
   const valuesAsChecked = values.map((value) => selected.includes(value));
@@ -71,6 +72,7 @@ export const Checkboxes = ({ radio, values, selected, onChange, title }: ICheckb
       empty={false}
       borderBottom={false}
       title={title}
+      mandatory={mandatory}
     >
       <Container>
         {checkboxes}

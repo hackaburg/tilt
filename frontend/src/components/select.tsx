@@ -26,14 +26,15 @@ interface ISelectProps {
   values: string[];
   value: string;
   onChange: (value: string) => any;
-  title?: React.ReactChild;
   placeholder?: string;
+  title?: string;
+  mandatory?: boolean;
 }
 
 /**
  * A select dropdown.
  */
-export const Select = ({ values, value, onChange, title, placeholder }: ISelectProps) => {
+export const Select = ({ values, value, onChange, title, placeholder, mandatory }: ISelectProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const isEmpty = !value || value === placeholder;
   const options = values.map((optionValue) => (
@@ -45,6 +46,7 @@ export const Select = ({ values, value, onChange, title, placeholder }: ISelectP
       active={isFocused && !isEmpty}
       empty={isEmpty}
       title={title}
+      mandatory={mandatory}
     >
       <Field
         active={isFocused}

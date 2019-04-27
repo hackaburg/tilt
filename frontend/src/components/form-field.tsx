@@ -28,6 +28,7 @@ const Container = styled.div<IContainerProps>`
 interface ITitleProps {
   active: boolean;
   moveUp: boolean;
+  mandatory: boolean;
 }
 
 const Title = styled.label<ITitleProps>`
@@ -53,20 +54,29 @@ const Title = styled.label<ITitleProps>`
   ${({ active, theme }) => active && `
     color: ${theme.colorGradientEnd};
   `}
+
+  ${({ mandatory }) => mandatory && `
+    &::after {
+      content: "*";
+      display: inline;
+      color: red;
+    }
+  `}
 `;
 
 interface IFormFieldProps {
   active: boolean;
   empty: boolean;
-  title?: React.ReactChild;
   children: React.ReactChild;
   borderBottom?: boolean;
+  title?: string;
+  mandatory?: boolean;
 }
 
 /**
  * A form field, whose label moves up when the field is active.
  */
-export const FormField = ({ active, empty, title, children, borderBottom }: IFormFieldProps) => (
+export const FormField = ({ active, empty, title, children, borderBottom, mandatory }: IFormFieldProps) => (
   <Container
     active={active}
     borderBottom={borderBottom === undefined || borderBottom}
@@ -75,7 +85,10 @@ export const FormField = ({ active, empty, title, children, borderBottom }: IFor
       <Title
         active={active}
         moveUp={active || !empty}
-      >{title}</Title>
+        mandatory={!!mandatory}
+      >
+        {title}
+      </Title>
     )}
 
     {children}

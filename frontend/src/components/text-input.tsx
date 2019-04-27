@@ -38,8 +38,9 @@ interface ICommonInputProps {
   onChange: (value: string) => any;
   placeholder: string;
   type?: TextInputType;
-  title?: React.ReactChild;
   focus?: boolean;
+  title?: string;
+  mandatory?: boolean;
 }
 
 interface ITextInputProps extends ICommonInputProps {
@@ -49,7 +50,7 @@ interface ITextInputProps extends ICommonInputProps {
 /**
  * An input, that can also be a textarea, depending on its `type`.
  */
-export const TextInput = ({ value, onChange, title, placeholder, type, focus }: ITextInputProps) => {
+export const TextInput = ({ value, onChange, title, placeholder, type, focus, mandatory }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus();
   const isEmpty = !value;
   const fieldType = type || TextInputType.Text;
@@ -83,6 +84,7 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus }: 
       active={isFocused}
       empty={isEmpty}
       title={title}
+      mandatory={mandatory}
     >
       {field}
     </FormField>
