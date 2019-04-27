@@ -32,25 +32,26 @@ export enum TextInputType {
   Text = "text",
   Password = "password",
   Area = "area",
+  Number = "number",
 }
 
-interface ICommonInputProps {
-  onChange: (value: string) => any;
-  placeholder: string;
-  type?: TextInputType;
+interface ITextInputProps {
+  placeholder?: string;
   focus?: boolean;
   title?: string;
   mandatory?: boolean;
-}
-
-interface ITextInputProps extends ICommonInputProps {
-  value: string;
+  type?: TextInputType;
+  value: any;
+  onChange: (value: any) => any;
+  min?: number;
+  max?: number;
+  allowDecimals?: boolean;
 }
 
 /**
  * An input, that can also be a textarea, depending on its `type`.
  */
-export const TextInput = ({ value, onChange, title, placeholder, type, focus, mandatory }: ITextInputProps) => {
+export const TextInput = ({ value, onChange, title, placeholder, type, focus, mandatory, min, max, allowDecimals }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus();
   const isEmpty = !value;
   const fieldType = type || TextInputType.Text;
@@ -59,7 +60,17 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus, ma
     autoFocus: focus,
     empty: isEmpty,
 
-    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(event.target.value),
+    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const changedValue = event.target.value;
+
+      if (type === TextInputType.Number) {
+        const parsedValue = Number(changedValue);
+        onChange(parsedValue);
+        return;
+      }
+
+      onChange(changedValue);
+    },
     placeholder,
     value,
 
@@ -74,7 +85,10 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus, ma
       )
       : (
         <Input
-          type={type}
+          type={fieldType}
+          min={min}
+          max={max}
+          step={allowDecimals ? "any" : 1}
           {...fieldProps}
         />
       );
@@ -91,7 +105,13 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus, ma
   );
 };
 
-interface IStatefulTextInputProps extends ICommonInputProps {
+interface IStatefulTextInputProps {
+  onChange: (value: string) => any;
+  placeholder: string;
+  type?: TextInputType;
+  focus?: boolean;
+  title?: string;
+  mandatory?: boolean;
   initialValue: string;
 }
 
