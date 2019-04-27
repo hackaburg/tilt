@@ -53,7 +53,7 @@ interface ITextInputProps {
  */
 export const TextInput = ({ value, onChange, title, placeholder, type, focus, mandatory, min, max, allowDecimals }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus();
-  const isEmpty = !value;
+  const isEmpty = `${value}`.trim().length === 0;
   const fieldType = type || TextInputType.Text;
   const fieldProps = {
     active: isFocused,
