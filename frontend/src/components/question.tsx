@@ -86,9 +86,9 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
       const base: IQuestionBase = {
         description: "",
         mandatory: false,
-        parentQuestionReferenceName: "",
+        parentReferenceName: "",
         referenceName: "",
-        showIfParentQuestionHasValue: "",
+        showIfParentHasValue: "",
         title: "",
       };
 
@@ -194,8 +194,8 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
           <Row>
             <Col percent={50}>
               <TextInput
-                value={question.parentQuestionReferenceName!}
-                onChange={(parentQuestionReferenceName) => handleQuestionChange({ parentQuestionReferenceName })}
+                value={question.parentReferenceName!}
+                onChange={(parentReferenceName) => handleQuestionChange({ parentReferenceName })}
                 title="Parent question reference name"
                 placeholder="no parent question"
               />
@@ -203,8 +203,8 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
 
             <Col percent={50}>
               <TextInput
-                value={question.showIfParentQuestionHasValue!}
-                onChange={(showIfParentQuestionHasValue) => handleQuestionChange({ showIfParentQuestionHasValue })}
+                value={question.showIfParentHasValue!}
+                onChange={(showIfParentHasValue) => handleQuestionChange({ showIfParentHasValue })}
                 title="Only show this question if the parent question has this value"
                 placeholder="no value"
               />

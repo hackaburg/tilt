@@ -10,8 +10,8 @@ export interface IQuestionBase {
   title: string;
   mandatory: boolean;
   referenceName?: string;
-  parentQuestionReferenceName?: string;
-  showIfParentQuestionHasValue?: string;
+  parentReferenceName?: string;
+  showIfParentHasValue?: string;
 }
 
 export interface ITextQuestion extends IQuestionBase {
