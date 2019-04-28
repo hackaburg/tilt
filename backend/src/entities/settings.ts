@@ -1,5 +1,5 @@
 import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ISettings } from "../../../types/settings";
+import { IEmailSettings, IFrontendSettings, ISettings } from "../../../types/settings";
 import { EmailSettings } from "./email-settings";
 import { FrontendSettings } from "./frontend-settings";
 
@@ -15,9 +15,9 @@ export class Settings implements ISettings {
 
   @OneToOne(() => FrontendSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public frontend!: FrontendSettings;
+  public frontend: IFrontendSettings;
 
   @OneToOne(() => EmailSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public email!: EmailSettings;
+  public email: IEmailSettings;
 }
