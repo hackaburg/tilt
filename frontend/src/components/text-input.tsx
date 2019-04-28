@@ -35,17 +35,20 @@ export enum TextInputType {
   Number = "number",
 }
 
-interface ITextInputProps {
+interface ICommonTextInputProps {
   placeholder?: string;
   focus?: boolean;
   title?: string;
   mandatory?: boolean;
   type?: TextInputType;
-  value: any;
   onChange: (value: any) => any;
   min?: number;
   max?: number;
   allowDecimals?: boolean;
+}
+
+interface ITextInputProps extends ICommonTextInputProps {
+  value: any;
 }
 
 /**
@@ -105,14 +108,8 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus, ma
   );
 };
 
-interface IStatefulTextInputProps {
-  onChange: (value: string) => any;
-  placeholder: string;
-  type?: TextInputType;
-  focus?: boolean;
-  title?: string;
-  mandatory?: boolean;
-  initialValue: string;
+interface IStatefulTextInputProps extends ICommonTextInputProps {
+  initialValue: any;
 }
 
 /**
