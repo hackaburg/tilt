@@ -33,11 +33,12 @@ export const fetchSettings = () => performRequest(async (dispatch: Dispatch) => 
 });
 
 /**
- * Asynchronously updates all settings.
+ * Asynchronously updates all settings. The specified form will be used to display error messages.
+ * @param form The specific form used to update the settings
  * @param settings The settings to update
  */
-export const updateSettings = (settings: IRecursivePartial<ISettings>) => performRequest(async (dispatch: Dispatch) => {
-  dispatch(setFormType(FormType.MailSettings));
+export const updateSettings = (form: FormType, settings: IRecursivePartial<ISettings>) => performRequest(async (dispatch: Dispatch) => {
+  dispatch(setFormType(form));
   await api.updateSettings(settings);
   notifyChangesSaved()(dispatch);
 });

@@ -33,7 +33,7 @@ interface IEmailSettingsProps {
  */
 export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmailSettingsProps) => {
   const handleSettingsChange = (field: keyof IEmailSettings, value: string | IEmailTemplate) => {
-    dispatchUpdateSettings({
+    dispatchUpdateSettings(FormType.MailSettings, {
       email: {
         [field]: value,
       },
