@@ -1,8 +1,7 @@
 import { IApi } from ".";
-import { IApiRequest, IApiResponse, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
+import { IApiRequest, IApiResponse, IRecursivePartial, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
 import { UserRole } from "../../../types/roles";
-import { ISettings } from "../../../types/settings";
-import { IUpdateEmailSettingsRequestBody, IUpdateEmailTemplatesRequestBody } from "../../../types/settings-email";
+import { ISettings, IUpdateSettingsRequestBody } from "../../../types/settings";
 import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
 import { IUserRoleResponseBody } from "../../../types/user-role";
@@ -157,18 +156,10 @@ export class BackendApi implements IApi {
   }
 
   /**
-   * Updates the email settings.
+   * Updates the settings.
    * @param settings The settings to use for updating
    */
-  public async updateEmailSettings(settings: Partial<IUpdateEmailSettingsRequestBody>): Promise<void> {
-    await this.put<Partial<IUpdateEmailSettingsRequestBody>, void>("/settings/email", settings);
-  }
-
-  /**
-   * Updates the email templates.
-   * @param templates The templates to use for updating
-   */
-  public async updateEmailTemplates(templates: Partial<IUpdateEmailTemplatesRequestBody>): Promise<void> {
-    await this.put<Partial<IUpdateEmailTemplatesRequestBody>, void>("/settings/email/templates", templates);
+  public async updateSettings(settings: IRecursivePartial<ISettings>): Promise<void> {
+    await this.put<IUpdateSettingsRequestBody, void>("/settings", settings);
   }
 }

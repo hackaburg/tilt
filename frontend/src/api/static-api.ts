@@ -15,18 +15,16 @@ export class StaticApi implements IApi {
 
     return {
       email: {
+        forgotPasswordEmail: {
+          htmlTemplate: "",
+          subject: "",
+          textTemplate: "",
+        },
         sender: "tilt@localhost",
-        templates: {
-          forgotPasswordEmail: {
-            htmlTemplate: "",
-            subject: "",
-            textTemplate: "",
-          },
-          verifyEmail: {
-            htmlTemplate: "",
-            subject: "",
-            textTemplate: "",
-          },
+        verifyEmail: {
+          htmlTemplate: "",
+          subject: "",
+          textTemplate: "",
         },
       },
       frontend: {
@@ -84,16 +82,9 @@ export class StaticApi implements IApi {
   }
 
   /**
-   * Simulates an update email settings api call.
+   * Simulates an update settings api call.
    */
-  public async updateEmailSettings(): Promise<void> {
-    await sleep(100);
-  }
-
-  /**
-   * Simulates an update email api call.
-   */
-  public async updateEmailTemplates(): Promise<void> {
+  public async updateSettings(): Promise<void> {
     await sleep(100);
   }
 }
