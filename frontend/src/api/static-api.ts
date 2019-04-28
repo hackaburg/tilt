@@ -14,6 +14,19 @@ export class StaticApi implements IApi {
     await sleep(100);
 
     return {
+      application: {
+        allowProfileFormFrom: new Date(),
+        allowProfileFormUntil: new Date(),
+        confirmationForm: {
+          questions: [],
+          title: "Confirmation form",
+        },
+        hoursToConfirm: 24,
+        profileForm: {
+          questions: [],
+          title: "Profile form",
+        },
+      },
       email: {
         forgotPasswordEmail: {
           htmlTemplate: "",
