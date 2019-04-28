@@ -14,3 +14,6 @@ interface IErrorApiResponse {
 
 export type IApiResponse<T> = ISuccessfulApiResponse<T> | IErrorApiResponse;
 export type ISuccessfullyUnpackedApiResponse<T> = ISuccessfulApiResponse<T>["data"];
+export type IRecursivePartial<T> = {
+  [K in keyof T]?: IRecursivePartial<T[K]>;
+};

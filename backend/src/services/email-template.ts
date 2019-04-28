@@ -63,7 +63,7 @@ export class EmailTemplateService implements IEmailTemplateService {
    */
   public async sendVerifyEmail(user: User): Promise<void> {
     const { email } = await this._settings.getSettings();
-    const template = this.compileTemplate<IVerifyEmailContext>(email.templates.verifyEmail, {
+    const template = this.compileTemplate<IVerifyEmailContext>(email.verifyEmail, {
       email: user.email,
       verifyUrl: user.verifyToken,
     });

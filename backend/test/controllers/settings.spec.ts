@@ -1,5 +1,4 @@
 import { SettingsController } from "../../src/controllers/settings";
-import { EmailSettings } from "../../src/entities/email-settings";
 import { Settings } from "../../src/entities/settings";
 import { ISettingsService } from "../../src/services/settings";
 import { MockedService } from "../services/mock";
@@ -27,8 +26,8 @@ describe("SettingsController", () => {
   it("updates settings", async () => {
     expect.assertions(1);
 
-    const settings = new EmailSettings();
-    await controller.updateEmailTemplates({ data: settings.templates });
-    expect(service.mocks.updateEmailTemplates).toBeCalledWith(settings.templates);
+    const settings = new Settings();
+    await controller.updateSettings({ data: settings });
+    expect(service.mocks.updateSettings).toBeCalledWith(settings);
   });
 });

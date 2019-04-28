@@ -1,3 +1,9 @@
+import { IQuestionBase } from "./questions";
+import { IApiResponse, IApiRequest, IRecursivePartial } from "./api";
+
+export type IGetSettingsApiResponse = IApiResponse<ISettings>;
+export type IUpdateSettingsApiRequest = IApiRequest<IRecursivePartial<ISettings>>;
+
 export interface ISettings {
   frontend: IFrontendSettings;
   email: IEmailSettings;
@@ -14,10 +20,6 @@ export interface IFrontendSettings {
 
 export interface IEmailSettings {
   sender: string;
-  templates: IEmailTemplates;
-}
-
-export interface IEmailTemplates {
   verifyEmail: IEmailTemplate;
   forgotPasswordEmail: IEmailTemplate;
 }

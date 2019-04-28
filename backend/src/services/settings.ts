@@ -1,8 +1,8 @@
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { IEmailSettings, IEmailTemplates, ISettings } from "../../../types/settings";
-import { EmailTemplates } from "../entities/email-templates";
+import { IRecursivePartial } from "../../../types/api";
+import { IEmailSettings, IEmailTemplate, IFrontendSettings, ISettings } from "../../../types/settings";
 import { Settings } from "../entities/settings";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 import { ILoggerService, LoggerServiceToken } from "./log";
@@ -17,16 +17,10 @@ export interface ISettingsService extends IService {
   getSettings(): Promise<ISettings>;
 
   /**
-   * Updates the email settings.
-   * @param settings The updated email settings
+   * Updates all settings.
+   * @param settings The updated settings
    */
-  updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void>;
-
-  /**
-   * Updates the email templates.
-   * @param templates The updated email templates
-   */
-  updateEmailTemplates(templates: Partial<IEmailTemplates>): Promise<void>;
+  updateSettings(settings: IRecursivePartial<ISettings>): Promise<void>;
 }
 
 /**
@@ -69,34 +63,75 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
-   * Updates the email settings.
-   * @param settings The updated email settings
+   * Gets the value that's defined. If the changed value is undefined, the existing value will be used.
+   * @param existing The existing value
+   * @param changed The changed value
    */
-  public async updateEmailSettings(settings: Partial<IEmailSettings>): Promise<void> {
-    const existingSettings = await this.getSettings();
-    existingSettings.email.sender = settings.sender || existingSettings.email.sender;
-    await this._settings!.save(existingSettings);
+  private getDefinedValue<T>(existing: T, changed?: T): T {
+    if (changed === undefined) {
+      return existing;
+    }
+
+    return changed;
   }
 
   /**
-   * Updates the email templates.
-   * @param templates The updated email templates
+   * Updates the email template if the values are set.
+   * @param existing The existing email template
+   * @param changes The changed email template
    */
-  public async updateEmailTemplates(templates: Partial<IEmailTemplates>): Promise<void> {
-    const settingsKeys = Object.keys(new EmailTemplates()) as Array<keyof IEmailTemplates>;
-    const existingSettings = await this.getSettings();
+  private updateEmailTemplate(existing: IEmailTemplate, changes: IRecursivePartial<IEmailTemplate>): void {
+    existing.htmlTemplate = this.getDefinedValue(existing.htmlTemplate, changes.htmlTemplate);
+    existing.subject = this.getDefinedValue(existing.subject, changes.subject);
+    existing.textTemplate = this.getDefinedValue(existing.textTemplate, changes.textTemplate);
+  }
 
-    for (const key of settingsKeys) {
-      const existingTemplate = existingSettings.email.templates[key];
-      const updatedTemplate = templates[key];
+  /**
+   * Updates the email settings if the values are set.
+   * @param existing The existing email settings
+   * @param changes The changed email settings
+   */
+  private updateEmailSettings(existing: IEmailSettings, changes: IRecursivePartial<IEmailSettings>): void {
+    existing.sender = this.getDefinedValue(existing.sender, changes.sender);
 
-      if (updatedTemplate) {
-        existingTemplate.htmlTemplate = updatedTemplate.htmlTemplate;
-        existingTemplate.textTemplate = updatedTemplate.textTemplate;
-        existingTemplate.subject = updatedTemplate.subject;
-      }
+    if (changes.forgotPasswordEmail) {
+      this.updateEmailTemplate(existing.forgotPasswordEmail, changes.forgotPasswordEmail);
     }
 
-    await this._settings!.save(existingSettings);
+    if (changes.verifyEmail) {
+      this.updateEmailTemplate(existing.verifyEmail, changes.verifyEmail);
+    }
+  }
+
+  /**
+   * Updates the frontend settings if the values are set.
+   * @param existing The existing frontend settings
+   * @param changes The changed frontend settings
+   */
+  private updateFrontendSettings(existing: IFrontendSettings, changes: IRecursivePartial<IFrontendSettings>): void {
+    existing.colorGradientEnd = this.getDefinedValue(existing.colorGradientEnd, changes.colorGradientEnd);
+    existing.colorGradientStart = this.getDefinedValue(existing.colorGradientStart, changes.colorGradientStart);
+    existing.colorLink = this.getDefinedValue(existing.colorLink, changes.colorLink);
+    existing.colorLinkHover = this.getDefinedValue(existing.colorLinkHover, changes.colorLinkHover);
+    existing.loginSignupImage = this.getDefinedValue(existing.loginSignupImage, changes.loginSignupImage);
+    existing.sidebarImage = this.getDefinedValue(existing.sidebarImage, changes.sidebarImage);
+  }
+
+  /**
+   * Updates all settings.
+   * @param changes The updated settings
+   */
+  public async updateSettings(changes: IRecursivePartial<ISettings>): Promise<void> {
+    const settings = await this.getSettings();
+
+    if (changes.email) {
+      this.updateEmailSettings(settings.email, changes.email);
+    }
+
+    if (changes.frontend) {
+      this.updateFrontendSettings(settings.frontend, changes.frontend);
+    }
+
+    await this._settings!.save(settings);
   }
 }

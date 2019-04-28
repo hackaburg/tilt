@@ -1,5 +1,6 @@
 import { Repository } from "typeorm";
-import { IEmailTemplates } from "../../../types/settings";
+import { IRecursivePartial } from "../../../types/api";
+import { ISettings } from "../../../types/settings";
 import { Settings } from "../../src/entities/settings";
 import { IDatabaseService } from "../../src/services/database";
 import { ILoggerService } from "../../src/services/log";
@@ -47,62 +48,52 @@ describe("SettingsService", () => {
     expect(settingsInTable).toHaveLength(1);
   });
 
-  it("updates email templates", async () => {
-    expect.assertions(3);
-
-    const updatedTemplates: Partial<IEmailTemplates> = {
-      verifyEmail: {
-        htmlTemplate: "foo",
-        subject: "foobar",
-        textTemplate: "bar",
-      },
-    };
-
-    await settingsService.updateEmailTemplates(updatedTemplates);
-    const settings = await settingsService.getSettings();
-
-    expect(settings.email.templates.verifyEmail.htmlTemplate).toBe(updatedTemplates.verifyEmail!.htmlTemplate);
-    expect(settings.email.templates.verifyEmail.textTemplate).toBe(updatedTemplates.verifyEmail!.textTemplate);
-    expect(settings.email.templates.verifyEmail.subject).toBe(updatedTemplates.verifyEmail!.subject);
-  });
-
-  it("doesn't pollute other settings by updating email templates", async () => {
-    expect.assertions(2);
-
-    type PollutedEmailSettings = Partial<IEmailTemplates> & {
-      foo: string;
-      verifyEmail: {
-        bar: string;
-      }
-    };
-
-    const updatedTemplates: PollutedEmailSettings = {
-      foo: "test",
-      verifyEmail: {
-        bar: "test",
-        htmlTemplate: "foo",
-        subject: "foobar",
-        textTemplate: "bar",
-      },
-    };
-
-    await settingsService.updateEmailTemplates(updatedTemplates);
-    const settings = await settingsService.getSettings();
-    const emailSettings = settings.email.templates as PollutedEmailSettings;
-
-    expect(emailSettings.foo).not.toBeDefined();
-    expect(emailSettings.verifyEmail.bar).not.toBeDefined();
-  });
-
-  it("updates email settings", async () => {
+  it("updates settings", async () => {
     expect.assertions(1);
 
-    const sender = "test";
-    await settingsService.updateEmailSettings({
-      sender,
-    });
+    const updatedSettings: IRecursivePartial<ISettings> = {
+      email: {
+        forgotPasswordEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+        sender: "test@foo.bar",
+        verifyEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+      },
+    };
 
+    await settingsService.updateSettings(updatedSettings);
     const settings = await settingsService.getSettings();
-    expect(settings.email.sender).toBe(sender);
+
+    expect(settings).toMatchObject(updatedSettings);
+  });
+
+  it("doesn't pollute other settings by updating settings", async () => {
+    expect.assertions(2);
+
+    type PollutedSettings = Partial<ISettings> & {
+      foo: string;
+      email: {
+        bar: string;
+      };
+    };
+
+    const updatedSettings: IRecursivePartial<PollutedSettings> = {
+      email: {
+        bar: "test",
+      },
+      foo: "test",
+    };
+
+    await settingsService.updateSettings(updatedSettings);
+    const settings = await settingsService.getSettings() as PollutedSettings;
+
+    expect(settings.foo).not.toBeDefined();
+    expect(settings.email.bar).not.toBeDefined();
   });
 });

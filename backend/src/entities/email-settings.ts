@@ -1,11 +1,12 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IEmailSettings } from "../../../types/settings";
-import { EmailTemplates } from "./email-templates";
+import { EmailTemplate } from "./email-template";
 
 @Entity()
 export class EmailSettings implements IEmailSettings {
   public constructor() {
-    this.templates = new EmailTemplates();
+    this.verifyEmail = new EmailTemplate();
+    this.forgotPasswordEmail = new EmailTemplate();
   }
 
   @PrimaryGeneratedColumn()
@@ -14,7 +15,11 @@ export class EmailSettings implements IEmailSettings {
   @Column()
   public sender: string = "tilt@localhost";
 
-  @OneToOne(() => EmailTemplates, { cascade: true, eager: true })
+  @OneToOne(() => EmailTemplate, { cascade: true, eager: true })
   @JoinColumn()
-  public templates: EmailTemplates;
+  public verifyEmail: EmailTemplate;
+
+  @OneToOne(() => EmailTemplate, { cascade: true, eager: true })
+  @JoinColumn()
+  public forgotPasswordEmail: EmailTemplate;
 }
