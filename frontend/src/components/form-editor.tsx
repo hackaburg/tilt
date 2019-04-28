@@ -28,7 +28,7 @@ interface IIdentifiableIQuestion {
   question: IQuestion;
 }
 
-interface IFormSettings {
+interface IFormEditorProps {
   heading: string;
   initialQuestions: IQuestion[];
   onQuestionsChange: (questions: IQuestion[]) => any;
@@ -37,7 +37,7 @@ interface IFormSettings {
 /**
  * An editor to edit an editable collection of questions, only for editing.
  */
-export const FormEditor = ({ heading, initialQuestions, onQuestionsChange }: IFormSettings) => {
+export const FormEditor = ({ heading, initialQuestions, onQuestionsChange }: IFormEditorProps) => {
   const initialQuestionsWithUUIDs = initialQuestions.map<IIdentifiableIQuestion>((question) => ({
     id: uuid(),
     question,
