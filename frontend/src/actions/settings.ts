@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
 import { IAction } from ".";
-import { IEmailSettings, IEmailTemplates, ISettings } from "../../../types/settings";
+import { IRecursivePartial } from "../../../types/api";
+import { ISettings } from "../../../types/settings";
 import { api } from "../api";
 import { FormType } from "../state";
 import { setFormType } from "./form";
@@ -32,21 +33,11 @@ export const fetchSettings = () => performRequest(async (dispatch: Dispatch) => 
 });
 
 /**
- * Asynchronously update email settings.
+ * Asynchronously updates all settings.
  * @param settings The settings to update
  */
-export const updateEmailSettings = (settings: Partial<IEmailSettings>) => performRequest(async (dispatch: Dispatch) => {
+export const updateSettings = (settings: IRecursivePartial<ISettings>) => performRequest(async (dispatch: Dispatch) => {
   dispatch(setFormType(FormType.MailSettings));
-  await api.updateEmailSettings(settings);
-  notifyChangesSaved()(dispatch);
-});
-
-/**
- * Asynchronously update email templates.
- * @param templates The templates to update
- */
-export const updateEmailTemplates = (templates: Partial<IEmailTemplates>) => performRequest(async (dispatch: Dispatch) => {
-  dispatch(setFormType(FormType.MailSettings));
-  await api.updateEmailTemplates(templates);
+  await api.updateSettings(settings);
   notifyChangesSaved()(dispatch);
 });

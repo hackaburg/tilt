@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
-import { IEmailSettings, IEmailTemplate, IEmailTemplates } from "../../../types/settings";
-import { updateEmailSettings, updateEmailTemplates } from "../actions/settings";
+import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
+import { updateSettings } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
 import { FormType, IState } from "../state";
 import { EmailTemplateEditor, EmailTemplateEditorPlaceholder } from "./email-template-editor";
@@ -23,8 +23,7 @@ const Code = styled.span`
 `;
 
 interface IEmailSettingsProps {
-  dispatchUpdateEmailTemplates: typeof updateEmailTemplates;
-  dispatchUpdateEmailSettings: typeof updateEmailSettings;
+  dispatchUpdateSettings: typeof updateSettings;
   settings: IState["settings"];
   error?: string | false;
 }
@@ -32,20 +31,15 @@ interface IEmailSettingsProps {
 /**
  * Settings to configure mail templates.
  */
-export const EmailSettings = ({ dispatchUpdateEmailTemplates, dispatchUpdateEmailSettings, settings, error }: IEmailSettingsProps) => {
-  const handleTemplateChange = (templateName: keyof IEmailTemplates, template: IEmailTemplate) => {
-    dispatchUpdateEmailTemplates({
-      [templateName]: template,
+export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmailSettingsProps) => {
+  const handleSettingsChange = (field: keyof IEmailSettings, value: string | IEmailTemplate) => {
+    dispatchUpdateSettings({
+      email: {
+        [field]: value,
+      },
     });
   };
 
-  const handleSettingsChange = (field: keyof IEmailSettings, value: string) => {
-    dispatchUpdateEmailSettings({
-      [field]: value,
-    });
-  };
-
-  const [debouncedHandleTemplateChange] = useDebouncedCallback(handleTemplateChange, debounceDuration, []);
   const [debouncedHandleSettingsChange] = useDebouncedCallback(handleSettingsChange, debounceDuration, []);
 
   return (
@@ -85,13 +79,13 @@ export const EmailSettings = ({ dispatchUpdateEmailTemplates, dispatchUpdateEmai
         <>
           <EmailTemplateEditor
             title="Verification"
-            template={settings.email.templates.verifyEmail}
-            onTemplateChange={(template) => debouncedHandleTemplateChange("verifyEmail", template)}
+            template={settings.email.verifyEmail}
+            onTemplateChange={(template) => debouncedHandleSettingsChange("verifyEmail", template)}
           />
           <EmailTemplateEditor
             title="Forgot password"
-            template={settings.email.templates.forgotPasswordEmail}
-            onTemplateChange={(template) => debouncedHandleTemplateChange("forgotPasswordEmail", template)}
+            template={settings.email.forgotPasswordEmail}
+            onTemplateChange={(template) => debouncedHandleSettingsChange("forgotPasswordEmail", template)}
           />
         </>
       )}
@@ -106,8 +100,7 @@ const mapStateToProps = (state: IState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators({
-    dispatchUpdateEmailSettings: updateEmailSettings,
-    dispatchUpdateEmailTemplates: updateEmailTemplates,
+    dispatchUpdateSettings: updateSettings,
   }, dispatch);
 };
 
