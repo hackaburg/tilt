@@ -1,11 +1,14 @@
 import { v4 as uuid } from "node-uuid";
-import * as React from "react";
 import { useState } from "react";
+import * as React from "react";
 import styled from "styled-components";
 import { IQuestion, ITextQuestion, QuestionType } from "../../../types/questions";
+import { IFormSettings } from "../../../types/settings";
 import { Button } from "./button";
 import { EditableQuestion } from "./editable-question";
+import { Col, Row } from "./grid";
 import { Sectionheading } from "./headings";
+import { TextInput } from "./text-input";
 
 const Section = styled.section`
   margin-bottom: 2rem;
@@ -14,6 +17,7 @@ const Section = styled.section`
 const AddButtonContainer = styled.div`
   display: inline-block;
   margin-left: 1rem;
+  margin-top: 1rem;
   transform: scale(0.8);
   vertical-align: center;
 `;
@@ -29,24 +33,28 @@ interface IIdentifiableIQuestion {
 }
 
 interface IFormEditorProps {
-  heading: string;
-  initialQuestions: IQuestion[];
-  onQuestionsChange: (questions: IQuestion[]) => any;
+  initialForm: IFormSettings;
+  onFormChange: (form: IFormSettings) => any;
 }
 
 /**
  * An editor to edit an editable collection of questions, only for editing.
  */
-export const FormEditor = ({ heading, initialQuestions, onQuestionsChange }: IFormEditorProps) => {
-  const initialQuestionsWithUUIDs = initialQuestions.map<IIdentifiableIQuestion>((question) => ({
+export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
+  const initialQuestionsWithUUIDs = initialForm.questions.map<IIdentifiableIQuestion>((question) => ({
     id: uuid(),
     question,
   }));
 
   const [questions, setQuestions] = useState(initialQuestionsWithUUIDs);
+  const [title, setTitle] = useState(initialForm.title);
+
   const updateQuestions = (updatedQuestions: IIdentifiableIQuestion[]) => {
     setQuestions(updatedQuestions);
-    onQuestionsChange(updatedQuestions.map(({ question }) => question));
+    onFormChange({
+      questions: updatedQuestions.map(({ question }) => question),
+      title,
+    });
   };
 
   const addQuestion = () => {
@@ -54,10 +62,10 @@ export const FormEditor = ({ heading, initialQuestions, onQuestionsChange }: IFo
       description: "A new question",
       mandatory: false,
       multiline: false,
-      parentQuestionReferenceName: "",
+      parentReferenceName: "",
       placeholder: "",
       referenceName: "",
-      showIfParentQuestionHasValue: "",
+      showIfParentHasValue: "",
       title: `Question ${questions.length + 1}`,
       type: QuestionType.Text,
     };
@@ -96,6 +104,14 @@ export const FormEditor = ({ heading, initialQuestions, onQuestionsChange }: IFo
     updateQuestions(updatedQuestions);
   };
 
+  const handleTitleChange = (updatedTitle: string) => {
+    setTitle(updatedTitle);
+    onFormChange({
+      questions: questions.map(({ question }) => question),
+      title: updatedTitle,
+    });
+  };
+
   const editableQuestions = questions.map(({ question, id }, index) => (
     <EditableQuestion
       key={id}
@@ -108,13 +124,24 @@ export const FormEditor = ({ heading, initialQuestions, onQuestionsChange }: IFo
   return (
     <Section>
       <Sectionheading>
-        {heading}
-        <AddButtonContainer>
-          <Button
-            onClick={addQuestion}
-            primary
-          >Add question</Button>
-        </AddButtonContainer>
+        <Row>
+          <Col percent={50}>
+            <TextInput
+              value={title}
+              onChange={handleTitleChange}
+              title="Form title"
+            />
+          </Col>
+
+          <Col percent={50}>
+            <AddButtonContainer>
+              <Button
+                onClick={addQuestion}
+                primary
+              >Add question</Button>
+            </AddButtonContainer>
+          </Col>
+        </Row>
       </Sectionheading>
 
       {questions.length === 0 && (
