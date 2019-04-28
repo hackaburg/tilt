@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ConnectedApplicationSettings } from "./application-settings";
 import { ConnectedEmailSettings } from "./email-settings";
 import { Heading } from "./headings";
 
@@ -8,6 +9,7 @@ import { Heading } from "./headings";
 export const Settings = () => (
   <>
     <Heading>Settings</Heading>
+    <ConnectedApplicationSettings />
     <ConnectedEmailSettings />
   </>
 );
