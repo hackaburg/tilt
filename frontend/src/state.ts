@@ -1,3 +1,4 @@
+import { IActivity } from "../../types/activity";
 import { UserRole } from "../../types/roles";
 import { ISettings } from "../../types/settings";
 
@@ -15,6 +16,7 @@ export interface IState {
   form: IForm;
   role: Nullable<UserRole>;
   notification: INotification;
+  activity: Nullable<IActivity[]>;
 }
 
 interface IRequest {
