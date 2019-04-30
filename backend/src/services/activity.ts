@@ -16,7 +16,7 @@ export interface IActivityService extends IService {
    * @param event The activity itself
    * @param additionalData Additional data
    */
-  addActivity(user: User, event: ActivityEvent, additionalData?: string): Promise<void>;
+  addActivity<T>(user: User, event: ActivityEvent, additionalData?: T): Promise<void>;
 
   /**
    * Gets all previous activity.
@@ -52,7 +52,7 @@ export class ActivityService implements IService {
    * @param user The user who did the activity
    * @param event The performed activity
    */
-  public async addActivity(user: User, event: ActivityEvent, additionalData?: string): Promise<void> {
+  public async addActivity<T>(user: User, event: ActivityEvent, additionalData?: T): Promise<void> {
     const activity = new Activity();
     activity.user = user;
     activity.event = event;

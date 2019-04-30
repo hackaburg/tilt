@@ -16,6 +16,6 @@ export class Activity {
   @Column()
   public timestamp!: Date;
 
-  @Column({ nullable: true, default: null })
-  public data!: string;
+  @Column("simple-json", { nullable: true, default: null })
+  public data!: any;
 }
