@@ -1,7 +1,10 @@
-import { Authorized, BadRequestError, Body, Get, JsonController, Put } from "routing-controllers";
+import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Put } from "routing-controllers";
 import { Inject } from "typedi";
+import { ActivityEvent } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
+import { User } from "../entities/user";
+import { ActivityServiceToken, IActivityService } from "../services/activity";
 import { ISettingsService, SettingsServiceToken, UpdateSettingsError } from "../services/settings";
 import { UpdateSettingsApiRequest } from "../validation/update-settings";
 
@@ -9,6 +12,7 @@ import { UpdateSettingsApiRequest } from "../validation/update-settings";
 export class SettingsController {
   public constructor(
     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
+    @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
   ) { }
 
   /**
@@ -24,9 +28,16 @@ export class SettingsController {
    */
   @Put()
   @Authorized(UserRole.Owner)
-  public async updateSettings(@Body() { data: settings }: UpdateSettingsApiRequest): Promise<void> {
+  public async updateSettings(@CurrentUser() user: User, @Body() { data: settings }: UpdateSettingsApiRequest): Promise<void> {
     try {
-      await this._settings.updateSettings(settings);
+      const previousSettings = await this._settings.getSettings();
+      const nextSettings = await this._settings.updateSettings(settings);
+
+      await this._activity.addActivity(user, {
+        event: ActivityEvent.SettingsUpdate,
+        next: nextSettings,
+        previous: previousSettings,
+      });
     } catch (error) {
       if (error instanceof UpdateSettingsError) {
         throw new BadRequestError(error.message);

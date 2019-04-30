@@ -1,6 +1,9 @@
+import { ISettings } from "./settings";
+
 export const enum ActivityEvent {
   Signup = "signup",
   EmailVerified = "email_verified",
+  SettingsUpdate = "settings_update",
 }
 
 export interface ISignupActivity {
@@ -11,6 +14,14 @@ export interface IEmailVerifiedActivity {
   event: ActivityEvent.EmailVerified;
 }
 
+export interface ISettingsUpdate {
+  event: ActivityEvent.SettingsUpdate;
+  previous: ISettings;
+  next: ISettings;
+}
+
 export type IActivity =
   ISignupActivity
-  | IEmailVerifiedActivity;
+  | IEmailVerifiedActivity
+  | ISettingsUpdate
+;

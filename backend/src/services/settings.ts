@@ -31,7 +31,7 @@ export interface ISettingsService extends IService {
    * Updates all settings.
    * @param settings The updated settings
    */
-  updateSettings(settings: IRecursivePartial<ISettings>): Promise<void>;
+  updateSettings(settings: IRecursivePartial<ISettings>): Promise<ISettings>;
 }
 
 /**
@@ -286,7 +286,7 @@ export class SettingsService implements ISettingsService {
    * Updates all settings.
    * @param changes The updated settings
    */
-  public async updateSettings(changes: IRecursivePartial<ISettings>): Promise<void> {
+  public async updateSettings(changes: IRecursivePartial<ISettings>): Promise<ISettings> {
     const updated = new Settings();
     const existing = await this.getSettings() as IActivatable<ISettings>;
     this.applyChanges(existing, changes, updated);
@@ -309,6 +309,7 @@ export class SettingsService implements ISettingsService {
     existing.active = false;
     await this._settings!.save(existing);
     await this._settings!.save(updated);
+    return updated;
   }
 }
 
