@@ -2,10 +2,8 @@ import { compare, genSalt, hash } from "bcrypt";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { ActivityEvent } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { User } from "../entities/user";
-import { ActivityServiceToken, IActivityService } from "./activity";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 import { EmailTemplateServiceToken, IEmailTemplateService } from "./email-template";
 import { HaveibeenpwnedServiceToken, IHaveibeenpwnedService, PasswordReuseError } from "./haveibeenpwned";
@@ -27,7 +25,7 @@ export interface IUserService extends IService {
    * Sets the verified flag on a user with the given token.
    * @param verifyToken The token sent to the user
    */
-  verifyUserByVerifyToken(verifyToken: string): Promise<void>;
+  verifyUserByVerifyToken(verifyToken: string): Promise<User>;
 
   /**
    * Generate a login token for the given user.
@@ -69,7 +67,6 @@ export class UserService implements IUserService {
     @Inject(HaveibeenpwnedServiceToken) private readonly _haveibeenpwned: IHaveibeenpwnedService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-    @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
     @Inject(TokenServiceToken) private readonly _tokens: ITokenService<ITokenContent>,
     @Inject(EmailTemplateServiceToken) private readonly _email: IEmailTemplateService,
   ) { }
@@ -112,10 +109,6 @@ export class UserService implements IUserService {
     this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
 
     await this._email.sendVerifyEmail(user);
-    await this._activity.addActivity(user, {
-      event: ActivityEvent.Signup,
-    });
-
     return user;
   }
 
@@ -123,7 +116,7 @@ export class UserService implements IUserService {
    * Verifies an account using it's verifyToken.
    * @param verifyToken The token sent to the user
    */
-  public async verifyUserByVerifyToken(verifyToken: string): Promise<void> {
+  public async verifyUserByVerifyToken(verifyToken: string): Promise<User> {
     const user = await this._users!.findOneOrFail({
       where: {
         verifyToken,
@@ -135,9 +128,7 @@ export class UserService implements IUserService {
 
     await this._users!.save(user);
     this._logger.debug(`${user.email} verified their email`);
-    this._activity.addActivity(user, {
-      event: ActivityEvent.EmailVerified,
-    });
+    return user;
   }
 
   /**

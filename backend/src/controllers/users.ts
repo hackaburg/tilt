@@ -1,5 +1,6 @@
 import { Authorized, BadRequestError, Body, CurrentUser, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
 import { Inject } from "typedi";
+import { ActivityEvent } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
@@ -7,6 +8,7 @@ import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { User } from "../entities/user";
+import { ActivityServiceToken, IActivityService } from "../services/activity";
 import { IUserService, UserServiceToken } from "../services/user";
 import { UserLoginApiRequest } from "../validation/user-login";
 import { UserSignupApiRequest } from "../validation/user-signup";
@@ -18,6 +20,7 @@ import { UserSignupApiRequest } from "../validation/user-signup";
 export class UsersController {
   public constructor(
     @Inject(UserServiceToken) private readonly _users: IUserService,
+    @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
   ) { }
 
   /**
@@ -28,6 +31,9 @@ export class UsersController {
   public async signup(@Body() { data: { email, password } }: UserSignupApiRequest): Promise<IUserSignupResponseBody> {
     try {
       const user = await this._users.signup(email, password);
+      await this._activity.addActivity(user, {
+        event: ActivityEvent.Signup,
+      });
 
       return {
         email: user.email,
@@ -44,7 +50,10 @@ export class UsersController {
   @Get("/verify")
   public async verify(@QueryParam("token") token: string): Promise<IUserVerifyResponseBody> {
     try {
-      await this._users.verifyUserByVerifyToken(token);
+      const user = await this._users.verifyUserByVerifyToken(token);
+      await this._activity.addActivity(user, {
+        event: ActivityEvent.EmailVerified,
+      });
 
       return {
         success: true,

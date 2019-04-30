@@ -5,7 +5,6 @@ import { User } from "../../src/entities/user";
 import { ActivityService, IActivityService } from "../../src/services/activity";
 import { IDatabaseService } from "../../src/services/database";
 import { UserService } from "../../src/services/user";
-import { MockActivityService } from "./mock/activity";
 import { TestDatabaseService } from "./mock/database";
 import { MockEmailTemplateService } from "./mock/email-template";
 import { MockHaveibeenpwnedService } from "./mock/haveibeenpwned";
@@ -26,7 +25,6 @@ describe("ActivityService", () => {
       new MockHaveibeenpwnedService().instance,
       database,
       new MockLoggerService().instance,
-      new MockActivityService().instance,
       new MockTokenService().instance,
       new MockEmailTemplateService().instance,
     );
