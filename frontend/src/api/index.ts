@@ -1,3 +1,4 @@
+import { IActivity } from "../../../types/activity";
 import { IRecursivePartial } from "../../../types/api";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
@@ -50,6 +51,11 @@ export interface IApi {
    * @param settings The changed settings
    */
   updateSettings(settings: IRecursivePartial<ISettings>): Promise<void>;
+
+  /**
+   * Queries the past activity.
+   */
+  getActivities(): Promise<IActivity[]>;
 }
 
 /**

@@ -8,6 +8,7 @@ import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { getLoginToken, isLoginTokenSet, setLoginToken } from "../authentication";
+import { IActivity } from "../../../types/activity";
 
 /**
  * An api client connected to a backend. Stores the login token in `localStorage`.
@@ -161,5 +162,12 @@ export class BackendApi implements IApi {
    */
   public async updateSettings(settings: IRecursivePartial<ISettings>): Promise<void> {
     await this.put<IUpdateSettingsRequestBody, void>("/settings", settings);
+  }
+
+  /**
+   * Fetches the latest activity in tilt.
+   */
+  public async getActivities(): Promise<IActivity[]> {
+    return await this.get<IActivity[]>("/activity");
   }
 }
