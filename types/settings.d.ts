@@ -5,6 +5,10 @@ export type IGetSettingsApiResponse = IApiResponse<ISettings>;
 export type IUpdateSettingsRequestBody = IRecursivePartial<ISettings>
 export type IUpdateSettingsApiRequest = IApiRequest<IUpdateSettingsRequestBody>;
 
+export type IActivatable<T> = T & {
+  active: boolean;
+};
+
 export interface ISettings {
   frontend: IFrontendSettings;
   email: IEmailSettings;

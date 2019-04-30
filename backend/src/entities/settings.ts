@@ -1,13 +1,13 @@
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
-import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { IApplicationSettings, IEmailSettings, IFrontendSettings, ISettings } from "../../../types/settings";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { IActivatable, IApplicationSettings, IEmailSettings, IFrontendSettings, ISettings } from "../../../types/settings";
 import { ApplicationSettings } from "./application-settings";
 import { EmailSettings } from "./email-settings";
 import { FrontendSettings } from "./frontend-settings";
 
 @Entity()
-export class Settings implements ISettings {
+export class Settings implements IActivatable<ISettings> {
   public constructor(initializeDefaults?: boolean) {
     if (initializeDefaults) {
       this.application = new ApplicationSettings(initializeDefaults);
@@ -22,21 +22,24 @@ export class Settings implements ISettings {
   @IsOptional()
   @ValidateNested()
   @Type(() => ApplicationSettings)
-  @OneToOne(() => ApplicationSettings, { cascade: true, eager: true })
+  @ManyToOne(() => ApplicationSettings, { cascade: true, eager: true })
   @JoinColumn()
   public application!: IApplicationSettings;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => FrontendSettings)
-  @OneToOne(() => FrontendSettings, { cascade: true, eager: true })
+  @ManyToOne(() => FrontendSettings, { cascade: true, eager: true })
   @JoinColumn()
   public frontend!: IFrontendSettings;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => EmailSettings)
-  @OneToOne(() => EmailSettings, { cascade: true, eager: true })
+  @ManyToOne(() => EmailSettings, { cascade: true, eager: true })
   @JoinColumn()
   public email!: IEmailSettings;
+
+  @Column()
+  public active: boolean = true;
 }

@@ -2,10 +2,15 @@ import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
 import { IRecursivePartial } from "../../../types/api";
-import { IChoicesQuestion, INumberQuestion, IQuestion, ITextQuestion, QuestionType } from "../../../types/questions";
-import { IApplicationSettings, IEmailSettings, IEmailTemplate, IFormSettings, IFrontendSettings, ISettings } from "../../../types/settings";
+import { IQuestion, QuestionType } from "../../../types/questions";
+import { IActivatable, IApplicationSettings, IEmailSettings, IEmailTemplate, IFormSettings, IFrontendSettings, ISettings } from "../../../types/settings";
+import { ApplicationSettings } from "../entities/application-settings";
 import { ChoicesQuestion } from "../entities/choices-question";
 import { CountryQuestion } from "../entities/country-question";
+import { EmailSettings } from "../entities/email-settings";
+import { EmailTemplate } from "../entities/email-template";
+import { FormSettings } from "../entities/form-settings";
+import { FrontendSettings } from "../entities/frontend-settings";
 import { NumberQuestion } from "../entities/number-question";
 import { Settings } from "../entities/settings";
 import { TextQuestion } from "../entities/text-question";
@@ -55,7 +60,11 @@ export class SettingsService implements ISettingsService {
    */
   public async getSettings(): Promise<ISettings> {
     try {
-      return await this._settings!.findOneOrFail();
+      return await this._settings!.findOneOrFail({
+        where: {
+          active: true,
+        },
+      });
     } catch (error) {
       this._logger.debug(`error loading settings: ${error.message}`);
       this._logger.info("no settings found. creating defaults");
@@ -83,14 +92,35 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
+   * Applies the changes from the given object to the new one, using existing values where there's no change given.
+   * @param existing The stored object
+   * @param changed Changes to apply to the object
+   * @param destination A new object to apply the changes on
+   */
+  private applyChanges<T>(existing: T, changed: T, destination: T): void {
+    const keys = Object.keys(existing) as Array<keyof T>;
+
+    for (const key of keys) {
+      if (key === "id") {
+        continue;
+      }
+
+      const existingValue = existing[key];
+      const changedValue = changed[key];
+
+      destination[key] = this.getDefinedValue(existingValue, changedValue);
+    }
+  }
+
+  /**
    * Updates the email template if the values are set.
    * @param existing The existing email template
    * @param changes The changed email template
    */
-  private updateEmailTemplate(existing: IEmailTemplate, changes: IRecursivePartial<IEmailTemplate>): void {
-    existing.htmlTemplate = this.getDefinedValue(existing.htmlTemplate, changes.htmlTemplate);
-    existing.subject = this.getDefinedValue(existing.subject, changes.subject);
-    existing.textTemplate = this.getDefinedValue(existing.textTemplate, changes.textTemplate);
+  private updateEmailTemplate(existing: IEmailTemplate, changes: IRecursivePartial<IEmailTemplate>): IEmailTemplate {
+    const updated = new EmailTemplate();
+    this.applyChanges(existing, changes, updated);
+    return updated;
   }
 
   /**
@@ -98,16 +128,21 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing email settings
    * @param changes The changed email settings
    */
-  private updateEmailSettings(existing: IEmailSettings, changes: IRecursivePartial<IEmailSettings>): void {
-    existing.sender = this.getDefinedValue(existing.sender, changes.sender);
+  private updateEmailSettings(existing: IEmailSettings, changes: IRecursivePartial<IEmailSettings>): IEmailSettings {
+    const updated = new EmailSettings();
+    this.applyChanges(existing, changes, updated);
 
-    if (changes.forgotPasswordEmail) {
-      this.updateEmailTemplate(existing.forgotPasswordEmail, changes.forgotPasswordEmail);
-    }
+    updated.verifyEmail =
+      changes.verifyEmail
+        ? this.updateEmailTemplate(existing.verifyEmail, changes.verifyEmail)
+        : existing.verifyEmail;
 
-    if (changes.verifyEmail) {
-      this.updateEmailTemplate(existing.verifyEmail, changes.verifyEmail);
-    }
+    updated.forgotPasswordEmail =
+      changes.forgotPasswordEmail
+        ? this.updateEmailTemplate(existing.forgotPasswordEmail, changes.forgotPasswordEmail)
+        : existing.forgotPasswordEmail;
+
+    return updated;
   }
 
   /**
@@ -115,52 +150,10 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing frontend settings
    * @param changes The changed frontend settings
    */
-  private updateFrontendSettings(existing: IFrontendSettings, changes: IRecursivePartial<IFrontendSettings>): void {
-    existing.colorGradientEnd = this.getDefinedValue(existing.colorGradientEnd, changes.colorGradientEnd);
-    existing.colorGradientStart = this.getDefinedValue(existing.colorGradientStart, changes.colorGradientStart);
-    existing.colorLink = this.getDefinedValue(existing.colorLink, changes.colorLink);
-    existing.colorLinkHover = this.getDefinedValue(existing.colorLinkHover, changes.colorLinkHover);
-    existing.loginSignupImage = this.getDefinedValue(existing.loginSignupImage, changes.loginSignupImage);
-    existing.sidebarImage = this.getDefinedValue(existing.sidebarImage, changes.sidebarImage);
-  }
-
-  private updateQuestion(existing: IQuestion, changes: IQuestion): void {
-    existing.description = this.getDefinedValue(existing.description, changes.description);
-    existing.mandatory = this.getDefinedValue(existing.mandatory, changes.mandatory);
-    existing.parentReferenceName = this.getDefinedValue(existing.parentReferenceName, changes.parentReferenceName);
-    existing.referenceName = this.getDefinedValue(existing.referenceName, changes.referenceName);
-    existing.showIfParentHasValue = this.getDefinedValue(existing.showIfParentHasValue, changes.showIfParentHasValue);
-    existing.title = this.getDefinedValue(existing.title, changes.title);
-
-    switch (existing.type) {
-      case QuestionType.Choices:
-        const changedChoiceQuestion = changes as IChoicesQuestion;
-        existing.choices = this.getDefinedValue(existing.choices, changedChoiceQuestion.choices);
-        existing.allowMultiple = this.getDefinedValue(existing.allowMultiple, changedChoiceQuestion.allowMultiple);
-        existing.displayAsDropdown = this.getDefinedValue(existing.displayAsDropdown, changedChoiceQuestion.displayAsDropdown);
-        break;
-
-      case QuestionType.Number:
-        const changedNumberQuestion = changes as INumberQuestion;
-        existing.allowDecimals = this.getDefinedValue(existing.allowDecimals, changedNumberQuestion.allowDecimals);
-        existing.minValue = this.getDefinedValue(existing.minValue, changedNumberQuestion.minValue);
-        existing.maxValue = this.getDefinedValue(existing.maxValue, changedNumberQuestion.maxValue);
-        existing.placeholder = this.getDefinedValue(existing.placeholder, changedNumberQuestion.placeholder);
-        break;
-
-      case QuestionType.Text:
-        const changedTextQuestion = changes as ITextQuestion;
-        existing.placeholder = this.getDefinedValue(existing.placeholder, changedTextQuestion.placeholder);
-        existing.multiline = this.getDefinedValue(existing.multiline, changedTextQuestion.multiline);
-        break;
-
-      case QuestionType.Country:
-        break;
-
-      default:
-        enforceExhaustiveSwitch(existing);
-        break;
-    }
+  private updateFrontendSettings(existing: IFrontendSettings, changes: IRecursivePartial<IFrontendSettings>): IFrontendSettings {
+    const updated = new FrontendSettings();
+    this.applyChanges(existing, changes, updated);
+    return updated;
   }
 
   /**
@@ -170,16 +163,16 @@ export class SettingsService implements ISettingsService {
   private createQuestion(type: QuestionType): IQuestion {
     switch (type) {
       case QuestionType.Choices:
-        return new ChoicesQuestion();
+        return new ChoicesQuestion(true);
 
       case QuestionType.Country:
-        return new CountryQuestion();
+        return new CountryQuestion(true);
 
       case QuestionType.Number:
-        return new NumberQuestion();
+        return new NumberQuestion(true);
 
       case QuestionType.Text:
-        return new TextQuestion();
+        return new TextQuestion(true);
 
       default:
         enforceExhaustiveSwitch(type);
@@ -188,34 +181,32 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
-   * Creates or updates
-   * @param existing The existing question to update, or undefined if there's no such question
-   * @param changes The changes to apply to this question
-   */
-  private createOrUpdateQuestion<T extends IQuestion>(existing: T | undefined, changes: T): IQuestion {
-    const questionToUpdate = existing ? existing : this.createQuestion(changes.type);
-    this.updateQuestion(questionToUpdate, changes);
-    return questionToUpdate;
-  }
-
-  /**
    * Updates the form settings if the values are set.
    * @param existing The existing form settings
    * @param changes The changed form settings
    */
-  private updateFormSettings(existing: IFormSettings, changes: IRecursivePartial<IFormSettings>): void {
-    existing.title = this.getDefinedValue(existing.title, changes.title);
+  private updateFormSettings(existing: IFormSettings, changes: IRecursivePartial<IFormSettings>): IFormSettings {
+    const updated = new FormSettings();
+    this.applyChanges(existing, changes, updated);
 
-    if (changes.questions) {
-      existing.questions = changes.questions.map((changedQuestion) => {
-        const existingQuestion = existing.questions.find((question) => (
-          question.referenceName === changedQuestion.referenceName
-          && question.type === changedQuestion.type
-        ));
+    updated.questions =
+      changes.questions
+        ? (
+          changes.questions.map((changedQuestion) => {
+            const existingQuestion = existing.questions.find((question) => (
+              question.referenceName === changedQuestion.referenceName
+              && question.type === changedQuestion.type
+            )) || this.createQuestion(changedQuestion.type);
 
-        return this.createOrUpdateQuestion(existingQuestion, changedQuestion);
-      });
-    }
+            const updatedQuestion = this.createQuestion(changedQuestion.type);
+            this.applyChanges(existingQuestion, changedQuestion, updatedQuestion);
+
+            return updatedQuestion;
+          })
+        )
+        : existing.questions;
+
+    return updated;
   }
 
   /**
@@ -263,15 +254,13 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing application settings
    * @param changes The changed application settings
    */
-  private updateApplicationSettings(existing: IApplicationSettings, changes: IRecursivePartial<IApplicationSettings>): void {
-    existing.allowProfileFormFrom = this.getDefinedValue(existing.allowProfileFormFrom, changes.allowProfileFormFrom) as Date;
-    existing.allowProfileFormUntil = this.getDefinedValue(existing.allowProfileFormUntil, changes.allowProfileFormUntil) as Date;
+  private updateApplicationSettings(existing: IApplicationSettings, changes: IRecursivePartial<IApplicationSettings>): IApplicationSettings {
+    const updated = new ApplicationSettings();
+    this.applyChanges(existing, changes, updated);
 
-    if (existing.allowProfileFormFrom.getTime() > existing.allowProfileFormUntil.getTime()) {
+    if (updated.allowProfileFormFrom.getTime() > updated.allowProfileFormUntil.getTime()) {
       throw new UpdateSettingsError("profile form closes before it's open, check your times");
     }
-
-    existing.hoursToConfirm = this.getDefinedValue(existing.hoursToConfirm, changes.hoursToConfirm);
 
     const referenceNames = this.getAllReferenceNames(changes);
     const duplicateReferenceName = this.getFirstDuplicate(referenceNames);
@@ -280,13 +269,17 @@ export class SettingsService implements ISettingsService {
       throw new UpdateSettingsError(`duplicate reference name "${duplicateReferenceName}"`);
     }
 
-    if (changes.profileForm) {
-      this.updateFormSettings(existing.profileForm, changes.profileForm);
-    }
+    updated.profileForm =
+      changes.profileForm
+        ? this.updateFormSettings(existing.profileForm, changes.profileForm)
+        : existing.profileForm;
 
-    if (changes.confirmationForm) {
-      this.updateFormSettings(existing.confirmationForm, changes.confirmationForm);
-    }
+    updated.confirmationForm =
+      changes.confirmationForm
+        ? this.updateFormSettings(existing.confirmationForm, changes.confirmationForm)
+        : existing.confirmationForm;
+
+    return updated;
   }
 
   /**
@@ -294,21 +287,28 @@ export class SettingsService implements ISettingsService {
    * @param changes The updated settings
    */
   public async updateSettings(changes: IRecursivePartial<ISettings>): Promise<void> {
-    const settings = await this.getSettings();
+    const updated = new Settings();
+    const existing = await this.getSettings() as IActivatable<ISettings>;
+    this.applyChanges(existing, changes, updated);
 
-    if (changes.application) {
-      this.updateApplicationSettings(settings.application, changes.application);
-    }
+    updated.application =
+      changes.application
+        ? this.updateApplicationSettings(existing.application, changes.application)
+        : existing.application;
 
-    if (changes.email) {
-      this.updateEmailSettings(settings.email, changes.email);
-    }
+    updated.email =
+      changes.email
+        ? this.updateEmailSettings(existing.email, changes.email)
+        : existing.email;
 
-    if (changes.frontend) {
-      this.updateFrontendSettings(settings.frontend, changes.frontend);
-    }
+    updated.frontend =
+      changes.frontend
+        ? this.updateFrontendSettings(existing.frontend, changes.frontend)
+        : existing.frontend;
 
-    await this._settings!.save(settings);
+    existing.active = false;
+    await this._settings!.save(existing);
+    await this._settings!.save(updated);
   }
 }
 

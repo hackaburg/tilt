@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsNumber, IsOptional, IsPositive, ValidateNested } from "class-validator";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IApplicationSettings, IFormSettings } from "../../../types/settings";
 import { FormSettings } from "./form-settings";
 
@@ -23,15 +23,13 @@ export class ApplicationSettings implements IApplicationSettings {
   @IsOptional()
   @ValidateNested()
   @Type(() => FormSettings)
-  @OneToOne(() => FormSettings, { cascade: true, eager: true })
-  @JoinColumn()
+  @ManyToOne(() => FormSettings, { cascade: true, eager: true })
   public profileForm!: IFormSettings;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => FormSettings)
-  @OneToOne(() => FormSettings, { cascade: true, eager: true })
-  @JoinColumn()
+  @ManyToOne(() => FormSettings, { cascade: true, eager: true })
   public confirmationForm!: IFormSettings;
 
   @IsOptional()
