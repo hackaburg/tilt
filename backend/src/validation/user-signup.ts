@@ -1,19 +1,12 @@
 import { Type } from "class-transformer";
-import { IsDefined, IsEmail, MinLength, ValidateNested } from "class-validator";
+import { IsDefined, ValidateNested } from "class-validator";
 import { IApiRequest } from "../../../types/api";
 import { IUserSignupRequestBody } from "../../../types/user-signup";
+import { User } from "../entities/user";
 
-class UserSignupRequestBody implements IUserSignupRequestBody {
-  @IsEmail()
-  public email!: string;
-
-  @MinLength(6)
-  public password!: string;
-}
-
-export class UserSignupApiRequest implements IApiRequest<UserSignupRequestBody> {
+export class UserSignupApiRequest implements IApiRequest<IUserSignupRequestBody> {
   @IsDefined()
   @ValidateNested()
-  @Type(() => UserSignupRequestBody)
-  public data!: UserSignupRequestBody;
+  @Type(() => User)
+  public data!: IUserSignupRequestBody;
 }
