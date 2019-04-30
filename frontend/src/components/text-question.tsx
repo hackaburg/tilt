@@ -19,6 +19,32 @@ interface ITextQuestionProps {
 export const TextQuestion = ({ question, onQuestionChange, editable, value, onChange }: ITextQuestionProps) => {
   if (editable && onQuestionChange) {
     const multilineOptionValue = "Multiline";
+    const convertToUrlOptionValue = "Convert answer to URL";
+
+    const appearanceOptions = [
+      multilineOptionValue,
+      convertToUrlOptionValue,
+    ];
+
+    const selectedAppearanceOptions = [
+      ...(
+        question.multiline
+          ? [multilineOptionValue]
+          : []
+      ),
+      ...(
+        question.convertAnswerToUrl
+          ? [convertToUrlOptionValue]
+          : []
+      ),
+    ];
+
+    const handleAppearanceChange = (selected: string[]) => {
+      onQuestionChange({
+        convertAnswerToUrl: selected.includes(convertToUrlOptionValue),
+        multiline: selected.includes(multilineOptionValue),
+      });
+    };
 
     return (
       <>
@@ -34,9 +60,9 @@ export const TextQuestion = ({ question, onQuestionChange, editable, value, onCh
 
           <Col percent={50}>
             <Checkboxes
-              onChange={(selected) => onQuestionChange({ multiline: selected.includes(multilineOptionValue) })}
-              selected={question.multiline ? [multilineOptionValue] : []}
-              values={[multilineOptionValue]}
+              onChange={handleAppearanceChange}
+              selected={selectedAppearanceOptions}
+              values={appearanceOptions}
               title="Appearance"
             />
           </Col>

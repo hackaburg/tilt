@@ -59,6 +59,7 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
 
   const addQuestion = () => {
     const textQuestion: ITextQuestion = {
+      convertAnswerToUrl: false,
       description: "A new question",
       mandatory: false,
       multiline: false,

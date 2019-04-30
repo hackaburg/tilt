@@ -12,6 +12,7 @@ export class TextQuestion extends QuestionBase implements ITextQuestion {
     if (initializeDefaults) {
       this.placeholder = "";
       this.multiline = false;
+      this.convertAnswerToUrl = false;
     }
   }
 
@@ -31,4 +32,9 @@ export class TextQuestion extends QuestionBase implements ITextQuestion {
   @IsBoolean()
   @Column()
   public multiline!: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Column()
+  public convertAnswerToUrl!: boolean;
 }

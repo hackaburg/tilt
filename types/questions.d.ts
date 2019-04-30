@@ -18,6 +18,7 @@ export interface ITextQuestion extends IQuestionBase {
   type: QuestionType.Text;
   placeholder: string;
   multiline: boolean;
+  convertAnswerToUrl: boolean;
 }
 
 export interface INumberQuestion extends IQuestionBase {

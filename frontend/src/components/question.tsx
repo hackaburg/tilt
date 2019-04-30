@@ -97,6 +97,7 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
         case QuestionType.Text:
           handleQuestionChange({
             ...base,
+            convertAnswerToUrl: false,
             multiline: false,
             placeholder: "",
             title: "Text question",
