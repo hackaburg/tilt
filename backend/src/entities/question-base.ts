@@ -1,31 +1,31 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
-import { IQuestionBase } from "../../../types/questions";
-import { FormSettings } from "./form-settings";
+import { Exclude } from "class-transformer";
+import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { IQuestionBase, ISortable } from "../../../types/questions";
 
-@Entity()
-@TableInheritance({ column: { name: "type", type: "varchar" } })
-export abstract class QuestionBase implements IQuestionBase {
+export abstract class QuestionBase implements ISortable<IQuestionBase> {
+  @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @ManyToOne(() => FormSettings)
-  public form!: FormSettings;
-
   @Column()
-  public description!: string;
-
-  @Column()
-  public title!: string;
-
-  @Column()
-  public mandatory!: boolean;
-
-  @Column({ unique: true, nullable: true })
   public referenceName!: string;
 
+  @Exclude()
   @Column()
-  public parentReferenceName: string = "";
+  public sortIndex: number = 0;
 
   @Column()
+  public description: string = "";
+
+  @Column()
+  public title: string = "Question";
+
+  @Column()
+  public mandatory: boolean = false;
+
+  @Column({ name: "parent" })
+  public parentReferenceName: string = "";
+
+  @Column({ name: "parentValue" })
   public showIfParentHasValue: string = "";
 }

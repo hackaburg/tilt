@@ -40,3 +40,6 @@ export interface ICountryQuestion extends IQuestionBase {
 }
 
 export type IQuestion = ITextQuestion | INumberQuestion | IChoicesQuestion | ICountryQuestion;
+export type ISortable<T> = T & {
+  sortIndex: number;
+};
