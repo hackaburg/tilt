@@ -1,7 +1,7 @@
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { ActivityEvent } from "../../../types/activity";
+import { IActivity } from "../../../types/activity";
 import { Activity } from "../entities/activity";
 import { deletePrivateUserFields, User } from "../entities/user";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
@@ -14,9 +14,8 @@ export interface IActivityService extends IService {
    * Adds an activity.
    * @param user The user who performed the activity
    * @param event The activity itself
-   * @param additionalData Additional data
    */
-  addActivity<T>(user: User, event: ActivityEvent, additionalData?: T): Promise<void>;
+  addActivity(user: User, activity: IActivity): Promise<void>;
 
   /**
    * Gets all previous activity.
@@ -52,7 +51,7 @@ export class ActivityService implements IService {
    * @param user The user who did the activity
    * @param event The performed activity
    */
-  public async addActivity<T>(user: User, event: ActivityEvent, additionalData?: T): Promise<void> {
+  public async addActivity(user: User, { event, ...additionalData }: IActivity): Promise<void> {
     const activity = new Activity();
     activity.user = user;
     activity.event = event;

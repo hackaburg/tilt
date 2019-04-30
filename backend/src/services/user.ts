@@ -112,7 +112,9 @@ export class UserService implements IUserService {
     this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
 
     await this._email.sendVerifyEmail(user);
-    await this._activity.addActivity(user, ActivityEvent.Signup);
+    await this._activity.addActivity(user, {
+      event: ActivityEvent.Signup,
+    });
 
     return user;
   }
@@ -133,7 +135,9 @@ export class UserService implements IUserService {
 
     await this._users!.save(user);
     this._logger.debug(`${user.email} verified their email`);
-    this._activity.addActivity(user, ActivityEvent.EmailVerified);
+    this._activity.addActivity(user, {
+      event: ActivityEvent.EmailVerified,
+    });
   }
 
   /**
