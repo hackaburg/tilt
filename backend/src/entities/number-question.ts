@@ -6,6 +6,15 @@ import { QuestionBase } from "./question-base";
 
 @Entity()
 export class NumberQuestion extends QuestionBase implements INumberQuestion {
+  constructor(initializeDefaults?: boolean) {
+    super(initializeDefaults);
+
+    if (initializeDefaults) {
+      this.placeholder = "";
+      this.allowDecimals = true;
+    }
+  }
+
   @ManyToOne(() => FormSettings)
   public form!: FormSettings;
 
@@ -16,7 +25,7 @@ export class NumberQuestion extends QuestionBase implements INumberQuestion {
   @IsOptional()
   @IsString()
   @Column()
-  public placeholder: string = "";
+  public placeholder!: string;
 
   @IsOptional()
   @IsNumber()
@@ -31,5 +40,5 @@ export class NumberQuestion extends QuestionBase implements INumberQuestion {
   @IsOptional()
   @IsBoolean()
   @Column()
-  public allowDecimals: boolean = true;
+  public allowDecimals!: boolean;
 }

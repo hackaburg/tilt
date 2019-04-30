@@ -6,12 +6,15 @@ import { FormSettings } from "./form-settings";
 
 @Entity()
 export class ApplicationSettings implements IApplicationSettings {
-  constructor() {
-    this.profileForm = new FormSettings();
-    this.confirmationForm = new FormSettings();
+  constructor(initializeDefaults?: boolean) {
+    if (initializeDefaults) {
+      this.profileForm = new FormSettings(initializeDefaults);
+      this.confirmationForm = new FormSettings(initializeDefaults);
 
-    this.allowProfileFormFrom = new Date();
-    this.allowProfileFormUntil = new Date();
+      this.allowProfileFormFrom = new Date();
+      this.allowProfileFormUntil = new Date();
+      this.hoursToConfirm = 24;
+    }
   }
 
   @PrimaryGeneratedColumn()
@@ -22,30 +25,30 @@ export class ApplicationSettings implements IApplicationSettings {
   @Type(() => FormSettings)
   @OneToOne(() => FormSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public profileForm: IFormSettings;
+  public profileForm!: IFormSettings;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => FormSettings)
   @OneToOne(() => FormSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public confirmationForm: IFormSettings;
+  public confirmationForm!: IFormSettings;
 
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   @Column()
-  public allowProfileFormFrom: Date;
+  public allowProfileFormFrom!: Date;
 
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   @Column()
-  public allowProfileFormUntil: Date;
+  public allowProfileFormUntil!: Date;
 
   @IsOptional()
   @IsNumber()
   @IsPositive()
   @Column()
-  public hoursToConfirm: number = 24;
+  public hoursToConfirm!: number;
 }

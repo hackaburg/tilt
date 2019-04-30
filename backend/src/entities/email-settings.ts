@@ -6,9 +6,12 @@ import { EmailTemplate } from "./email-template";
 
 @Entity()
 export class EmailSettings implements IEmailSettings {
-  public constructor() {
-    this.verifyEmail = new EmailTemplate();
-    this.forgotPasswordEmail = new EmailTemplate();
+  public constructor(initializeDefaults?: boolean) {
+    if (initializeDefaults) {
+      this.verifyEmail = new EmailTemplate(initializeDefaults);
+      this.forgotPasswordEmail = new EmailTemplate(initializeDefaults);
+      this.sender = "tilt@hackaburg.de";
+    }
   }
 
   @PrimaryGeneratedColumn()
@@ -17,19 +20,19 @@ export class EmailSettings implements IEmailSettings {
   @IsOptional()
   @IsEmail()
   @Column()
-  public sender: string = "tilt@hackaburg.de";
+  public sender!: string;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => EmailTemplate)
   @OneToOne(() => EmailTemplate, { cascade: true, eager: true })
   @JoinColumn()
-  public verifyEmail: EmailTemplate;
+  public verifyEmail!: EmailTemplate;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => EmailTemplate)
   @OneToOne(() => EmailTemplate, { cascade: true, eager: true })
   @JoinColumn()
-  public forgotPasswordEmail: EmailTemplate;
+  public forgotPasswordEmail!: EmailTemplate;
 }

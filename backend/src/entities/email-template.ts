@@ -4,21 +4,29 @@ import { IEmailTemplate } from "../../../types/settings";
 
 @Entity()
 export class EmailTemplate implements IEmailTemplate {
+  constructor(initializeDefaults?: boolean) {
+    if (initializeDefaults) {
+      this.subject = "";
+      this.htmlTemplate = "";
+      this.textTemplate = "";
+    }
+  }
+
   @PrimaryGeneratedColumn()
   public id!: number;
 
   @IsOptional()
   @IsString()
   @Column()
-  public subject: string = "";
+  public subject!: string;
 
   @IsOptional()
   @IsString()
   @Column()
-  public htmlTemplate: string = "";
+  public htmlTemplate!: string;
 
   @IsOptional()
   @IsString()
   @Column()
-  public textTemplate: string = "";
+  public textTemplate!: string;
 }

@@ -6,6 +6,15 @@ import { QuestionBase } from "./question-base";
 
 @Entity()
 export class TextQuestion extends QuestionBase implements ITextQuestion {
+  constructor(initializeDefaults?: boolean) {
+    super(initializeDefaults);
+
+    if (initializeDefaults) {
+      this.placeholder = "";
+      this.multiline = false;
+    }
+  }
+
   @ManyToOne(() => FormSettings)
   public form!: FormSettings;
 
@@ -16,10 +25,10 @@ export class TextQuestion extends QuestionBase implements ITextQuestion {
   @IsOptional()
   @IsString()
   @Column()
-  public placeholder: string = "";
+  public placeholder!: string;
 
   @IsOptional()
   @IsBoolean()
   @Column()
-  public multiline: boolean = false;
+  public multiline!: boolean;
 }

@@ -12,6 +12,12 @@ import { TextQuestion } from "./text-question";
 
 @Entity()
 export class FormSettings implements IFormSettings {
+  constructor(initializeDefaults?: boolean) {
+    if (initializeDefaults) {
+      this.title = "Form";
+    }
+  }
+
   @PrimaryGeneratedColumn()
   public id!: number;
 
@@ -19,7 +25,7 @@ export class FormSettings implements IFormSettings {
   @IsString()
   @MinLength(1)
   @Column()
-  public title: string = "Form";
+  public title!: string;
 
   @Exclude()
   @OneToMany(() => ChoicesQuestion, (question) => question.form, { cascade: true, eager: true })

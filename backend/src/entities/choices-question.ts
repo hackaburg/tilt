@@ -6,6 +6,16 @@ import { QuestionBase } from "./question-base";
 
 @Entity()
 export class ChoicesQuestion extends QuestionBase implements IChoicesQuestion {
+  constructor(initializeDefaults?: boolean) {
+    super(initializeDefaults);
+
+    if (initializeDefaults) {
+      this.choices = [];
+      this.allowMultiple = false;
+      this.displayAsDropdown = false;
+    }
+  }
+
   @ManyToOne(() => FormSettings)
   public form!: FormSettings;
 
@@ -16,15 +26,15 @@ export class ChoicesQuestion extends QuestionBase implements IChoicesQuestion {
   @IsArray()
   @IsString({ each: true })
   @Column("simple-json")
-  public choices: string[] = [];
+  public choices!: string[];
 
   @IsOptional()
   @IsBoolean()
   @Column()
-  public allowMultiple: boolean = false;
+  public allowMultiple!: boolean;
 
   @IsOptional()
   @IsBoolean()
   @Column()
-  public displayAsDropdown: boolean = false;
+  public displayAsDropdown!: boolean;
 }

@@ -4,6 +4,17 @@ import { Column, PrimaryGeneratedColumn } from "typeorm";
 import { IQuestionBase, ISortable } from "../../../types/questions";
 
 export abstract class QuestionBase implements ISortable<IQuestionBase> {
+  constructor(initializeDefaults?: boolean) {
+    if (initializeDefaults) {
+      this.sortIndex = 0;
+      this.description = "";
+      this.title = "Question";
+      this.mandatory = false;
+      this.parentReferenceName = "";
+      this.showIfParentHasValue = "";
+    }
+  }
+
   @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
@@ -15,30 +26,30 @@ export abstract class QuestionBase implements ISortable<IQuestionBase> {
 
   @Exclude()
   @Column()
-  public sortIndex: number = 0;
+  public sortIndex!: number;
 
   @IsOptional()
   @IsString()
   @Column()
-  public description: string = "";
+  public description!: string;
 
   @IsOptional()
   @IsString()
   @Column()
-  public title: string = "Question";
+  public title!: string;
 
   @IsOptional()
   @IsBoolean()
   @Column()
-  public mandatory: boolean = false;
+  public mandatory!: boolean;
 
   @IsOptional()
   @IsString()
   @Column({ name: "parent" })
-  public parentReferenceName: string = "";
+  public parentReferenceName!: string;
 
   @IsOptional()
   @IsString()
   @Column({ name: "parentValue" })
-  public showIfParentHasValue: string = "";
+  public showIfParentHasValue!: string;
 }

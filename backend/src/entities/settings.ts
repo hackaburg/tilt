@@ -8,10 +8,12 @@ import { FrontendSettings } from "./frontend-settings";
 
 @Entity()
 export class Settings implements ISettings {
-  public constructor() {
-    this.application = new ApplicationSettings();
-    this.frontend = new FrontendSettings();
-    this.email = new EmailSettings();
+  public constructor(initializeDefaults?: boolean) {
+    if (initializeDefaults) {
+      this.application = new ApplicationSettings(initializeDefaults);
+      this.frontend = new FrontendSettings(initializeDefaults);
+      this.email = new EmailSettings(initializeDefaults);
+    }
   }
 
   @PrimaryGeneratedColumn()
@@ -22,19 +24,19 @@ export class Settings implements ISettings {
   @Type(() => ApplicationSettings)
   @OneToOne(() => ApplicationSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public application: IApplicationSettings;
+  public application!: IApplicationSettings;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => FrontendSettings)
   @OneToOne(() => FrontendSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public frontend: IFrontendSettings;
+  public frontend!: IFrontendSettings;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => EmailSettings)
   @OneToOne(() => EmailSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public email: IEmailSettings;
+  public email!: IEmailSettings;
 }
