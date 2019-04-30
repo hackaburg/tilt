@@ -1,4 +1,5 @@
 import { IApi } from ".";
+import { IActivity } from "../../../types/activity";
 import { IApiRequest, IApiResponse, IRecursivePartial, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
 import { UserRole } from "../../../types/roles";
 import { ISettings, IUpdateSettingsRequestBody } from "../../../types/settings";
@@ -8,7 +9,6 @@ import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { getLoginToken, isLoginTokenSet, setLoginToken } from "../authentication";
-import { IActivity } from "../../../types/activity";
 
 /**
  * An api client connected to a backend. Stores the login token in `localStorage`.
