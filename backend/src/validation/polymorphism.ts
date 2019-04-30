@@ -8,6 +8,10 @@ type IAnyClass = new(...args: any[]) => any;
  */
 export function ArrayType<TBaseType extends object>(parseTypes: (values: TBaseType[]) => ReadonlyArray<IAnyClass>) {
   return Transform((values: TBaseType[]) => {
+    if (!Array.isArray(values)) {
+      return null;
+    }
+
     const types = parseTypes(values);
 
     if (types.length !== values.length) {
