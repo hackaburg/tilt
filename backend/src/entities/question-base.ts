@@ -6,6 +6,7 @@ import { IQuestionBase, ISortable } from "../../../types/questions";
 export abstract class QuestionBase implements ISortable<IQuestionBase> {
   constructor(initializeDefaults?: boolean) {
     if (initializeDefaults) {
+      this.referenceName = "";
       this.sortIndex = 0;
       this.description = "";
       this.title = "Question";
