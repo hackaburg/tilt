@@ -1,3 +1,4 @@
+import { v4 as uuid } from "node-uuid";
 import * as React from "react";
 import * as ReactMarkdown from "react-markdown";
 import styled from "styled-components";
@@ -87,7 +88,7 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
         description: "",
         mandatory: false,
         parentReferenceName: "",
-        referenceName: "",
+        referenceName: uuid(),
         showIfParentHasValue: "",
         title: "",
       };
@@ -189,6 +190,7 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
             onChange={(referenceName) => handleQuestionChange({ referenceName })}
             title="Reference name"
             placeholder="no reference name"
+            mandatory={true}
           />
 
           <Row>

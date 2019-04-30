@@ -64,7 +64,7 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
       multiline: false,
       parentReferenceName: "",
       placeholder: "",
-      referenceName: "",
+      referenceName: uuid(),
       showIfParentHasValue: "",
       title: `Question ${questions.length + 1}`,
       type: QuestionType.Text,

@@ -9,7 +9,7 @@ export interface IQuestionBase {
   description: string;
   title: string;
   mandatory: boolean;
-  referenceName?: string;
+  referenceName: string;
   parentReferenceName?: string;
   showIfParentHasValue?: string;
 }
