@@ -64,7 +64,7 @@ export class FormSettings implements IFormSettings {
         throw new TypeError("unknown question type");
     }
   }))
-  public get questions(): Array<ISortable<IQuestion>> {
+  public get questions(): IQuestion[] {
     return [
       ...(this.choices || []),
       ...(this.countries || []),
@@ -73,9 +73,9 @@ export class FormSettings implements IFormSettings {
     ].sort((a, b) => a.sortIndex! - b.sortIndex!);
   }
 
-  public set questions(questions: Array<ISortable<IQuestion>>) {
+  public set questions(questions: IQuestion[]) {
     const questionsWithIndex = (questions || []).map((question, index) => {
-      question.sortIndex = index;
+      (question as ISortable<IQuestion>).sortIndex = index;
       return question;
     });
 
