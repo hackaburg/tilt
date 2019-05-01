@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ActivityType } from "../../../types/activity";
+import { IUser } from "../../../types/user";
 import { User } from "./user";
 
 @Entity()
@@ -8,7 +9,7 @@ export class Activity {
   public id!: number;
 
   @ManyToOne(() => User, (user) => user.activity)
-  public user!: User;
+  public user!: IUser;
 
   @Column()
   public type!: ActivityType;

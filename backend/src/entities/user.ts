@@ -2,10 +2,11 @@ import { Exclude } from "class-transformer";
 import { IsEmail, IsString, MinLength } from "class-validator";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserRole } from "../../../types/roles";
+import { IUser } from "../../../types/user";
 import { Activity } from "./activity";
 
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn()
   public id!: number;
 
