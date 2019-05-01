@@ -29,12 +29,12 @@ export const Activity = ({ activity, dispatchFetchActivities }: IActivityProps) 
   const activityByMonth =
     groupByMonth(descendingActivities)
       .map(({ month, data }) => (
-        <>
+        <div key={month}>
           <Subheading>{month}</Subheading>
           {data.map((event) => (
-            <ActivityEvent event={event} />
+            <ActivityEvent event={event} key={JSON.stringify(event)} />
           ))}
-        </>
+        </div>
       ));
 
   return (
