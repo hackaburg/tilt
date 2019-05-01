@@ -1,7 +1,7 @@
 import { Authorized, Get, JsonController } from "routing-controllers";
 import { Inject } from "typedi";
+import { IActivity } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
-import { Activity } from "../entities/activity";
 import { ActivityServiceToken, IActivityService } from "../services/activity";
 
 @JsonController("/activity")
@@ -15,7 +15,7 @@ export class ActivityController {
    */
   @Get()
   @Authorized(UserRole.Moderator)
-  public async getAllActivities(): Promise<Activity[]> {
+  public async getAllActivities(): Promise<IActivity[]> {
     return await this._activity.getActivities();
   }
 }
