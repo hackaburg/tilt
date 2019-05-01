@@ -19,18 +19,23 @@ export class User {
   @Column({ select: false })
   public password!: string;
 
+  @Exclude()
   @Column()
   public verifyToken!: string;
 
+  @Exclude()
   @Column()
   public createdAt!: Date;
 
+  @Exclude()
   @Column()
   public updatedAt!: Date;
 
+  @Exclude()
   @OneToMany(() => Activity, (activity) => activity.user)
   public activity!: Activity[];
 
+  @Exclude()
   @Column()
   public role!: UserRole;
 }
