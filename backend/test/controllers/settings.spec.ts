@@ -3,6 +3,7 @@ import { SettingsController } from "../../src/controllers/settings";
 import { Settings } from "../../src/entities/settings";
 import { IActivityService } from "../../src/services/activity";
 import { ISettingsService } from "../../src/services/settings";
+import { toPrettyJson } from "../../src/utils/json";
 import { MockedService } from "../services/mock";
 import { MockActivityService } from "../services/mock/activity";
 import { MockSettingsService } from "../services/mock/settings";
@@ -48,8 +49,8 @@ describe("SettingsController", () => {
 
     await controller.updateSettings(user, { data: nextSettings });
     expect(activityService.instance.addActivity).toBeCalledWith(user, {
-      next: nextSettings,
-      previous: previousSettings,
+      next: toPrettyJson(nextSettings),
+      previous: toPrettyJson(previousSettings),
       type: ActivityType.SettingsUpdate,
     } as IActivityData);
   });

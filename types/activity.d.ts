@@ -1,4 +1,3 @@
-import { ISettings } from "./settings";
 import { IUser } from "./user";
 
 export const enum ActivityType {
@@ -23,8 +22,8 @@ export interface IEmailVerifiedActivityData {
 
 export interface ISettingsUpdateActivityData {
   type: ActivityType.SettingsUpdate;
-  previous: ISettings;
-  next: ISettings;
+  previous: string;
+  next: string;
 }
 
 export type IActivityData =

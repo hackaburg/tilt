@@ -6,6 +6,7 @@ import { ISettings } from "../../../types/settings";
 import { User } from "../entities/user";
 import { ActivityServiceToken, IActivityService } from "../services/activity";
 import { ISettingsService, SettingsServiceToken, UpdateSettingsError } from "../services/settings";
+import { toPrettyJson } from "../utils/json";
 import { UpdateSettingsApiRequest } from "../validation/update-settings";
 
 @JsonController("/settings")
@@ -34,8 +35,8 @@ export class SettingsController {
       const nextSettings = await this._settings.updateSettings(settings);
 
       await this._activity.addActivity(user, {
-        next: nextSettings,
-        previous: previousSettings,
+        next: toPrettyJson(nextSettings),
+        previous: toPrettyJson(previousSettings),
         type: ActivityType.SettingsUpdate,
       });
     } catch (error) {
