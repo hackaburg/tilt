@@ -7,26 +7,28 @@ export const enum ActivityType {
   SettingsUpdate = "settings_update",
 }
 
-export interface IActivityBase {
+export interface IActivity {
   user: IUser;
+  timestamp: number;
+  data: IActivityData;
 }
 
-export interface ISignupActivity extends IActivityBase {
+export interface ISignupActivityData {
   type: ActivityType.Signup;
 }
 
-export interface IEmailVerifiedActivity extends IActivityBase {
+export interface IEmailVerifiedActivityData {
   type: ActivityType.EmailVerified;
 }
 
-export interface ISettingsUpdateActivity extends IActivityBase {
+export interface ISettingsUpdateActivityData {
   type: ActivityType.SettingsUpdate;
   previous: ISettings;
   next: ISettings;
 }
 
-export type IActivity =
-  ISignupActivity
-  | IEmailVerifiedActivity
-  | ISettingsUpdateActivity
+export type IActivityData =
+  ISignupActivityData
+  | IEmailVerifiedActivityData
+  | ISettingsUpdateActivityData
 ;

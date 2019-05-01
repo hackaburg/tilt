@@ -31,9 +31,8 @@ export class UsersController {
   public async signup(@Body() { data: { email, password } }: UserSignupApiRequest): Promise<IUserSignupResponseBody> {
     try {
       const user = await this._users.signup(email, password);
-      await this._activity.addActivity({
+      await this._activity.addActivity(user, {
         type: ActivityType.Signup,
-        user,
       });
 
       return {
@@ -52,9 +51,8 @@ export class UsersController {
   public async verify(@QueryParam("token") token: string): Promise<IUserVerifyResponseBody> {
     try {
       const user = await this._users.verifyUserByVerifyToken(token);
-      await this._activity.addActivity({
+      await this._activity.addActivity(user, {
         type: ActivityType.EmailVerified,
-        user,
       });
 
       return {

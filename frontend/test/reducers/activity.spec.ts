@@ -11,7 +11,10 @@ describe("activityReducer", () => {
   it("adds activities to empty state", () => {
     const activities: IActivity[] = [
       {
-        type: ActivityType.Signup,
+        data: {
+          type: ActivityType.Signup,
+        },
+        timestamp: new Date().getTime(),
         user: {
           email: "test@foo.bar",
         },
@@ -25,7 +28,10 @@ describe("activityReducer", () => {
   it("appends activities to existing ones", () => {
     const activities: IActivity[] = [
       {
-        type: ActivityType.Signup,
+        data: {
+          type: ActivityType.Signup,
+        },
+        timestamp: new Date().getTime(),
         user: {
           email: "test@foo.bar",
         },
@@ -34,7 +40,10 @@ describe("activityReducer", () => {
 
     const previousState: IActivity[] = [
       {
-        type: ActivityType.EmailVerified,
+        data: {
+          type: ActivityType.EmailVerified,
+        },
+        timestamp: new Date().getTime(),
         user: {
           email: "test@foo.bar",
         },

@@ -1,4 +1,4 @@
-import { ActivityType, IActivity } from "../../../types/activity";
+import { ActivityType, IActivityData } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { UsersController } from "../../src/controllers/users";
 import { User } from "../../src/entities/user";
@@ -65,10 +65,9 @@ describe("UsersController", () => {
       },
     });
 
-    expect(activityService.mocks.addActivity).toBeCalledWith({
+    expect(activityService.mocks.addActivity).toBeCalledWith(user, {
       type: ActivityType.Signup,
-      user,
-    } as IActivity);
+    } as IActivityData);
   });
 
   it("verifies users with their token", async () => {
@@ -93,10 +92,9 @@ describe("UsersController", () => {
     const user = {};
     userService.mocks.verifyUserByVerifyToken.mockResolvedValue(user);
     await controller.verify("");
-    expect(activityService.mocks.addActivity).toBeCalledWith({
+    expect(activityService.mocks.addActivity).toBeCalledWith(user, {
       type: ActivityType.EmailVerified,
-      user,
-    } as IActivity);
+    } as IActivityData);
   });
 
   it("generates tokens for valid credentials", async () => {

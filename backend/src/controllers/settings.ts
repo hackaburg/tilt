@@ -33,11 +33,10 @@ export class SettingsController {
       const previousSettings = await this._settings.getSettings();
       const nextSettings = await this._settings.updateSettings(settings);
 
-      await this._activity.addActivity({
+      await this._activity.addActivity(user, {
         next: nextSettings,
         previous: previousSettings,
         type: ActivityType.SettingsUpdate,
-        user,
       });
     } catch (error) {
       if (error instanceof UpdateSettingsError) {

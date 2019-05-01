@@ -1,7 +1,8 @@
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { IActivity } from "../../../types/activity";
+import { IActivity, IActivityData } from "../../../types/activity";
+import { IUser } from "../../../types/user";
 import { Activity } from "../entities/activity";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 
@@ -13,7 +14,7 @@ export interface IActivityService extends IService {
    * Adds an activity.
    * @param event The activity itself
    */
-  addActivity(activity: IActivity): Promise<void>;
+  addActivity(user: IUser, data: IActivityData): Promise<void>;
 
   /**
    * Gets all previous activity.
@@ -49,14 +50,14 @@ export class ActivityService implements IService {
    * @param user The user who did the activity
    * @param event The performed activity
    */
-  public async addActivity({ user, type, ...additionalData }: IActivity): Promise<void> {
+  public async addActivity(user: IUser, { type, ...data }: IActivityData): Promise<void> {
     const activity = new Activity();
     activity.user = user;
     activity.type = type;
     activity.timestamp = new Date();
 
-    if (additionalData) {
-      activity.data = additionalData;
+    if (data) {
+      activity.data = data;
     }
 
     await this._activities!.insert(activity);
@@ -72,10 +73,13 @@ export class ActivityService implements IService {
       ],
     });
 
-    return activities.map(({ user, type, data }) => ({
-      type,
+    return activities.map<IActivity>(({ data, timestamp, type, user }) => ({
+      data: {
+        ...data,
+        type,
+      },
+      timestamp: timestamp.getTime(),
       user,
-      ...data,
     }));
   }
 }
