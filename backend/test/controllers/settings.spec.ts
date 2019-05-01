@@ -1,4 +1,4 @@
-import { ActivityType } from "../../../types/activity";
+import { ActivityType, IActivity } from "../../../types/activity";
 import { SettingsController } from "../../src/controllers/settings";
 import { Settings } from "../../src/entities/settings";
 import { IActivityService } from "../../src/services/activity";
@@ -47,10 +47,11 @@ describe("SettingsController", () => {
     service.mocks.updateSettings.mockResolvedValue(nextSettings);
 
     await controller.updateSettings(user, { data: nextSettings });
-    expect(activityService.instance.addActivity).toBeCalledWith(user, {
-      event: ActivityType.SettingsUpdate,
+    expect(activityService.instance.addActivity).toBeCalledWith({
       next: nextSettings,
       previous: previousSettings,
-    });
+      type: ActivityType.SettingsUpdate,
+      user,
+    } as IActivity);
   });
 });

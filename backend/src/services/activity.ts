@@ -3,7 +3,6 @@ import { Repository } from "typeorm";
 import { IService } from ".";
 import { IActivity } from "../../../types/activity";
 import { Activity } from "../entities/activity";
-import { deletePrivateUserFields, User } from "../entities/user";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 
 /**
@@ -12,15 +11,14 @@ import { DatabaseServiceToken, IDatabaseService } from "./database";
 export interface IActivityService extends IService {
   /**
    * Adds an activity.
-   * @param user The user who performed the activity
    * @param event The activity itself
    */
-  addActivity(user: User, activity: IActivity): Promise<void>;
+  addActivity(activity: IActivity): Promise<void>;
 
   /**
    * Gets all previous activity.
    */
-  getActivities(): Promise<Activity[]>;
+  getActivities(): Promise<IActivity[]>;
 }
 
 /**
@@ -51,10 +49,10 @@ export class ActivityService implements IService {
    * @param user The user who did the activity
    * @param event The performed activity
    */
-  public async addActivity(user: User, { type: event, ...additionalData }: IActivity): Promise<void> {
+  public async addActivity({ user, type, ...additionalData }: IActivity): Promise<void> {
     const activity = new Activity();
     activity.user = user;
-    activity.event = event;
+    activity.type = type;
     activity.timestamp = new Date();
 
     if (additionalData) {
@@ -67,16 +65,17 @@ export class ActivityService implements IService {
   /**
    * Gets all previous activity.
    */
-  public async getActivities(): Promise<Activity[]> {
+  public async getActivities(): Promise<IActivity[]> {
     const activities = await this._activities!.find({
       relations: [
         "user",
       ],
     });
 
-    return activities.map((activity) => {
-      activity.user = deletePrivateUserFields(activity.user);
-      return activity;
-    });
+    return activities.map(({ user, type, data }) => ({
+      type,
+      user,
+      ...data,
+    }));
   }
 }

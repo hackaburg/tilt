@@ -44,25 +44,28 @@ describe("ActivityService", () => {
     expect.assertions(2);
 
     const event = ActivityType.Signup;
-    await activity.addActivity(user, {
+    await activity.addActivity({
       type: event,
+      user,
     });
 
     const data = await activities.find();
 
     expect(data.length).toBe(1);
-    expect(data[0].event).toBe(event);
+    expect(data[0].type).toBe(event);
   });
 
   it("retrieves all activities", async () => {
     expect.assertions(1);
 
-    await activity.addActivity(user, {
+    await activity.addActivity({
       type: ActivityType.EmailVerified,
+      user,
     });
 
-    await activity.addActivity(user, {
+    await activity.addActivity({
       type: ActivityType.Signup,
+      user,
     });
 
     const data = await activity.getActivities();

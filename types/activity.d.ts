@@ -1,4 +1,5 @@
 import { ISettings } from "./settings";
+import { IUser } from "./user";
 
 export const enum ActivityType {
   Signup = "signup",
@@ -6,15 +7,19 @@ export const enum ActivityType {
   SettingsUpdate = "settings_update",
 }
 
-export interface ISignupActivity {
+export interface IActivityBase {
+  user: IUser;
+}
+
+export interface ISignupActivity extends IActivityBase {
   type: ActivityType.Signup;
 }
 
-export interface IEmailVerifiedActivity {
+export interface IEmailVerifiedActivity extends IActivityBase {
   type: ActivityType.EmailVerified;
 }
 
-export interface ISettingsUpdate {
+export interface ISettingsUpdate extends IActivityBase {
   type: ActivityType.SettingsUpdate;
   previous: ISettings;
   next: ISettings;

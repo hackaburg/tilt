@@ -12,6 +12,9 @@ describe("activityReducer", () => {
     const activities: IActivity[] = [
       {
         type: ActivityType.Signup,
+        user: {
+          email: "test@foo.bar",
+        },
       },
     ];
 
@@ -23,12 +26,18 @@ describe("activityReducer", () => {
     const activities: IActivity[] = [
       {
         type: ActivityType.Signup,
+        user: {
+          email: "test@foo.bar",
+        },
       },
     ];
 
     const previousState: IActivity[] = [
       {
         type: ActivityType.EmailVerified,
+        user: {
+          email: "test@foo.bar",
+        },
       },
     ];
 
