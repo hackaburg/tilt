@@ -19,7 +19,7 @@ export interface IEmailVerifiedActivity extends IActivityBase {
   type: ActivityType.EmailVerified;
 }
 
-export interface ISettingsUpdate extends IActivityBase {
+export interface ISettingsUpdateActivity extends IActivityBase {
   type: ActivityType.SettingsUpdate;
   previous: ISettings;
   next: ISettings;
@@ -28,5 +28,5 @@ export interface ISettingsUpdate extends IActivityBase {
 export type IActivity =
   ISignupActivity
   | IEmailVerifiedActivity
-  | ISettingsUpdate
+  | ISettingsUpdateActivity
 ;
