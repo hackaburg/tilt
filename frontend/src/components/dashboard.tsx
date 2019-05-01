@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router";
 import styled from "styled-components";
 import { sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
+import { ConnectedActivity } from "./activity";
 import { PageSizedContainer } from "./centering";
 import { ConnectedNotification } from "./notification";
 import { PageNotFound } from "./page-not-found";
@@ -95,6 +96,7 @@ export const Dashboard = () => {
           <ContentContainer>
             <ConnectedNotification />
             <Switch>
+              <Route path={Routes.Activity} component={ConnectedActivity} />
               <Route path={Routes.Settings} component={Settings} />
               <Route component={PageNotFound} />
             </Switch>
