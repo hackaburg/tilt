@@ -51,7 +51,7 @@ export class ActivityService implements IService {
    * @param user The user who did the activity
    * @param event The performed activity
    */
-  public async addActivity(user: User, { event, ...additionalData }: IActivity): Promise<void> {
+  public async addActivity(user: User, { type: event, ...additionalData }: IActivity): Promise<void> {
     const activity = new Activity();
     activity.user = user;
     activity.event = event;

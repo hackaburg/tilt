@@ -1,4 +1,4 @@
-import { ActivityEvent, IActivity } from "../../../types/activity";
+import { ActivityType, IActivity } from "../../../types/activity";
 import { addActivities, fetchActivities } from "../../src/actions/activity";
 import { finishRequest, startRequest } from "../../src/actions/request";
 import { api } from "../__mocks__/api";
@@ -9,7 +9,7 @@ describe("activity actions", () => {
 
     const activities: IActivity[] = [
       {
-        event: ActivityEvent.Signup,
+        type: ActivityType.Signup,
       },
     ];
 

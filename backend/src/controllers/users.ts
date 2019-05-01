@@ -1,6 +1,6 @@
 import { Authorized, BadRequestError, Body, CurrentUser, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
 import { Inject } from "typedi";
-import { ActivityEvent } from "../../../types/activity";
+import { ActivityType } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { IUserLoginResponseBody } from "../../../types/user-login";
 import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
@@ -32,7 +32,7 @@ export class UsersController {
     try {
       const user = await this._users.signup(email, password);
       await this._activity.addActivity(user, {
-        event: ActivityEvent.Signup,
+        type: ActivityType.Signup,
       });
 
       return {
@@ -52,7 +52,7 @@ export class UsersController {
     try {
       const user = await this._users.verifyUserByVerifyToken(token);
       await this._activity.addActivity(user, {
-        event: ActivityEvent.EmailVerified,
+        type: ActivityType.EmailVerified,
       });
 
       return {

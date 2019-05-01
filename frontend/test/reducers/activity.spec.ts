@@ -1,4 +1,4 @@
-import { ActivityEvent, IActivity } from "../../../types/activity";
+import { ActivityType, IActivity } from "../../../types/activity";
 import { addActivities } from "../../src/actions/activity";
 import { activityReducer, initialActivitiesState } from "../../src/reducers/activity";
 
@@ -11,7 +11,7 @@ describe("activityReducer", () => {
   it("adds activities to empty state", () => {
     const activities: IActivity[] = [
       {
-        event: ActivityEvent.Signup,
+        type: ActivityType.Signup,
       },
     ];
 
@@ -22,13 +22,13 @@ describe("activityReducer", () => {
   it("appends activities to existing ones", () => {
     const activities: IActivity[] = [
       {
-        event: ActivityEvent.Signup,
+        type: ActivityType.Signup,
       },
     ];
 
     const previousState: IActivity[] = [
       {
-        event: ActivityEvent.EmailVerified,
+        type: ActivityType.EmailVerified,
       },
     ];
 

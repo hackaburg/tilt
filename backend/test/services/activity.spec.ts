@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { ActivityEvent } from "../../../types/activity";
+import { ActivityType } from "../../../types/activity";
 import { Activity } from "../../src/entities/activity";
 import { User } from "../../src/entities/user";
 import { ActivityService, IActivityService } from "../../src/services/activity";
@@ -43,9 +43,9 @@ describe("ActivityService", () => {
   it("adds new activities", async () => {
     expect.assertions(2);
 
-    const event = ActivityEvent.Signup;
+    const event = ActivityType.Signup;
     await activity.addActivity(user, {
-      event,
+      type: event,
     });
 
     const data = await activities.find();
@@ -58,11 +58,11 @@ describe("ActivityService", () => {
     expect.assertions(1);
 
     await activity.addActivity(user, {
-      event: ActivityEvent.EmailVerified,
+      type: ActivityType.EmailVerified,
     });
 
     await activity.addActivity(user, {
-      event: ActivityEvent.Signup,
+      type: ActivityType.Signup,
     });
 
     const data = await activity.getActivities();

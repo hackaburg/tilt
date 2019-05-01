@@ -1,4 +1,4 @@
-import { ActivityEvent } from "../../../types/activity";
+import { ActivityType } from "../../../types/activity";
 import { SettingsController } from "../../src/controllers/settings";
 import { Settings } from "../../src/entities/settings";
 import { IActivityService } from "../../src/services/activity";
@@ -48,7 +48,7 @@ describe("SettingsController", () => {
 
     await controller.updateSettings(user, { data: nextSettings });
     expect(activityService.instance.addActivity).toBeCalledWith(user, {
-      event: ActivityEvent.SettingsUpdate,
+      event: ActivityType.SettingsUpdate,
       next: nextSettings,
       previous: previousSettings,
     });

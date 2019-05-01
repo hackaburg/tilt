@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ActivityEvent } from "../../../types/activity";
+import { ActivityType } from "../../../types/activity";
 import { User } from "./user";
 
 @Entity()
@@ -11,7 +11,7 @@ export class Activity {
   public user!: User;
 
   @Column()
-  public event!: ActivityEvent;
+  public type!: ActivityType;
 
   @Column()
   public timestamp!: Date;

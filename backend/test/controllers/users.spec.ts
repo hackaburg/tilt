@@ -1,4 +1,4 @@
-import { ActivityEvent } from "../../../types/activity";
+import { ActivityType } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { UsersController } from "../../src/controllers/users";
 import { User } from "../../src/entities/user";
@@ -66,7 +66,7 @@ describe("UsersController", () => {
     });
 
     expect(activityService.mocks.addActivity).toBeCalledWith(user, {
-      event: ActivityEvent.Signup,
+      event: ActivityType.Signup,
     });
   });
 
@@ -93,7 +93,7 @@ describe("UsersController", () => {
     userService.mocks.verifyUserByVerifyToken.mockResolvedValue(user);
     await controller.verify("");
     expect(activityService.mocks.addActivity).toBeCalledWith(user, {
-      event: ActivityEvent.EmailVerified,
+      event: ActivityType.EmailVerified,
     });
   });
 

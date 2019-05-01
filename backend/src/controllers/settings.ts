@@ -1,6 +1,6 @@
 import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Put } from "routing-controllers";
 import { Inject } from "typedi";
-import { ActivityEvent } from "../../../types/activity";
+import { ActivityType } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { User } from "../entities/user";
@@ -34,9 +34,9 @@ export class SettingsController {
       const nextSettings = await this._settings.updateSettings(settings);
 
       await this._activity.addActivity(user, {
-        event: ActivityEvent.SettingsUpdate,
         next: nextSettings,
         previous: previousSettings,
+        type: ActivityType.SettingsUpdate,
       });
     } catch (error) {
       if (error instanceof UpdateSettingsError) {
