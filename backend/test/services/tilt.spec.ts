@@ -4,13 +4,13 @@ import { MockActivityService } from "./mock/activity";
 import { MockConfigurationService } from "./mock/config";
 import { MockDatabaseService } from "./mock/database";
 import { MockEmailService } from "./mock/email";
+import { MockEmailTemplateService } from "./mock/email-template";
 import { MockHaveibeenpwnedService } from "./mock/haveibeenpwned";
 import { MockHttpService } from "./mock/http";
 import { MockLoggerService } from "./mock/logger";
 import { MockSettingsService } from "./mock/settings";
 import { MockTokenService } from "./mock/tokens";
 import { MockUserService } from "./mock/users";
-import { MockEmailTemplateService } from "./mock/email-template";
 
 describe("TiltService", () => {
   it("bootstraps all services", async () => {
