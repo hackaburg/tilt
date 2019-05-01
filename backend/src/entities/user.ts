@@ -7,6 +7,7 @@ import { Activity } from "./activity";
 
 @Entity()
 export class User implements IUser {
+  @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 

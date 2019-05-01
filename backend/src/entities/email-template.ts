@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { IsOptional, IsString } from "class-validator";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { IEmailTemplate } from "../../../types/settings";
@@ -12,6 +13,7 @@ export class EmailTemplate implements IEmailTemplate {
     }
   }
 
+  @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 

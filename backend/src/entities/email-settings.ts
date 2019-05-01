@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
 import { IsEmail, IsOptional, ValidateNested } from "class-validator";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
@@ -14,6 +14,7 @@ export class EmailSettings implements IEmailSettings {
     }
   }
 
+  @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 

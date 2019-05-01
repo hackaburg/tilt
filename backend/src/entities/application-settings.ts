@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
 import { IsDate, IsNumber, IsOptional, IsPositive, ValidateNested } from "class-validator";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IApplicationSettings, IFormSettings } from "../../../types/settings";
@@ -17,6 +17,7 @@ export class ApplicationSettings implements IApplicationSettings {
     }
   }
 
+  @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 

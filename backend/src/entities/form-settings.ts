@@ -18,6 +18,7 @@ export class FormSettings implements IFormSettings {
     }
   }
 
+  @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 

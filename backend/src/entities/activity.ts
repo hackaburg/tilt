@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ActivityType } from "../../../types/activity";
 import { IUser } from "../../../types/user";
@@ -5,6 +6,7 @@ import { User } from "./user";
 
 @Entity()
 export class Activity {
+  @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 
