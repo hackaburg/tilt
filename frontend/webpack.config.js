@@ -86,6 +86,7 @@ module.exports = {
     new MonacoWebpackPlugin({
       languages: [
         "html",
+        "json",
       ],
     }),
     new EnvironmentPlugin({
