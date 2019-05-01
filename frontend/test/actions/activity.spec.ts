@@ -9,7 +9,11 @@ describe("activity actions", () => {
 
     const activities: IActivity[] = [
       {
-        type: ActivityType.Signup,
+        data: {
+          type: ActivityType.Signup,
+        },
+        timestamp: new Date().getTime(),
+        user: null as any,
       },
     ];
 
