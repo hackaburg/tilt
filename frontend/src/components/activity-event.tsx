@@ -134,7 +134,7 @@ export const ActivityEvent = ({ event }: IActivityEventProps) => {
 
       {body && (
         <Body shown={showBody}>
-          {body}
+          {showBody && body}
         </Body>
       )}
     </Container>
