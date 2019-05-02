@@ -11,6 +11,7 @@ import { ILoggerService, LoggerServiceToken } from "./log";
 import { ISettingsService, SettingsServiceToken } from "./settings";
 import { ITokenService, TokenServiceToken } from "./tokens";
 import { IUserService, UserServiceToken } from "./user";
+import { IWebSocketService, WebSocketServiceToken } from "./ws";
 
 /**
  * The tilt service in a nutshell. Contains all services required to run tilt.
@@ -30,6 +31,7 @@ export class Tilt implements IService {
     @Inject(TokenServiceToken) tokens: ITokenService<any>,
     @Inject(UserServiceToken) users: IUserService,
     @Inject(SettingsServiceToken) settings: ISettingsService,
+    @Inject(WebSocketServiceToken) ws: IWebSocketService,
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
@@ -43,6 +45,7 @@ export class Tilt implements IService {
       tokens,
       users,
       settings,
+      ws,
       http,
     ];
   }

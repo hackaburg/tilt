@@ -11,6 +11,7 @@ import { MockLoggerService } from "./mock/logger";
 import { MockSettingsService } from "./mock/settings";
 import { MockTokenService } from "./mock/tokens";
 import { MockUserService } from "./mock/users";
+import { MockWebSocketService } from "./mock/ws";
 
 describe("TiltService", () => {
   it("bootstraps all services", async () => {
@@ -31,6 +32,7 @@ describe("TiltService", () => {
     const email = addService(new MockEmailService());
     const haveibeenpwned = addService(new MockHaveibeenpwnedService());
     const emailTemplates = addService(new MockEmailTemplateService());
+    const ws = addService(new MockWebSocketService());
 
     const instances: ConstructorParameters<typeof Tilt> = [
       haveibeenpwned.instance,
@@ -43,6 +45,7 @@ describe("TiltService", () => {
       tokens.instance,
       users.instance,
       settings.instance,
+      ws.instance,
       http.instance,
     ];
 
