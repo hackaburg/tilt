@@ -14,7 +14,7 @@ export interface IActivityService extends IService {
    * Adds an activity.
    * @param event The activity itself
    */
-  addActivity(user: IUser, data: IActivityData): Promise<void>;
+  addActivity(user: IUser, data: IActivityData): Promise<IActivity>;
 
   /**
    * Gets all previous activity.
@@ -46,11 +46,27 @@ export class ActivityService implements IService {
   }
 
   /**
+   * Converts an activity entity to an @see IActivity object.
+   */
+  private convertActivityEntityToIActivity({ data, type, timestamp, user }: Activity): IActivity {
+    return {
+      data: {
+        ...data,
+        type,
+      },
+      timestamp: timestamp.getTime(),
+      user: {
+        email: user.email,
+      },
+    };
+  }
+
+  /**
    * Adds an activity to the log.
    * @param user The user who did the activity
    * @param event The performed activity
    */
-  public async addActivity(user: IUser, { type, ...data }: IActivityData): Promise<void> {
+  public async addActivity(user: IUser, { type, ...data }: IActivityData): Promise<IActivity> {
     const activity = new Activity();
     activity.user = user;
     activity.type = type;
@@ -61,6 +77,7 @@ export class ActivityService implements IService {
     }
 
     await this._activities!.insert(activity);
+    return this.convertActivityEntityToIActivity(activity);
   }
 
   /**
@@ -73,13 +90,6 @@ export class ActivityService implements IService {
       ],
     });
 
-    return activities.map<IActivity>(({ data, timestamp, type, user }) => ({
-      data: {
-        ...data,
-        type,
-      },
-      timestamp: timestamp.getTime(),
-      user,
-    }));
+    return activities.map((activity) => this.convertActivityEntityToIActivity(activity));
   }
 }

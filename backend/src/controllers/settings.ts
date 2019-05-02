@@ -3,9 +3,11 @@ import { Inject } from "typedi";
 import { ActivityType } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
+import { WebSocketMessageType } from "../../../types/ws";
 import { User } from "../entities/user";
 import { ActivityServiceToken, IActivityService } from "../services/activity";
 import { ISettingsService, SettingsServiceToken, UpdateSettingsError } from "../services/settings";
+import { IWebSocketService, WebSocketServiceToken } from "../services/ws";
 import { toPrettyJson } from "../utils/json";
 import { UpdateSettingsApiRequest } from "../validation/update-settings";
 
@@ -14,6 +16,7 @@ export class SettingsController {
   public constructor(
     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
     @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
+    @Inject(WebSocketServiceToken) private readonly _ws: IWebSocketService,
   ) { }
 
   /**
@@ -34,10 +37,17 @@ export class SettingsController {
       const previousSettings = await this._settings.getSettings();
       const nextSettings = await this._settings.updateSettings(settings);
 
-      await this._activity.addActivity(user, {
+      const activity = await this._activity.addActivity(user, {
         next: toPrettyJson(nextSettings),
         previous: toPrettyJson(previousSettings),
         type: ActivityType.SettingsUpdate,
+      });
+
+      this._ws.broadcast(UserRole.Moderator, {
+        activity: [
+          activity,
+        ],
+        type: WebSocketMessageType.Activity,
       });
     } catch (error) {
       if (error instanceof UpdateSettingsError) {
