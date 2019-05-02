@@ -6,5 +6,6 @@ export const MockHttpService = jest.fn(() =>
     bootstrap: jest.fn(),
     getCurrentUser: jest.fn(),
     isActionAuthorized: jest.fn(),
+    setupWebSocketConnection: jest.fn(),
   }),
 );

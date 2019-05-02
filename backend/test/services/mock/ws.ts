@@ -12,6 +12,8 @@ export const MockWebSocketService = jest.fn(() => (
 
 export const MockWebSocket = jest.fn(() => (
   new MockedService<WebSocket>({
+    close: jest.fn(),
+    off: jest.fn(),
     on: jest.fn(),
     send: jest.fn(),
   } as any)

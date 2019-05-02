@@ -1,14 +1,19 @@
 import * as cors from "cors";
 import * as express from "express";
+import * as ws from "express-ws";
+import { createServer } from "http";
 import { join } from "path";
 import { Action, useContainer, useExpressServer } from "routing-controllers";
 import { Container, Inject, Service, Token } from "typedi";
+import * as WebSocket from "ws";
 import { IService } from ".";
 import { UserRole } from "../../../types/roles";
+import { IWebSocketMessage, WebSocketMessageType } from "../../../types/ws";
 import { User } from "../entities/user";
 import { ConfigurationServiceToken, IConfigurationService } from "./config";
 import { ILoggerService, LoggerServiceToken } from "./log";
 import { IUserService, UserServiceToken } from "./user";
+import { IWebSocketService, WebSocketServiceToken } from "./ws";
 
 /**
  * An interface describing the http service.
@@ -27,6 +32,12 @@ export interface IHttpService extends IService {
    * @param roles The roles required for the action
    */
   isActionAuthorized(action: Action, roles?: UserRole[]): Promise<boolean>;
+
+  /**
+   * Sets up the incoming websocket.
+   * @param socket The incoming websocket
+   */
+  setupWebSocketConnection(socket: WebSocket): void;
 }
 
 /**
@@ -43,6 +54,7 @@ export class HttpService implements IHttpService {
     @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(UserServiceToken) private readonly _users: IUserService,
+    @Inject(WebSocketServiceToken) private readonly _ws: IWebSocketService,
   ) { }
 
   /**
@@ -51,13 +63,14 @@ export class HttpService implements IHttpService {
   public async bootstrap(): Promise<void> {
     useContainer(Container);
 
-    const server = express();
+    const app = express();
 
     if (!this._config.isProductionEnabled) {
-      server.use(cors());
+      app.use(cors());
+      this._logger.debug("enabled cors");
     }
 
-    const routedServer = useExpressServer(server, {
+    const routedApp = useExpressServer(app, {
       authorizationChecker: async (action, roles?: UserRole[]) => await this.isActionAuthorized(action, roles),
       controllers: [
         join(__dirname, "../controllers/*"),
@@ -80,18 +93,16 @@ export class HttpService implements IHttpService {
       routePrefix: "/api",
     });
 
-    return new Promise<void>((resolve, reject) => {
-      const port = this._config.config.http.port;
+    this._logger.debug("initialized http controllers");
+    const server = createServer(routedApp);
 
-      routedServer.listen(port, (error: Error) => {
-        if (error) {
-          reject(error);
-        }
+    const wsApp = ws(routedApp, server).app;
+    wsApp.ws("/api/ws", (socket) => this.setupWebSocketConnection(socket));
+    this._logger.debug("initialized ws");
 
-        this._logger.info(`http server running on ${port}`);
-        resolve();
-      });
-    });
+    const port = this._config.config.http.port;
+    server.listen(port);
+    this._logger.info(`http server running on ${port}`);
   }
 
   /**
@@ -174,5 +185,46 @@ export class HttpService implements IHttpService {
     }
 
     return true;
+  }
+
+  /**
+   * Sets up the incoming websocket and registeres it in the injected websocket service after authentication.
+   * @param socket The incoming websocket
+   */
+  public setupWebSocketConnection(socket: WebSocket): void {
+    const onMessage = async (messageString?: string) => {
+      if (!messageString) {
+        return;
+      }
+
+      let message: IWebSocketMessage;
+
+      try {
+        message = JSON.parse(messageString);
+      } catch {
+        return;
+      }
+
+      if (!message || !message.data) {
+        return;
+      }
+
+      const { data } = message;
+
+      if (data.type === WebSocketMessageType.Token) {
+        const user = await this._users.findUserByLoginToken(data.token);
+
+        if (!user) {
+          this._logger.debug("unauthorized websocket access");
+          socket.close();
+          return;
+        }
+
+        socket.off("message", onMessage);
+        this._ws.registerClient(user.role, socket);
+      }
+    };
+
+    socket.on("message", onMessage);
   }
 }
