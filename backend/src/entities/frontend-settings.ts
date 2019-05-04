@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import { IsOptional, IsString, IsUrl } from "class-validator";
+import { IsHexColor, IsOptional, IsString, IsUrl } from "class-validator";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { IFrontendSettings } from "../../../types/settings";
 
@@ -22,21 +22,25 @@ export class FrontendSettings implements IFrontendSettings {
 
   @IsOptional()
   @IsString()
+  @IsHexColor()
   @Column()
   public colorGradientStart!: string;
 
   @IsOptional()
   @IsString()
+  @IsHexColor()
   @Column()
   public colorGradientEnd!: string;
 
   @IsOptional()
   @IsString()
+  @IsHexColor()
   @Column()
   public colorLink!: string;
 
   @IsOptional()
   @IsString()
+  @IsHexColor()
   @Column()
   public colorLinkHover!: string;
 

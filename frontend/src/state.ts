@@ -37,6 +37,7 @@ export enum FormType {
   Signup = "signup",
   MailSettings = "mail_settings",
   ApplicationSettings = "application_settings",
+  FrontendSettings = "frontend_settings",
 }
 
 interface INotification {
