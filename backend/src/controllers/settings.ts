@@ -32,7 +32,7 @@ export class SettingsController {
    */
   @Put()
   @Authorized(UserRole.Owner)
-  public async updateSettings(@CurrentUser() user: User, @Body() { data: settings }: UpdateSettingsApiRequest): Promise<void> {
+  public async updateSettings(@CurrentUser() user: User, @Body() { data: settings }: UpdateSettingsApiRequest): Promise<ISettings> {
     try {
       const previousSettings = await this._settings.getSettings();
       const nextSettings = await this._settings.updateSettings(settings);
@@ -49,6 +49,8 @@ export class SettingsController {
         ],
         type: WebSocketMessageType.Activity,
       });
+
+      return nextSettings;
     } catch (error) {
       if (error instanceof UpdateSettingsError) {
         throw new BadRequestError(error.message);
