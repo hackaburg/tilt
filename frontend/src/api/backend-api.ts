@@ -160,8 +160,8 @@ export class BackendApi implements IApi {
    * Updates the settings.
    * @param settings The settings to use for updating
    */
-  public async updateSettings(settings: IRecursivePartial<ISettings>): Promise<void> {
-    await this.put<IUpdateSettingsRequestBody, void>("/settings", settings);
+  public async updateSettings(settings: IRecursivePartial<ISettings>): Promise<ISettings> {
+    return await this.put<IUpdateSettingsRequestBody, ISettings>("/settings", settings);
   }
 
   /**

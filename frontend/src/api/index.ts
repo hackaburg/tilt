@@ -50,7 +50,7 @@ export interface IApi {
    * Updates the settings with the given changes.
    * @param settings The changed settings
    */
-  updateSettings(settings: IRecursivePartial<ISettings>): Promise<void>;
+  updateSettings(settings: IRecursivePartial<ISettings>): Promise<ISettings>;
 
   /**
    * Queries the past activity.

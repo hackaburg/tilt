@@ -98,8 +98,8 @@ export class StaticApi implements IApi {
   /**
    * Simulates an update settings api call.
    */
-  public async updateSettings(): Promise<void> {
-    await sleep(100);
+  public async updateSettings(): Promise<ISettings> {
+    return await this.getSettings();
   }
 
   /**

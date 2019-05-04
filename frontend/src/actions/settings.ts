@@ -39,6 +39,7 @@ export const fetchSettings = () => performRequest(async (dispatch: Dispatch) => 
  */
 export const updateSettings = (form: FormType, settings: IRecursivePartial<ISettings>) => performRequest(async (dispatch: Dispatch) => {
   dispatch(setFormType(form));
-  await api.updateSettings(settings);
+  const updatedSettings = await api.updateSettings(settings);
+  dispatch(setSettings(updatedSettings));
   notifyChangesSaved()(dispatch);
 });
