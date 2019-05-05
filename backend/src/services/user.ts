@@ -90,6 +90,22 @@ export class UserService implements IUserService {
       throw new PasswordReuseError(passwordReuseCount);
     }
 
+    const existingUser = await this._users!.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser && existingUser.verifyToken) {
+      this._logger.debug(`${existingUser.email} signed up again, resending verification email`);
+      await this._email.sendVerifyEmail(existingUser);
+      return existingUser;
+    }
+
+    if (existingUser) {
+      throw new Error("email already registered");
+    }
+
     const user = new User();
     user.email = email;
     user.password = await hash(password, 10);
@@ -102,8 +118,8 @@ export class UserService implements IUserService {
 
     try {
       await this._users!.save(user);
-    } catch {
-      throw new Error("email already registered");
+    } catch (error) {
+      throw error;
     }
 
     this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);

@@ -56,11 +56,18 @@ describe("UserService", () => {
   });
 
   it("enforces unique emails on signup", async () => {
-    expect.assertions(1);
+    expect.assertions(2);
 
-    await userService.signup("test@foo.bar", "password");
-    const promise = userService.signup("test@foo.bar", "password");
-    await expect(promise).rejects.toBeDefined();
+    const email = "test@foo.bar";
+    const password = "password";
+    const existingUser = await userService.signup(email, password);
+
+    const unverifiedPromise = userService.signup(email, password);
+    await expect(unverifiedPromise).resolves.toBeDefined();
+
+    await userService.verifyUserByVerifyToken(existingUser.verifyToken);
+    const verifiedPromise = userService.signup(email, password);
+    await expect(verifiedPromise).rejects.toBeDefined();
   });
 
   it("hashes user passwords", async () => {
@@ -87,6 +94,29 @@ describe("UserService", () => {
 
     await userService.signup("test@foo.bar", "password");
     expect(emailTemplates.mocks.sendVerifyEmail).toHaveBeenCalled();
+  });
+
+  it("doesn't sign up users twice if they didn't verify their email address", async () => {
+    expect.assertions(1);
+
+    const email = "test@foo.bar";
+    const password = "password";
+    await userService.signup(email, password);
+    await userService.signup(email, password);
+
+    const users = await userRepo.find();
+    expect(users).toHaveLength(1);
+  });
+
+  it("resends the verification email", async () => {
+    expect.assertions(1);
+
+    const email = "test@foo.bar";
+    const password = "password";
+    await userService.signup(email, password);
+    await userService.signup(email, password);
+
+    expect(emailTemplates.mocks.sendVerifyEmail).toHaveBeenCalledTimes(2);
   });
 
   it("verifies users using their token", async () => {
