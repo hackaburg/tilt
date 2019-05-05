@@ -11,7 +11,7 @@ interface IDefaultEmailContext {
 }
 
 interface IVerifyEmailContext extends IDefaultEmailContext {
-  verifyUrl: string;
+  verifyToken: string;
 }
 
 /**
@@ -65,7 +65,7 @@ export class EmailTemplateService implements IEmailTemplateService {
     const { email } = await this._settings.getSettings();
     const template = this.compileTemplate<IVerifyEmailContext>(email.verifyEmail, {
       email: user.email,
-      verifyUrl: user.verifyToken,
+      verifyToken: user.verifyToken,
     });
 
     await this._email.sendEmail(email.sender, user.email, template.subject, template.htmlTemplate, template.textTemplate);

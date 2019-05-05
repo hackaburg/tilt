@@ -65,7 +65,10 @@ export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmai
       <p>
         Use the editors to configure the email templates sent to applicants. The HTML and plain text templates will be sent in the same mail.
         <br />
-        You may use Handlebars syntax to access variables injected into the template like <Code>verifyUrl</Code>, <Code>email</Code> or <Code>questions.id</Code>.
+        You may use Handlebars syntax to access variables injected into the template like <Code>email</Code> or <Code>questions.id</Code>.
+      </p>
+      <p>
+        tilt will inject the <Code>verifyToken</Code> into the verification email template. To actually verify users, supply the url to your hosted instance, e.g. <Code>{"https://hackathon.com/apply/verify#{{verifyToken}}"}</Code> - the frontend will expect the token to be at <Code>{"/verify#token"}</Code>.
       </p>
 
       {!settings && (
