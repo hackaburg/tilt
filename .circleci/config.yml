@@ -3,7 +3,7 @@ version: 2
 jobs:
   backend:
     docker:
-      - image: node:11
+      - image: node:latest
     steps:
       - checkout
       - restore_cache:
