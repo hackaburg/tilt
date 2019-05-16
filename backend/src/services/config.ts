@@ -24,6 +24,7 @@ interface IHttpConfiguration {
 interface ILoggerConfiguration {
   filename: string;
   level: string;
+  slackWebhookUrl: string;
 }
 
 interface IMailConfiguration {
@@ -156,6 +157,11 @@ export class ConfigurationService implements IConfigurationService {
         level: {
           default: "info",
           env: "LOG_LEVEL",
+          format: String,
+        },
+        slackWebhookUrl: {
+          default: "",
+          env: "LOG_SLACK_WEBHOOK_URL",
           format: String,
         },
       },
