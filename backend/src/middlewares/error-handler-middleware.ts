@@ -4,6 +4,7 @@ import { ExpressErrorMiddlewareInterface, Middleware } from "routing-controllers
 import { Inject } from "typedi";
 import { IApiResponse } from "../../../types/api";
 import { ILoggerService, LoggerServiceToken } from "../services/log";
+import { ISlackNotificationService, SlackNotificationServiceToken } from "../services/slack";
 
 /**
  * Get the first validation error message from an array of validation errors.
@@ -38,6 +39,7 @@ const findFirstValidationError = (errors: ValidationError[]): string => {
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public constructor(
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
+    @Inject(SlackNotificationServiceToken) private readonly _slack: ISlackNotificationService,
   ) { }
 
   /**
@@ -60,6 +62,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
 
     if (!error.httpCode) {
       this._logger.error(error.message, { stack: error.stack });
+      this._slack.sendMessage(`\`\`\`${error.stack}\`\`\``);
     }
 
     res.status(error.httpCode || 500);
