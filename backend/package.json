@@ -36,6 +36,7 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
+    "@slack/webhook": "^5.0.0",
     "bcrypt": "^3.0.6",
     "convict": "^4.4.1",
     "dotenv": "^7.0.0",

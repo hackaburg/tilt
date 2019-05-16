@@ -9,6 +9,7 @@ import { MockHaveibeenpwnedService } from "./mock/haveibeenpwned";
 import { MockHttpService } from "./mock/http";
 import { MockLoggerService } from "./mock/logger";
 import { MockSettingsService } from "./mock/settings";
+import { MockSlackNotificationService } from "./mock/slack";
 import { MockTokenService } from "./mock/tokens";
 import { MockUserService } from "./mock/users";
 import { MockWebSocketService } from "./mock/ws";
@@ -33,11 +34,13 @@ describe("TiltService", () => {
     const haveibeenpwned = addService(new MockHaveibeenpwnedService());
     const emailTemplates = addService(new MockEmailTemplateService());
     const ws = addService(new MockWebSocketService());
+    const slack = addService(new MockSlackNotificationService());
 
     const instances: ConstructorParameters<typeof Tilt> = [
       haveibeenpwned.instance,
       config.instance,
       logger.instance,
+      slack.instance,
       database.instance,
       email.instance,
       emailTemplates.instance,

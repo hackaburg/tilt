@@ -9,6 +9,7 @@ import { HaveibeenpwnedServiceToken, IHaveibeenpwnedService } from "./haveibeenp
 import { HttpServiceToken, IHttpService } from "./http";
 import { ILoggerService, LoggerServiceToken } from "./log";
 import { ISettingsService, SettingsServiceToken } from "./settings";
+import { ISlackNotificationService, SlackNotificationServiceToken } from "./slack";
 import { ITokenService, TokenServiceToken } from "./tokens";
 import { IUserService, UserServiceToken } from "./user";
 import { IWebSocketService, WebSocketServiceToken } from "./ws";
@@ -24,6 +25,7 @@ export class Tilt implements IService {
     @Inject(HaveibeenpwnedServiceToken) haveibeenpwned: IHaveibeenpwnedService,
     @Inject(ConfigurationServiceToken) config: IConfigurationService,
     @Inject(LoggerServiceToken) logger: ILoggerService,
+    @Inject(SlackNotificationServiceToken) slack: ISlackNotificationService,
     @Inject(DatabaseServiceToken) database: IDatabaseService,
     @Inject(EmailServiceToken) email: IEmailService,
     @Inject(EmailTemplateServiceToken) emailTemplates: IEmailTemplateService,
@@ -38,6 +40,7 @@ export class Tilt implements IService {
       haveibeenpwned,
       config,
       logger,
+      slack,
       database,
       email,
       emailTemplates,
