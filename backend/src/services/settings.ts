@@ -289,6 +289,11 @@ export class SettingsService implements ISettingsService {
   public async updateSettings(changes: IRecursivePartial<ISettings>): Promise<ISettings> {
     const updated = new Settings();
     const existing = await this.getSettings() as IActivatable<ISettings>;
+
+    if (!changes) {
+      return existing;
+    }
+
     this.applyChanges(existing, changes, updated);
 
     updated.application =
@@ -316,9 +321,8 @@ export class SettingsService implements ISettingsService {
 /**
  * An error to signal updating the settings didn't work.
  */
-export class UpdateSettingsError {
-  public readonly message: string;
+export class UpdateSettingsError extends Error {
   constructor(message: string) {
-    this.message = message;
+    super(message);
   }
 }
