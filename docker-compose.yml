@@ -7,6 +7,9 @@ services:
       - 8080:80
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
     networks:
       tilt_network:
         ipv4_address: 172.50.0.2
@@ -25,6 +28,23 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     image: tilt_backend
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - LOG_LEVEL=debug
+      - LOG_FILENAME=tilt.log
+      - MAIL_HOST=maildev
+      - MAIL_PORT=1025
+      - MAIL_USERNAME=root@localhost
+      - MAIL_PASSWORD=password
+      - DATABASE_NAME=tilt
+      - DATABASE_HOST=db
+      - DATABASE_PASSWORD=wowsuchpassword
+      - DATABASE_PORT=3306
+      - DATABASE_USERNAME=root
+      - SECRET_JWT=wow_this_is_some_secure_password
+    depends_on:
+      - db
     networks:
       tilt_network:
         ipv4_address: 172.50.0.4
