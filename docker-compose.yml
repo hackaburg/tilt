@@ -19,7 +19,9 @@ services:
         ipv4_address: 172.50.0.3
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     image: tilt_backend
     networks:
       tilt_network:
