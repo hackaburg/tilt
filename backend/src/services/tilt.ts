@@ -11,6 +11,7 @@ import { ILoggerService, LoggerServiceToken } from "./log";
 import { ISettingsService, SettingsServiceToken } from "./settings";
 import { ISlackNotificationService, SlackNotificationServiceToken } from "./slack";
 import { ITokenService, TokenServiceToken } from "./tokens";
+import { IUnixSignalService, UnixSignalServiceToken } from "./unix-signals";
 import { IUserService, UserServiceToken } from "./user";
 import { IWebSocketService, WebSocketServiceToken } from "./ws";
 
@@ -22,6 +23,7 @@ export class Tilt implements IService {
   private readonly _services: IService[];
 
   public constructor(
+    @Inject(UnixSignalServiceToken) signals: IUnixSignalService,
     @Inject(HaveibeenpwnedServiceToken) haveibeenpwned: IHaveibeenpwnedService,
     @Inject(ConfigurationServiceToken) config: IConfigurationService,
     @Inject(LoggerServiceToken) logger: ILoggerService,
@@ -37,6 +39,7 @@ export class Tilt implements IService {
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
+      signals,
       haveibeenpwned,
       config,
       logger,

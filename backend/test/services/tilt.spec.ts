@@ -11,6 +11,7 @@ import { MockLoggerService } from "./mock/logger";
 import { MockSettingsService } from "./mock/settings";
 import { MockSlackNotificationService } from "./mock/slack";
 import { MockTokenService } from "./mock/tokens";
+import { MockUnixSignalService } from "./mock/unix-signals";
 import { MockUserService } from "./mock/users";
 import { MockWebSocketService } from "./mock/ws";
 
@@ -22,6 +23,7 @@ describe("TiltService", () => {
       return service;
     };
 
+    const signals = addService(new MockUnixSignalService());
     const logger = addService(new MockLoggerService());
     const config = addService(new MockConfigurationService({ }));
     const database = addService(new MockDatabaseService());
@@ -37,6 +39,7 @@ describe("TiltService", () => {
     const slack = addService(new MockSlackNotificationService());
 
     const instances: ConstructorParameters<typeof Tilt> = [
+      signals.instance,
       haveibeenpwned.instance,
       config.instance,
       logger.instance,
