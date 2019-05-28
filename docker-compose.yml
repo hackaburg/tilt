@@ -12,7 +12,9 @@ services:
         ipv4_address: 172.50.0.2
 
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
     image: tilt_frontend
     networks:
       tilt_network:
