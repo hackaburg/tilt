@@ -54,10 +54,13 @@ export class UnixSignalService implements IUnixSignalService {
    */
   public async registerSignalHandler(signal: NodeJS.Signals, handler: ISignalHandler): Promise<void> {
     if (!this._handlers.has(signal)) {
-      this._handlers.set(signal, []);
+      this._handlers.set(signal, [
+        () => process.exit(),
+      ]);
+
       process.on(signal, () => this.handleSignal(signal));
     }
 
-    this._handlers.get(signal)!.push(handler);
+    this._handlers.get(signal)!.unshift(handler);
   }
 }
