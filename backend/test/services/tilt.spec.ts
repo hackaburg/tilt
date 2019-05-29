@@ -1,6 +1,7 @@
 import { Tilt } from "../../src/services/tilt";
 import { MockedService } from "./mock";
 import { MockActivityService } from "./mock/activity";
+import { MockBootShutdownNotifier } from "./mock/boot-shutdown-notifier";
 import { MockConfigurationService } from "./mock/config";
 import { MockDatabaseService } from "./mock/database";
 import { MockEmailService } from "./mock/email";
@@ -37,6 +38,7 @@ describe("TiltService", () => {
     const emailTemplates = addService(new MockEmailTemplateService());
     const ws = addService(new MockWebSocketService());
     const slack = addService(new MockSlackNotificationService());
+    const bootShutdownNotifier = addService(new MockBootShutdownNotifier());
 
     const instances: ConstructorParameters<typeof Tilt> = [
       signals.instance,
@@ -44,6 +46,7 @@ describe("TiltService", () => {
       config.instance,
       logger.instance,
       slack.instance,
+      bootShutdownNotifier.instance,
       database.instance,
       email.instance,
       emailTemplates.instance,

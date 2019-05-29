@@ -1,6 +1,7 @@
 import { Inject, Service } from "typedi";
 import { IService } from ".";
 import { ActivityServiceToken, IActivityService } from "./activity";
+import { BootShutdownNotificationServiceToken, IBootShutdownNotificationService } from "./boot-shutdown-notifier";
 import { ConfigurationServiceToken, IConfigurationService } from "./config";
 import { DatabaseServiceToken, IDatabaseService } from "./database";
 import { EmailServiceToken, IEmailService } from "./email";
@@ -28,6 +29,7 @@ export class Tilt implements IService {
     @Inject(ConfigurationServiceToken) config: IConfigurationService,
     @Inject(LoggerServiceToken) logger: ILoggerService,
     @Inject(SlackNotificationServiceToken) slack: ISlackNotificationService,
+    @Inject(BootShutdownNotificationServiceToken) bootShutdownNotifier: IBootShutdownNotificationService,
     @Inject(DatabaseServiceToken) database: IDatabaseService,
     @Inject(EmailServiceToken) email: IEmailService,
     @Inject(EmailTemplateServiceToken) emailTemplates: IEmailTemplateService,
@@ -44,6 +46,7 @@ export class Tilt implements IService {
       config,
       logger,
       slack,
+      bootShutdownNotifier,
       database,
       email,
       emailTemplates,
