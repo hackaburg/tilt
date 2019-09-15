@@ -1,7 +1,7 @@
 import { ActivityType, IActivityData } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { IWebSocketActivityMessageData, WebSocketMessageType } from "../../../types/ws";
-import { SettingsController } from "../../src/controllers/settings";
+import { SettingsController } from "../../src/controllers/settings-controller";
 import { Settings } from "../../src/entities/settings";
 import { IActivityService } from "../../src/services/activity";
 import { ISettingsService } from "../../src/services/settings";

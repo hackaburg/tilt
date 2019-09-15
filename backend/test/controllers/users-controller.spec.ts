@@ -1,6 +1,6 @@
 import { ActivityType, IActivityData } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
-import { UsersController } from "../../src/controllers/users";
+import { UsersController } from "../../src/controllers/users-controller";
 import { User } from "../../src/entities/user";
 import { IActivityService } from "../../src/services/activity";
 import { IUserService } from "../../src/services/user";
