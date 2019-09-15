@@ -3,14 +3,14 @@ import { UserRole } from "../../../types/roles";
 import { IWebSocketActivityMessageData, WebSocketMessageType } from "../../../types/ws";
 import { SettingsController } from "../../src/controllers/settings-controller";
 import { Settings } from "../../src/entities/settings";
-import { IActivityService } from "../../src/services/activity";
-import { ISettingsService } from "../../src/services/settings";
-import { IWebSocketService } from "../../src/services/ws";
+import { IActivityService } from "../../src/services/activity-service";
+import { ISettingsService } from "../../src/services/settings-service";
+import { IWebSocketService } from "../../src/services/ws-service";
 import { toPrettyJson } from "../../src/utils/json";
 import { MockedService } from "../services/mock";
-import { MockActivityService } from "../services/mock/activity";
-import { MockSettingsService } from "../services/mock/settings";
-import { MockWebSocketService } from "../services/mock/ws";
+import { MockActivityService } from "../services/mock/mock-activity-service";
+import { MockSettingsService } from "../services/mock/mock-settings-service";
+import { MockWebSocketService } from "../services/mock/mock-ws-service";
 
 describe("SettingsController", () => {
   let activityService: MockedService<IActivityService>;

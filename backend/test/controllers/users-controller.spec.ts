@@ -2,11 +2,11 @@ import { ActivityType, IActivityData } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { UsersController } from "../../src/controllers/users-controller";
 import { User } from "../../src/entities/user";
-import { IActivityService } from "../../src/services/activity";
-import { IUserService } from "../../src/services/user";
+import { IActivityService } from "../../src/services/activity-service";
+import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
-import { MockActivityService } from "../services/mock/activity";
-import { MockUserService } from "../services/mock/users";
+import { MockActivityService } from "../services/mock/mock-activity-service";
+import { MockUserService } from "../services/mock/mock-user-service";
 
 describe("UsersController", () => {
   let userService: MockedService<IUserService>;

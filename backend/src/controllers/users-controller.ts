@@ -8,8 +8,8 @@ import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { User } from "../entities/user";
-import { ActivityServiceToken, IActivityService } from "../services/activity";
-import { IUserService, UserServiceToken } from "../services/user";
+import { ActivityServiceToken, IActivityService } from "../services/activity-service";
+import { IUserService, UserServiceToken } from "../services/user-service";
 import { UserLoginApiRequest } from "../validation/user-login";
 import { UserSignupApiRequest } from "../validation/user-signup";
 

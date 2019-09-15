@@ -2,11 +2,11 @@ import { validate } from "class-validator";
 import { IApiResponse } from "../../../types/api";
 import { User } from "../../src/entities/user";
 import { ErrorHandlerMiddleware } from "../../src/middlewares/error-handler-middleware";
-import { ILoggerService } from "../../src/services/log";
-import { ISlackNotificationService } from "../../src/services/slack";
+import { ILoggerService } from "../../src/services/logger-service";
+import { ISlackNotificationService } from "../../src/services/slack-service";
 import { MockedService } from "../services/mock";
-import { MockLoggerService } from "../services/mock/logger";
-import { MockSlackNotificationService } from "../services/mock/slack";
+import { MockLoggerService } from "../services/mock/mock-logger-service";
+import { MockSlackNotificationService } from "../services/mock/mock-slack-service";
 import { MockRequest, MockResponse } from "./mock/express";
 
 describe("ErrorHandlerMiddleware", () => {

@@ -3,8 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import { ExpressErrorMiddlewareInterface, Middleware } from "routing-controllers";
 import { Inject } from "typedi";
 import { IApiResponse } from "../../../types/api";
-import { ILoggerService, LoggerServiceToken } from "../services/log";
-import { ISlackNotificationService, SlackNotificationServiceToken } from "../services/slack";
+import { ILoggerService, LoggerServiceToken } from "../services/logger-service";
+import { ISlackNotificationService, SlackNotificationServiceToken } from "../services/slack-service";
 
 /**
  * Get the first validation error message from an array of validation errors.

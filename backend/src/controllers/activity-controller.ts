@@ -2,7 +2,7 @@ import { Authorized, Get, JsonController } from "routing-controllers";
 import { Inject } from "typedi";
 import { IActivity } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
-import { ActivityServiceToken, IActivityService } from "../services/activity";
+import { ActivityServiceToken, IActivityService } from "../services/activity-service";
 
 @JsonController("/activity")
 export class ActivityController {

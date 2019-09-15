@@ -5,9 +5,9 @@ import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { WebSocketMessageType } from "../../../types/ws";
 import { User } from "../entities/user";
-import { ActivityServiceToken, IActivityService } from "../services/activity";
-import { ISettingsService, SettingsServiceToken, UpdateSettingsError } from "../services/settings";
-import { IWebSocketService, WebSocketServiceToken } from "../services/ws";
+import { ActivityServiceToken, IActivityService } from "../services/activity-service";
+import { ISettingsService, SettingsServiceToken, UpdateSettingsError } from "../services/settings-service";
+import { IWebSocketService, WebSocketServiceToken } from "../services/ws-service";
 import { toPrettyJson } from "../utils/json";
 import { UpdateSettingsApiRequest } from "../validation/update-settings";
 
