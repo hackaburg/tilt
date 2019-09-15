@@ -1,6 +1,5 @@
-import { validate } from "class-validator";
+import { IsString, validate, ValidateNested } from "class-validator";
 import { IApiResponse } from "../../../types/api";
-import { User } from "../../src/entities/user";
 import { ErrorHandlerMiddleware } from "../../src/middlewares/error-handler-middleware";
 import { ILoggerService } from "../../src/services/logger-service";
 import { ISlackNotificationService } from "../../src/services/slack-service";
@@ -23,8 +22,18 @@ describe("ErrorHandlerMiddleware", () => {
   it("extracts the first validation error", async () => {
     expect.assertions(1);
 
-    const user = new User();
-    const errors = await validate(user);
+    class Child {
+      @IsString()
+      public bar = 10;
+    }
+
+    class ValidatedSchema {
+      @ValidateNested()
+      public foo = new Child();
+    }
+
+    const schema = new ValidatedSchema();
+    const errors = await validate(schema);
     const error = {
       errors,
     };
@@ -36,7 +45,7 @@ describe("ErrorHandlerMiddleware", () => {
     middleware.error(error, req.instance, res.instance, next);
 
     expect(res.mocks.json).toBeCalledWith({
-      error: errors[0].constraints[Object.keys(errors[0].constraints)[0]],
+      error: errors[0].children[0].constraints[Object.keys(errors[0].children[0].constraints)[0]],
       status: "error",
     } as IApiResponse<any>);
   });
