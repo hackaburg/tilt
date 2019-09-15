@@ -12,19 +12,96 @@ import { MockLoggerService } from "./mock/mock-logger-service";
 import { MockUserService } from "./mock/mock-user-service";
 import { MockWebSocket, MockWebSocketService } from "./mock/mock-ws-service";
 
+interface IMockedRoutingControllers {
+  useExpressServer: jest.Mock;
+  useContainer: jest.Mock;
+}
+
+jest.mock("routing-controllers", jest.fn(() => ({
+  useContainer: jest.fn(),
+  useExpressServer: jest.fn(),
+} as IMockedRoutingControllers)));
+
+type IMockedExpress = jest.Mock<{
+  use: jest.Mock,
+}>;
+
+// I heard you like jest.fn, so I put jest.fn inside jest.fn inside jest.fn inside jest.fn
+jest.mock("cors");
+jest.mock("http", jest.fn(() => ({
+  createServer: jest.fn(() => ({
+    listen: jest.fn(),
+  })),
+})));
+
+jest.mock("express", jest.fn(() => jest.fn()));
+jest.mock("express-ws",
+  jest.fn(() =>
+    jest.fn(() => ({
+      app: {
+        ws: jest.fn(),
+      },
+}))));
+
 describe("HttpService", () => {
+  let routingControllers: IMockedRoutingControllers;
+  let express: IMockedExpress;
+  let expressUse: jest.Mock;
+
   let config: MockedService<IConfigurationService>;
   let logger: MockedService<ILoggerService>;
   let users: MockedService<IUserService>;
   let ws: MockedService<IWebSocketService>;
   let httpService: IHttpService;
 
+  beforeAll(() => {
+    jest.useFakeTimers();
+
+    routingControllers = require("routing-controllers");
+    express = require("express");
+  });
+
   beforeEach(() => {
-    config = new MockConfigurationService({  });
+    config = new MockConfigurationService({
+      config: {
+        http: {
+          port: 3000,
+        },
+      },
+      isProductionEnabled: false,
+    } as any);
     logger = new MockLoggerService();
     users = new MockUserService();
     ws = new MockWebSocketService();
     httpService = new HttpService(config.instance, logger.instance, users.instance, ws.instance);
+
+    routingControllers.useContainer.mockReset();
+    routingControllers.useExpressServer.mockReset();
+
+    express.mockReset();
+    expressUse = jest.fn();
+    express.mockImplementation(() => ({
+      use: expressUse,
+    }));
+  });
+
+  it("creates a routed express server", async () => {
+    expect.assertions(2);
+    await httpService.bootstrap();
+    expect(routingControllers.useExpressServer).toBeCalled();
+    expect(express).toBeCalled();
+  });
+
+  it("uses typedi", async () => {
+    expect.assertions(1);
+    await httpService.bootstrap();
+    expect(routingControllers.useContainer).toBeCalled();
+  });
+
+  it("uses cors during development", async () => {
+    expect.assertions(1);
+    await httpService.bootstrap();
+    expect(expressUse).toBeCalled();
   });
 
   it("retrieves the current user from an access token", async () => {
@@ -193,5 +270,16 @@ describe("HttpService", () => {
     }
 
     expect(ws.mocks.registerClient).not.toBeCalled();
+  });
+
+  it("drops stale websockets after 5s of not logging in", async () => {
+    expect.assertions(1);
+
+    const socket = new MockWebSocket();
+
+    httpService.setupWebSocketConnection(socket.instance);
+    jest.runAllTimers();
+
+    expect(socket.mocks.close).toBeCalled();
   });
 });

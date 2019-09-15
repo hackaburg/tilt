@@ -192,7 +192,10 @@ export class HttpService implements IHttpService {
    * @param socket The incoming websocket
    */
   public setupWebSocketConnection(socket: WebSocket): void {
-    const onMessage = async (messageString?: string) => {
+    // close socket after 5s
+    const socketCloseTimeout = setTimeout(() => socket.close(), 5 * 1000);
+
+    const onMessage = async (messageString?: string | Buffer) => {
       if (!messageString) {
         return;
       }
@@ -200,8 +203,13 @@ export class HttpService implements IHttpService {
       let message: IWebSocketMessage;
 
       try {
-        message = JSON.parse(messageString);
+        message = JSON.parse((
+          messageString instanceof Buffer
+            ? messageString.toString()
+            : messageString
+        ));
       } catch {
+        this._logger.debug(`invalid websocket setup message: ${messageString}`);
         return;
       }
 
@@ -222,6 +230,7 @@ export class HttpService implements IHttpService {
 
         socket.off("message", onMessage);
         this._ws.registerClient(user.role, socket);
+        clearTimeout(socketCloseTimeout);
       }
     };
 
