@@ -35,7 +35,7 @@ const findFirstValidationError = (errors: ValidationError[]): string => {
 /**
  * An error handler, which transforms errors to @see IApiResponse.
  */
-@Middleware({ type: "after" })
+@Middleware({ type: "after", priority: 100 })
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public constructor(
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
