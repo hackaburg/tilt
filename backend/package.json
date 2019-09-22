@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --coverage",
     "codecov": "codecov -f coverage/*.json -F backend -p ..",
-    "lint": "tslint --project tsconfig.prod.json",
+    "lint": "tslint --project tsconfig.json",
     "build": "tsc --project tsconfig.prod.json",
     "clean": "rimraf dist/",
     "start": "nodemon"

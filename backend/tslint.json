@@ -19,7 +19,15 @@
               "exported"
             ]
           },
-          "methods": true,
+          "methods": {
+            "tags": {
+              "content": {},
+              "existence": [
+                "inheritdoc",
+                "override"
+              ]
+            }
+          },
           "types": {
             "visibilities": [
               "exported"
