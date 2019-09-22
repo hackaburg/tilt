@@ -183,6 +183,7 @@ export class UserService implements IUserService {
         "id",
         "password",
         "role",
+        "verifyToken",
       ],
       where: {
         email,
