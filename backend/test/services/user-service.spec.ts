@@ -173,6 +173,7 @@ describe("UserService", () => {
     const email = "test@foo.bar";
     const password = "password";
     const user = await userService.signup(email, password);
+    await userService.verifyUserByVerifyToken(user.verifyToken);
     const loggedInUser = await userService.findUserWithCredentials(email, password);
 
     expect(loggedInUser).toBeDefined();
@@ -198,7 +199,8 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const password = "password";
-    await userService.signup(email, password);
+    const signedUpUser = await userService.signup(email, password);
+    await userService.verifyUserByVerifyToken(signedUpUser.verifyToken);
 
     const loggedInUser = await userService.findUserWithCredentials(email, password);
     expect(loggedInUser!.role).toBeDefined();
