@@ -9,4 +9,5 @@ export enum Routes {
   Settings = "/settings",
   Statistics = "/statistics",
   Users = "/users",
+  VerifyEmail = "/verify",
 }

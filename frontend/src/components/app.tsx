@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { connect } from "react-redux";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router";
 import { bindActionCreators, Dispatch } from "redux";
@@ -12,6 +12,7 @@ import { IState } from "../state";
 import { ITheme } from "../theme";
 import { Dashboard } from "./dashboard";
 import { ConnectedLoginSignupForm } from "./login-signup-form";
+import { ConnectedVerifyEmail } from "./verify-email";
 
 interface IAppProps extends RouteComponentProps<any> {
   settings: IState["settings"];
@@ -28,13 +29,19 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
   }, []);
 
   const isLoggedIn = isLoginTokenSet();
+  const {hash, pathname} = location;
+
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && pathname !== Routes.VerifyEmail) {
       history.push(Routes.Login);
-    } else if (location.pathname === Routes.Login) {
+    } else if (pathname === Routes.Login) {
       history.push(Routes.Dashboard);
     }
-  }, [role]);
+  }, [role, pathname]);
+
+  const ConnectedVerifyEmailWithToken = useCallback(() => (
+    <ConnectedVerifyEmail token={hash} />
+  ), [hash]);
 
   let theme: ITheme = {
     colorGradientEnd: defaultThemeColor,
@@ -56,6 +63,7 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
     <ThemeProvider theme={theme}>
       <Switch>
         <Route path={Routes.Login} component={ConnectedLoginSignupForm} />
+        <Route path={Routes.VerifyEmail} component={ConnectedVerifyEmailWithToken} />
         <Route component={Dashboard} />
       </Switch>
     </ThemeProvider>
