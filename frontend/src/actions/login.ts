@@ -1,8 +1,7 @@
 import { Dispatch } from "redux";
 import { api } from "../api";
 import { clearLoginToken } from "../authentication";
-import { FormType } from "../state";
-import { setFormType } from "./form";
+import { RequestTarget } from "../state";
 import { performRequest } from "./request";
 import { setRole } from "./role";
 
@@ -11,8 +10,7 @@ import { setRole } from "./role";
  * @param email The user's email
  * @param password The user's password
  */
-export const login = (email: string, password: string) => performRequest(async (dispatch: Dispatch) => {
-  dispatch(setFormType(FormType.Login));
+export const login = (email: string, password: string) => performRequest(RequestTarget.Login, async (dispatch: Dispatch) => {
   const role = await api.login(email, password);
   dispatch(setRole(role));
 });

@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import { IAction } from ".";
 import { IActivity } from "../../../types/activity";
 import { api } from "../api";
+import { RequestTarget } from "../state";
 import { performRequest } from "./request";
 
 /**
@@ -23,7 +24,7 @@ export const addActivities = (activities: IActivity[]): IAction<ActivityAction.A
 /**
  * Asynchronously fetches the latest activity.
  */
-export const fetchActivities = () => performRequest(async (dispatch: Dispatch) => {
+export const fetchActivities = () => performRequest(RequestTarget.Activities, async (dispatch: Dispatch) => {
   const activity = await api.getActivities();
   dispatch(addActivities(activity));
 });

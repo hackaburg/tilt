@@ -6,7 +6,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
 import { updateSettings } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
-import { FormType, IState } from "../state";
+import { IState, RequestTarget } from "../state";
 import { EmailTemplateEditor, EmailTemplateEditorPlaceholder } from "./email-template-editor";
 import { Subheading } from "./headings";
 import { Message } from "./message";
@@ -33,7 +33,7 @@ interface IEmailSettingsProps {
  */
 export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmailSettingsProps) => {
   const handleSettingsChange = (field: keyof IEmailSettings, value: string | IEmailTemplate) => {
-    dispatchUpdateSettings(FormType.MailSettings, {
+    dispatchUpdateSettings(RequestTarget.MailSettings, {
       email: {
         [field]: value,
       },
@@ -97,7 +97,7 @@ export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmai
 };
 
 const mapStateToProps = (state: IState) => ({
-  error: state.form.type === FormType.MailSettings && state.request.error,
+  error: state.request[RequestTarget.MailSettings].error,
   settings: state.settings,
 });
 

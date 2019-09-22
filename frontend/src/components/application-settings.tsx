@@ -5,7 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { IApplicationSettings, ISettings } from "../../../types/settings";
 import { updateSettings } from "../actions/settings";
 import { debounceDuration } from "../config";
-import { FormType, IState, Nullable } from "../state";
+import { IState, Nullable, RequestTarget } from "../state";
 import { FormEditor } from "./form-editor";
 import { Col, Row } from "./grid";
 import { Subheading } from "./headings";
@@ -23,7 +23,7 @@ interface IApplicationSettingsProps {
  */
 export const ApplicationSettings = ({ settings, error, dispatchUpdateSettings }: IApplicationSettingsProps) => {
   const handleUpdateApplicationSettings = (field: keyof IApplicationSettings, value: any) => {
-    dispatchUpdateSettings(FormType.ApplicationSettings, {
+    dispatchUpdateSettings(RequestTarget.ApplicationSettings, {
       application: {
         [field]: value,
       },
@@ -94,7 +94,7 @@ export const ApplicationSettings = ({ settings, error, dispatchUpdateSettings }:
 };
 
 const mapStateToProps = (state: IState) => ({
-  error: state.form.type === FormType.ApplicationSettings && state.request.error,
+  error: state.request[RequestTarget.ApplicationSettings].error,
   settings: state.settings,
 });
 

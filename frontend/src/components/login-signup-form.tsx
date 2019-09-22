@@ -5,7 +5,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import { login as loginRaw } from "../actions/login";
 import { signup as signupRaw } from "../actions/signup";
-import { FormType, IState } from "../state";
+import { IState, RequestTarget } from "../state";
 import { BlurContainer } from "./blur-container";
 import { Button } from "./button";
 import { CenteredContainer, PageSizedContainer } from "./centering";
@@ -41,8 +41,8 @@ const Divider = styled.p`
 
 interface ILoginSignupFormProps {
   error?: string;
-  requestInProgress: boolean;
-  formType: FormType;
+  loginInProgress: boolean;
+  signupInProgress: boolean;
   signup: typeof signupRaw;
   login: typeof loginRaw;
 }
@@ -50,14 +50,23 @@ interface ILoginSignupFormProps {
 /**
  * A form to create an account.
  */
-export const LoginSignupForm = ({ formType, requestInProgress, error, signup, login }: ILoginSignupFormProps) => {
+export const LoginSignupForm = ({ loginInProgress, signupInProgress, error, signup, login }: ILoginSignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [didSignup, setDidSignup] = useState(false);
 
-  const signupInProgress = formType === FormType.Signup && requestInProgress;
-  const loginInProgress = formType === FormType.Login && requestInProgress;
+  const handleLogin = () => {
+    setDidSignup(false);
+    login(email, password);
+  };
+
+  const handleSignup = () => {
+    setDidSignup(true);
+    signup(email, password);
+  };
+
   const formInProgress = signupInProgress || loginInProgress;
-  const signupDone = formType === FormType.Signup && !requestInProgress && !error;
+  const signupDone = didSignup && !signupInProgress && !error;
 
   return (
     <PageSizedContainer>
@@ -103,7 +112,7 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
               </Fields>
 
               <Button
-                onClick={() => signup(email, password)}
+                onClick={handleSignup}
                 loading={signupInProgress}
                 disable={formInProgress}
                 primary
@@ -111,7 +120,7 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
               >Create my account</Button>
               <Divider>Already have an account?</Divider>
               <Button
-                onClick={() => login(email, password)}
+                onClick={handleLogin}
                 loading={loginInProgress}
                 disable={formInProgress}
                 fluid
@@ -125,9 +134,9 @@ export const LoginSignupForm = ({ formType, requestInProgress, error, signup, lo
 };
 
 const mapStateToProps = (state: IState) => ({
-  error: state.request.error,
-  formType: state.form.type,
-  requestInProgress: state.request.requestInProgress,
+  error: state.request[RequestTarget.Login].error || state.request[RequestTarget.Signup].error,
+  loginInProgress: state.request[RequestTarget.Login].requestInProgress,
+  signupInProgress: state.request[RequestTarget.Signup].requestInProgress,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

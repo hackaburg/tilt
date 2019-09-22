@@ -11,33 +11,37 @@ export type Nullable<T> = T | null;
  * Describes the frontend state.
  */
 export interface IState {
-  request: IRequest;
+  request: IRequestCollection;
   settings: Nullable<ISettings>;
-  form: IForm;
   role: Nullable<UserRole>;
   notification: INotification;
   activity: Nullable<IActivity[]>;
 }
+
+type IRequestCollection = {
+  [target in RequestTarget]: IRequest;
+};
 
 interface IRequest {
   requestInProgress: boolean;
   error?: string;
 }
 
-interface IForm {
-  type: FormType;
-}
-
 /**
- * The currently displayed form action type.
+ * The type of the request in action.
  */
-export enum FormType {
+export enum RequestTarget {
   None = "none",
   Login = "login",
+  RefreshLoginToken = "refresh_login_token",
   Signup = "signup",
+  FetchSettings = "fetch_settings",
   MailSettings = "mail_settings",
   ApplicationSettings = "application_settings",
   FrontendSettings = "frontend_settings",
+  Activities = "activities",
+  FetchRole = "get_role",
+  VerifyEmail = "verify_email",
 }
 
 interface INotification {

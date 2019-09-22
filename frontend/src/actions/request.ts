@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
-import { IAction, IEmptyAction } from ".";
+import { IAction } from ".";
+import { RequestTarget } from "../state";
 
 /**
  * Request action types.
@@ -13,37 +14,47 @@ export enum RequestAction {
 /**
  * Creates a @see RequestAction.StartRequest action.
  */
-export const startRequest = (): IEmptyAction<RequestAction.StartRequest> => ({
+export const startRequest = (target: RequestTarget): IAction<RequestAction.StartRequest, RequestTarget> => ({
   type: RequestAction.StartRequest,
+  value: target,
 });
 
 /**
  * Creates a @see RequestAction.FinishRequest action.
  */
-export const finishRequest = (): IEmptyAction<RequestAction.FinishRequest> => ({
+export const finishRequest = (target: RequestTarget): IAction<RequestAction.FinishRequest, RequestTarget> => ({
   type: RequestAction.FinishRequest,
+  value: target,
 });
+
+interface IFailedRequest {
+  error: string;
+  target: RequestTarget;
+}
 
 /**
  * Creates a @see RequestAction.FailRequest action.
  * @param error The error that occurreed during the request
  */
-export const failRequest = (error: string): IAction<RequestAction.FailRequest, string> => ({
+export const failRequest = (target: RequestTarget, error: string): IAction<RequestAction.FailRequest, IFailedRequest> => ({
   type: RequestAction.FailRequest,
-  value: error,
+  value: {
+    error,
+    target,
+  },
 });
 
 /**
  * Asynchronously performs the given action as a request.
  * @param action An async action to perform as a request
  */
-export const performRequest = (action: (dispatch: Dispatch) => Promise<void>) => async (dispatch: Dispatch) => {
-  dispatch(startRequest());
+export const performRequest = (target: RequestTarget, action: (dispatch: Dispatch) => Promise<void>) => async (dispatch: Dispatch) => {
+  dispatch(startRequest(target));
 
   try {
     await action(dispatch);
-    dispatch(finishRequest());
+    dispatch(finishRequest(target));
   } catch (error) {
-    dispatch(failRequest(error.message));
+    dispatch(failRequest(target, error.message));
   }
 };

@@ -1,7 +1,11 @@
-import styled, { css } from "styled-components";
+import { Link as RouterLink } from "react-router-dom";
+import styled from "styled-components";
 import { IThemeProps } from "../theme";
 
-const LinkStyle = css`
+/**
+ * A styled link.
+ */
+export const Link = styled(RouterLink)`
   cursor: pointer;
   color: ${(props: IThemeProps) => props.theme.colorLink};
   text-decoration: none;
@@ -11,11 +15,4 @@ const LinkStyle = css`
   &:active {
     color: ${(props: IThemeProps) => props.theme.colorLinkHover};
   }
-`;
-
-/**
- * A span that looks like a link, but isn't.
- */
-export const LinkLike = styled.span`
-  ${LinkStyle}
 `;

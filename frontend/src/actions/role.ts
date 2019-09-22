@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 import { IAction } from ".";
 import { UserRole } from "../../../types/roles";
 import { api } from "../api";
-import { Nullable } from "../state";
+import { Nullable, RequestTarget } from "../state";
 import { performRequest } from "./request";
 
 /**
@@ -24,7 +24,7 @@ export const setRole = (role: Nullable<UserRole>): IAction<RoleAction.SetRole, N
 /**
  * Asynchronously fetches the user's role.
  */
-export const fetchRole = () => performRequest(async (dispatch: Dispatch) => {
+export const fetchRole = () => performRequest(RequestTarget.FetchRole, async (dispatch: Dispatch) => {
   try {
     const role = await api.getRole();
     dispatch(setRole(role));

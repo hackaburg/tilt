@@ -1,12 +1,11 @@
-import { setFormType } from "../../src/actions/form";
 import { finishRequest, startRequest } from "../../src/actions/request";
 import { signup } from "../../src/actions/signup";
-import { FormType } from "../../src/state";
+import { RequestTarget } from "../../src/state";
 import { api } from "../__mocks__/api";
 
 describe("signup actions", () => {
   it("asynchronously fetches the settings", async () => {
-    expect.assertions(4);
+    expect.assertions(3);
 
     const email = "email";
     const password = "password";
@@ -16,9 +15,9 @@ describe("signup actions", () => {
     const actions = signup(email, password);
     await actions(dispatch);
 
-    expect(dispatch).toBeCalledWith(startRequest());
-    expect(dispatch).toBeCalledWith(setFormType(FormType.Signup));
+    const target = RequestTarget.Signup;
+    expect(dispatch).toBeCalledWith(startRequest(target));
     expect(api.signup).toBeCalledWith(email, password);
-    expect(dispatch).toBeCalledWith(finishRequest());
+    expect(dispatch).toBeCalledWith(finishRequest(target));
   });
 });

@@ -3,8 +3,7 @@ import { IAction } from ".";
 import { IRecursivePartial } from "../../../types/api";
 import { ISettings } from "../../../types/settings";
 import { api } from "../api";
-import { FormType } from "../state";
-import { setFormType } from "./form";
+import { RequestTarget } from "../state";
 import { notifyChangesSaved } from "./notify";
 import { performRequest } from "./request";
 
@@ -27,18 +26,17 @@ export const setSettings = (settings: ISettings): IAction<SettingsAction.SetSett
 /**
  * Asynchronously fetches settings.
  */
-export const fetchSettings = () => performRequest(async (dispatch: Dispatch) => {
+export const fetchSettings = () => performRequest(RequestTarget.FetchSettings, async (dispatch: Dispatch) => {
   const settings = await api.getSettings();
   dispatch(setSettings(settings));
 });
 
 /**
  * Asynchronously updates all settings. The specified form will be used to display error messages.
- * @param form The specific form used to update the settings
+ * @param target The settings to fetch
  * @param settings The settings to update
  */
-export const updateSettings = (form: FormType, settings: IRecursivePartial<ISettings>) => performRequest(async (dispatch: Dispatch) => {
-  dispatch(setFormType(form));
+export const updateSettings = (target: RequestTarget, settings: IRecursivePartial<ISettings>) => performRequest(target, async (dispatch: Dispatch) => {
   const updatedSettings = await api.updateSettings(settings);
   dispatch(setSettings(updatedSettings));
   notifyChangesSaved()(dispatch);

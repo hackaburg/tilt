@@ -5,7 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { IFrontendSettings, ISettings } from "../../../types/settings";
 import { updateSettings } from "../actions/settings";
 import { debounceDuration } from "../config";
-import { FormType, IState, Nullable } from "../state";
+import { IState, Nullable, RequestTarget } from "../state";
 import { Col, Row } from "./grid";
 import { Subheading } from "./headings";
 import { Message } from "./message";
@@ -23,7 +23,7 @@ interface IFrontendSettingsProps {
  */
 export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IFrontendSettingsProps) => {
   const handleSettingsChange = (field: keyof IFrontendSettings, value: any) => {
-    dispatchUpdateSettings(FormType.FrontendSettings, {
+    dispatchUpdateSettings(RequestTarget.FrontendSettings, {
       frontend: {
         [field]: value,
       },
@@ -117,7 +117,7 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
 };
 
 const mapStateToProps = (state: IState) => ({
-  error: state.form.type === FormType.FrontendSettings && state.request.error,
+  error: state.request[RequestTarget.FrontendSettings].error,
   settings: state.settings,
 });
 

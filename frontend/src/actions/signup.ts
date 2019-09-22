@@ -1,7 +1,5 @@
-import { Dispatch } from "redux";
 import { api } from "../api";
-import { FormType } from "../state";
-import { setFormType } from "./form";
+import { RequestTarget } from "../state";
 import { performRequest } from "./request";
 
 /**
@@ -9,7 +7,6 @@ import { performRequest } from "./request";
  * @param email The user's email
  * @param password The user's password
  */
-export const signup = (email: string, password: string) => performRequest(async (dispatch: Dispatch) => {
-  dispatch(setFormType(FormType.Signup));
+export const signup = (email: string, password: string) => performRequest(RequestTarget.Signup, async () => {
   await api.signup(email, password);
 });
