@@ -2,10 +2,11 @@ import * as React from "react";
 import { useState } from "react";
 import { Route, Switch } from "react-router";
 import styled from "styled-components";
-import { sidebarWidth, transitionDuration } from "../config";
+import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
 import { ConnectedActivity } from "./activity";
 import { PageSizedContainer } from "./centering";
+import { HeaderBar } from "./headerbar";
 import { ConnectedNotification } from "./notification";
 import { PageNotFound } from "./page-not-found";
 import { Settings } from "./settings";
@@ -41,7 +42,6 @@ const SidebarContainer = styled.div<ISidebarAwareProps>`
 
 const SidebarBurgerContainer = styled.div<ISidebarAwareProps>`
   position: fixed;
-  top: 0.75rem;
   left: 1rem;
 
   transition-property: left;
@@ -67,8 +67,10 @@ const PageContainer = styled.div<ISidebarAwareProps>`
   transition-property: padding;
   transition-duration: ${transitionDuration};
 
+  padding-left: 1rem;
+
   ${(props) => props.showSidebar && `
-    padding-left: ${sidebarWidth};
+    padding-left: calc(${sidebarWidth} + 1rem);
   `}
 `;
 
@@ -78,6 +80,7 @@ const ContentContainer = styled.div`
   min-height: 100vh;
   margin: auto;
   flex-direction: column;
+  padding-top: calc(${headerBarHeight} + 10px);
 `;
 
 /**
@@ -92,9 +95,11 @@ export const Dashboard = () => {
           <ConnectedSidebar />
         </SidebarContainer>
         <PageContainer showSidebar={showSidebar}>
-          <SidebarBurgerContainer showSidebar={showSidebar}>
-            <SidebarBurger onClick={() => setShowSidebar((value) => !value)} />
-          </SidebarBurgerContainer>
+          <HeaderBar showSidebar={showSidebar}>
+            <SidebarBurgerContainer showSidebar={showSidebar}>
+              <SidebarBurger onClick={() => setShowSidebar((value) => !value)} />
+            </SidebarBurgerContainer>
+          </HeaderBar>
 
           <ContentContainer>
             <ConnectedNotification />
@@ -104,6 +109,7 @@ export const Dashboard = () => {
               <Route component={PageNotFound} />
             </Switch>
           </ContentContainer>
+
         </PageContainer>
     </PageSizedContainer>
   );
