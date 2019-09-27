@@ -10,23 +10,21 @@ export const HeaderBar = styled.div<ISidebarAwareProps>`
   display: flex;
 
   top: 0px;
+  left: 0px;
+  width: 100%;
+  height: ${ headerBarHeight };
 
   z-index: 1;
-
-  transition-property: left;
-  transition-duration: ${transitionDuration};
-  justify-content: center;
 
   background-color: white;
   box-shadow: 0 4px 2px -2px gray;
 
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 
-  width: 100vw;
-  height: ${ headerBarHeight };
-
-  flex-direction: row;
+  transition-property: left;
+  transition-duration: ${ transitionDuration };
 
   ${(props) => props.showSidebar && `
     left: ${sidebarWidth};
