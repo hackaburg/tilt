@@ -12,7 +12,10 @@ import { Settings } from "./settings";
 import { ConnectedSidebar } from "./sidebar";
 import { SidebarBurger } from "./sidebar-burger";
 
-interface ISidebarAwareProps {
+/**
+ * Interface for whether or not the sidebar is being shown.
+ */
+export interface ISidebarAwareProps {
   showSidebar: boolean;
 }
 
