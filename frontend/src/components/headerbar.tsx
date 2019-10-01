@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
-import { ISidebarAwareProps } from "./dashboard";
+import { ISidebarAwareProps } from "./page-wrapper";
 
 /**
  * Header bar for all views. Usually shows control to show/hide sidebar.
