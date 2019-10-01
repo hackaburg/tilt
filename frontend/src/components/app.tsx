@@ -10,7 +10,7 @@ import { defaultThemeColor } from "../config";
 import { Routes } from "../routes";
 import { IState } from "../state";
 import { ITheme } from "../theme";
-import { PageWrapper } from "./page-wrapper";
+import { Dashboard } from "./dashboard";
 import { ConnectedLoginSignupForm } from "./login-signup-form";
 import { ConnectedVerifyEmail } from "./verify-email";
 
@@ -64,7 +64,7 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
       <Switch>
         <Route path={Routes.Login} component={ConnectedLoginSignupForm} />
         <Route path={Routes.VerifyEmail} component={ConnectedVerifyEmailWithToken} />
-        <Route component={PageWrapper} />
+        <Route component={Dashboard} />
       </Switch>
     </ThemeProvider>
   );
