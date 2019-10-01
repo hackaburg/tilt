@@ -83,7 +83,7 @@ const ContentContainer = styled.div`
 /**
  * A dashboard wrapper
  */
-export const PageWrapper = () => {
+export const Dashboard = () => {
   const [showSidebar, setShowSidebar] = useState(true);
 
   return (
