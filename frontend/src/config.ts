@@ -60,3 +60,8 @@ export const mediaBreakpoints = {
   phone: "767px",
   tablet: "1024px",
 };
+
+/**
+ * The height of the top navigation bar.
+ */
+export const headerBarHeight = "50px";
