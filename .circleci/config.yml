@@ -19,6 +19,11 @@ jobs:
             - backend/node_modules
           key: backend-dependencies-{{ checksum "backend/package.json" }}
       - run:
+          name: prettier
+          working_directory: backend
+          command: |
+            yarn prettier --check
+      - run:
           name: lint
           working_directory: backend
           command: |
@@ -51,6 +56,11 @@ jobs:
           paths:
             - frontend/node_modules
           key: frontend-dependencies-{{ checksum "frontend/package.json" }}
+      - run:
+          name: prettier
+          working_directory: frontend
+          command: |
+            yarn prettier --check
       - run:
           name: lint
           working_directory: frontend
