@@ -9,6 +9,8 @@ export const HeaderBar = styled.div<ISidebarAwareProps>`
   position: fixed;
   display: flex;
 
+  top: 0;
+  left: 0;
   right: 0;
 
   height: ${ headerBarHeight};
