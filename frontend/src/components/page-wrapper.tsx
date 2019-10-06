@@ -110,9 +110,6 @@ export const PageWrapper = () => {
           <ContentContainer>
             <ConnectedNotification />
             <Switch>
-              <Route path={Routes.Dashboard} component={Dashboard} />
-              <Route path={Routes.Users} component={Users} />
-              <Route path={Routes.Statistics} component={Statistics} />
               <Route path={Routes.Activity} component={ConnectedActivity} />
               <Route path={Routes.Settings} component={Settings} />
               <Route component={PageNotFound} />
