@@ -40,7 +40,7 @@
     "monaco-editor-webpack-plugin": "^1.7.0",
     "node-uuid": "^1.4.8",
     "react": "^16.8.6",
-    "react-dom": "^16.10.0",
+    "react-dom": "^16.8.6",
     "react-markdown": "^4.0.8",
     "react-monaco-editor": "^0.25.1",
     "react-redux": "^6.0.1",
@@ -62,9 +62,5 @@
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.8.1"
-  },
-  "dependencies": {
-    "@types/react-table": "^6.8.5",
-    "react-table": "^6.10.3"
   }
 }
