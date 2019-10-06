@@ -5,6 +5,9 @@ import { ISidebarAwareProps } from "./page-wrapper";
 /**
  * Header bar for all views. Usually shows control to show/hide sidebar.
  */
+
+// height: ${ headerBarHeight };
+
 export const HeaderBar = styled.div<ISidebarAwareProps>`
   position: fixed;
   display: flex;
