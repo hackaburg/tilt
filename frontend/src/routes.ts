@@ -3,7 +3,7 @@
  */
 export enum Routes {
   Activity = "/activity",
-  Dashboard = "/",
+  Dashboard = "/dashboard",
   Login = "/login",
   Logout = "/logout",
   Settings = "/settings",
