@@ -6,17 +6,12 @@ import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
 import { ConnectedActivity } from "./activity";
 import { PageSizedContainer } from "./centering";
-import { Dashboard } from "./dashboard";
 import { HeaderBar } from "./headerbar";
 import { ConnectedNotification } from "./notification";
 import { PageNotFound } from "./page-not-found";
 import { Settings } from "./settings";
 import { ConnectedSidebar } from "./sidebar";
 import { SidebarBurger } from "./sidebar-burger";
-import { Statistics } from "./statistics";
-import { Users } from "./users";
-
-// Possible addition: moving the headings into the headerbar, but I wouldn't know how to accomplish that.
 
 /**
  * Interface for whether or not the sidebar is being shown.
