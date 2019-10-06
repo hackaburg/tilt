@@ -1,25 +1,21 @@
 import styled from "styled-components";
-import { sidebarWidth, transitionDuration } from "../config";
+import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { ISidebarAwareProps } from "./page-wrapper";
 
 /**
  * Header bar for all views. Usually shows control to show/hide sidebar.
  */
-
-// height: ${ headerBarHeight };
-
 export const HeaderBar = styled.div<ISidebarAwareProps>`
   position: fixed;
   display: flex;
 
-  top: 0px;
-  right: 0px;
+  right: 0;
 
-  height: 50px;
+  height: ${ headerBarHeight};
 
   z-index: 1;
 
-  background-color: purple;
+  background-color: white;
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
 
   flex-direction: row;
