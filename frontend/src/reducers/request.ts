@@ -9,23 +9,28 @@ type IActionType = IActionReturnTypes<typeof requestActions>;
 /**
  * The initial request state.
  */
-export const initialRequestCollectionState: IStateType =
-  Object
-    .values(RequestTarget)
-    .reduce((state, target) => {
-      state[target as RequestTarget] = {
-        error: undefined,
-        requestInProgress: false,
-      };
-      return state;
-    }, {} as IStateType);
+export const initialRequestCollectionState: IStateType = Object.values(
+  RequestTarget,
+).reduce(
+  (state, target) => {
+    state[target as RequestTarget] = {
+      error: undefined,
+      requestInProgress: false,
+    };
+    return state;
+  },
+  {} as IStateType,
+);
 
 /**
  * The request reducer.
  * @param state The current state
  * @param action The current action
  */
-export const requestReducer = (state: IStateType = initialRequestCollectionState, action: IActionType): IStateType => {
+export const requestReducer = (
+  state: IStateType = initialRequestCollectionState,
+  action: IActionType,
+): IStateType => {
   switch (action.type) {
     case RequestAction.StartRequest:
       return {

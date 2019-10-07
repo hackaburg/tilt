@@ -1,10 +1,13 @@
 import { ActivityType, IActivity } from "../../../types/activity";
 import { addActivities } from "../../src/actions/activity";
-import { activityReducer, initialActivitiesState } from "../../src/reducers/activity";
+import {
+  activityReducer,
+  initialActivitiesState,
+} from "../../src/reducers/activity";
 
 describe("activityReducer", () => {
   it("provides an initial state", () => {
-    const state = activityReducer(undefined, {} as any);
+    const state = activityReducer(undefined, {} as any);
     expect(state).toBe(initialActivitiesState);
   });
 

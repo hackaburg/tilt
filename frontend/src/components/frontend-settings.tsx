@@ -21,7 +21,11 @@ interface IFrontendSettingsProps {
 /**
  * A component to modify the frontend/appearance settings.
  */
-export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IFrontendSettingsProps) => {
+export const FrontendSettings = ({
+  settings,
+  error,
+  dispatchUpdateSettings,
+}: IFrontendSettingsProps) => {
   const handleSettingsChange = (field: keyof IFrontendSettings, value: any) => {
     dispatchUpdateSettings(RequestTarget.FrontendSettings, {
       frontend: {
@@ -30,21 +34,24 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
     });
   };
 
-  const [debouncedHandleSettingsChange] = useDebouncedCallback(handleSettingsChange, debounceDuration, []);
+  const [debouncedHandleSettingsChange] = useDebouncedCallback(
+    handleSettingsChange,
+    debounceDuration,
+    [],
+  );
 
   return (
     <>
       <Subheading>Appearance</Subheading>
 
-      {error && (
-        <Message error>{error}</Message>
-      )}
+      {error && <Message error>{error}</Message>}
 
-      <p>Adjust these settings to modify the appearance of tilt, using hex colors and absolute image urls.</p>
+      <p>
+        Adjust these settings to modify the appearance of tilt, using hex colors
+        and absolute image urls.
+      </p>
 
-      {!settings && (
-        <Placeholder width="100%" height="2rem" />
-      )}
+      {!settings && <Placeholder width="100%" height="2rem" />}
 
       {settings && (
         <>
@@ -55,7 +62,9 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
                 placeholder="#abcdef"
                 type={TextInputType.Text}
                 initialValue={settings.frontend.colorGradientStart}
-                onChange={(value) => debouncedHandleSettingsChange("colorGradientStart", value)}
+                onChange={(value) =>
+                  debouncedHandleSettingsChange("colorGradientStart", value)
+                }
               />
             </Col>
             <Col percent={50}>
@@ -64,7 +73,9 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
                 placeholder="#abcdef"
                 type={TextInputType.Text}
                 initialValue={settings.frontend.colorGradientEnd}
-                onChange={(value) => debouncedHandleSettingsChange("colorGradientEnd", value)}
+                onChange={(value) =>
+                  debouncedHandleSettingsChange("colorGradientEnd", value)
+                }
               />
             </Col>
           </Row>
@@ -76,7 +87,9 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
                 placeholder="#abcdef"
                 type={TextInputType.Text}
                 initialValue={settings.frontend.colorLink}
-                onChange={(value) => debouncedHandleSettingsChange("colorLink", value)}
+                onChange={(value) =>
+                  debouncedHandleSettingsChange("colorLink", value)
+                }
               />
             </Col>
             <Col percent={50}>
@@ -85,7 +98,9 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
                 placeholder="#abcdef"
                 type={TextInputType.Text}
                 initialValue={settings.frontend.colorLinkHover}
-                onChange={(value) => debouncedHandleSettingsChange("colorLinkHover", value)}
+                onChange={(value) =>
+                  debouncedHandleSettingsChange("colorLinkHover", value)
+                }
               />
             </Col>
           </Row>
@@ -97,7 +112,9 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
                 placeholder="absolute image url with https"
                 type={TextInputType.Text}
                 initialValue={settings.frontend.loginSignupImage}
-                onChange={(value) => debouncedHandleSettingsChange("loginSignupImage", value)}
+                onChange={(value) =>
+                  debouncedHandleSettingsChange("loginSignupImage", value)
+                }
               />
             </Col>
             <Col percent={50}>
@@ -106,7 +123,9 @@ export const FrontendSettings = ({ settings, error, dispatchUpdateSettings }: IF
                 placeholder="absolute image url with https"
                 type={TextInputType.Text}
                 initialValue={settings.frontend.sidebarImage}
-                onChange={(value) => debouncedHandleSettingsChange("sidebarImage", value)}
+                onChange={(value) =>
+                  debouncedHandleSettingsChange("sidebarImage", value)
+                }
               />
             </Col>
           </Row>
@@ -122,12 +141,18 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    dispatchUpdateSettings: updateSettings,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      dispatchUpdateSettings: updateSettings,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The frontend settings connected to the redux store.
  */
-export const ConnectedFrontendSettings = connect(mapStateToProps, mapDispatchToProps)(FrontendSettings);
+export const ConnectedFrontendSettings = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(FrontendSettings);

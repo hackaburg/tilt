@@ -1,6 +1,12 @@
 import { Exclude, Type } from "class-transformer";
 import { IsEmail, IsOptional, ValidateNested } from "class-validator";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
 import { EmailTemplate } from "./email-template";
 

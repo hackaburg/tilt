@@ -10,10 +10,11 @@ import { setRole } from "./role";
  * @param email The user's email
  * @param password The user's password
  */
-export const login = (email: string, password: string) => performRequest(RequestTarget.Login, async (dispatch: Dispatch) => {
-  const role = await api.login(email, password);
-  dispatch(setRole(role));
-});
+export const login = (email: string, password: string) =>
+  performRequest(RequestTarget.Login, async (dispatch: Dispatch) => {
+    const role = await api.login(email, password);
+    dispatch(setRole(role));
+  });
 
 /**
  * Logs the user out.

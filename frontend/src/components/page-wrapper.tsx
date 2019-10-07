@@ -35,7 +35,9 @@ const SidebarContainer = styled.div<ISidebarAwareProps>`
   transition-duration: ${transitionDuration};
   overflow-x: hidden;
 
-  ${(props) => props.showSidebar && `
+  ${(props) =>
+    props.showSidebar &&
+    `
     left: 0px;
   `}
 `;
@@ -49,7 +51,9 @@ const SidebarBurgerContainer = styled.div<ISidebarAwareProps>`
 
   z-index: 1;
 
-  ${(props) => props.showSidebar && `
+  ${(props) =>
+    props.showSidebar &&
+    `
     left: calc(${sidebarWidth} + 1rem);
   `}
 `;
@@ -69,7 +73,9 @@ const PageContainer = styled.div<ISidebarAwareProps>`
 
   padding-left: 1rem;
 
-  ${(props) => props.showSidebar && `
+  ${(props) =>
+    props.showSidebar &&
+    `
     padding-left: calc(${sidebarWidth} + 1rem);
   `}
 `;
@@ -92,26 +98,25 @@ export const PageWrapper = () => {
 
   return (
     <PageSizedContainer>
-        <SidebarContainer showSidebar={showSidebar}>
-          <ConnectedSidebar />
-        </SidebarContainer>
-        <PageContainer showSidebar={showSidebar}>
-          <HeaderBar showSidebar={showSidebar}>
-            <SidebarBurgerContainer showSidebar={showSidebar}>
-              <SidebarBurger onClick={() => setShowSidebar((value) => !value)} />
-            </SidebarBurgerContainer>
-          </HeaderBar>
+      <SidebarContainer showSidebar={showSidebar}>
+        <ConnectedSidebar />
+      </SidebarContainer>
+      <PageContainer showSidebar={showSidebar}>
+        <HeaderBar showSidebar={showSidebar}>
+          <SidebarBurgerContainer showSidebar={showSidebar}>
+            <SidebarBurger onClick={() => setShowSidebar((value) => !value)} />
+          </SidebarBurgerContainer>
+        </HeaderBar>
 
-          <ContentContainer>
-            <ConnectedNotification />
-            <Switch>
-              <Route path={Routes.Activity} component={ConnectedActivity} />
-              <Route path={Routes.Settings} component={Settings} />
-              <Route component={PageNotFound} />
-            </Switch>
-          </ContentContainer>
-
-        </PageContainer>
+        <ContentContainer>
+          <ConnectedNotification />
+          <Switch>
+            <Route path={Routes.Activity} component={ConnectedActivity} />
+            <Route path={Routes.Settings} component={Settings} />
+            <Route component={PageNotFound} />
+          </Switch>
+        </ContentContainer>
+      </PageContainer>
     </PageSizedContainer>
   );
 };

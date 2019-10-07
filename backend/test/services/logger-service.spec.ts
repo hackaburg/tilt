@@ -1,5 +1,8 @@
 import { IConfigurationService } from "../../src/services/config-service";
-import { ILoggerService, LoggerService } from "../../src/services/logger-service";
+import {
+  ILoggerService,
+  LoggerService,
+} from "../../src/services/logger-service";
 import { MockedService } from "./mock";
 import { MockConfigurationService } from "./mock/mock-config-service";
 
@@ -22,18 +25,24 @@ interface IMockedWinston {
   };
 }
 
-jest.mock("winston", jest.fn(() => ({
-  createLogger: jest.fn(),
-  format: {
-    colorize: jest.fn(),
-    combine: jest.fn(),
-    printf: jest.fn(),
-  },
-  transports: {
-    Console: jest.fn(),
-    File: jest.fn(),
-  },
-} as IMockedWinston)));
+jest.mock(
+  "winston",
+  jest.fn(
+    () =>
+      ({
+        createLogger: jest.fn(),
+        format: {
+          colorize: jest.fn(),
+          combine: jest.fn(),
+          printf: jest.fn(),
+        },
+        transports: {
+          Console: jest.fn(),
+          File: jest.fn(),
+        },
+      } as IMockedWinston),
+  ),
+);
 
 describe("LoggerService", () => {
   let config: MockedService<IConfigurationService>;
@@ -71,7 +80,9 @@ describe("LoggerService", () => {
   it("creates a custom log format", async () => {
     expect.assertions(5);
     let messageTransformer: ((info: any) => string) | undefined;
-    winston.format.printf.mockImplementation((callback) => messageTransformer = callback);
+    winston.format.printf.mockImplementation(
+      (callback) => (messageTransformer = callback),
+    );
     await service.bootstrap();
 
     expect(winston.format.printf).toBeCalled();

@@ -18,24 +18,29 @@ interface IActivityProps {
 /**
  * An overview over activities in tilt.
  */
-export const Activity = ({ activity, dispatchFetchActivities }: IActivityProps) => {
+export const Activity = ({
+  activity,
+  dispatchFetchActivities,
+}: IActivityProps) => {
   useEffect(() => {
     if (!activity) {
       dispatchFetchActivities();
     }
   }, []);
 
-  const descendingActivities = (activity || []).sort((a, b) => b.timestamp - a.timestamp);
-  const activityByMonth =
-    groupByMonth(descendingActivities)
-      .map(({ month, data }) => (
-        <div key={month}>
-          <Subheading>{month}</Subheading>
-          {data.map((event) => (
-            <ActivityEvent event={event} key={JSON.stringify(event)} />
-          ))}
-        </div>
-      ));
+  const descendingActivities = (activity || []).sort(
+    (a, b) => b.timestamp - a.timestamp,
+  );
+  const activityByMonth = groupByMonth(descendingActivities).map(
+    ({ month, data }) => (
+      <div key={month}>
+        <Subheading>{month}</Subheading>
+        {data.map((event) => (
+          <ActivityEvent event={event} key={JSON.stringify(event)} />
+        ))}
+      </div>
+    ),
+  );
 
   return (
     <>
@@ -59,12 +64,18 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    dispatchFetchActivities: fetchActivities,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      dispatchFetchActivities: fetchActivities,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The activity component connected to the redux store.
  */
-export const ConnectedActivity = connect(mapStateToProps, mapDispatchToProps)(Activity);
+export const ConnectedActivity = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Activity);

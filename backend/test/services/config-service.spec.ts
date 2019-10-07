@@ -24,7 +24,7 @@ describe("ConfigurationService", () => {
   });
 
   it("extracts the environment into the config", async () => {
-    const dotenv = jest.fn(() => ({ }));
+    const dotenv = jest.fn(() => ({}));
     jest.setMock("dotenv", dotenv);
 
     const port = 1337;

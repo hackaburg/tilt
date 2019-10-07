@@ -1,13 +1,31 @@
-import { Authorized, BadRequestError, Body, CurrentUser, Get, JsonController, Put } from "routing-controllers";
+import {
+  Authorized,
+  BadRequestError,
+  Body,
+  CurrentUser,
+  Get,
+  JsonController,
+  Put,
+} from "routing-controllers";
 import { Inject } from "typedi";
 import { ActivityType } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { WebSocketMessageType } from "../../../types/ws";
 import { User } from "../entities/user";
-import { ActivityServiceToken, IActivityService } from "../services/activity-service";
-import { ISettingsService, SettingsServiceToken, UpdateSettingsError } from "../services/settings-service";
-import { IWebSocketService, WebSocketServiceToken } from "../services/ws-service";
+import {
+  ActivityServiceToken,
+  IActivityService,
+} from "../services/activity-service";
+import {
+  ISettingsService,
+  SettingsServiceToken,
+  UpdateSettingsError,
+} from "../services/settings-service";
+import {
+  IWebSocketService,
+  WebSocketServiceToken,
+} from "../services/ws-service";
 import { toPrettyJson } from "../utils/json";
 import { UpdateSettingsApiRequest } from "../validation/update-settings";
 
@@ -17,7 +35,7 @@ export class SettingsController {
     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
     @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
     @Inject(WebSocketServiceToken) private readonly _ws: IWebSocketService,
-  ) { }
+  ) {}
 
   /**
    * Gets the application settings.
@@ -32,7 +50,10 @@ export class SettingsController {
    */
   @Put()
   @Authorized(UserRole.Owner)
-  public async updateSettings(@CurrentUser() user: User, @Body() { data: settings }: UpdateSettingsApiRequest): Promise<ISettings> {
+  public async updateSettings(
+    @CurrentUser() user: User,
+    @Body() { data: settings }: UpdateSettingsApiRequest,
+  ): Promise<ISettings> {
     try {
       const previousSettings = await this._settings.getSettings();
       const nextSettings = await this._settings.updateSettings(settings);
@@ -44,9 +65,7 @@ export class SettingsController {
       });
 
       this._ws.broadcast(UserRole.Moderator, {
-        activity: [
-          activity,
-        ],
+        activity: [activity],
         type: WebSocketMessageType.Activity,
       });
 

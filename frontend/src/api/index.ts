@@ -61,7 +61,6 @@ export interface IApi {
 /**
  * An api client, configured to either run against static data, or a tilt backend.
  */
-export const api: IApi =
-  apiBaseUrl
-    ? new BackendApi(apiBaseUrl)
-    : new StaticApi();
+export const api: IApi = apiBaseUrl
+  ? new BackendApi(apiBaseUrl)
+  : new StaticApi();

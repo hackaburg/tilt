@@ -1,4 +1,8 @@
-import { IWebSocketMessage, IWebSocketMessageData, WebSocketMessageType } from "../../../types/ws";
+import {
+  IWebSocketMessage,
+  IWebSocketMessageData,
+  WebSocketMessageType,
+} from "../../../types/ws";
 import { getLoginToken } from "../authentication";
 
 /**
@@ -25,10 +29,9 @@ export class WebSocketHandler {
   constructor(apiBaseUrl: string) {
     const httpRegex = /^http/;
     const ssl = location.protocol === "https";
-    const wsBaseUrl =
-      httpRegex.test(apiBaseUrl)
-        ? apiBaseUrl.replace(/^http/, "ws")
-        : `${ssl ? "wss" : "ws"}://${location.host}${apiBaseUrl}`;
+    const wsBaseUrl = httpRegex.test(apiBaseUrl)
+      ? apiBaseUrl.replace(/^http/, "ws")
+      : `${ssl ? "wss" : "ws"}://${location.host}${apiBaseUrl}`;
 
     this._url = `${wsBaseUrl}/ws`;
     this._ws = new WebSocket(this._url);
@@ -55,7 +58,10 @@ export class WebSocketHandler {
       }
 
       // tslint:disable-next-line: no-console
-      console.info(`couldn't handle message of type ${message.data.type}`, message);
+      console.info(
+        `couldn't handle message of type ${message.data.type}`,
+        message,
+      );
     });
 
     this._ws.addEventListener("open", () => {

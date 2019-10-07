@@ -13,7 +13,7 @@ export const HeaderBar = styled.div<ISidebarAwareProps>`
   left: 0;
   right: 0;
 
-  height: ${ headerBarHeight};
+  height: ${headerBarHeight};
 
   z-index: 1;
 
@@ -25,9 +25,11 @@ export const HeaderBar = styled.div<ISidebarAwareProps>`
   justify-content: center;
 
   transition-property: left;
-  transition-duration: ${ transitionDuration };
+  transition-duration: ${transitionDuration};
 
-  ${(props) => props.showSidebar && `
+  ${(props) =>
+    props.showSidebar &&
+    `
     left: ${sidebarWidth};
   `}
 `;

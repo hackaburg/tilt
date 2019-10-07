@@ -45,23 +45,25 @@ export const Sidebar = ({ role, logout }: ISidebarProps) => (
     <ConnectedSidebarLogo />
 
     <SidebarMenu>
-        <SidebarMenuItem to={Routes.Dashboard}>Dashboard</SidebarMenuItem>
+      <SidebarMenuItem to={Routes.Dashboard}>Dashboard</SidebarMenuItem>
 
-        {[UserRole.Moderator, UserRole.Owner].includes(role) && (
-          <>
-            <SidebarMenuItem to={Routes.Users}>Users</SidebarMenuItem>
-            <SidebarMenuItem to={Routes.Statistics}>Statistics</SidebarMenuItem>
-          </>
-        )}
+      {[UserRole.Moderator, UserRole.Owner].includes(role) && (
+        <>
+          <SidebarMenuItem to={Routes.Users}>Users</SidebarMenuItem>
+          <SidebarMenuItem to={Routes.Statistics}>Statistics</SidebarMenuItem>
+        </>
+      )}
 
-        {role === UserRole.Owner && (
-          <>
-            <SidebarMenuItem to={Routes.Activity}>Activity</SidebarMenuItem>
-            <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
-          </>
-        )}
+      {role === UserRole.Owner && (
+        <>
+          <SidebarMenuItem to={Routes.Activity}>Activity</SidebarMenuItem>
+          <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
+        </>
+      )}
 
-        <SidebarMenuItem to={Routes.Logout} onClick={logout}>Logout</SidebarMenuItem>
+      <SidebarMenuItem to={Routes.Logout} onClick={logout}>
+        Logout
+      </SidebarMenuItem>
     </SidebarMenu>
   </Container>
 );
@@ -71,12 +73,18 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    logout: logoutRaw,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      logout: logoutRaw,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The sidebar connected to the redux store.
  */
-export const ConnectedSidebar = connect(mapStateToProps, mapDispatchToProps)(Sidebar);
+export const ConnectedSidebar = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Sidebar);

@@ -39,15 +39,17 @@ interface IHome {
 }
 
 class Home implements IHome {
-  @ArrayType<IAnimals>((values) => values.map((value) => {
-    switch (value.type) {
-      case BaseType.Cat:
-        return Cat;
+  @ArrayType<IAnimals>((values) =>
+    values.map((value) => {
+      switch (value.type) {
+        case BaseType.Cat:
+          return Cat;
 
-      case BaseType.Dog:
-        return Dog;
-    }
-  }))
+        case BaseType.Dog:
+          return Dog;
+      }
+    }),
+  )
   public pets!: IAnimals[];
 }
 

@@ -14,7 +14,9 @@ export enum RequestAction {
 /**
  * Creates a @see RequestAction.StartRequest action.
  */
-export const startRequest = (target: RequestTarget): IAction<RequestAction.StartRequest, RequestTarget> => ({
+export const startRequest = (
+  target: RequestTarget,
+): IAction<RequestAction.StartRequest, RequestTarget> => ({
   type: RequestAction.StartRequest,
   value: target,
 });
@@ -22,7 +24,9 @@ export const startRequest = (target: RequestTarget): IAction<RequestAction.Start
 /**
  * Creates a @see RequestAction.FinishRequest action.
  */
-export const finishRequest = (target: RequestTarget): IAction<RequestAction.FinishRequest, RequestTarget> => ({
+export const finishRequest = (
+  target: RequestTarget,
+): IAction<RequestAction.FinishRequest, RequestTarget> => ({
   type: RequestAction.FinishRequest,
   value: target,
 });
@@ -36,7 +40,10 @@ interface IFailedRequest {
  * Creates a @see RequestAction.FailRequest action.
  * @param error The error that occurreed during the request
  */
-export const failRequest = (target: RequestTarget, error: string): IAction<RequestAction.FailRequest, IFailedRequest> => ({
+export const failRequest = (
+  target: RequestTarget,
+  error: string,
+): IAction<RequestAction.FailRequest, IFailedRequest> => ({
   type: RequestAction.FailRequest,
   value: {
     error,
@@ -48,7 +55,10 @@ export const failRequest = (target: RequestTarget, error: string): IAction<Reque
  * Asynchronously performs the given action as a request.
  * @param action An async action to perform as a request
  */
-export const performRequest = (target: RequestTarget, action: (dispatch: Dispatch) => Promise<void>) => async (dispatch: Dispatch) => {
+export const performRequest = (
+  target: RequestTarget,
+  action: (dispatch: Dispatch) => Promise<void>,
+) => async (dispatch: Dispatch) => {
   dispatch(startRequest(target));
 
   try {

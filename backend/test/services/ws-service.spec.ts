@@ -1,6 +1,9 @@
 import { UserRole } from "../../../types/roles";
 import { IWebSocketMessage, WebSocketMessageType } from "../../../types/ws";
-import { IWebSocketService, WebSocketService } from "../../src/services/ws-service";
+import {
+  IWebSocketService,
+  WebSocketService,
+} from "../../src/services/ws-service";
 import { MockWebSocket } from "./mock/mock-ws-service";
 
 describe("WebSocketService", () => {
@@ -26,7 +29,9 @@ describe("WebSocketService", () => {
     const socket = new MockWebSocket();
 
     let onCloseCallback: (() => any) | undefined;
-    socket.mocks.on.mockImplementation((_event: string, callback: () => any) => onCloseCallback = callback);
+    socket.mocks.on.mockImplementation(
+      (_event: string, callback: () => any) => (onCloseCallback = callback),
+    );
 
     service.registerClient(role, socket.instance);
 

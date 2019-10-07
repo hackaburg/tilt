@@ -1,4 +1,10 @@
-import { Equals, IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
+import {
+  Equals,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 import { Column, Entity, ManyToOne } from "typeorm";
 import { INumberQuestion, QuestionType } from "../../../types/questions";
 import { FormSettings } from "./form-settings";

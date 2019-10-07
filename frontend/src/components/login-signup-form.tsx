@@ -50,7 +50,13 @@ interface ILoginSignupFormProps {
 /**
  * A form to create an account.
  */
-export const LoginSignupForm = ({ loginInProgress, signupInProgress, error, signup, login }: ILoginSignupFormProps) => {
+export const LoginSignupForm = ({
+  loginInProgress,
+  signupInProgress,
+  error,
+  signup,
+  login,
+}: ILoginSignupFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [didSignup, setDidSignup] = useState(false);
@@ -77,7 +83,10 @@ export const LoginSignupForm = ({ loginInProgress, signupInProgress, error, sign
           <SignupDoneMessage show={signupDone}>
             <Heading>Done.</Heading>
             <p>We've sent you an email with a button to verify yourself.</p>
-            <p>It might take a minute or two to arrive, and to be safe, please also check your junk mail.</p>
+            <p>
+              It might take a minute or two to arrive, and to be safe, please
+              also check your junk mail.
+            </p>
           </SignupDoneMessage>
 
           <BlurContainer blur={signupDone}>
@@ -89,7 +98,9 @@ export const LoginSignupForm = ({ loginInProgress, signupInProgress, error, sign
             )}
 
             {error && (
-              <Message error><b>Error:</b> {error}</Message>
+              <Message error>
+                <b>Error:</b> {error}
+              </Message>
             )}
 
             <FormContainer>
@@ -117,14 +128,18 @@ export const LoginSignupForm = ({ loginInProgress, signupInProgress, error, sign
                 disable={formInProgress}
                 primary
                 fluid
-              >Create my account</Button>
+              >
+                Create my account
+              </Button>
               <Divider>Already have an account?</Divider>
               <Button
                 onClick={handleLogin}
                 loading={loginInProgress}
                 disable={formInProgress}
                 fluid
-              >Let me in</Button>
+              >
+                Let me in
+              </Button>
             </FormContainer>
           </BlurContainer>
         </Container>
@@ -134,19 +149,27 @@ export const LoginSignupForm = ({ loginInProgress, signupInProgress, error, sign
 };
 
 const mapStateToProps = (state: IState) => ({
-  error: state.request[RequestTarget.Login].error || state.request[RequestTarget.Signup].error,
+  error:
+    state.request[RequestTarget.Login].error ||
+    state.request[RequestTarget.Signup].error,
   loginInProgress: state.request[RequestTarget.Login].requestInProgress,
   signupInProgress: state.request[RequestTarget.Signup].requestInProgress,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    login: loginRaw,
-    signup: signupRaw,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      login: loginRaw,
+      signup: signupRaw,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The signup form connected to the redux store.
  */
-export const ConnectedLoginSignupForm = connect(mapStateToProps, mapDispatchToProps)(LoginSignupForm);
+export const ConnectedLoginSignupForm = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LoginSignupForm);

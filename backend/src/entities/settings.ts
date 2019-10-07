@@ -1,7 +1,19 @@
 import { Exclude, Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { IActivatable, IApplicationSettings, IEmailSettings, IFrontendSettings, ISettings } from "../../../types/settings";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import {
+  IActivatable,
+  IApplicationSettings,
+  IEmailSettings,
+  IFrontendSettings,
+  ISettings,
+} from "../../../types/settings";
 import { ApplicationSettings } from "./application-settings";
 import { EmailSettings } from "./email-settings";
 import { FrontendSettings } from "./frontend-settings";

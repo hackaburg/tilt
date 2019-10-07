@@ -1,7 +1,10 @@
 import { IncomingWebhook } from "@slack/webhook";
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { ConfigurationServiceToken, IConfigurationService } from "./config-service";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 
 /**
  * Describes a service to send Slack notifications.
@@ -17,15 +20,18 @@ export interface ISlackNotificationService extends IService {
 /**
  * A token used to inject a concrete Slack notification service.
  */
-export const SlackNotificationServiceToken = new Token<ISlackNotificationService>();
+export const SlackNotificationServiceToken = new Token<
+  ISlackNotificationService
+>();
 
 @Service(SlackNotificationServiceToken)
 export class SlackNotificationService implements ISlackNotificationService {
   private _hook?: IncomingWebhook;
 
   constructor(
-    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
-  ) { }
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
+  ) {}
 
   /**
    * Sets up the Slack webhook.

@@ -16,7 +16,9 @@ export enum ActivityAction {
  * Creates an @see ActivityAction.AddActivities action with the given activities.
  * @param activities Activities to add
  */
-export const addActivities = (activities: IActivity[]): IAction<ActivityAction.AddActivities, IActivity[]> => ({
+export const addActivities = (
+  activities: IActivity[],
+): IAction<ActivityAction.AddActivities, IActivity[]> => ({
   type: ActivityAction.AddActivities,
   value: activities,
 });
@@ -24,7 +26,8 @@ export const addActivities = (activities: IActivity[]): IAction<ActivityAction.A
 /**
  * Asynchronously fetches the latest activity.
  */
-export const fetchActivities = () => performRequest(RequestTarget.Activities, async (dispatch: Dispatch) => {
-  const activity = await api.getActivities();
-  dispatch(addActivities(activity));
-});
+export const fetchActivities = () =>
+  performRequest(RequestTarget.Activities, async (dispatch: Dispatch) => {
+    const activity = await api.getActivities();
+    dispatch(addActivities(activity));
+  });

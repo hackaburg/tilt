@@ -16,7 +16,10 @@ export const initialSettingsState: IStateType = null;
  * @param state The current state
  * @param action The current action
  */
-export const settingsReducer = (state: IStateType = initialSettingsState, action: IActionType): IStateType => {
+export const settingsReducer = (
+  state: IStateType = initialSettingsState,
+  action: IActionType,
+): IStateType => {
   switch (action.type) {
     case SettingsAction.SetSettings:
       return {

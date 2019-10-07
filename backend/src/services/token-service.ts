@@ -1,7 +1,10 @@
 import { decode, sign, verify } from "jsonwebtoken";
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { ConfigurationServiceToken, IConfigurationService } from "./config-service";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 
 /**
  * An interface providing access to JsonWebTokens.
@@ -30,8 +33,9 @@ export const TokenServiceToken = new Token<ITokenService<any>>();
 @Service(TokenServiceToken)
 export class TokenService<T> implements ITokenService<T> {
   public constructor(
-    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
-  ) { }
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
+  ) {}
 
   /**
    * Bootstraps the service, i.e. noop.

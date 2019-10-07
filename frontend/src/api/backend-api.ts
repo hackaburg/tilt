@@ -1,14 +1,29 @@
 import { IApi } from ".";
 import { IActivity } from "../../../types/activity";
-import { IApiRequest, IApiResponse, IRecursivePartial, ISuccessfullyUnpackedApiResponse } from "../../../types/api";
+import {
+  IApiRequest,
+  IApiResponse,
+  IRecursivePartial,
+  ISuccessfullyUnpackedApiResponse,
+} from "../../../types/api";
 import { UserRole } from "../../../types/roles";
 import { ISettings, IUpdateSettingsRequestBody } from "../../../types/settings";
-import { IUserLoginRequestBody, IUserLoginResponseBody } from "../../../types/user-login";
+import {
+  IUserLoginRequestBody,
+  IUserLoginResponseBody,
+} from "../../../types/user-login";
 import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
 import { IUserRoleResponseBody } from "../../../types/user-role";
-import { IUserSignupRequestBody, IUserSignupResponseBody } from "../../../types/user-signup";
+import {
+  IUserSignupRequestBody,
+  IUserSignupResponseBody,
+} from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
-import { getLoginToken, isLoginTokenSet, setLoginToken } from "../authentication";
+import {
+  getLoginToken,
+  isLoginTokenSet,
+  setLoginToken,
+} from "../authentication";
 
 /**
  * An api client connected to a backend. Stores the login token in `localStorage`.
@@ -24,9 +39,7 @@ export class BackendApi implements IApi {
     return headers;
   }
 
-  public constructor(
-    private readonly _apiBaseUrl: string,
-  ) { }
+  public constructor(private readonly _apiBaseUrl: string) {}
 
   /**
    * Packs the body in the api request structure.
@@ -56,7 +69,11 @@ export class BackendApi implements IApi {
    * @param method The method to use
    * @param body An optional body to send with the request
    */
-  private async request<TBody, TResponse>(url: string, method: RequestInit["method"], body?: TBody): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
+  private async request<TBody, TResponse>(
+    url: string,
+    method: RequestInit["method"],
+    body?: TBody,
+  ): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
     const headers = this.headers;
     const options: RequestInit = {
       headers,
@@ -76,7 +93,9 @@ export class BackendApi implements IApi {
    * Sends a GET request to the given resource.
    * @param url The resource to get
    */
-  protected async get<TResponse>(url: string): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
+  protected async get<TResponse>(
+    url: string,
+  ): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
     return await this.request<undefined, TResponse>(url, "get");
   }
 
@@ -84,7 +103,10 @@ export class BackendApi implements IApi {
    * Sends a POST request to the given resource.
    * @param url The resource to get
    */
-  protected async post<TBody, TResponse>(url: string, body: TBody): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
+  protected async post<TBody, TResponse>(
+    url: string,
+    body: TBody,
+  ): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
     return await this.request<TBody, TResponse>(url, "post", body);
   }
 
@@ -92,7 +114,10 @@ export class BackendApi implements IApi {
    * Sends a PUT request to the given resource.
    * @param url The resource to get
    */
-  protected async put<TBody, TResponse>(url: string, body: TBody): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
+  protected async put<TBody, TResponse>(
+    url: string,
+    body: TBody,
+  ): Promise<ISuccessfullyUnpackedApiResponse<TResponse>> {
     return await this.request<TBody, TResponse>(url, "put", body);
   }
 
@@ -109,7 +134,10 @@ export class BackendApi implements IApi {
    * @param password The user's password
    */
   public async signup(email: string, password: string): Promise<string> {
-    const response = await this.post<IUserSignupRequestBody, IUserSignupResponseBody>("/user/signup", {
+    const response = await this.post<
+      IUserSignupRequestBody,
+      IUserSignupResponseBody
+    >("/user/signup", {
       email,
       password,
     });
@@ -131,7 +159,10 @@ export class BackendApi implements IApi {
    * @param password The user's password
    */
   public async login(email: string, password: string): Promise<UserRole> {
-    const response = await this.post<IUserLoginRequestBody, IUserLoginResponseBody>("/user/login", {
+    const response = await this.post<
+      IUserLoginRequestBody,
+      IUserLoginResponseBody
+    >("/user/login", {
       email,
       password,
     });
@@ -152,7 +183,9 @@ export class BackendApi implements IApi {
    * Refreshes the login token.
    */
   public async refreshLoginToken(): Promise<void> {
-    const response = await this.get<IUserRefreshTokenResponseBody>("/user/refreshtoken");
+    const response = await this.get<IUserRefreshTokenResponseBody>(
+      "/user/refreshtoken",
+    );
     setLoginToken(response.token);
   }
 
@@ -160,8 +193,13 @@ export class BackendApi implements IApi {
    * Updates the settings.
    * @param settings The settings to use for updating
    */
-  public async updateSettings(settings: IRecursivePartial<ISettings>): Promise<ISettings> {
-    return await this.put<IUpdateSettingsRequestBody, ISettings>("/settings", settings);
+  public async updateSettings(
+    settings: IRecursivePartial<ISettings>,
+  ): Promise<ISettings> {
+    return await this.put<IUpdateSettingsRequestBody, ISettings>(
+      "/settings",
+      settings,
+    );
   }
 
   /**

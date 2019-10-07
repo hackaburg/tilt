@@ -40,20 +40,20 @@ interface ILoginImageProps {
  */
 export const LoginImage = ({ imageUrl }: ILoginImageProps) => (
   <Container>
-    {imageUrl && (
-      <Image src={imageUrl} />
-    )}
+    {imageUrl && <Image src={imageUrl} />}
 
     {!imageUrl && (
       <ScaleLoader
         height={1}
         heightUnit="rem"
         color="currentColor"
-        css={{
-          display: "inline-block",
-          margin: "auto",
-          padding: "1rem 0rem",
-        } as any}
+        css={
+          {
+            display: "inline-block",
+            margin: "auto",
+            padding: "1rem 0rem",
+          } as any
+        }
       />
     )}
   </Container>

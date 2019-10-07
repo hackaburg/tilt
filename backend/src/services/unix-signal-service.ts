@@ -12,7 +12,10 @@ export interface IUnixSignalService extends IService {
    * @param signal The signal to register
    * @param handler The handler to use for the signal
    */
-  registerSignalHandler(signal: NodeJS.Signals, handler: ISignalHandler): Promise<void>;
+  registerSignalHandler(
+    signal: NodeJS.Signals,
+    handler: ISignalHandler,
+  ): Promise<void>;
 }
 
 /**
@@ -52,11 +55,12 @@ export class UnixSignalService implements IUnixSignalService {
    * @param signal The signal to register
    * @param handler The handler to use for the signal
    */
-  public async registerSignalHandler(signal: NodeJS.Signals, handler: ISignalHandler): Promise<void> {
+  public async registerSignalHandler(
+    signal: NodeJS.Signals,
+    handler: ISignalHandler,
+  ): Promise<void> {
     if (!this._handlers.has(signal)) {
-      this._handlers.set(signal, [
-        () => process.exit(),
-      ]);
+      this._handlers.set(signal, [() => process.exit()]);
 
       process.on(signal, () => this.handleSignal(signal));
     }

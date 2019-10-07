@@ -4,9 +4,10 @@ import { IHaveibeenpwnedService } from "../../../src/services/haveibeenpwned-ser
 /**
  * A mocked haveibeenpwned service.
  */
-export const MockHaveibeenpwnedService = jest.fn(() => (
-  new MockedService<IHaveibeenpwnedService>({
-    bootstrap: jest.fn(),
-    getPasswordUsedCount: jest.fn(),
-  })
-));
+export const MockHaveibeenpwnedService = jest.fn(
+  () =>
+    new MockedService<IHaveibeenpwnedService>({
+      bootstrap: jest.fn(),
+      getPasswordUsedCount: jest.fn(),
+    }),
+);

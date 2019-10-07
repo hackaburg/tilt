@@ -4,8 +4,9 @@ import { IBootShutdownNotificationService } from "../../../src/services/boot-shu
 /**
  * A mocked boot shutdown notifier service.
  */
-export const MockBootShutdownNotifier = jest.fn(() => (
-  new MockedService<IBootShutdownNotificationService>({
-    bootstrap: jest.fn(),
-  })
-));
+export const MockBootShutdownNotifier = jest.fn(
+  () =>
+    new MockedService<IBootShutdownNotificationService>({
+      bootstrap: jest.fn(),
+    }),
+);

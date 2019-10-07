@@ -2,7 +2,11 @@ import * as React from "react";
 import { useState } from "react";
 import styled, { css } from "styled-components";
 import { useFocus } from "../hooks/use-focus";
-import { FormField, getPlaceholderStyle, IPlaceholderAwareProps } from "./form-field";
+import {
+  FormField,
+  getPlaceholderStyle,
+  IPlaceholderAwareProps,
+} from "./form-field";
 
 const FieldStyle = css`
   width: 100%;
@@ -54,7 +58,18 @@ interface ITextInputProps extends ICommonTextInputProps {
 /**
  * An input, that can also be a textarea, depending on its `type`.
  */
-export const TextInput = ({ value, onChange, title, placeholder, type, focus, mandatory, min, max, allowDecimals }: ITextInputProps) => {
+export const TextInput = ({
+  value,
+  onChange,
+  title,
+  placeholder,
+  type,
+  focus,
+  mandatory,
+  min,
+  max,
+  allowDecimals,
+}: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus();
   const isEmpty = `${value}`.trim().length === 0;
   const fieldType = type || TextInputType.Text;
@@ -63,7 +78,9 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus, ma
     autoFocus: focus,
     empty: isEmpty,
 
-    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    onChange: (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
       const changedValue = event.target.value;
 
       if (type === TextInputType.Number) {
@@ -82,19 +99,17 @@ export const TextInput = ({ value, onChange, title, placeholder, type, focus, ma
   };
 
   const field =
-    fieldType === TextInputType.Area
-      ? (
-        <Area {...fieldProps} />
-      )
-      : (
-        <Input
-          type={fieldType}
-          min={min}
-          max={max}
-          step={allowDecimals ? "any" : 1}
-          {...fieldProps}
-        />
-      );
+    fieldType === TextInputType.Area ? (
+      <Area {...fieldProps} />
+    ) : (
+      <Input
+        type={fieldType}
+        min={min}
+        max={max}
+        step={allowDecimals ? "any" : 1}
+        {...fieldProps}
+      />
+    );
 
   return (
     <FormField
@@ -116,18 +131,16 @@ interface IStatefulTextInputProps extends ICommonTextInputProps {
  * An input, which contains state inside, i.e. can be used to use hooks "conditionally".
  * Due to state being inside the component, you can render it conditionally, making the state hook conditonal as well.
  */
-export const StatefulTextInput = ({ initialValue, onChange, ...props }: IStatefulTextInputProps) => {
+export const StatefulTextInput = ({
+  initialValue,
+  onChange,
+  ...props
+}: IStatefulTextInputProps) => {
   const [text, setText] = useState(initialValue);
   const handleChange = (value: string) => {
     setText(value);
     onChange(value);
   };
 
-  return (
-    <TextInput
-      value={text}
-      onChange={handleChange}
-      {...props}
-    />
-  );
+  return <TextInput value={text} onChange={handleChange} {...props} />;
 };

@@ -1,6 +1,9 @@
 import { ActivityType, IActivityData } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
-import { IWebSocketActivityMessageData, WebSocketMessageType } from "../../../types/ws";
+import {
+  IWebSocketActivityMessageData,
+  WebSocketMessageType,
+} from "../../../types/ws";
 import { SettingsController } from "../../src/controllers/settings-controller";
 import { Settings } from "../../src/entities/settings";
 import { IActivityService } from "../../src/services/activity-service";
@@ -22,7 +25,11 @@ describe("SettingsController", () => {
     activityService = new MockActivityService();
     wsService = new MockWebSocketService();
     service = new MockSettingsService();
-    controller = new SettingsController(service.instance, activityService.instance, wsService.instance);
+    controller = new SettingsController(
+      service.instance,
+      activityService.instance,
+      wsService.instance,
+    );
   });
 
   it("gets all settings", async () => {
@@ -70,9 +77,7 @@ describe("SettingsController", () => {
     await controller.updateSettings(null as any, { data: null as any });
 
     const data: IWebSocketActivityMessageData = {
-      activity: [
-        activity,
-      ],
+      activity: [activity],
       type: WebSocketMessageType.Activity,
     };
 

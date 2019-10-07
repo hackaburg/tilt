@@ -7,7 +7,10 @@ import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
 import { updateSettings } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
 import { IState, RequestTarget } from "../state";
-import { EmailTemplateEditor, EmailTemplateEditorPlaceholder } from "./email-template-editor";
+import {
+  EmailTemplateEditor,
+  EmailTemplateEditorPlaceholder,
+} from "./email-template-editor";
 import { Subheading } from "./headings";
 import { Message } from "./message";
 import { Placeholder } from "./placeholder";
@@ -31,8 +34,15 @@ interface IEmailSettingsProps {
 /**
  * Settings to configure mail templates.
  */
-export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmailSettingsProps) => {
-  const handleSettingsChange = (field: keyof IEmailSettings, value: string | IEmailTemplate) => {
+export const EmailSettings = ({
+  dispatchUpdateSettings,
+  settings,
+  error,
+}: IEmailSettingsProps) => {
+  const handleSettingsChange = (
+    field: keyof IEmailSettings,
+    value: string | IEmailTemplate,
+  ) => {
     dispatchUpdateSettings(RequestTarget.MailSettings, {
       email: {
         [field]: value,
@@ -40,19 +50,23 @@ export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmai
     });
   };
 
-  const [debouncedHandleSettingsChange] = useDebouncedCallback(handleSettingsChange, debounceDuration, []);
+  const [debouncedHandleSettingsChange] = useDebouncedCallback(
+    handleSettingsChange,
+    debounceDuration,
+    [],
+  );
 
   return (
     <>
       <Subheading>Mail settings</Subheading>
       {error && (
-        <Message error><b>Error:</b> {error}</Message>
+        <Message error>
+          <b>Error:</b> {error}
+        </Message>
       )}
 
       <p>Emails sent out will contain the following sender address:</p>
-      {!settings && (
-        <Placeholder width="100%" height="3rem" />
-      )}
+      {!settings && <Placeholder width="100%" height="3rem" />}
       {settings && (
         <StatefulTextInput
           initialValue={settings.email.sender}
@@ -63,12 +77,19 @@ export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmai
       )}
 
       <p>
-        Use the editors to configure the email templates sent to applicants. The HTML and plain text templates will be sent in the same mail.
+        Use the editors to configure the email templates sent to applicants. The
+        HTML and plain text templates will be sent in the same mail.
         <br />
-        You may use Handlebars syntax to access variables injected into the template like <Code>email</Code> or <Code>questions.id</Code>.
+        You may use Handlebars syntax to access variables injected into the
+        template like <Code>email</Code> or <Code>questions.id</Code>.
       </p>
       <p>
-        tilt will inject the <Code>verifyToken</Code> into the verification email template. To actually verify users, supply the url to your hosted instance, e.g. <Code>{"https://hackathon.com/apply/verify#{{verifyToken}}"}</Code> - the frontend will expect the token to be at <Code>{"/verify#token"}</Code>.
+        tilt will inject the <Code>verifyToken</Code> into the verification
+        email template. To actually verify users, supply the url to your hosted
+        instance, e.g.{" "}
+        <Code>{"https://hackathon.com/apply/verify#{{verifyToken}}"}</Code> -
+        the frontend will expect the token to be at{" "}
+        <Code>{"/verify#token"}</Code>.
       </p>
 
       {!settings && (
@@ -83,12 +104,16 @@ export const EmailSettings = ({ dispatchUpdateSettings, settings, error }: IEmai
           <EmailTemplateEditor
             title="Verification"
             template={settings.email.verifyEmail}
-            onTemplateChange={(template) => debouncedHandleSettingsChange("verifyEmail", template)}
+            onTemplateChange={(template) =>
+              debouncedHandleSettingsChange("verifyEmail", template)
+            }
           />
           <EmailTemplateEditor
             title="Forgot password"
             template={settings.email.forgotPasswordEmail}
-            onTemplateChange={(template) => debouncedHandleSettingsChange("forgotPasswordEmail", template)}
+            onTemplateChange={(template) =>
+              debouncedHandleSettingsChange("forgotPasswordEmail", template)
+            }
           />
         </>
       )}
@@ -102,12 +127,18 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    dispatchUpdateSettings: updateSettings,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      dispatchUpdateSettings: updateSettings,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The email settings connected to the redux store.
  */
-export const ConnectedEmailSettings = connect(mapStateToProps, mapDispatchToProps)(EmailSettings);
+export const ConnectedEmailSettings = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(EmailSettings);

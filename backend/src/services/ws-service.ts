@@ -79,22 +79,13 @@ export class WebSocketService implements IWebSocketService {
   private expandAudience(audience: UserRole): UserRole[] {
     switch (audience) {
       case UserRole.User:
-        return [
-          UserRole.User,
-          UserRole.Moderator,
-          UserRole.Owner,
-        ];
+        return [UserRole.User, UserRole.Moderator, UserRole.Owner];
 
       case UserRole.Moderator:
-        return [
-          UserRole.Moderator,
-          UserRole.Owner,
-        ];
+        return [UserRole.Moderator, UserRole.Owner];
 
       case UserRole.Owner:
-        return [
-          UserRole.Owner,
-        ];
+        return [UserRole.Owner];
 
       default:
         return [];
@@ -108,7 +99,9 @@ export class WebSocketService implements IWebSocketService {
    */
   public broadcast(audience: UserRole, data: IWebSocketMessageData): void {
     const expandedAudience = this.expandAudience(audience);
-    const clientsWithRole = this._clients.filter((client) => expandedAudience.includes(client.role));
+    const clientsWithRole = this._clients.filter((client) =>
+      expandedAudience.includes(client.role),
+    );
     const message: IWebSocketMessage = {
       data,
       status: "ok",

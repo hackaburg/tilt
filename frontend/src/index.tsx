@@ -14,7 +14,9 @@ declare var window: {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: (...args: any[]) => any;
 };
 
-const composeEnhancers = (!isProductionEnabled && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+const composeEnhancers =
+  (!isProductionEnabled && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  compose;
 const middleware = composeEnhancers(applyMiddleware(thunk));
 const store = createStore(rootReducer, middleware);
 
@@ -24,7 +26,9 @@ store.subscribe(() => {
 
   if (role && !ws) {
     ws = new WebSocketHandler(apiBaseUrl);
-    ws.registerMessageHandler(new ActivityWebSocketHandler((action) => store.dispatch(action)));
+    ws.registerMessageHandler(
+      new ActivityWebSocketHandler((action) => store.dispatch(action)),
+    );
   } else if (!role && ws) {
     ws.close();
     ws = null;

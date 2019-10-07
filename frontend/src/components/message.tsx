@@ -18,13 +18,17 @@ export const Message = styled.div<IMessageProps>`
 
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.05);
 
-  ${(props) => props.error && `
+  ${(props) =>
+    props.error &&
+    `
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
   `}
 
-  ${(props) => props.warn && `
+  ${(props) =>
+    props.warn &&
+    `
     color: #856404;
     background-color: #fff3cd;
     border-color: #ffeeba;

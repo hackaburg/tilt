@@ -49,7 +49,9 @@ const EditButton = styled.button<IEditQuestionButtonProps>`
     opacity: 1;
   }
 
-  ${({ active, theme }: IEditQuestionButtonProps & IThemeProps) => active && `
+  ${({ active, theme }: IEditQuestionButtonProps & IThemeProps) =>
+    active &&
+    `
     color: ${theme.colorGradientEnd};
     opacity: 1;
   `}
@@ -81,7 +83,11 @@ interface IEditableQuestion {
 /**
  * A question with an "Edit" and "Delete" button, and mock content.
  */
-export const EditableQuestion = ({ question, onQuestionChange, onDeleteQuestion }: IEditableQuestion) => {
+export const EditableQuestion = ({
+  question,
+  onQuestionChange,
+  onDeleteQuestion,
+}: IEditableQuestion) => {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
@@ -95,10 +101,15 @@ export const EditableQuestion = ({ question, onQuestionChange, onDeleteQuestion 
       />
       <Modifiers>
         {isEditing && (
-          <RemoveButton onClick={onDeleteQuestion}>Delete question</RemoveButton>
+          <RemoveButton onClick={onDeleteQuestion}>
+            Delete question
+          </RemoveButton>
         )}
 
-        <EditButton active={isEditing} onClick={() => setIsEditing((value) => !value)}>
+        <EditButton
+          active={isEditing}
+          onClick={() => setIsEditing((value) => !value)}
+        >
           {isEditing ? "Finish Editing" : "Edit"}
         </EditButton>
       </Modifiers>

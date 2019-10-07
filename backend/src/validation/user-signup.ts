@@ -4,7 +4,8 @@ import { IApiRequest } from "../../../types/api";
 import { IUserSignupRequestBody } from "../../../types/user-signup";
 import { User } from "../entities/user";
 
-export class UserSignupApiRequest implements IApiRequest<IUserSignupRequestBody> {
+export class UserSignupApiRequest
+  implements IApiRequest<IUserSignupRequestBody> {
   @IsDefined()
   @ValidateNested()
   @Type(() => User)

@@ -19,7 +19,10 @@ export const initialNotificationState: IStateType = {
  * @param state The current state
  * @param action The current action
  */
-export const notifyReducer = (state: IStateType = initialNotificationState, action: IActionType): IStateType => {
+export const notifyReducer = (
+  state: IStateType = initialNotificationState,
+  action: IActionType,
+): IStateType => {
   switch (action.type) {
     case NotifyAction.ShowNotification:
       return {

@@ -18,7 +18,13 @@ interface IChoicesQuestionProps {
 /**
  * A question to select from multiple options, either via dropdown, checkboxes or radio boxes.
  */
-export const ChoicesQuestion = ({ editable, onQuestionChange, question, selected, onSelectedChanged }: IChoicesQuestionProps) => {
+export const ChoicesQuestion = ({
+  editable,
+  onQuestionChange,
+  question,
+  selected,
+  onSelectedChanged,
+}: IChoicesQuestionProps) => {
   if (editable && onQuestionChange) {
     const checkboxOptionValue = "Use checkboxes";
     const radioOptionValue = "Use radio buttons";
@@ -29,20 +35,18 @@ export const ChoicesQuestion = ({ editable, onQuestionChange, question, selected
       displayAsDropdownOptionValue,
     ];
 
-    const selectedAppearanceOptions = (
-      question.allowMultiple
-        ? [checkboxOptionValue]
-        : (
-          question.displayAsDropdown
-            ? [displayAsDropdownOptionValue]
-            : [radioOptionValue]
-        )
-    );
+    const selectedAppearanceOptions = question.allowMultiple
+      ? [checkboxOptionValue]
+      : question.displayAsDropdown
+      ? [displayAsDropdownOptionValue]
+      : [radioOptionValue];
 
     const handleAppearanceChange = (selectedAppearance: string[]) => {
       onQuestionChange({
         allowMultiple: selectedAppearance.includes(checkboxOptionValue),
-        displayAsDropdown: selectedAppearance.includes(displayAsDropdownOptionValue),
+        displayAsDropdown: selectedAppearance.includes(
+          displayAsDropdownOptionValue,
+        ),
       });
     };
 
@@ -50,11 +54,10 @@ export const ChoicesQuestion = ({ editable, onQuestionChange, question, selected
     const handleChoicesUpdate = (text: string) => {
       setChoicesText(text);
       onQuestionChange({
-        choices:
-          text
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line.length > 0),
+        choices: text
+          .split("\n")
+          .map((line) => line.trim())
+          .filter((line) => line.length > 0),
       });
     };
 

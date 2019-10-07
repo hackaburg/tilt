@@ -2,7 +2,11 @@ import { v4 as uuid } from "node-uuid";
 import * as React from "react";
 import * as ReactMarkdown from "react-markdown";
 import styled from "styled-components";
-import { IQuestion, IQuestionBase, QuestionType } from "../../../types/questions";
+import {
+  IQuestion,
+  IQuestionBase,
+  QuestionType,
+} from "../../../types/questions";
 import { Checkboxes } from "./checkbox";
 import { ChoicesQuestion } from "./choices-question";
 import { CountryQuestion } from "./country-question";
@@ -28,7 +32,13 @@ interface IQuestionProps {
  * A question component, displaying the respective question depending on the @see IQuestionBase.type value.
  * If it's not a known question, only the settings will be rendered.
  */
-export const Question = ({ question, onQuestionChange, editable, value, onChange }: IQuestionProps) => {
+export const Question = ({
+  question,
+  onQuestionChange,
+  editable,
+  value,
+  onChange,
+}: IQuestionProps) => {
   const handleQuestionChange = (changes: Partial<IQuestion>) => {
     if (onQuestionChange) {
       onQuestionChange(changes);
@@ -42,7 +52,6 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
           editable={editable}
           question={question}
           onQuestionChange={handleQuestionChange}
-
           onChange={onChange}
           value={value}
         />
@@ -53,7 +62,6 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
           editable={editable}
           question={question}
           onQuestionChange={handleQuestionChange}
-
           onChange={onChange}
           value={value}
         />
@@ -64,7 +72,6 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
           editable={editable}
           question={question}
           onQuestionChange={handleQuestionChange}
-
           onSelectedChanged={onChange}
           selected={value}
         />
@@ -170,7 +177,9 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
             <Col percent={50}>
               <TextInput
                 value={question.description}
-                onChange={(description) => handleQuestionChange({ description })}
+                onChange={(description) =>
+                  handleQuestionChange({ description })
+                }
                 placeholder="no description"
                 title="Description"
                 type={TextInputType.Area}
@@ -180,7 +189,11 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
               <Checkboxes
                 values={[mandatoryOptionName]}
                 selected={question.mandatory ? [mandatoryOptionName] : []}
-                onChange={(selected) => handleQuestionChange({ mandatory: selected.includes(mandatoryOptionName) })}
+                onChange={(selected) =>
+                  handleQuestionChange({
+                    mandatory: selected.includes(mandatoryOptionName),
+                  })
+                }
                 title="Behaviour"
               />
             </Col>
@@ -188,7 +201,9 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
 
           <TextInput
             value={question.referenceName!}
-            onChange={(referenceName) => handleQuestionChange({ referenceName })}
+            onChange={(referenceName) =>
+              handleQuestionChange({ referenceName })
+            }
             title="Reference name"
             placeholder="no reference name"
             mandatory={true}
@@ -198,7 +213,9 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
             <Col percent={50}>
               <TextInput
                 value={question.parentReferenceName!}
-                onChange={(parentReferenceName) => handleQuestionChange({ parentReferenceName })}
+                onChange={(parentReferenceName) =>
+                  handleQuestionChange({ parentReferenceName })
+                }
                 title="Parent question reference name"
                 placeholder="no parent question"
               />
@@ -207,7 +224,9 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
             <Col percent={50}>
               <TextInput
                 value={question.showIfParentHasValue!}
-                onChange={(showIfParentHasValue) => handleQuestionChange({ showIfParentHasValue })}
+                onChange={(showIfParentHasValue) =>
+                  handleQuestionChange({ showIfParentHasValue })
+                }
                 title="Only show this question if the parent question has this value"
                 placeholder="no value"
               />
@@ -222,10 +241,7 @@ export const Question = ({ question, onQuestionChange, editable, value, onChange
 
   return (
     <>
-      <ReactMarkdown
-        source={question.description}
-        linkTarget="_blank"
-      />
+      <ReactMarkdown source={question.description} linkTarget="_blank" />
 
       {renderedQuestion}
     </>

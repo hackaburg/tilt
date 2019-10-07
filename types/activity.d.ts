@@ -27,7 +27,6 @@ export interface ISettingsUpdateActivityData {
 }
 
 export type IActivityData =
-  ISignupActivityData
+  | ISignupActivityData
   | IEmailVerifiedActivityData
-  | ISettingsUpdateActivityData
-;
+  | ISettingsUpdateActivityData;

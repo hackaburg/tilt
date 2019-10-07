@@ -2,7 +2,11 @@ import { v4 as uuid } from "node-uuid";
 import { useState } from "react";
 import * as React from "react";
 import styled from "styled-components";
-import { IQuestion, ITextQuestion, QuestionType } from "../../../types/questions";
+import {
+  IQuestion,
+  ITextQuestion,
+  QuestionType,
+} from "../../../types/questions";
 import { IFormSettings } from "../../../types/settings";
 import { Button } from "./button";
 import { EditableQuestion } from "./editable-question";
@@ -41,7 +45,9 @@ interface IFormEditorProps {
  * An editor to edit an editable collection of questions, only for editing.
  */
 export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
-  const initialQuestionsWithUUIDs = initialForm.questions.map<IIdentifiableIQuestion>((question) => ({
+  const initialQuestionsWithUUIDs = initialForm.questions.map<
+    IIdentifiableIQuestion
+  >((question) => ({
     id: uuid(),
     question,
   }));
@@ -81,15 +87,13 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
   };
 
   const handleQuestionChange = (changes: Partial<IQuestion>, index: number) => {
-    const updatedQuestions = [
-      ...questions,
-    ];
+    const updatedQuestions = [...questions];
 
     updatedQuestions[index] = {
       ...updatedQuestions[index],
       question: {
         ...updatedQuestions[index].question,
-        ...changes as IQuestion,
+        ...(changes as IQuestion),
       },
     };
 
@@ -97,9 +101,7 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
   };
 
   const handleDeleteQuestion = (index: number) => {
-    const updatedQuestions = [
-      ...questions,
-    ];
+    const updatedQuestions = [...questions];
 
     updatedQuestions.splice(index, 1);
     updateQuestions(updatedQuestions);
@@ -136,10 +138,9 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
 
           <Col percent={50}>
             <AddButtonContainer>
-              <Button
-                onClick={addQuestion}
-                primary
-              >Add question</Button>
+              <Button onClick={addQuestion} primary>
+                Add question
+              </Button>
             </AddButtonContainer>
           </Col>
         </Row>

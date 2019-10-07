@@ -1,18 +1,36 @@
 import { Inject, Service } from "typedi";
 import { IService } from ".";
 import { ActivityServiceToken, IActivityService } from "./activity-service";
-import { BootShutdownNotificationServiceToken, IBootShutdownNotificationService } from "./boot-shutdown-notification-service";
-import { ConfigurationServiceToken, IConfigurationService } from "./config-service";
+import {
+  BootShutdownNotificationServiceToken,
+  IBootShutdownNotificationService,
+} from "./boot-shutdown-notification-service";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { EmailServiceToken, IEmailService } from "./email-service";
-import { EmailTemplateServiceToken, IEmailTemplateService } from "./email-template-service";
-import { HaveibeenpwnedServiceToken, IHaveibeenpwnedService } from "./haveibeenpwned-service";
+import {
+  EmailTemplateServiceToken,
+  IEmailTemplateService,
+} from "./email-template-service";
+import {
+  HaveibeenpwnedServiceToken,
+  IHaveibeenpwnedService,
+} from "./haveibeenpwned-service";
 import { HttpServiceToken, IHttpService } from "./http-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
-import { ISlackNotificationService, SlackNotificationServiceToken } from "./slack-service";
+import {
+  ISlackNotificationService,
+  SlackNotificationServiceToken,
+} from "./slack-service";
 import { ITokenService, TokenServiceToken } from "./token-service";
-import { IUnixSignalService, UnixSignalServiceToken } from "./unix-signal-service";
+import {
+  IUnixSignalService,
+  UnixSignalServiceToken,
+} from "./unix-signal-service";
 import { IUserService, UserServiceToken } from "./user-service";
 import { IWebSocketService, WebSocketServiceToken } from "./ws-service";
 
@@ -29,7 +47,8 @@ export class Tilt implements IService {
     @Inject(ConfigurationServiceToken) config: IConfigurationService,
     @Inject(LoggerServiceToken) logger: ILoggerService,
     @Inject(SlackNotificationServiceToken) slack: ISlackNotificationService,
-    @Inject(BootShutdownNotificationServiceToken) bootShutdownNotifier: IBootShutdownNotificationService,
+    @Inject(BootShutdownNotificationServiceToken)
+    bootShutdownNotifier: IBootShutdownNotificationService,
     @Inject(DatabaseServiceToken) database: IDatabaseService,
     @Inject(EmailServiceToken) email: IEmailService,
     @Inject(EmailTemplateServiceToken) emailTemplates: IEmailTemplateService,

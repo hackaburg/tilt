@@ -16,17 +16,17 @@ export interface IAction<TType, TValue> extends IEmptyAction<TType> {
 
 type IAsyncAction = (dispatch: Dispatch) => Promise<any>;
 type ActionCreator = (...args: any[]) => any;
-type NonAsyncActionCreatorReturnType<T extends ActionCreator> =
-  ReturnType<T> extends IAsyncAction
-    ? never
-    : ReturnType<T>;
+type NonAsyncActionCreatorReturnType<T extends ActionCreator> = ReturnType<
+  T
+> extends IAsyncAction
+  ? never
+  : ReturnType<T>;
 
 /**
  * Return types from action creators.
  */
 export type IActionReturnTypes<T> = {
-  [P in keyof T]:
-    T[P] extends ActionCreator
-      ? NonAsyncActionCreatorReturnType<T[P]>
-      : never;
+  [P in keyof T]: T[P] extends ActionCreator
+    ? NonAsyncActionCreatorReturnType<T[P]>
+    : never;
 }[keyof T];
