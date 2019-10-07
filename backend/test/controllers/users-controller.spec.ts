@@ -16,7 +16,10 @@ describe("UsersController", () => {
   beforeEach(async () => {
     userService = new MockUserService();
     activityService = new MockActivityService();
-    controller = new UsersController(userService.instance, activityService.instance);
+    controller = new UsersController(
+      userService.instance,
+      activityService.instance,
+    );
   });
 
   it("signs up users", async () => {

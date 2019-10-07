@@ -25,7 +25,12 @@ interface IVerifyEmailProps {
 /**
  * A dialog to verify the user's email address via the given token.
  */
-export const VerifyEmail = ({ token, dispatchVerifyEmail, error, verificationInProgress }: IVerifyEmailProps) => {
+export const VerifyEmail = ({
+  token,
+  dispatchVerifyEmail,
+  error,
+  verificationInProgress,
+}: IVerifyEmailProps) => {
   if (token.startsWith("#")) {
     token = token.substring(1);
   }
@@ -40,7 +45,9 @@ export const VerifyEmail = ({ token, dispatchVerifyEmail, error, verificationInP
         <Container>
           <ConnectedLoginImage />
           {error && (
-            <Message error><b>Error:</b> {error}</Message>
+            <Message error>
+              <b>Error:</b> {error}
+            </Message>
           )}
 
           {!error && (
@@ -65,16 +72,23 @@ export const VerifyEmail = ({ token, dispatchVerifyEmail, error, verificationInP
 
 const mapStateToProps = (state: IState) => ({
   error: state.request[RequestTarget.VerifyEmail].error,
-  verificationInProgress: state.request[RequestTarget.VerifyEmail].requestInProgress,
+  verificationInProgress:
+    state.request[RequestTarget.VerifyEmail].requestInProgress,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    dispatchVerifyEmail: verifyEmail,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      dispatchVerifyEmail: verifyEmail,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The verify email component connected to the redux store.
  */
-export const ConnectedVerifyEmail = connect(mapStateToProps, mapDispatchToProps)(VerifyEmail);
+export const ConnectedVerifyEmail = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(VerifyEmail);

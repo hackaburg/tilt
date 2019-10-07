@@ -1,4 +1,14 @@
-import { Authorized, BadRequestError, Body, CurrentUser, Get, HttpCode, JsonController, Post, QueryParam } from "routing-controllers";
+import {
+  Authorized,
+  BadRequestError,
+  Body,
+  CurrentUser,
+  Get,
+  HttpCode,
+  JsonController,
+  Post,
+  QueryParam,
+} from "routing-controllers";
 import { Inject } from "typedi";
 import { ActivityType } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
@@ -8,7 +18,10 @@ import { IUserRoleResponseBody } from "../../../types/user-role";
 import { IUserSignupResponseBody } from "../../../types/user-signup";
 import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { User } from "../entities/user";
-import { ActivityServiceToken, IActivityService } from "../services/activity-service";
+import {
+  ActivityServiceToken,
+  IActivityService,
+} from "../services/activity-service";
 import { IUserService, UserServiceToken } from "../services/user-service";
 import { UserLoginApiRequest } from "../validation/user-login";
 import { UserSignupApiRequest } from "../validation/user-signup";
@@ -21,14 +34,17 @@ export class UsersController {
   public constructor(
     @Inject(UserServiceToken) private readonly _users: IUserService,
     @Inject(ActivityServiceToken) private readonly _activity: IActivityService,
-  ) { }
+  ) {}
 
   /**
    * Create a user.
    */
   @HttpCode(201)
   @Post("/signup")
-  public async signup(@Body() { data: { email, password } }: UserSignupApiRequest): Promise<IUserSignupResponseBody> {
+  public async signup(@Body()
+  {
+    data: { email, password },
+  }: UserSignupApiRequest): Promise<IUserSignupResponseBody> {
     try {
       const user = await this._users.signup(email, password);
       await this._activity.addActivity(user, {
@@ -48,7 +64,9 @@ export class UsersController {
    * @param token The token to verify.
    */
   @Get("/verify")
-  public async verify(@QueryParam("token") token: string): Promise<IUserVerifyResponseBody> {
+  public async verify(
+    @QueryParam("token") token: string,
+  ): Promise<IUserVerifyResponseBody> {
     try {
       const user = await this._users.verifyUserByVerifyToken(token);
       await this._activity.addActivity(user, {
@@ -68,7 +86,10 @@ export class UsersController {
    * @param body The user's login credentials
    */
   @Post("/login")
-  public async login(@Body() { data: { email, password } }: UserLoginApiRequest): Promise<IUserLoginResponseBody> {
+  public async login(@Body()
+  {
+    data: { email, password },
+  }: UserLoginApiRequest): Promise<IUserLoginResponseBody> {
     const user = await this._users.findUserWithCredentials(email, password);
 
     if (!user) {
@@ -87,7 +108,9 @@ export class UsersController {
    */
   @Get("/role")
   @Authorized(UserRole.User)
-  public async getRole(@CurrentUser() user: User): Promise<IUserRoleResponseBody> {
+  public async getRole(
+    @CurrentUser() user: User,
+  ): Promise<IUserRoleResponseBody> {
     return {
       role: user.role,
     };
@@ -99,7 +122,9 @@ export class UsersController {
    */
   @Get("/refreshtoken")
   @Authorized(UserRole.User)
-  public async refreshLoginToken(@CurrentUser() user: User): Promise<IUserRefreshTokenResponseBody> {
+  public async refreshLoginToken(
+    @CurrentUser() user: User,
+  ): Promise<IUserRefreshTokenResponseBody> {
     return {
       token: this._users.generateLoginToken(user),
     };

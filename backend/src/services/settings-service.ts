@@ -3,7 +3,15 @@ import { Repository } from "typeorm";
 import { IService } from ".";
 import { IRecursivePartial } from "../../../types/api";
 import { IQuestion, QuestionType } from "../../../types/questions";
-import { IActivatable, IApplicationSettings, IEmailSettings, IEmailTemplate, IFormSettings, IFrontendSettings, ISettings } from "../../../types/settings";
+import {
+  IActivatable,
+  IApplicationSettings,
+  IEmailSettings,
+  IEmailTemplate,
+  IFormSettings,
+  IFrontendSettings,
+  ISettings,
+} from "../../../types/settings";
 import { ApplicationSettings } from "../entities/application-settings";
 import { ChoicesQuestion } from "../entities/choices-question";
 import { CountryQuestion } from "../entities/country-question";
@@ -46,7 +54,7 @@ export class SettingsService implements ISettingsService {
   public constructor(
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-  ) { }
+  ) {}
 
   /**
    * Sets up the settings service.
@@ -117,7 +125,10 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing email template
    * @param changes The changed email template
    */
-  private updateEmailTemplate(existing: IEmailTemplate, changes: IRecursivePartial<IEmailTemplate>): IEmailTemplate {
+  private updateEmailTemplate(
+    existing: IEmailTemplate,
+    changes: IRecursivePartial<IEmailTemplate>,
+  ): IEmailTemplate {
     const updated = new EmailTemplate();
     this.applyChanges(existing, changes, updated);
     return updated;
@@ -128,19 +139,23 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing email settings
    * @param changes The changed email settings
    */
-  private updateEmailSettings(existing: IEmailSettings, changes: IRecursivePartial<IEmailSettings>): IEmailSettings {
+  private updateEmailSettings(
+    existing: IEmailSettings,
+    changes: IRecursivePartial<IEmailSettings>,
+  ): IEmailSettings {
     const updated = new EmailSettings();
     this.applyChanges(existing, changes, updated);
 
-    updated.verifyEmail =
-      changes.verifyEmail
-        ? this.updateEmailTemplate(existing.verifyEmail, changes.verifyEmail)
-        : existing.verifyEmail;
+    updated.verifyEmail = changes.verifyEmail
+      ? this.updateEmailTemplate(existing.verifyEmail, changes.verifyEmail)
+      : existing.verifyEmail;
 
-    updated.forgotPasswordEmail =
-      changes.forgotPasswordEmail
-        ? this.updateEmailTemplate(existing.forgotPasswordEmail, changes.forgotPasswordEmail)
-        : existing.forgotPasswordEmail;
+    updated.forgotPasswordEmail = changes.forgotPasswordEmail
+      ? this.updateEmailTemplate(
+          existing.forgotPasswordEmail,
+          changes.forgotPasswordEmail,
+        )
+      : existing.forgotPasswordEmail;
 
     return updated;
   }
@@ -150,7 +165,10 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing frontend settings
    * @param changes The changed frontend settings
    */
-  private updateFrontendSettings(existing: IFrontendSettings, changes: IRecursivePartial<IFrontendSettings>): IFrontendSettings {
+  private updateFrontendSettings(
+    existing: IFrontendSettings,
+    changes: IRecursivePartial<IFrontendSettings>,
+  ): IFrontendSettings {
     const updated = new FrontendSettings();
     this.applyChanges(existing, changes, updated);
     return updated;
@@ -185,26 +203,28 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing form settings
    * @param changes The changed form settings
    */
-  private updateFormSettings(existing: IFormSettings, changes: IRecursivePartial<IFormSettings>): IFormSettings {
+  private updateFormSettings(
+    existing: IFormSettings,
+    changes: IRecursivePartial<IFormSettings>,
+  ): IFormSettings {
     const updated = new FormSettings();
     this.applyChanges(existing, changes, updated);
 
-    updated.questions =
-      changes.questions
-        ? (
-          changes.questions.map((changedQuestion) => {
-            const existingQuestion = existing.questions.find((question) => (
-              question.referenceName === changedQuestion.referenceName
-              && question.type === changedQuestion.type
-            )) || this.createQuestion(changedQuestion.type);
+    updated.questions = changes.questions
+      ? changes.questions.map((changedQuestion) => {
+          const existingQuestion =
+            existing.questions.find(
+              (question) =>
+                question.referenceName === changedQuestion.referenceName &&
+                question.type === changedQuestion.type,
+            ) || this.createQuestion(changedQuestion.type);
 
-            const updatedQuestion = this.createQuestion(changedQuestion.type);
-            this.applyChanges(existingQuestion, changedQuestion, updatedQuestion);
+          const updatedQuestion = this.createQuestion(changedQuestion.type);
+          this.applyChanges(existingQuestion, changedQuestion, updatedQuestion);
 
-            return updatedQuestion;
-          })
-        )
-        : existing.questions;
+          return updatedQuestion;
+        })
+      : existing.questions;
 
     return updated;
   }
@@ -213,18 +233,20 @@ export class SettingsService implements ISettingsService {
    * Creates an array of all reference names provided in the changed application settings.
    * @param changes The changed application settings
    */
-  private getAllReferenceNames(changes: IRecursivePartial<IApplicationSettings>): string[] {
+  private getAllReferenceNames(
+    changes: IRecursivePartial<IApplicationSettings>,
+  ): string[] {
     return [
-      ...(
-        changes.profileForm && changes.profileForm.questions
-          ? changes.profileForm.questions.map(({ referenceName }) => referenceName)
-          : []
-      ),
-      ...(
-        changes.confirmationForm && changes.confirmationForm.questions
-          ? changes.confirmationForm.questions.map(({ referenceName }) => referenceName)
-          : []
-      ),
+      ...(changes.profileForm && changes.profileForm.questions
+        ? changes.profileForm.questions.map(
+            ({ referenceName }) => referenceName,
+          )
+        : []),
+      ...(changes.confirmationForm && changes.confirmationForm.questions
+        ? changes.confirmationForm.questions.map(
+            ({ referenceName }) => referenceName,
+          )
+        : []),
     ];
   }
 
@@ -254,30 +276,41 @@ export class SettingsService implements ISettingsService {
    * @param existing The existing application settings
    * @param changes The changed application settings
    */
-  private updateApplicationSettings(existing: IApplicationSettings, changes: IRecursivePartial<IApplicationSettings>): IApplicationSettings {
+  private updateApplicationSettings(
+    existing: IApplicationSettings,
+    changes: IRecursivePartial<IApplicationSettings>,
+  ): IApplicationSettings {
     const updated = new ApplicationSettings();
     this.applyChanges(existing, changes, updated);
 
-    if (updated.allowProfileFormFrom.getTime() > updated.allowProfileFormUntil.getTime()) {
-      throw new UpdateSettingsError("profile form closes before it's open, check your times");
+    if (
+      updated.allowProfileFormFrom.getTime() >
+      updated.allowProfileFormUntil.getTime()
+    ) {
+      throw new UpdateSettingsError(
+        "profile form closes before it's open, check your times",
+      );
     }
 
     const referenceNames = this.getAllReferenceNames(changes);
     const duplicateReferenceName = this.getFirstDuplicate(referenceNames);
 
     if (duplicateReferenceName) {
-      throw new UpdateSettingsError(`duplicate reference name "${duplicateReferenceName}"`);
+      throw new UpdateSettingsError(
+        `duplicate reference name "${duplicateReferenceName}"`,
+      );
     }
 
-    updated.profileForm =
-      changes.profileForm
-        ? this.updateFormSettings(existing.profileForm, changes.profileForm)
-        : existing.profileForm;
+    updated.profileForm = changes.profileForm
+      ? this.updateFormSettings(existing.profileForm, changes.profileForm)
+      : existing.profileForm;
 
-    updated.confirmationForm =
-      changes.confirmationForm
-        ? this.updateFormSettings(existing.confirmationForm, changes.confirmationForm)
-        : existing.confirmationForm;
+    updated.confirmationForm = changes.confirmationForm
+      ? this.updateFormSettings(
+          existing.confirmationForm,
+          changes.confirmationForm,
+        )
+      : existing.confirmationForm;
 
     return updated;
   }
@@ -286,9 +319,11 @@ export class SettingsService implements ISettingsService {
    * Updates all settings.
    * @param changes The updated settings
    */
-  public async updateSettings(changes: IRecursivePartial<ISettings>): Promise<ISettings> {
+  public async updateSettings(
+    changes: IRecursivePartial<ISettings>,
+  ): Promise<ISettings> {
     const updated = new Settings();
-    const existing = await this.getSettings() as IActivatable<ISettings>;
+    const existing = (await this.getSettings()) as IActivatable<ISettings>;
 
     if (!changes) {
       return existing;
@@ -296,20 +331,20 @@ export class SettingsService implements ISettingsService {
 
     this.applyChanges(existing, changes, updated);
 
-    updated.application =
-      changes.application
-        ? this.updateApplicationSettings(existing.application, changes.application)
-        : existing.application;
+    updated.application = changes.application
+      ? this.updateApplicationSettings(
+          existing.application,
+          changes.application,
+        )
+      : existing.application;
 
-    updated.email =
-      changes.email
-        ? this.updateEmailSettings(existing.email, changes.email)
-        : existing.email;
+    updated.email = changes.email
+      ? this.updateEmailSettings(existing.email, changes.email)
+      : existing.email;
 
-    updated.frontend =
-      changes.frontend
-        ? this.updateFrontendSettings(existing.frontend, changes.frontend)
-        : existing.frontend;
+    updated.frontend = changes.frontend
+      ? this.updateFrontendSettings(existing.frontend, changes.frontend)
+      : existing.frontend;
 
     existing.active = false;
     await this._settings!.save(existing);

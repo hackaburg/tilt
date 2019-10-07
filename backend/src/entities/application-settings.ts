@@ -1,5 +1,11 @@
 import { Exclude, Type } from "class-transformer";
-import { IsDate, IsNumber, IsOptional, IsPositive, ValidateNested } from "class-validator";
+import {
+  IsDate,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  ValidateNested,
+} from "class-validator";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IApplicationSettings, IFormSettings } from "../../../types/settings";
 import { FormSettings } from "./form-settings";

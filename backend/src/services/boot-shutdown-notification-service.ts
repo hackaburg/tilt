@@ -1,27 +1,38 @@
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
-import { ISlackNotificationService, SlackNotificationServiceToken } from "./slack-service";
-import { IUnixSignalService, UnixSignalServiceToken } from "./unix-signal-service";
+import {
+  ISlackNotificationService,
+  SlackNotificationServiceToken,
+} from "./slack-service";
+import {
+  IUnixSignalService,
+  UnixSignalServiceToken,
+} from "./unix-signal-service";
 
 /**
  * A service to notify about pending shutdowns.
  */
 // tslint:disable-next-line: no-empty-interface
-export interface IBootShutdownNotificationService extends IService { }
+export interface IBootShutdownNotificationService extends IService {}
 
 /**
  * A token used to inject a concrete boot shutdown notifier.
  */
-export const BootShutdownNotificationServiceToken = new Token<IBootShutdownNotificationService>();
+export const BootShutdownNotificationServiceToken = new Token<
+  IBootShutdownNotificationService
+>();
 
 @Service(BootShutdownNotificationServiceToken)
-export class BootShutdownNotificationService implements IBootShutdownNotificationService {
+export class BootShutdownNotificationService
+  implements IBootShutdownNotificationService {
   constructor(
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-    @Inject(SlackNotificationServiceToken) private readonly _slack: ISlackNotificationService,
-    @Inject(UnixSignalServiceToken) private readonly _signals: IUnixSignalService,
-  ) { }
+    @Inject(SlackNotificationServiceToken)
+    private readonly _slack: ISlackNotificationService,
+    @Inject(UnixSignalServiceToken)
+    private readonly _signals: IUnixSignalService,
+  ) {}
 
   /**
    * Registers signals to listen on and notifies the configured Slack webhook about state changes.

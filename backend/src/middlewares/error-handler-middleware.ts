@@ -1,10 +1,16 @@
 import { ValidationError } from "class-validator";
 import { NextFunction, Request, Response } from "express";
-import { ExpressErrorMiddlewareInterface, Middleware } from "routing-controllers";
+import {
+  ExpressErrorMiddlewareInterface,
+  Middleware,
+} from "routing-controllers";
 import { Inject } from "typedi";
 import { IApiResponse } from "../../../types/api";
 import { ILoggerService, LoggerServiceToken } from "../services/logger-service";
-import { ISlackNotificationService, SlackNotificationServiceToken } from "../services/slack-service";
+import {
+  ISlackNotificationService,
+  SlackNotificationServiceToken,
+} from "../services/slack-service";
 
 /**
  * Get the first validation error message from an array of validation errors.
@@ -39,8 +45,9 @@ const findFirstValidationError = (errors: ValidationError[]): string => {
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public constructor(
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-    @Inject(SlackNotificationServiceToken) private readonly _slack: ISlackNotificationService,
-  ) { }
+    @Inject(SlackNotificationServiceToken)
+    private readonly _slack: ISlackNotificationService,
+  ) {}
 
   /**
    * Sends an error message as defined in @see IApiResponse
@@ -49,7 +56,12 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
    * @param res The express response
    * @param _next The express next function
    */
-  public error(error: any, _req: Request, res: Response, _next: NextFunction): void {
+  public error(
+    error: any,
+    _req: Request,
+    res: Response,
+    _next: NextFunction,
+  ): void {
     const response: IApiResponse<never> = {
       error: error.message,
       status: "error",
@@ -57,7 +69,8 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
 
     if (Array.isArray(error.errors)) {
       const validations = error.errors as ValidationError[];
-      response.error = findFirstValidationError(validations) || "unknown validation error";
+      response.error =
+        findFirstValidationError(validations) || "unknown validation error";
     }
 
     if (!error.httpCode) {

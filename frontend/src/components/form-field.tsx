@@ -13,14 +13,18 @@ const Container = styled.div<IContainerProps>`
   margin: 0.75rem 0rem;
   padding-top: 0.5rem;
 
-  ${({ borderBottom }) => borderBottom && `
+  ${({ borderBottom }) =>
+    borderBottom &&
+    `
     border-bottom: 1.5px solid #aaa;
   `}
 
   transition-property: border-color;
   transition-duration: ${transitionDuration};
 
-  ${({ active, theme }: IContainerProps & IThemeProps) => active && `
+  ${({ active, theme }: IContainerProps & IThemeProps) =>
+    active &&
+    `
     border-color: ${theme.colorGradientEnd};
   `}
 `;
@@ -44,18 +48,24 @@ const Title = styled.label<ITitleProps>`
   transition-property: top, color, font-weight, font-size;
   transition-duration: ${transitionDuration};
 
-  ${({ moveUp }: ITitleProps) => moveUp && `
+  ${({ moveUp }: ITitleProps) =>
+    moveUp &&
+    `
     top: 0rem;
 
     font-size: 0.7rem;
     font-weight: bold;
   `}
 
-  ${({ active, theme }) => active && `
+  ${({ active, theme }) =>
+    active &&
+    `
     color: ${theme.colorGradientEnd};
   `}
 
-  ${({ mandatory }) => mandatory && `
+  ${({ mandatory }) =>
+    mandatory &&
+    `
     &::after {
       content: "*";
       display: inline;
@@ -76,17 +86,20 @@ interface IFormFieldProps {
 /**
  * A form field, whose label moves up when the field is active.
  */
-export const FormField = ({ active, empty, title, children, borderBottom, mandatory }: IFormFieldProps) => (
+export const FormField = ({
+  active,
+  empty,
+  title,
+  children,
+  borderBottom,
+  mandatory,
+}: IFormFieldProps) => (
   <Container
     active={active}
     borderBottom={borderBottom === undefined || borderBottom}
   >
     {title && (
-      <Title
-        active={active}
-        moveUp={active || !empty}
-        mandatory={!!mandatory}
-      >
+      <Title active={active} moveUp={active || !empty} mandatory={!!mandatory}>
         {title}
       </Title>
     )}
@@ -106,13 +119,15 @@ export const getPlaceholderStyle = (empty: boolean, focused: boolean) => css`
     transition-duration: ${transitionDuration};
   }
 
-  ${empty && `
+  ${empty &&
+    `
     &::placeholder {
       color: white;
     }
   `}
 
-  ${focused && `
+  ${focused &&
+    `
     &::placeholder {
       color: #ccc;
     }

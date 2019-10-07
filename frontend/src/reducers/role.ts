@@ -16,7 +16,10 @@ export const initialSettingsState: IStateType = null;
  * @param state The current state
  * @param action The current action
  */
-export const roleReducer = (state: IStateType = initialSettingsState, action: IActionType): IStateType => {
+export const roleReducer = (
+  state: IStateType = initialSettingsState,
+  action: IActionType,
+): IStateType => {
   switch (action.type) {
     case RoleAction.SetRole:
       return action.value;

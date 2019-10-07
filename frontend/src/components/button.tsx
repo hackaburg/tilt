@@ -19,7 +19,9 @@ const StyledButton = styled.button<IStyledButtonProps>`
   padding: 0.75rem 2rem;
   margin: 0rem;
 
-  ${(props) => props.fluid && `
+  ${(props) =>
+    props.fluid &&
+    `
     width: 100%;
   `}
 
@@ -40,12 +42,12 @@ const StyledButton = styled.button<IStyledButtonProps>`
   transition-duration: ${transitionDuration};
 
   ${(props) =>
-    (props.disable || props.loading)
-    ? `
+    props.disable || props.loading
+      ? `
       cursor: default;
       opacity: 0.7;
     `
-    : `
+      : `
       opacity: 1;
 
       &:hover {
@@ -55,7 +57,10 @@ const StyledButton = styled.button<IStyledButtonProps>`
       }
     `}
 
-  ${(props: IThemeProps & IStyledButtonProps) => props.primary && props.theme.colorGradientStart && `
+  ${(props: IThemeProps & IStyledButtonProps) =>
+    props.primary &&
+    props.theme.colorGradientStart &&
+    `
     background: linear-gradient(to top right, ${props.theme.colorGradientStart}, ${props.theme.colorGradientEnd});
   `}
 `;
@@ -78,7 +83,9 @@ export const Button = (props: IButtonProps) => (
     fluid={props.fluid}
     loading={props.loading}
     disable={props.disable}
-    onClick={(event) => (!props.loading && !props.disable) && props.onClick && props.onClick(event)}
+    onClick={(event) =>
+      !props.loading && !props.disable && props.onClick && props.onClick(event)
+    }
   >
     <Text>{props.children}</Text>
     {props.loading && (
@@ -86,11 +93,13 @@ export const Button = (props: IButtonProps) => (
         height={1}
         heightUnit="rem"
         color="currentColor"
-        css={{
-          position: "absolute",
-          right: "1rem",
-          top: "0.5rem",
-        } as any}
+        css={
+          {
+            position: "absolute",
+            right: "1rem",
+            top: "0.5rem",
+          } as any
+        }
       />
     )}
   </StyledButton>

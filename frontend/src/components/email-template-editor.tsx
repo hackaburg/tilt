@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import styled, { css} from "styled-components";
+import styled, { css } from "styled-components";
 import { IEmailTemplate } from "../../../types/settings";
 import { borderRadius } from "../config";
 import { Editor } from "./editor";
@@ -51,13 +51,18 @@ interface IEmailTemplateEditor {
 /**
  * An editor to modify email templates.
  */
-export const EmailTemplateEditor = ({ title, template, onTemplateChange }: IEmailTemplateEditor) => {
+export const EmailTemplateEditor = ({
+  title,
+  template,
+  onTemplateChange,
+}: IEmailTemplateEditor) => {
   const [subject, setSubject] = useState(template.subject);
   const [htmlTemplate, setHtmlTemplate] = useState(template.htmlTemplate);
   const [textTemplate, setTextTemplate] = useState(template.textTemplate);
   const [language, setLanguage] = useState(EditorLanguage.HTML);
 
-  const displayedValue = language === EditorLanguage.HTML ? htmlTemplate : textTemplate;
+  const displayedValue =
+    language === EditorLanguage.HTML ? htmlTemplate : textTemplate;
   const onBodyChange = (value: string) => {
     if (language === EditorLanguage.HTML) {
       setHtmlTemplate(value);

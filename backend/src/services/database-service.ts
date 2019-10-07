@@ -1,8 +1,16 @@
 import { join } from "path";
 import { Container, Inject, Service, Token } from "typedi";
-import { Connection, createConnection, Repository, useContainer } from "typeorm";
+import {
+  Connection,
+  createConnection,
+  Repository,
+  useContainer,
+} from "typeorm";
 import { IService } from ".";
-import { ConfigurationServiceToken, IConfigurationService } from "./config-service";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 
 type Entity<T> = new () => T;
@@ -31,9 +39,10 @@ export class DatabaseService implements IDatabaseService {
   private _connection?: Connection;
 
   public constructor(
-    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-  ) { }
+  ) {}
 
   /**
    * Connects to a database.
@@ -44,9 +53,7 @@ export class DatabaseService implements IDatabaseService {
     try {
       this._connection = await createConnection({
         database: this._config.config.database.databaseName,
-        entities: [
-          join(__dirname, "../entities/*"),
-        ],
+        entities: [join(__dirname, "../entities/*")],
         host: this._config.config.database.host,
         password: this._config.config.database.password,
         port: this._config.config.database.port,
@@ -55,7 +62,9 @@ export class DatabaseService implements IDatabaseService {
         username: this._config.config.database.username,
       });
 
-      this._logger.info(`connected to database on ${this._config.config.database.host}`);
+      this._logger.info(
+        `connected to database on ${this._config.config.database.host}`,
+      );
     } catch (error) {
       this._logger.error(`unable to connect to database: ${error}`);
       process.exit(1);

@@ -6,11 +6,12 @@ import { IDatabaseService } from "../../../src/services/database-service";
 /**
  * A mocked database service.
  */
-export const MockDatabaseService = jest.fn(() =>
-  new MockedService<IDatabaseService>({
-    bootstrap: jest.fn(),
-    getRepository: jest.fn(),
-  }),
+export const MockDatabaseService = jest.fn(
+  () =>
+    new MockedService<IDatabaseService>({
+      bootstrap: jest.fn(),
+      getRepository: jest.fn(),
+    }),
 );
 
 export class TestDatabaseService implements IDatabaseService {
@@ -36,9 +37,7 @@ export class TestDatabaseService implements IDatabaseService {
   public async bootstrap(): Promise<void> {
     this._connection = await createConnection({
       database: ":memory:",
-      entities: [
-        join(__dirname, "../../../src/entities/*"),
-      ],
+      entities: [join(__dirname, "../../../src/entities/*")],
       synchronize: true,
       type: "sqlite",
     });

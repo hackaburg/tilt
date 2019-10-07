@@ -16,7 +16,9 @@ export const BlurContainer = styled.div<IBlurContainer>`
   filter: none;
   opacity: 1;
 
-  ${(props) => props.blur && `
+  ${(props) =>
+    props.blur &&
+    `
     transform: scale(0.75);
     filter: blur(10px);
     opacity: 0;

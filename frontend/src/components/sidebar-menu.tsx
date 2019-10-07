@@ -45,7 +45,11 @@ interface ISidebarMenuItemProps {
 /**
  * An item in the sidebar.
  */
-export const SidebarMenuItem = ({ to, onClick, children }: ISidebarMenuItemProps) => (
+export const SidebarMenuItem = ({
+  to,
+  onClick,
+  children,
+}: ISidebarMenuItemProps) => (
   <Item>
     <Link to={to} exact onClick={onClick}>
       {children}

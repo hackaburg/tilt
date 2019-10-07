@@ -15,7 +15,9 @@ export enum NotifyAction {
  * Creates an @see NotifyAction.ShowNotification action.
  * @param text The text to display
  */
-export const showNotification = (text: string): IAction<NotifyAction.ShowNotification, string> => ({
+export const showNotification = (
+  text: string,
+): IAction<NotifyAction.ShowNotification, string> => ({
   type: NotifyAction.ShowNotification,
   value: text,
 });
@@ -23,7 +25,9 @@ export const showNotification = (text: string): IAction<NotifyAction.ShowNotific
 /**
  * Creates an @see NotifyAction.HideNotification action.
  */
-export const hideNotification = (): IEmptyAction<NotifyAction.HideNotification> => ({
+export const hideNotification = (): IEmptyAction<
+  NotifyAction.HideNotification
+> => ({
   type: NotifyAction.HideNotification,
 });
 

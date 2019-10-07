@@ -9,20 +9,26 @@ describe("notifyReducer", () => {
 
   it("shows a notification", () => {
     const message = "test";
-    const state = notifyReducer({
-      show: false,
-      text: "",
-    }, showNotification(message));
+    const state = notifyReducer(
+      {
+        show: false,
+        text: "",
+      },
+      showNotification(message),
+    );
 
     expect(state.show).toBeTruthy();
     expect(state.text).toBe(message);
   });
 
   it("hides the notification", () => {
-    const state = notifyReducer({
-      show: true,
-      text: "",
-    }, hideNotification());
+    const state = notifyReducer(
+      {
+        show: true,
+        text: "",
+      },
+      hideNotification(),
+    );
 
     expect(state.show).toBeFalsy();
   });

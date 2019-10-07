@@ -2,7 +2,10 @@ import { Repository } from "typeorm";
 import { ActivityType } from "../../../types/activity";
 import { Activity } from "../../src/entities/activity";
 import { User } from "../../src/entities/user";
-import { ActivityService, IActivityService } from "../../src/services/activity-service";
+import {
+  ActivityService,
+  IActivityService,
+} from "../../src/services/activity-service";
 import { IDatabaseService } from "../../src/services/database-service";
 import { UserService } from "../../src/services/user-service";
 import { TestDatabaseService } from "./mock/mock-database-service";

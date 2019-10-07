@@ -35,7 +35,7 @@ export class EmailTemplateService implements IEmailTemplateService {
   public constructor(
     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
     @Inject(EmailServiceToken) private readonly _email: IEmailService,
-  ) { }
+  ) {}
 
   /**
    * Bootstraps the email template service, i.e. noop, since no setup is required.
@@ -49,7 +49,10 @@ export class EmailTemplateService implements IEmailTemplateService {
    * @param template The template to use for compilation
    * @param context The context to inject into the template
    */
-  private compileTemplate<TContext>(template: IEmailTemplate, context: TContext): IEmailTemplate {
+  private compileTemplate<TContext>(
+    template: IEmailTemplate,
+    context: TContext,
+  ): IEmailTemplate {
     return {
       htmlTemplate: Handlebars.compile(template.htmlTemplate)(context),
       subject: Handlebars.compile(template.subject)(context),
@@ -63,11 +66,20 @@ export class EmailTemplateService implements IEmailTemplateService {
    */
   public async sendVerifyEmail(user: User): Promise<void> {
     const { email } = await this._settings.getSettings();
-    const template = this.compileTemplate<IVerifyEmailContext>(email.verifyEmail, {
-      email: user.email,
-      verifyToken: user.verifyToken,
-    });
+    const template = this.compileTemplate<IVerifyEmailContext>(
+      email.verifyEmail,
+      {
+        email: user.email,
+        verifyToken: user.verifyToken,
+      },
+    );
 
-    await this._email.sendEmail(email.sender, user.email, template.subject, template.htmlTemplate, template.textTemplate);
+    await this._email.sendEmail(
+      email.sender,
+      user.email,
+      template.subject,
+      template.htmlTemplate,
+      template.textTemplate,
+    );
   }
 }

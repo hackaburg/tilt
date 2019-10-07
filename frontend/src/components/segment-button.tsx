@@ -31,7 +31,9 @@ const SegmentedButton = styled.div<ISegmentedButtonProps>`
   background-color: white;
   color: ${(props: IThemeProps) => props.theme.colorGradientEnd};
 
-  ${(props: ISegmentedButtonProps & IThemeProps) => props.active && `
+  ${(props: ISegmentedButtonProps & IThemeProps) =>
+    props.active &&
+    `
     background-color: ${props.theme.colorGradientEnd};
     color: white;
   `}
@@ -49,7 +51,10 @@ interface ISegmentButtonProps {
 /**
  * A segmented button control, similar to iOS.
  */
-export const SegmentButton = ({ choices, onChoiceChanged }: ISegmentButtonProps) => {
+export const SegmentButton = ({
+  choices,
+  onChoiceChanged,
+}: ISegmentButtonProps) => {
   const [choice, setChoice] = useState(choices[0]);
   const buttons = choices.map((text) => (
     <SegmentedButton
@@ -61,9 +66,5 @@ export const SegmentButton = ({ choices, onChoiceChanged }: ISegmentButtonProps)
     </SegmentedButton>
   ));
 
-  return (
-    <Container>
-      {buttons}
-    </Container>
-  );
+  return <Container>{buttons}</Container>;
 };

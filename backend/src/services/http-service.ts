@@ -10,7 +10,10 @@ import { IService } from ".";
 import { UserRole } from "../../../types/roles";
 import { IWebSocketMessage, WebSocketMessageType } from "../../../types/ws";
 import { User } from "../entities/user";
-import { ConfigurationServiceToken, IConfigurationService } from "./config-service";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { IUserService, UserServiceToken } from "./user-service";
 import { IWebSocketService, WebSocketServiceToken } from "./ws-service";
@@ -51,11 +54,12 @@ export const HttpServiceToken = new Token<IHttpService>();
 @Service(HttpServiceToken)
 export class HttpService implements IHttpService {
   public constructor(
-    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(UserServiceToken) private readonly _users: IUserService,
     @Inject(WebSocketServiceToken) private readonly _ws: IWebSocketService,
-  ) { }
+  ) {}
 
   /**
    * Starts the HTTP service.
@@ -71,10 +75,9 @@ export class HttpService implements IHttpService {
     }
 
     const routedApp = useExpressServer(app, {
-      authorizationChecker: async (action, roles?: UserRole[]) => await this.isActionAuthorized(action, roles),
-      controllers: [
-        join(__dirname, "../controllers/*"),
-      ],
+      authorizationChecker: async (action, roles?: UserRole[]) =>
+        await this.isActionAuthorized(action, roles),
+      controllers: [join(__dirname, "../controllers/*")],
       cors: !this._config.isProductionEnabled,
       currentUserChecker: async (action) => await this.getCurrentUser(action),
       defaultErrorHandler: false,
@@ -84,12 +87,8 @@ export class HttpService implements IHttpService {
         },
       },
       development: !this._config.isProductionEnabled,
-      interceptors: [
-        join(__dirname, "../interceptors/*"),
-      ],
-      middlewares: [
-        join(__dirname, "../middlewares/*"),
-      ],
+      interceptors: [join(__dirname, "../interceptors/*")],
+      middlewares: [join(__dirname, "../middlewares/*")],
       routePrefix: "/api",
     });
 
@@ -135,7 +134,10 @@ export class HttpService implements IHttpService {
    * @param expectedRole The role required to perform the action
    * @param actualRole The actual role
    */
-  private isActionAllowed(expectedRole: UserRole, actualRole: UserRole): boolean {
+  private isActionAllowed(
+    expectedRole: UserRole,
+    actualRole: UserRole,
+  ): boolean {
     switch (actualRole) {
       case UserRole.User:
         switch (expectedRole) {
@@ -167,7 +169,10 @@ export class HttpService implements IHttpService {
    * @param action The currently performed action
    * @param roles The roles required for the action
    */
-  public async isActionAuthorized(action: Action, roles?: UserRole[]): Promise<boolean> {
+  public async isActionAuthorized(
+    action: Action,
+    roles?: UserRole[],
+  ): Promise<boolean> {
     if (!roles || !roles.length) {
       return false;
     }
@@ -203,11 +208,11 @@ export class HttpService implements IHttpService {
       let message: IWebSocketMessage;
 
       try {
-        message = JSON.parse((
+        message = JSON.parse(
           messageString instanceof Buffer
             ? messageString.toString()
-            : messageString
-        ));
+            : messageString,
+        );
       } catch {
         this._logger.debug(`invalid websocket setup message: ${messageString}`);
         return;

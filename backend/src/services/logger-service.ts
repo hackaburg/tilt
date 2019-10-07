@@ -2,7 +2,10 @@ import { relative } from "path";
 import { Inject, Service, Token } from "typedi";
 import { createLogger, format, Logger, transports } from "winston";
 import { IService } from ".";
-import { ConfigurationServiceToken, IConfigurationService } from "./config-service";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 
 interface ICallerInformation {
   file: string;
@@ -46,8 +49,9 @@ export class LoggerService implements ILoggerService {
   private _logger?: Logger;
 
   public constructor(
-    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
-  ) { }
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
+  ) {}
 
   /**
    * Gets the information of the function calling the logger.
@@ -104,10 +108,7 @@ export class LoggerService implements ILoggerService {
       level: this._config.config.log.level,
       transports: [
         new transports.Console({
-          format: format.combine(
-            format.colorize(),
-            loggerFormat,
-          ),
+          format: format.combine(format.colorize(), loggerFormat),
         }),
         new transports.File({
           filename: this._config.config.log.filename,

@@ -1,7 +1,10 @@
 import { createTransport, Transporter } from "nodemailer";
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { ConfigurationServiceToken, IConfigurationService } from "./config-service";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 
 /**
@@ -16,7 +19,13 @@ export interface IEmailService extends IService {
    * @param htmlBody The body in HTML
    * @param textBody The body in plaintext
    */
-  sendEmail(from: string, to: string, subject: string, htmlBody: string, textBody: string): Promise<void>;
+  sendEmail(
+    from: string,
+    to: string,
+    subject: string,
+    htmlBody: string,
+    textBody: string,
+  ): Promise<void>;
 }
 
 /**
@@ -29,9 +38,10 @@ export class EmailService implements IEmailService {
   private _transporter!: Transporter;
 
   public constructor(
-    @Inject(ConfigurationServiceToken) private readonly _config: IConfigurationService,
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-  ) { }
+  ) {}
 
   /**
    * Sets up the email service.
@@ -59,7 +69,13 @@ export class EmailService implements IEmailService {
    * @param htmlBody The body in HTML
    * @param textBody The body in plaintext
    */
-  public async sendEmail(from: string, to: string, subject: string, htmlBody: string, textBody: string): Promise<void> {
+  public async sendEmail(
+    from: string,
+    to: string,
+    subject: string,
+    htmlBody: string,
+    textBody: string,
+  ): Promise<void> {
     const info = await this._transporter!.sendMail({
       from,
       html: htmlBody,

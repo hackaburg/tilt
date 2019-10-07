@@ -1,4 +1,8 @@
-import { hideNotification, notify, showNotification } from "../../src/actions/notify";
+import {
+  hideNotification,
+  notify,
+  showNotification,
+} from "../../src/actions/notify";
 
 jest.useFakeTimers();
 

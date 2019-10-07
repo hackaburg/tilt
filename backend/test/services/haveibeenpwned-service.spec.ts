@@ -1,4 +1,7 @@
-import { HaveibeenpwnedService, IHaveibeenpwnedService } from "../../src/services/haveibeenpwned-service";
+import {
+  HaveibeenpwnedService,
+  IHaveibeenpwnedService,
+} from "../../src/services/haveibeenpwned-service";
 
 describe("HaveibeenpwnedService", () => {
   let service: IHaveibeenpwnedService;

@@ -15,7 +15,13 @@ interface INumberQuestionProps {
 /**
  * A question to ask users for a number, e.g. their age.
  */
-export const NumberQuestion = ({ question, value, onChange, editable, onQuestionChange }: INumberQuestionProps) => {
+export const NumberQuestion = ({
+  question,
+  value,
+  onChange,
+  editable,
+  onQuestionChange,
+}: INumberQuestionProps) => {
   if (editable && onQuestionChange) {
     return (
       <>

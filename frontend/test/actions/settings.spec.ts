@@ -1,6 +1,10 @@
 import { advanceTo } from "jest-date-mock";
 import { finishRequest, startRequest } from "../../src/actions/request";
-import { fetchSettings, setSettings, updateSettings } from "../../src/actions/settings";
+import {
+  fetchSettings,
+  setSettings,
+  updateSettings,
+} from "../../src/actions/settings";
 import { RequestTarget } from "../../src/state";
 import { api } from "../__mocks__/api";
 

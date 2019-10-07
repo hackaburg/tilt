@@ -26,7 +26,7 @@ describe("TiltService", () => {
 
     const signals = addService(new MockUnixSignalService());
     const logger = addService(new MockLoggerService());
-    const config = addService(new MockConfigurationService({ }));
+    const config = addService(new MockConfigurationService({}));
     const database = addService(new MockDatabaseService());
     const activity = addService(new MockActivityService());
     const users = addService(new MockUserService());

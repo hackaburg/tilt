@@ -32,7 +32,9 @@ const Container = styled.div<IContainerProps>`
 
   z-index: 100;
 
-  ${(props) => props.show && `
+  ${(props) =>
+    props.show &&
+    `
     right: 1rem;
     opacity: 1;
   `}

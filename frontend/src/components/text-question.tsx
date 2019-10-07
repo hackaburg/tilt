@@ -16,27 +16,22 @@ interface ITextQuestionProps {
 /**
  * An editable text question.
  */
-export const TextQuestion = ({ question, onQuestionChange, editable, value, onChange }: ITextQuestionProps) => {
+export const TextQuestion = ({
+  question,
+  onQuestionChange,
+  editable,
+  value,
+  onChange,
+}: ITextQuestionProps) => {
   if (editable && onQuestionChange) {
     const multilineOptionValue = "Multiline";
     const convertToUrlOptionValue = "Convert answer to URL";
 
-    const appearanceOptions = [
-      multilineOptionValue,
-      convertToUrlOptionValue,
-    ];
+    const appearanceOptions = [multilineOptionValue, convertToUrlOptionValue];
 
     const selectedAppearanceOptions = [
-      ...(
-        question.multiline
-          ? [multilineOptionValue]
-          : []
-      ),
-      ...(
-        question.convertAnswerToUrl
-          ? [convertToUrlOptionValue]
-          : []
-      ),
+      ...(question.multiline ? [multilineOptionValue] : []),
+      ...(question.convertAnswerToUrl ? [convertToUrlOptionValue] : []),
     ];
 
     const handleAppearanceChange = (selected: string[]) => {

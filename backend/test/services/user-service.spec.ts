@@ -82,10 +82,16 @@ describe("UserService", () => {
   it("rejects incomplete signups", async () => {
     expect.assertions(2);
 
-    const missingEmailPromise = userService.signup(undefined as any, "password");
+    const missingEmailPromise = userService.signup(
+      undefined as any,
+      "password",
+    );
     await expect(missingEmailPromise).rejects.toBeDefined();
 
-    const missingPasswordPromise = userService.signup("test@foo.bar", undefined as any);
+    const missingPasswordPromise = userService.signup(
+      "test@foo.bar",
+      undefined as any,
+    );
     await expect(missingPasswordPromise).rejects.toBeDefined();
   });
 
@@ -122,7 +128,10 @@ describe("UserService", () => {
   it("verifies users using their token", async () => {
     expect.assertions(1);
 
-    const { verifyToken } = await userService.signup("test@foo.bar", "password");
+    const { verifyToken } = await userService.signup(
+      "test@foo.bar",
+      "password",
+    );
     await userService.verifyUserByVerifyToken(verifyToken);
     const [user] = await userRepo.find();
     expect(user.verifyToken).not.toEqual(verifyToken);
@@ -162,7 +171,9 @@ describe("UserService", () => {
   it("returns no user for invalid login tokens", async () => {
     expect.assertions(1);
 
-    tokens.mocks.decode.mockImplementation(() => { throw new Error("invalid token"); });
+    tokens.mocks.decode.mockImplementation(() => {
+      throw new Error("invalid token");
+    });
     const user = await userService.findUserByLoginToken("token");
     expect(user).not.toBeDefined();
   });
@@ -174,7 +185,10 @@ describe("UserService", () => {
     const password = "password";
     const user = await userService.signup(email, password);
     await userService.verifyUserByVerifyToken(user.verifyToken);
-    const loggedInUser = await userService.findUserWithCredentials(email, password);
+    const loggedInUser = await userService.findUserWithCredentials(
+      email,
+      password,
+    );
 
     expect(loggedInUser).toBeDefined();
     expect(loggedInUser!.id).toBe(user.id);
@@ -187,10 +201,16 @@ describe("UserService", () => {
     const password = "password";
     await userService.signup(email, password);
 
-    const userWithWrongPassword = await userService.findUserWithCredentials(email, "nope");
+    const userWithWrongPassword = await userService.findUserWithCredentials(
+      email,
+      "nope",
+    );
     expect(userWithWrongPassword).not.toBeDefined();
 
-    const userWithWrongEmail = await userService.findUserWithCredentials("other@foo.bar", password);
+    const userWithWrongEmail = await userService.findUserWithCredentials(
+      "other@foo.bar",
+      password,
+    );
     expect(userWithWrongEmail).not.toBeDefined();
   });
 
@@ -202,7 +222,10 @@ describe("UserService", () => {
     const signedUpUser = await userService.signup(email, password);
     await userService.verifyUserByVerifyToken(signedUpUser.verifyToken);
 
-    const loggedInUser = await userService.findUserWithCredentials(email, password);
+    const loggedInUser = await userService.findUserWithCredentials(
+      email,
+      password,
+    );
     expect(loggedInUser!.role).toBeDefined();
   });
 
@@ -212,7 +235,9 @@ describe("UserService", () => {
     const password = "password";
     haveibeenpwned.mocks.getPasswordUsedCount.mockResolvedValue(0);
     await userService.signup("test@foo.bar", password);
-    expect(haveibeenpwned.mocks.getPasswordUsedCount).toHaveBeenCalledWith(password);
+    expect(haveibeenpwned.mocks.getPasswordUsedCount).toHaveBeenCalledWith(
+      password,
+    );
 
     haveibeenpwned.mocks.getPasswordUsedCount.mockResolvedValue(1337);
     const promise = userService.signup("test@foo.bar", password);

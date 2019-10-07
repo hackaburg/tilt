@@ -4,7 +4,10 @@ import { ISettings } from "../../../types/settings";
 import { Settings } from "../../src/entities/settings";
 import { IDatabaseService } from "../../src/services/database-service";
 import { ILoggerService } from "../../src/services/logger-service";
-import { ISettingsService, SettingsService } from "../../src/services/settings-service";
+import {
+  ISettingsService,
+  SettingsService,
+} from "../../src/services/settings-service";
 import { MockedService } from "./mock";
 import { TestDatabaseService } from "./mock/mock-database-service";
 import { MockLoggerService } from "./mock/mock-logger-service";
@@ -91,7 +94,7 @@ describe("SettingsService", () => {
     };
 
     await settingsService.updateSettings(updatedSettings);
-    const settings = await settingsService.getSettings() as PollutedSettings;
+    const settings = (await settingsService.getSettings()) as PollutedSettings;
 
     expect(settings.foo).not.toBeDefined();
     expect(settings.email.bar).not.toBeDefined();

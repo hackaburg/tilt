@@ -36,7 +36,7 @@ export class ActivityService implements IService {
 
   public constructor(
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
-  ) { }
+  ) {}
 
   /**
    * Sets up the activity service.
@@ -48,7 +48,12 @@ export class ActivityService implements IService {
   /**
    * Converts an activity entity to an @see IActivity object.
    */
-  private convertActivityEntityToIActivity({ data, type, timestamp, user }: Activity): IActivity {
+  private convertActivityEntityToIActivity({
+    data,
+    type,
+    timestamp,
+    user,
+  }: Activity): IActivity {
     return {
       data: {
         ...data,
@@ -66,7 +71,10 @@ export class ActivityService implements IService {
    * @param user The user who did the activity
    * @param event The performed activity
    */
-  public async addActivity(user: IUser, { type, ...data }: IActivityData): Promise<IActivity> {
+  public async addActivity(
+    user: IUser,
+    { type, ...data }: IActivityData,
+  ): Promise<IActivity> {
     const activity = new Activity();
     activity.user = user;
     activity.type = type;
@@ -85,11 +93,11 @@ export class ActivityService implements IService {
    */
   public async getActivities(): Promise<IActivity[]> {
     const activities = await this._activities!.find({
-      relations: [
-        "user",
-      ],
+      relations: ["user"],
     });
 
-    return activities.map((activity) => this.convertActivityEntityToIActivity(activity));
+    return activities.map((activity) =>
+      this.convertActivityEntityToIActivity(activity),
+    );
   }
 }

@@ -16,7 +16,9 @@ export enum RoleAction {
  * Creates an @see RoleAction.SetRole action.
  * @param role The role to set
  */
-export const setRole = (role: Nullable<UserRole>): IAction<RoleAction.SetRole, Nullable<UserRole>> => ({
+export const setRole = (
+  role: Nullable<UserRole>,
+): IAction<RoleAction.SetRole, Nullable<UserRole>> => ({
   type: RoleAction.SetRole,
   value: role,
 });
@@ -24,11 +26,12 @@ export const setRole = (role: Nullable<UserRole>): IAction<RoleAction.SetRole, N
 /**
  * Asynchronously fetches the user's role.
  */
-export const fetchRole = () => performRequest(RequestTarget.FetchRole, async (dispatch: Dispatch) => {
-  try {
-    const role = await api.getRole();
-    dispatch(setRole(role));
-  } catch {
-    // user is probably not logged in, ignore
-  }
-});
+export const fetchRole = () =>
+  performRequest(RequestTarget.FetchRole, async (dispatch: Dispatch) => {
+    try {
+      const role = await api.getRole();
+      dispatch(setRole(role));
+    } catch {
+      // user is probably not logged in, ignore
+    }
+  });

@@ -5,8 +5,15 @@ import { IService } from ".";
 import { UserRole } from "../../../types/roles";
 import { User } from "../entities/user";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
-import { EmailTemplateServiceToken, IEmailTemplateService } from "./email-template-service";
-import { HaveibeenpwnedServiceToken, IHaveibeenpwnedService, PasswordReuseError } from "./haveibeenpwned-service";
+import {
+  EmailTemplateServiceToken,
+  IEmailTemplateService,
+} from "./email-template-service";
+import {
+  HaveibeenpwnedServiceToken,
+  IHaveibeenpwnedService,
+  PasswordReuseError,
+} from "./haveibeenpwned-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { ITokenService, TokenServiceToken } from "./token-service";
 
@@ -44,7 +51,10 @@ export interface IUserService extends IService {
    * @param email The user's email
    * @param password The user's password
    */
-  findUserWithCredentials(email: string, password: string): Promise<User | undefined>;
+  findUserWithCredentials(
+    email: string,
+    password: string,
+  ): Promise<User | undefined>;
 }
 
 /**
@@ -64,12 +74,15 @@ export class UserService implements IUserService {
   private _users?: Repository<User>;
 
   public constructor(
-    @Inject(HaveibeenpwnedServiceToken) private readonly _haveibeenpwned: IHaveibeenpwnedService,
+    @Inject(HaveibeenpwnedServiceToken)
+    private readonly _haveibeenpwned: IHaveibeenpwnedService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
-    @Inject(TokenServiceToken) private readonly _tokens: ITokenService<ITokenContent>,
-    @Inject(EmailTemplateServiceToken) private readonly _email: IEmailTemplateService,
-  ) { }
+    @Inject(TokenServiceToken)
+    private readonly _tokens: ITokenService<ITokenContent>,
+    @Inject(EmailTemplateServiceToken)
+    private readonly _email: IEmailTemplateService,
+  ) {}
 
   /**
    * Sets up the user service.
@@ -84,7 +97,9 @@ export class UserService implements IUserService {
    * @param password The user's password
    */
   public async signup(email: string, password: string): Promise<User> {
-    const passwordReuseCount = await this._haveibeenpwned.getPasswordUsedCount(password);
+    const passwordReuseCount = await this._haveibeenpwned.getPasswordUsedCount(
+      password,
+    );
 
     if (passwordReuseCount > 0) {
       throw new PasswordReuseError(passwordReuseCount);
@@ -97,7 +112,9 @@ export class UserService implements IUserService {
     });
 
     if (existingUser && existingUser.verifyToken) {
-      this._logger.debug(`${existingUser.email} signed up again, resending verification email`);
+      this._logger.debug(
+        `${existingUser.email} signed up again, resending verification email`,
+      );
       await this._email.sendVerifyEmail(existingUser);
       return existingUser;
     }
@@ -177,14 +194,12 @@ export class UserService implements IUserService {
    * @param email The user's email
    * @param password The user's password
    */
-  public async findUserWithCredentials(email: string, password: string): Promise<User | undefined> {
+  public async findUserWithCredentials(
+    email: string,
+    password: string,
+  ): Promise<User | undefined> {
     const user = await this._users!.findOne({
-      select: [
-        "id",
-        "password",
-        "role",
-        "verifyToken",
-      ],
+      select: ["id", "password", "role", "verifyToken"],
       where: {
         email,
       },

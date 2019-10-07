@@ -1,7 +1,8 @@
 import { IActivity } from "./activity";
 import { ISuccessfulApiResponse } from "./api";
 
-export interface IWebSocketMessage extends ISuccessfulApiResponse<IWebSocketMessageData> {
+export interface IWebSocketMessage
+  extends ISuccessfulApiResponse<IWebSocketMessageData> {
   data: IWebSocketMessageData;
 }
 
@@ -21,6 +22,5 @@ export interface IWebSocketActivityMessageData {
 }
 
 export type IWebSocketMessageData =
-  IWebSocketTokenMessageData
-  | IWebSocketActivityMessageData
-;
+  | IWebSocketTokenMessageData
+  | IWebSocketActivityMessageData;

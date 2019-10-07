@@ -2,7 +2,7 @@ import { IQuestion } from "./questions";
 import { IApiResponse, IApiRequest, IRecursivePartial } from "./api";
 
 export type IGetSettingsApiResponse = IApiResponse<ISettings>;
-export type IUpdateSettingsRequestBody = IRecursivePartial<ISettings>
+export type IUpdateSettingsRequestBody = IRecursivePartial<ISettings>;
 export type IUpdateSettingsApiRequest = IApiRequest<IUpdateSettingsRequestBody>;
 
 export type IActivatable<T> = T & {

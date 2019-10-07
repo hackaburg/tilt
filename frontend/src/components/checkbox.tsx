@@ -28,30 +28,33 @@ interface ICheckboxesProps {
 /**
  * A checkbox group, which can also be displayed as a radio group.
  */
-export const Checkboxes = ({ radio, values, selected, onChange, title, mandatory }: ICheckboxesProps) => {
+export const Checkboxes = ({
+  radio,
+  values,
+  selected,
+  onChange,
+  title,
+  mandatory,
+}: ICheckboxesProps) => {
   const groupId = useUniqueId();
   const checkboxesIds = useUniqueIds(values.length);
   const valuesAsChecked = values.map((value) => selected.includes(value));
   const [checked, setChecked] = useState(valuesAsChecked);
   const toggleChecked = (checkedIndex: number) => {
-    const updatedChecked =
-      radio
-        ? new Array(values.length).fill(false)
-        : [
-          ...checked,
-        ];
+    const updatedChecked = radio
+      ? new Array(values.length).fill(false)
+      : [...checked];
 
     updatedChecked[checkedIndex] = !updatedChecked[checkedIndex];
     setChecked(updatedChecked);
 
-    const checkedValues =
-      values
-        .map((value, index) => ({
-          checked: updatedChecked[index],
-          value,
-        }))
-        .filter((value) => value.checked)
-        .map(({ value }) => value);
+    const checkedValues = values
+      .map((value, index) => ({
+        checked: updatedChecked[index],
+        value,
+      }))
+      .filter((value) => value.checked)
+      .map(({ value }) => value);
 
     onChange(checkedValues);
   };
@@ -77,9 +80,7 @@ export const Checkboxes = ({ radio, values, selected, onChange, title, mandatory
       title={title}
       mandatory={mandatory}
     >
-      <Container>
-        {checkboxes}
-      </Container>
+      <Container>{checkboxes}</Container>
     </FormField>
   );
 };

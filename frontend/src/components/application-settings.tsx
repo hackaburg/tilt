@@ -21,8 +21,15 @@ interface IApplicationSettingsProps {
 /**
  * Settings to configure the application users have to fill out.
  */
-export const ApplicationSettings = ({ settings, error, dispatchUpdateSettings }: IApplicationSettingsProps) => {
-  const handleUpdateApplicationSettings = (field: keyof IApplicationSettings, value: any) => {
+export const ApplicationSettings = ({
+  settings,
+  error,
+  dispatchUpdateSettings,
+}: IApplicationSettingsProps) => {
+  const handleUpdateApplicationSettings = (
+    field: keyof IApplicationSettings,
+    value: any,
+  ) => {
     dispatchUpdateSettings(RequestTarget.ApplicationSettings, {
       application: {
         [field]: value,
@@ -30,22 +37,37 @@ export const ApplicationSettings = ({ settings, error, dispatchUpdateSettings }:
     });
   };
 
-  const [debouncedHandleUpdateApplicationSettings] = useDebouncedCallback(handleUpdateApplicationSettings, debounceDuration, []);
+  const [debouncedHandleUpdateApplicationSettings] = useDebouncedCallback(
+    handleUpdateApplicationSettings,
+    debounceDuration,
+    [],
+  );
 
   return (
     <>
       <Subheading>Application</Subheading>
       {error && (
-        <Message error><b>Error:</b> {error}</Message>
+        <Message error>
+          <b>Error:</b> {error}
+        </Message>
       )}
 
-      <p>An application is divided into two parts: the application and the confirmation phase. Once you accept applications, the users will be moved to the confirmation queue, where they'll need to fill out the remaining questions. If you add questions to the first phase after users submitted the first answers, tilt will ask these new questions in the confirmation phase.</p>
+      <p>
+        An application is divided into two parts: the application and the
+        confirmation phase. Once you accept applications, the users will be
+        moved to the confirmation queue, where they'll need to fill out the
+        remaining questions. If you add questions to the first phase after users
+        submitted the first answers, tilt will ask these new questions in the
+        confirmation phase.
+      </p>
       {settings && (
         <Row>
           <Col percent={33}>
             <StatefulTextInput
               initialValue={settings.application.hoursToConfirm}
-              onChange={(time) => debouncedHandleUpdateApplicationSettings("hoursToConfirm", time)}
+              onChange={(time) =>
+                debouncedHandleUpdateApplicationSettings("hoursToConfirm", time)
+              }
               type={TextInputType.Number}
               min={1}
               title="Hours to confirm"
@@ -56,7 +78,12 @@ export const ApplicationSettings = ({ settings, error, dispatchUpdateSettings }:
           <Col percent={33}>
             <StatefulTextInput
               initialValue={settings.application.allowProfileFormFrom}
-              onChange={(timestring) => debouncedHandleUpdateApplicationSettings("allowProfileFormFrom", timestring)}
+              onChange={(timestring) =>
+                debouncedHandleUpdateApplicationSettings(
+                  "allowProfileFormFrom",
+                  timestring,
+                )
+              }
               title="Open registration on"
               placeholder="1970-01-01 00:00:00"
             />
@@ -65,7 +92,12 @@ export const ApplicationSettings = ({ settings, error, dispatchUpdateSettings }:
           <Col percent={33}>
             <StatefulTextInput
               initialValue={settings.application.allowProfileFormUntil}
-              onChange={(timestring) => debouncedHandleUpdateApplicationSettings("allowProfileFormUntil", timestring)}
+              onChange={(timestring) =>
+                debouncedHandleUpdateApplicationSettings(
+                  "allowProfileFormUntil",
+                  timestring,
+                )
+              }
               title="Close registration on"
               placeholder="1970-01-01 00:00:00"
             />
@@ -73,19 +105,33 @@ export const ApplicationSettings = ({ settings, error, dispatchUpdateSettings }:
         </Row>
       )}
 
-      <p>Use the add button to add new questions and the edit button in the top right of each question to modify them. You may use Markdown syntax in the description, but please keep it short.</p>
-      <p>Questions can have reference names, which you can use to conditionally show other questions. For instance, if you have a question, whether someone is a student, you could give that question the reference name "student" and modify subsequent questions by referencing the user's answer to that question.</p>
+      <p>
+        Use the add button to add new questions and the edit button in the top
+        right of each question to modify them. You may use Markdown syntax in
+        the description, but please keep it short.
+      </p>
+      <p>
+        Questions can have reference names, which you can use to conditionally
+        show other questions. For instance, if you have a question, whether
+        someone is a student, you could give that question the reference name
+        "student" and modify subsequent questions by referencing the user's
+        answer to that question.
+      </p>
 
       {settings && (
         <>
           <FormEditor
             initialForm={settings.application.profileForm}
-            onFormChange={(form) => debouncedHandleUpdateApplicationSettings("profileForm", form)}
+            onFormChange={(form) =>
+              debouncedHandleUpdateApplicationSettings("profileForm", form)
+            }
           />
 
           <FormEditor
             initialForm={settings.application.confirmationForm}
-            onFormChange={(form) => debouncedHandleUpdateApplicationSettings("confirmationForm", form)}
+            onFormChange={(form) =>
+              debouncedHandleUpdateApplicationSettings("confirmationForm", form)
+            }
           />
         </>
       )}
@@ -99,12 +145,18 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    dispatchUpdateSettings: updateSettings,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      dispatchUpdateSettings: updateSettings,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The application settings connected to the redux store.
  */
-export const ConnectedApplicationSettings = connect(mapStateToProps, mapDispatchToProps)(ApplicationSettings);
+export const ConnectedApplicationSettings = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ApplicationSettings);

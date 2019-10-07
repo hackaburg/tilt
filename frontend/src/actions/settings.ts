@@ -18,7 +18,9 @@ export enum SettingsAction {
  * Creates a @see SettingsAction.SetSettings action.
  * @param settings The settings to set
  */
-export const setSettings = (settings: ISettings): IAction<SettingsAction.SetSettings, ISettings> => ({
+export const setSettings = (
+  settings: ISettings,
+): IAction<SettingsAction.SetSettings, ISettings> => ({
   type: SettingsAction.SetSettings,
   value: settings,
 });
@@ -26,18 +28,23 @@ export const setSettings = (settings: ISettings): IAction<SettingsAction.SetSett
 /**
  * Asynchronously fetches settings.
  */
-export const fetchSettings = () => performRequest(RequestTarget.FetchSettings, async (dispatch: Dispatch) => {
-  const settings = await api.getSettings();
-  dispatch(setSettings(settings));
-});
+export const fetchSettings = () =>
+  performRequest(RequestTarget.FetchSettings, async (dispatch: Dispatch) => {
+    const settings = await api.getSettings();
+    dispatch(setSettings(settings));
+  });
 
 /**
  * Asynchronously updates all settings. The specified form will be used to display error messages.
  * @param target The settings to fetch
  * @param settings The settings to update
  */
-export const updateSettings = (target: RequestTarget, settings: IRecursivePartial<ISettings>) => performRequest(target, async (dispatch: Dispatch) => {
-  const updatedSettings = await api.updateSettings(settings);
-  dispatch(setSettings(updatedSettings));
-  notifyChangesSaved()(dispatch);
-});
+export const updateSettings = (
+  target: RequestTarget,
+  settings: IRecursivePartial<ISettings>,
+) =>
+  performRequest(target, async (dispatch: Dispatch) => {
+    const updatedSettings = await api.updateSettings(settings);
+    dispatch(setSettings(updatedSettings));
+    notifyChangesSaved()(dispatch);
+  });

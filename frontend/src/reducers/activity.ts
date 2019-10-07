@@ -16,13 +16,13 @@ export const initialActivitiesState: IStateType = null;
  * @param state The current state
  * @param action The current action
  */
-export const activityReducer = (state: IStateType = initialActivitiesState, action: IActionType): IStateType => {
+export const activityReducer = (
+  state: IStateType = initialActivitiesState,
+  action: IActionType,
+): IStateType => {
   switch (action.type) {
     case ActivityAction.AddActivities:
-      return [
-        ...(state || []),
-        ...action.value,
-      ];
+      return [...(state || []), ...action.value];
 
     default:
       return state;

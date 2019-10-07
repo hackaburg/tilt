@@ -5,6 +5,7 @@ import { performRequest } from "./request";
 /**
  * Asynchronously refreshes the login token.
  */
-export const refreshLoginToken = () => performRequest(RequestTarget.RefreshLoginToken, async () => {
-  await api.refreshLoginToken();
-});
+export const refreshLoginToken = () =>
+  performRequest(RequestTarget.RefreshLoginToken, async () => {
+    await api.refreshLoginToken();
+  });

@@ -29,7 +29,7 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
   }, []);
 
   const isLoggedIn = isLoginTokenSet();
-  const {hash, pathname} = location;
+  const { hash, pathname } = location;
 
   useEffect(() => {
     if (!isLoggedIn && pathname !== Routes.VerifyEmail) {
@@ -39,9 +39,10 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
     }
   }, [role, pathname]);
 
-  const ConnectedVerifyEmailWithToken = useCallback(() => (
-    <ConnectedVerifyEmail token={hash} />
-  ), [hash]);
+  const ConnectedVerifyEmailWithToken = useCallback(
+    () => <ConnectedVerifyEmail token={hash} />,
+    [hash],
+  );
 
   let theme: ITheme = {
     colorGradientEnd: defaultThemeColor,
@@ -63,7 +64,10 @@ export const App = ({ settings, boot, role, history, location }: IAppProps) => {
     <ThemeProvider theme={theme}>
       <Switch>
         <Route path={Routes.Login} component={ConnectedLoginSignupForm} />
-        <Route path={Routes.VerifyEmail} component={ConnectedVerifyEmailWithToken} />
+        <Route
+          path={Routes.VerifyEmail}
+          component={ConnectedVerifyEmailWithToken}
+        />
         <Route component={PageWrapper} />
       </Switch>
     </ThemeProvider>
@@ -76,15 +80,21 @@ const mapStateToProps = (state: IState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators({
-    boot: bootRaw,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      boot: bootRaw,
+    },
+    dispatch,
+  );
 };
 
 /**
  * The main app component, connected to the redux store.
  */
-export const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
+export const ConnectedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);
 
 /**
  * The main app component, connected to the redux store and react-router.

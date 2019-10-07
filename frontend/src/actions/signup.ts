@@ -7,6 +7,7 @@ import { performRequest } from "./request";
  * @param email The user's email
  * @param password The user's password
  */
-export const signup = (email: string, password: string) => performRequest(RequestTarget.Signup, async () => {
-  await api.signup(email, password);
-});
+export const signup = (email: string, password: string) =>
+  performRequest(RequestTarget.Signup, async () => {
+    await api.signup(email, password);
+  });

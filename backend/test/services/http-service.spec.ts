@@ -17,31 +17,43 @@ interface IMockedRoutingControllers {
   useContainer: jest.Mock;
 }
 
-jest.mock("routing-controllers", jest.fn(() => ({
-  useContainer: jest.fn(),
-  useExpressServer: jest.fn(),
-} as IMockedRoutingControllers)));
+jest.mock(
+  "routing-controllers",
+  jest.fn(
+    () =>
+      ({
+        useContainer: jest.fn(),
+        useExpressServer: jest.fn(),
+      } as IMockedRoutingControllers),
+  ),
+);
 
 type IMockedExpress = jest.Mock<{
-  use: jest.Mock,
+  use: jest.Mock;
 }>;
 
 // I heard you like jest.fn, so I put jest.fn inside jest.fn inside jest.fn inside jest.fn
 jest.mock("cors");
-jest.mock("http", jest.fn(() => ({
-  createServer: jest.fn(() => ({
-    listen: jest.fn(),
+jest.mock(
+  "http",
+  jest.fn(() => ({
+    createServer: jest.fn(() => ({
+      listen: jest.fn(),
+    })),
   })),
-})));
+);
 
 jest.mock("express", jest.fn(() => jest.fn()));
-jest.mock("express-ws",
+jest.mock(
+  "express-ws",
   jest.fn(() =>
     jest.fn(() => ({
       app: {
         ws: jest.fn(),
       },
-}))));
+    })),
+  ),
+);
 
 describe("HttpService", () => {
   let routingControllers: IMockedRoutingControllers;
@@ -73,7 +85,12 @@ describe("HttpService", () => {
     logger = new MockLoggerService();
     users = new MockUserService();
     ws = new MockWebSocketService();
-    httpService = new HttpService(config.instance, logger.instance, users.instance, ws.instance);
+    httpService = new HttpService(
+      config.instance,
+      logger.instance,
+      users.instance,
+      ws.instance,
+    );
 
     routingControllers.useContainer.mockReset();
     routingControllers.useExpressServer.mockReset();
@@ -185,7 +202,9 @@ describe("HttpService", () => {
     for (const row of table) {
       for (const [actual, expected, value] of row) {
         user.role = actual as UserRole;
-        const result = await httpService.isActionAuthorized(action, [expected as UserRole]);
+        const result = await httpService.isActionAuthorized(action, [
+          expected as UserRole,
+        ]);
         expect(result).toBe(value);
       }
     }
@@ -197,7 +216,9 @@ describe("HttpService", () => {
     const socket = new MockWebSocket();
     let messageCallback: ((message: string) => any) | undefined;
 
-    socket.mocks.on.mockImplementation((_event: string, callback: any) => messageCallback = callback);
+    socket.mocks.on.mockImplementation(
+      (_event: string, callback: any) => (messageCallback = callback),
+    );
     httpService.setupWebSocketConnection(socket.instance);
     expect(messageCallback).toBeDefined();
 
@@ -231,7 +252,9 @@ describe("HttpService", () => {
     const socket = new MockWebSocket();
     let messageCallback: ((message: string) => any) | undefined;
 
-    socket.mocks.on.mockImplementation((_event: string, callback: any) => messageCallback = callback);
+    socket.mocks.on.mockImplementation(
+      (_event: string, callback: any) => (messageCallback = callback),
+    );
     httpService.setupWebSocketConnection(socket.instance);
     expect(messageCallback).toBeDefined();
 
@@ -261,7 +284,9 @@ describe("HttpService", () => {
     const socket = new MockWebSocket();
     let messageCallback: ((message: string) => any) | undefined;
 
-    socket.mocks.on.mockImplementation((_event: string, callback: any) => messageCallback = callback);
+    socket.mocks.on.mockImplementation(
+      (_event: string, callback: any) => (messageCallback = callback),
+    );
     httpService.setupWebSocketConnection(socket.instance);
     expect(messageCallback).toBeDefined();
 

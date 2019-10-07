@@ -14,7 +14,9 @@ export const FadeContainer = styled.div<IFadeContainer>`
 
   opacity: 0;
 
-  ${(props) => props.show && `
+  ${(props) =>
+    props.show &&
+    `
     opacity: 1;
   `}
 `;

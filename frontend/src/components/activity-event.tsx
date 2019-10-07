@@ -22,7 +22,9 @@ const Body = styled.div<IBodyProps>`
   height: 0rem;
   overflow: hidden;
 
-  ${({ shown }) => shown && `
+  ${({ shown }) =>
+    shown &&
+    `
     opacity: 1;
     height: calc(40vh + 2rem);
     padding: 1rem;
@@ -43,7 +45,9 @@ const Title = styled.h3<ITitleProps>`
   font-weight: normal;
   font-size: 0.9rem;
 
-  ${({ clickable }) => clickable && `
+  ${({ clickable }) =>
+    clickable &&
+    `
     cursor: pointer;
   `}
 `;
@@ -74,7 +78,9 @@ const ClickIndicator = styled.button<IClickIndicatorProps>`
   transition-property: transform;
   transition-duration: ${transitionDuration};
 
-  ${({ clicked }) => clicked && `
+  ${({ clicked }) =>
+    clicked &&
+    `
     transform: rotateZ(90deg);
   `}
 `;
@@ -117,26 +123,15 @@ export const ActivityEvent = ({ event }: IActivityEventProps) => {
 
   return (
     <Container>
-      <Title
-        onClick={() => setShowBody((value) => !value)}
-        clickable={!!body}
-      >
-        {getActivityText(event.data.type)} by <Accent>{event.user.email}</Accent>
-
-        {body && (
-          <ClickIndicator clicked={showBody}>&#9658;</ClickIndicator>
-        )}
+      <Title onClick={() => setShowBody((value) => !value)} clickable={!!body}>
+        {getActivityText(event.data.type)} by{" "}
+        <Accent>{event.user.email}</Accent>
+        {body && <ClickIndicator clicked={showBody}>&#9658;</ClickIndicator>}
       </Title>
 
-      <Time>
-        {dateToString(new Date(event.timestamp))}
-      </Time>
+      <Time>{dateToString(new Date(event.timestamp))}</Time>
 
-      {body && (
-        <Body shown={showBody}>
-          {showBody && body}
-        </Body>
-      )}
+      {body && <Body shown={showBody}>{showBody && body}</Body>}
     </Container>
   );
 };
