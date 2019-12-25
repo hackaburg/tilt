@@ -4,7 +4,7 @@ import { Route, Switch } from "react-router";
 import styled from "styled-components";
 import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
-import { ConnectedActivity } from "./activity";
+import { Activity } from "./activity";
 import { ConnectedApplicationForm } from "./application-form";
 import { PageSizedContainer } from "./centering";
 import { HeaderBar } from "./headerbar";
@@ -110,7 +110,7 @@ export const PageWrapper = () => {
 
         <ContentContainer>
           <Switch>
-            <Route path={Routes.Activity} component={ConnectedActivity} />
+            <Route path={Routes.Activity} component={Activity} />
             <Route
               path={Routes.Application}
               component={ConnectedApplicationForm}

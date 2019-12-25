@@ -26,7 +26,7 @@ interface IMonthlyGroupedData<T> {
  * @param data Data to group
  */
 export const groupByMonth = <T extends ITimestamped>(
-  data: T[],
+  data: readonly T[],
 ): Array<IMonthlyGroupedData<T>> =>
   data.reduce<Array<IMonthlyGroupedData<T>>>((months, value) => {
     const date = new Date(value.timestamp);
