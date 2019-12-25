@@ -20,9 +20,9 @@ export const MockWebSocketService = jest.fn(
 export const MockWebSocket = jest.fn(
   () =>
     new MockedService<WebSocket>({
+      addEventListener: jest.fn(),
       close: jest.fn(),
-      off: jest.fn(),
-      on: jest.fn(),
+      removeEventListener: jest.fn(),
       send: jest.fn(),
     } as any),
 );
