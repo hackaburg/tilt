@@ -5,6 +5,7 @@ import { Spinner } from "../components/spinner";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
 import { Nullable } from "../state";
+import { useNotificationContext } from "./notification-context";
 
 interface ISettingsContextValue {
   settings: ISettings;
@@ -26,6 +27,7 @@ interface ISettingsContextProviderProps {
 export const SettingsContextProvider = ({
   children,
 }: ISettingsContextProviderProps) => {
+  const { showNotification } = useNotificationContext();
   const [localSettings, setLocalSettings] = useState<Nullable<ISettings>>(null);
   const [
     fetchedSettings,
@@ -51,6 +53,7 @@ export const SettingsContextProvider = ({
     async (api) => {
       if (localSettings != null) {
         await api.updateSettings(localSettings);
+        showNotification("Changes saved");
       }
     },
     [localSettings],
