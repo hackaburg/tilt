@@ -4,27 +4,22 @@ import {
   WebSocketMessageType,
 } from "../../../types/ws";
 import { getLoginToken } from "../authentication";
+import {
+  websocketReconnectDelayMilliseconds,
+  websocketReconnectMaxAttempts,
+} from "../config";
 
 /**
- * A message handler for websocket data.
+ * A callback called when there's data from the websocket.
+ * @param data The data received from the websocket
  */
-export interface IWebSocketMessageHandler {
-  /**
-   * The type this handler takes care of.
-   */
-  type: WebSocketMessageType;
-
-  /**
-   * A callback called when there's data from the websocket.
-   * @param data The data received from the websocket
-   */
-  onMessage(data: IWebSocketMessageData): void;
-}
+export type WebSocketMessageHandler = (data: IWebSocketMessageData) => void;
 
 export class WebSocketHandler {
-  private readonly _messageHandlers: IWebSocketMessageHandler[];
   private readonly _url: string;
-  private readonly _ws: WebSocket;
+  private _ws!: WebSocket;
+  private _messageHandlers: WebSocketMessageHandler[];
+  private _reconnectCount: number;
 
   constructor(apiBaseUrl: string) {
     const httpRegex = /^http/;
@@ -34,8 +29,21 @@ export class WebSocketHandler {
       : `${ssl ? "wss" : "ws"}://${location.host}${apiBaseUrl}`;
 
     this._url = `${wsBaseUrl}/ws`;
-    this._ws = new WebSocket(this._url);
     this._messageHandlers = [];
+    this._reconnectCount = 0;
+
+    this.connect();
+  }
+
+  public get isConnected(): boolean {
+    return this._ws.readyState === WebSocket.OPEN;
+  }
+
+  /**
+   * Creates and connects the socket.
+   */
+  private connect(): void {
+    this._ws = new WebSocket(this._url);
 
     this._ws.addEventListener("message", ({ data }) => {
       let message: IWebSocketMessage;
@@ -51,10 +59,7 @@ export class WebSocketHandler {
       }
 
       for (const handler of this._messageHandlers) {
-        if (handler.type === message.data.type) {
-          handler.onMessage(message.data);
-          return;
-        }
+        handler(message.data);
       }
 
       // tslint:disable-next-line: no-console
@@ -65,10 +70,31 @@ export class WebSocketHandler {
     });
 
     this._ws.addEventListener("open", () => {
+      this._reconnectCount = 0;
       this.send({
         token: getLoginToken(),
         type: WebSocketMessageType.Token,
       });
+    });
+
+    this._ws.addEventListener("close", () => {
+      this._reconnectCount++;
+
+      if (this._reconnectCount <= websocketReconnectMaxAttempts) {
+        // increase reconnect delay after every attempt to give the backend time to
+        // recover if it crashed. this will connect the socket after e.g. 5s, then 10s
+        const reconnectDelay =
+          websocketReconnectDelayMilliseconds * this._reconnectCount;
+
+        setTimeout(() => {
+          if (this.isConnected) {
+            // ws already connected, we don't need to reconnect
+            return;
+          }
+
+          this.connect();
+        }, reconnectDelay);
+      }
     });
   }
 
@@ -76,8 +102,20 @@ export class WebSocketHandler {
    * Registers a message handler in this handler.
    * @param handler The handler to register
    */
-  public registerMessageHandler(handler: IWebSocketMessageHandler): void {
+  public registerMessageHandler(handler: WebSocketMessageHandler): void {
     this._messageHandlers.push(handler);
+  }
+
+  /**
+   * Unregisters a message handler in this handler.
+   * @param handler The handler to unregister
+   */
+  public unregisterMessageHandler(
+    handlerToDelete: WebSocketMessageHandler,
+  ): void {
+    this._messageHandlers = this._messageHandlers.filter(
+      (handler) => handler !== handlerToDelete,
+    );
   }
 
   /**
@@ -85,7 +123,7 @@ export class WebSocketHandler {
    * @param data The data to send to the server
    */
   public send(data: IWebSocketMessageData): void {
-    if (this._ws.readyState !== WebSocket.OPEN) {
+    if (!this.isConnected) {
       return;
     }
 

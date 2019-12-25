@@ -65,3 +65,13 @@ export const mediaBreakpoints = {
  * The height of the top navigation bar.
  */
 export const headerBarHeight = "50px";
+
+/**
+ * The delay between attempts to reconnect the WebSocket.
+ */
+export const websocketReconnectDelayMilliseconds = 5 * 1000;
+
+/**
+ * The maximum number of attempts to reconnect the WebSocket.
+ */
+export const websocketReconnectMaxAttempts = 10;
