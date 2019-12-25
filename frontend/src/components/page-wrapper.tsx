@@ -5,12 +5,13 @@ import styled from "styled-components";
 import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
 import { ConnectedActivity } from "./activity";
+import { ConnectedApplicationForm } from "./application-form";
 import { PageSizedContainer } from "./centering";
 import { HeaderBar } from "./headerbar";
 import { ConnectedNotification } from "./notification";
 import { PageNotFound } from "./page-not-found";
 import { Settings } from "./settings";
-import { ConnectedSidebar } from "./sidebar";
+import { Sidebar } from "./sidebar";
 import { SidebarBurger } from "./sidebar-burger";
 
 /**
@@ -99,7 +100,7 @@ export const PageWrapper = () => {
   return (
     <PageSizedContainer>
       <SidebarContainer showSidebar={showSidebar}>
-        <ConnectedSidebar />
+        <Sidebar />
       </SidebarContainer>
       <PageContainer showSidebar={showSidebar}>
         <HeaderBar showSidebar={showSidebar}>
@@ -112,6 +113,10 @@ export const PageWrapper = () => {
           <ConnectedNotification />
           <Switch>
             <Route path={Routes.Activity} component={ConnectedActivity} />
+            <Route
+              path={Routes.Application}
+              component={ConnectedApplicationForm}
+            />
             <Route path={Routes.Settings} component={Settings} />
             <Route component={PageNotFound} />
           </Switch>
