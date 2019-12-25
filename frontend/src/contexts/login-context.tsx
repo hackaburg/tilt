@@ -59,6 +59,7 @@ export const LoginContextProvider = ({
 
   const logout = useCallback(() => {
     clearLoginToken();
+    setRole(null);
   }, []);
 
   const value = useMemo<ILoginContextValue>(
