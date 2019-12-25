@@ -214,9 +214,9 @@ describe("HttpService", () => {
     expect.assertions(3);
 
     const socket = new MockWebSocket();
-    let messageCallback: ((message: string) => any) | undefined;
+    let messageCallback: ((message: { data: string }) => any) | undefined;
 
-    socket.mocks.on.mockImplementation(
+    socket.mocks.addEventListener.mockImplementation(
       (_event: string, callback: any) => (messageCallback = callback),
     );
     httpService.setupWebSocketConnection(socket.instance);
@@ -239,10 +239,13 @@ describe("HttpService", () => {
     const json = JSON.stringify(tokenMessage);
 
     if (messageCallback) {
-      await messageCallback(json);
+      await messageCallback({ data: json });
     }
 
-    expect(socket.mocks.off).toBeCalledWith("message", messageCallback);
+    expect(socket.mocks.addEventListener).toBeCalledWith(
+      "message",
+      messageCallback,
+    );
     expect(ws.mocks.registerClient).toBeCalledWith(user.role, socket.instance);
   });
 
@@ -250,9 +253,9 @@ describe("HttpService", () => {
     expect.assertions(3);
 
     const socket = new MockWebSocket();
-    let messageCallback: ((message: string) => any) | undefined;
+    let messageCallback: ((message: { data: string }) => any) | undefined;
 
-    socket.mocks.on.mockImplementation(
+    socket.mocks.addEventListener.mockImplementation(
       (_event: string, callback: any) => (messageCallback = callback),
     );
     httpService.setupWebSocketConnection(socket.instance);
@@ -271,7 +274,7 @@ describe("HttpService", () => {
     const json = JSON.stringify(tokenMessage);
 
     if (messageCallback) {
-      await messageCallback(json);
+      await messageCallback({ data: json });
     }
 
     expect(socket.mocks.close).toBeCalled();
@@ -284,7 +287,7 @@ describe("HttpService", () => {
     const socket = new MockWebSocket();
     let messageCallback: ((message: string) => any) | undefined;
 
-    socket.mocks.on.mockImplementation(
+    socket.mocks.addEventListener.mockImplementation(
       (_event: string, callback: any) => (messageCallback = callback),
     );
     httpService.setupWebSocketConnection(socket.instance);

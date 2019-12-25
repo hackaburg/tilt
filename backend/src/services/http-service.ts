@@ -200,7 +200,7 @@ export class HttpService implements IHttpService {
     // close socket after 5s
     const socketCloseTimeout = setTimeout(() => socket.close(), 5 * 1000);
 
-    const onMessage = async (messageString?: string | Buffer) => {
+    const onMessage = async ({ data: messageString }: any) => {
       if (!messageString) {
         return;
       }
@@ -214,7 +214,7 @@ export class HttpService implements IHttpService {
             : messageString,
         );
       } catch {
-        this._logger.debug(`invalid websocket setup message: ${messageString}`);
+        this._logger.debug(`invalid websocket setup message`);
         return;
       }
 
@@ -233,12 +233,12 @@ export class HttpService implements IHttpService {
           return;
         }
 
-        socket.off("message", onMessage);
+        socket.removeEventListener("message", onMessage);
         this._ws.registerClient(user.role, socket);
         clearTimeout(socketCloseTimeout);
       }
     };
 
-    socket.on("message", onMessage);
+    socket.addEventListener("message", onMessage);
   }
 }

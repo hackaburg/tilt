@@ -67,7 +67,7 @@ export class WebSocketService implements IWebSocketService {
       socket,
     });
 
-    socket.on("close", () => {
+    socket.addEventListener("close", () => {
       this.unregisterClient(socket);
     });
   }

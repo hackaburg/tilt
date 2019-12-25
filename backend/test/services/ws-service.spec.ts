@@ -29,13 +29,13 @@ describe("WebSocketService", () => {
     const socket = new MockWebSocket();
 
     let onCloseCallback: (() => any) | undefined;
-    socket.mocks.on.mockImplementation(
+    socket.mocks.addEventListener.mockImplementation(
       (_event: string, callback: () => any) => (onCloseCallback = callback),
     );
 
     service.registerClient(role, socket.instance);
 
-    expect(socket.mocks.on).toBeCalled();
+    expect(socket.mocks.addEventListener).toBeCalled();
     expect(onCloseCallback).toBeDefined();
 
     service.broadcast(role, "test" as any);
