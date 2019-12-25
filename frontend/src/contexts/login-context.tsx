@@ -24,6 +24,7 @@ interface ILoggedInContextValue extends ILoginBaseContextValue {
 type ILoginContextValue = ILoggedOutContextValue | ILoggedInContextValue;
 
 const Context = React.createContext<Nullable<ILoginContextValue>>(null);
+Context.displayName = "LoginContext";
 
 interface ILoginContextProviderProps {
   children: React.ReactNode;
