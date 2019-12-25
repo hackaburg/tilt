@@ -8,7 +8,6 @@ import { ConnectedActivity } from "./activity";
 import { ConnectedApplicationForm } from "./application-form";
 import { PageSizedContainer } from "./centering";
 import { HeaderBar } from "./headerbar";
-import { ConnectedNotification } from "./notification";
 import { PageNotFound } from "./page-not-found";
 import { Settings } from "./settings";
 import { Sidebar } from "./sidebar";
@@ -110,7 +109,6 @@ export const PageWrapper = () => {
         </HeaderBar>
 
         <ContentContainer>
-          <ConnectedNotification />
           <Switch>
             <Route path={Routes.Activity} component={ConnectedActivity} />
             <Route

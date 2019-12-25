@@ -7,6 +7,7 @@ import thunk from "redux-thunk";
 import { RoutedApp } from "./components/app";
 import { apiBaseUrl, isProductionEnabled } from "./config";
 import { LoginContextProvider } from "./contexts/login-context";
+import { NotificationContextProvider } from "./contexts/notification-context";
 import { SettingsContextProvider } from "./contexts/settings-context";
 import { rootReducer } from "./reducers";
 import { WebSocketHandler } from "./ws";
@@ -39,15 +40,17 @@ store.subscribe(() => {
 
 const container = document.getElementById("app");
 const app = (
-  <SettingsContextProvider>
-    <LoginContextProvider>
-      <Provider store={store}>
-        <BrowserRouter>
-          <RoutedApp />
-        </BrowserRouter>
-      </Provider>
-    </LoginContextProvider>
-  </SettingsContextProvider>
+  <NotificationContextProvider>
+    <SettingsContextProvider>
+      <LoginContextProvider>
+        <Provider store={store}>
+          <BrowserRouter>
+            <RoutedApp />
+          </BrowserRouter>
+        </Provider>
+      </LoginContextProvider>
+    </SettingsContextProvider>
+  </NotificationContextProvider>
 );
 
 ReactDOM.render(app, container);
