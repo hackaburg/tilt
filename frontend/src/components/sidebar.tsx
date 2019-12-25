@@ -7,6 +7,7 @@ import { ConnectedSidebarLogo } from "./sidebar-logo";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 
 const Container = styled.div`
+  overflow: auto;
   position: relative;
   width: 100%;
   height: 100%;
