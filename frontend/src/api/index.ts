@@ -2,9 +2,6 @@ import { IActivity } from "../../../types/activity";
 import { IRecursivePartial } from "../../../types/api";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
-import { apiBaseUrl } from "../config";
-import { BackendApi } from "./backend-api";
-import { StaticApi } from "./static-api";
 
 /**
  * Describes API methods provided by tilt.
@@ -57,11 +54,3 @@ export interface IApi {
    */
   getActivities(): Promise<IActivity[]>;
 }
-
-/**
- * An api client, configured to either run against static data, or a tilt backend.
- * @deprecated
- */
-export const api: IApi = apiBaseUrl
-  ? new BackendApi(apiBaseUrl)
-  : new StaticApi();
