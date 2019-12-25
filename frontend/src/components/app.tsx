@@ -9,7 +9,7 @@ import { Routes } from "../routes";
 import { ITheme } from "../theme";
 import { LoginSignupForm } from "./login-signup-form";
 import { PageWrapper } from "./page-wrapper";
-import { ConnectedVerifyEmail } from "./verify-email";
+import { VerifyEmail } from "./verify-email";
 
 interface IAppProps extends RouteComponentProps<any> {}
 
@@ -32,10 +32,9 @@ export const App = ({ history, location }: IAppProps) => {
     }
   }, [isLoggedIn, pathname]);
 
-  const ConnectedVerifyEmailWithToken = useCallback(
-    () => <ConnectedVerifyEmail token={hash} />,
-    [hash],
-  );
+  const VerifyEmailWithToken = useCallback(() => <VerifyEmail token={hash} />, [
+    hash,
+  ]);
 
   let theme: ITheme = {
     colorGradientEnd: defaultThemeColor,
@@ -59,10 +58,7 @@ export const App = ({ history, location }: IAppProps) => {
     <ThemeProvider theme={theme}>
       <Switch>
         <Route path={Routes.Login} component={LoginSignupForm} />
-        <Route
-          path={Routes.VerifyEmail}
-          component={ConnectedVerifyEmailWithToken}
-        />
+        <Route path={Routes.VerifyEmail} component={VerifyEmailWithToken} />
         <Route component={PageWrapper} />
       </Switch>
     </ThemeProvider>
