@@ -16,7 +16,7 @@ export const useApi = <T>(
   callback: (api: IApi, wasForced: boolean) => Promise<T>,
   deps: readonly any[] = [],
 ): [Nullable<T>, boolean, Nullable<Error>, () => void] => {
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const [value, setValue] = useState<Nullable<T>>(null);
   const [error, setError] = useState<Nullable<Error>>(null);
 
