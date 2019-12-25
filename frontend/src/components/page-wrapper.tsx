@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
 import { Activity } from "./activity";
-import { ConnectedApplicationForm } from "./application-form";
 import { PageSizedContainer } from "./centering";
 import { HeaderBar } from "./headerbar";
 import { PageNotFound } from "./page-not-found";
@@ -111,10 +110,6 @@ export const PageWrapper = () => {
         <ContentContainer>
           <Switch>
             <Route path={Routes.Activity} component={Activity} />
-            <Route
-              path={Routes.Application}
-              component={ConnectedApplicationForm}
-            />
             <Route path={Routes.Settings} component={Settings} />
             <Route component={PageNotFound} />
           </Switch>
