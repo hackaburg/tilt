@@ -8,7 +8,7 @@ import { Routes } from "../routes";
 import { IState, RequestTarget } from "../state";
 import { CenteredContainer, PageSizedContainer } from "./centering";
 import { Link } from "./link";
-import { ConnectedLoginImage } from "./login-image";
+import { LoginImage } from "./login-image";
 import { Message } from "./message";
 
 const Container = styled.div`
@@ -43,7 +43,7 @@ export const VerifyEmail = ({
     <PageSizedContainer>
       <CenteredContainer>
         <Container>
-          <ConnectedLoginImage />
+          <LoginImage />
           {error && (
             <Message error>
               <b>Error:</b> {error}

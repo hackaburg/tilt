@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { UserRole } from "../../../types/roles";
 import { useLoginContext } from "../contexts/login-context";
 import { Routes } from "../routes";
-import { ConnectedSidebarLogo } from "./sidebar-logo";
+import { SidebarLogo } from "./sidebar-logo";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 
 const Container = styled.div`
@@ -45,7 +45,7 @@ export const Sidebar = () => {
 
   return (
     <Container>
-      <ConnectedSidebarLogo />
+      <SidebarLogo />
 
       <SidebarMenu>
         <SidebarMenuItem to={Routes.Dashboard}>Dashboard</SidebarMenuItem>

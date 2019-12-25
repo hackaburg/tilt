@@ -1,12 +1,9 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
 import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
-import { updateSettings } from "../actions/settings";
 import { borderRadius, debounceDuration } from "../config";
-import { IState, RequestTarget } from "../state";
+import { useSettingsContext } from "../contexts/settings-context";
 import {
   EmailTemplateEditor,
   EmailTemplateEditorPlaceholder,
@@ -25,43 +22,32 @@ const Code = styled.span`
   border-radius: ${borderRadius};
 `;
 
-interface IEmailSettingsProps {
-  dispatchUpdateSettings: typeof updateSettings;
-  settings: IState["settings"];
-  error?: string | false;
-}
-
 /**
  * Settings to configure mail templates.
  */
-export const EmailSettings = ({
-  dispatchUpdateSettings,
-  settings,
-  error,
-}: IEmailSettingsProps) => {
-  const handleSettingsChange = (
-    field: keyof IEmailSettings,
-    value: string | IEmailTemplate,
-  ) => {
-    dispatchUpdateSettings(RequestTarget.MailSettings, {
-      email: {
-        [field]: value,
-      },
-    });
-  };
+export const EmailSettings = () => {
+  const { settings, updateSettings, updateError } = useSettingsContext();
 
   const [debouncedHandleSettingsChange] = useDebouncedCallback(
-    handleSettingsChange,
+    (field: keyof IEmailSettings, value: string | IEmailTemplate) => {
+      updateSettings({
+        ...settings,
+        email: {
+          ...settings.email,
+          [field]: value,
+        },
+      });
+    },
     debounceDuration,
-    [],
+    [updateSettings, settings],
   );
 
   return (
     <>
       <Subheading>Mail settings</Subheading>
-      {error && (
+      {updateError && (
         <Message error>
-          <b>Error:</b> {error}
+          <b>Error:</b> {updateError.message}
         </Message>
       )}
 
@@ -120,25 +106,3 @@ export const EmailSettings = ({
     </>
   );
 };
-
-const mapStateToProps = (state: IState) => ({
-  error: state.request[RequestTarget.MailSettings].error,
-  settings: state.settings,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators(
-    {
-      dispatchUpdateSettings: updateSettings,
-    },
-    dispatch,
-  );
-};
-
-/**
- * The email settings connected to the redux store.
- */
-export const ConnectedEmailSettings = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EmailSettings);

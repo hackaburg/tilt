@@ -4,6 +4,7 @@ import { Route, RouteComponentProps, Switch, withRouter } from "react-router";
 import { ThemeProvider } from "styled-components";
 import { defaultThemeColor } from "../config";
 import { useLoginContext } from "../contexts/login-context";
+import { useSettingsContext } from "../contexts/settings-context";
 import { Routes } from "../routes";
 import { ITheme } from "../theme";
 import { LoginSignupForm } from "./login-signup-form";
@@ -43,8 +44,7 @@ export const App = ({ history, location }: IAppProps) => {
     colorLinkHover: defaultThemeColor,
   };
 
-  // todo: introduce settings context
-  const settings = null as any;
+  const { settings } = useSettingsContext();
 
   if (settings) {
     theme = {

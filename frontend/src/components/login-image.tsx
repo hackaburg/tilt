@@ -1,9 +1,7 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { ScaleLoader } from "react-spinners";
 import styled, { keyframes } from "styled-components";
 import { transitionDuration } from "../config";
-import { IState } from "../state";
+import { useSettingsContext } from "../contexts/settings-context";
 
 const Container = styled.div`
   text-align: center;
@@ -31,39 +29,16 @@ const Image = styled.img`
   animation-iteration-count: 1;
 `;
 
-interface ILoginImageProps {
-  imageUrl: string;
-}
-
 /**
  * The image displayed on the login and signup page.
  */
-export const LoginImage = ({ imageUrl }: ILoginImageProps) => (
-  <Container>
-    {imageUrl && <Image src={imageUrl} />}
+export const LoginImage = () => {
+  const { settings } = useSettingsContext();
+  const imageUrl = settings?.frontend.loginSignupImage;
 
-    {!imageUrl && (
-      <ScaleLoader
-        height={1}
-        heightUnit="rem"
-        color="currentColor"
-        css={
-          {
-            display: "inline-block",
-            margin: "auto",
-            padding: "1rem 0rem",
-          } as any
-        }
-      />
-    )}
-  </Container>
-);
-
-const mapStateToProps = (state: IState) => ({
-  imageUrl: state.settings ? state.settings.frontend.loginSignupImage : "",
-});
-
-/**
- * The login/signup image connected to the redux store.
- */
-export const ConnectedLoginImage = connect(mapStateToProps)(LoginImage);
+  return (
+    <Container>
+      <Image src={imageUrl} />
+    </Container>
+  );
+};

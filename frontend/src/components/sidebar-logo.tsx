@@ -1,7 +1,6 @@
 import * as React from "react";
-import { connect } from "react-redux";
 import styled from "styled-components";
-import { IState } from "../state";
+import { useSettingsContext } from "../contexts/settings-context";
 
 const Container = styled.div`
   padding: 4rem 0rem;
@@ -13,24 +12,14 @@ const Image = styled.img`
   max-height: 20vh;
 `;
 
-interface ISidebarLogoProps {
-  sidebarImageUrl: string;
-}
-
 /**
  * The sidebar logo.
  */
-export const SidebarLogo = ({ sidebarImageUrl }: ISidebarLogoProps) => (
-  <Container>
-    <Image src={sidebarImageUrl} />
-  </Container>
-);
-
-const mapStateToProps = (state: IState) => ({
-  sidebarImageUrl: state.settings ? state.settings.frontend.sidebarImage : "",
-});
-
-/**
- * The sidebar logo connected to the redux store.
- */
-export const ConnectedSidebarLogo = connect(mapStateToProps)(SidebarLogo);
+export const SidebarLogo = () => {
+  const { settings } = useSettingsContext();
+  return (
+    <Container>
+      <Image src={settings?.frontend.sidebarImage} />
+    </Container>
+  );
+};

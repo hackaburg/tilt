@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
 import { ISettings } from "../../../types/settings";
+import { Spinner } from "../components/spinner";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
 import { Nullable } from "../state";
 
 interface ISettingsContextValue {
-  isFetchingSettings: boolean;
   settings: ISettings;
   updateSettings: (settings: ISettings) => void;
   updateError: Nullable<Error>;
@@ -47,7 +47,7 @@ export const SettingsContextProvider = ({
     }
   }, []);
 
-  const [, isUpdatingSettings, updateError] = useApi(
+  const [, , updateError] = useApi(
     async (api) => {
       if (localSettings != null) {
         await api.updateSettings(localSettings);
@@ -58,20 +58,16 @@ export const SettingsContextProvider = ({
 
   const value = useMemo<ISettingsContextValue>(
     () => ({
-      isFetchingSettings: isFetchingSettings || isUpdatingSettings,
       settings: localSettings ?? (fetchedSettings as ISettings),
       updateError,
       updateSettings,
     }),
-    [
-      isFetchingSettings,
-      isUpdatingSettings,
-      localSettings,
-      fetchedSettings,
-      updateSettings,
-      updateError,
-    ],
+    [localSettings, fetchedSettings, updateSettings, updateError],
   );
+
+  if (isFetchingSettings) {
+    return <Spinner />;
+  }
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
