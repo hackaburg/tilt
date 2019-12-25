@@ -60,6 +60,7 @@ export interface IApi {
 
 /**
  * An api client, configured to either run against static data, or a tilt backend.
+ * @deprecated
  */
 export const api: IApi = apiBaseUrl
   ? new BackendApi(apiBaseUrl)

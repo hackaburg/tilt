@@ -6,6 +6,7 @@ import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import { RoutedConnectedApp } from "./components/app";
 import { apiBaseUrl, isProductionEnabled } from "./config";
+import { LoginContextProvider } from "./contexts/login-context";
 import { rootReducer } from "./reducers";
 import { WebSocketHandler } from "./ws";
 import { ActivityWebSocketHandler } from "./ws/activity-handler";
@@ -37,11 +38,13 @@ store.subscribe(() => {
 
 const container = document.getElementById("app");
 const app = (
-  <Provider store={store}>
-    <BrowserRouter>
-      <RoutedConnectedApp />
-    </BrowserRouter>
-  </Provider>
+  <LoginContextProvider>
+    <Provider store={store}>
+      <BrowserRouter>
+        <RoutedConnectedApp />
+      </BrowserRouter>
+    </Provider>
+  </LoginContextProvider>
 );
 
 ReactDOM.render(app, container);
