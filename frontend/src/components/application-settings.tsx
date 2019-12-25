@@ -1,54 +1,40 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
 import { useDebouncedCallback } from "use-debounce";
-import { IApplicationSettings, ISettings } from "../../../types/settings";
-import { updateSettings } from "../actions/settings";
+import { IApplicationSettings } from "../../../types/settings";
 import { debounceDuration } from "../config";
-import { IState, Nullable, RequestTarget } from "../state";
+import { useSettingsContext } from "../contexts/settings-context";
 import { FormEditor } from "./form-editor";
 import { Col, Row } from "./grid";
 import { Subheading } from "./headings";
 import { Message } from "./message";
 import { StatefulTextInput, TextInputType } from "./text-input";
 
-interface IApplicationSettingsProps {
-  error?: string | false;
-  settings: Nullable<ISettings>;
-  dispatchUpdateSettings: typeof updateSettings;
-}
-
 /**
  * Settings to configure the application users have to fill out.
  */
-export const ApplicationSettings = ({
-  settings,
-  error,
-  dispatchUpdateSettings,
-}: IApplicationSettingsProps) => {
-  const handleUpdateApplicationSettings = (
-    field: keyof IApplicationSettings,
-    value: any,
-  ) => {
-    dispatchUpdateSettings(RequestTarget.ApplicationSettings, {
-      application: {
-        [field]: value,
-      },
-    });
-  };
+export const ApplicationSettings = () => {
+  const { settings, updateSettings, updateError } = useSettingsContext();
 
   const [debouncedHandleUpdateApplicationSettings] = useDebouncedCallback(
-    handleUpdateApplicationSettings,
+    (field: keyof IApplicationSettings, value: any) => {
+      updateSettings({
+        ...settings,
+        application: {
+          ...settings.application,
+          [field]: value,
+        },
+      });
+    },
     debounceDuration,
-    [],
+    [settings, updateSettings],
   );
 
   return (
     <>
       <Subheading>Application</Subheading>
-      {error && (
+      {updateError && (
         <Message error>
-          <b>Error:</b> {error}
+          <b>Error:</b> {updateError.message}
         </Message>
       )}
 
@@ -60,50 +46,48 @@ export const ApplicationSettings = ({
         submitted the first answers, tilt will ask these new questions in the
         confirmation phase.
       </p>
-      {settings && (
-        <Row>
-          <Col percent={33}>
-            <StatefulTextInput
-              initialValue={settings.application.hoursToConfirm}
-              onChange={(time) =>
-                debouncedHandleUpdateApplicationSettings("hoursToConfirm", time)
-              }
-              type={TextInputType.Number}
-              min={1}
-              title="Hours to confirm"
-              placeholder="keep it fair, e.g. 240 for 10 days"
-            />
-          </Col>
+      <Row>
+        <Col percent={33}>
+          <StatefulTextInput
+            initialValue={settings.application.hoursToConfirm}
+            onChange={(time) =>
+              debouncedHandleUpdateApplicationSettings("hoursToConfirm", time)
+            }
+            type={TextInputType.Number}
+            min={1}
+            title="Hours to confirm"
+            placeholder="keep it fair, e.g. 240 for 10 days"
+          />
+        </Col>
 
-          <Col percent={33}>
-            <StatefulTextInput
-              initialValue={settings.application.allowProfileFormFrom}
-              onChange={(timestring) =>
-                debouncedHandleUpdateApplicationSettings(
-                  "allowProfileFormFrom",
-                  timestring,
-                )
-              }
-              title="Open registration on"
-              placeholder="1970-01-01 00:00:00"
-            />
-          </Col>
+        <Col percent={33}>
+          <StatefulTextInput
+            initialValue={settings.application.allowProfileFormFrom}
+            onChange={(timestring) =>
+              debouncedHandleUpdateApplicationSettings(
+                "allowProfileFormFrom",
+                timestring,
+              )
+            }
+            title="Open registration on"
+            placeholder="1970-01-01 00:00:00"
+          />
+        </Col>
 
-          <Col percent={33}>
-            <StatefulTextInput
-              initialValue={settings.application.allowProfileFormUntil}
-              onChange={(timestring) =>
-                debouncedHandleUpdateApplicationSettings(
-                  "allowProfileFormUntil",
-                  timestring,
-                )
-              }
-              title="Close registration on"
-              placeholder="1970-01-01 00:00:00"
-            />
-          </Col>
-        </Row>
-      )}
+        <Col percent={33}>
+          <StatefulTextInput
+            initialValue={settings.application.allowProfileFormUntil}
+            onChange={(timestring) =>
+              debouncedHandleUpdateApplicationSettings(
+                "allowProfileFormUntil",
+                timestring,
+              )
+            }
+            title="Close registration on"
+            placeholder="1970-01-01 00:00:00"
+          />
+        </Col>
+      </Row>
 
       <p>
         Use the add button to add new questions and the edit button in the top
@@ -118,45 +102,19 @@ export const ApplicationSettings = ({
         answer to that question.
       </p>
 
-      {settings && (
-        <>
-          <FormEditor
-            initialForm={settings.application.profileForm}
-            onFormChange={(form) =>
-              debouncedHandleUpdateApplicationSettings("profileForm", form)
-            }
-          />
+      <FormEditor
+        initialForm={settings.application.profileForm}
+        onFormChange={(form) =>
+          debouncedHandleUpdateApplicationSettings("profileForm", form)
+        }
+      />
 
-          <FormEditor
-            initialForm={settings.application.confirmationForm}
-            onFormChange={(form) =>
-              debouncedHandleUpdateApplicationSettings("confirmationForm", form)
-            }
-          />
-        </>
-      )}
+      <FormEditor
+        initialForm={settings.application.confirmationForm}
+        onFormChange={(form) =>
+          debouncedHandleUpdateApplicationSettings("confirmationForm", form)
+        }
+      />
     </>
   );
 };
-
-const mapStateToProps = (state: IState) => ({
-  error: state.request[RequestTarget.ApplicationSettings].error,
-  settings: state.settings,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators(
-    {
-      dispatchUpdateSettings: updateSettings,
-    },
-    dispatch,
-  );
-};
-
-/**
- * The application settings connected to the redux store.
- */
-export const ConnectedApplicationSettings = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ApplicationSettings);

@@ -8,7 +8,7 @@ import { Button } from "./button";
 import { CenteredContainer, PageSizedContainer } from "./centering";
 import { FadeContainer } from "./fade-container";
 import { Heading } from "./headings";
-import { ConnectedLoginImage } from "./login-image";
+import { LoginImage } from "./login-image";
 import { Message } from "./message";
 import { TextInput, TextInputType } from "./text-input";
 
@@ -80,7 +80,7 @@ export const LoginSignupForm = () => {
     <PageSizedContainer>
       <CenteredContainer>
         <Container>
-          <ConnectedLoginImage />
+          <LoginImage />
 
           <SignupDoneMessage show={signupDone}>
             <Heading>Done.</Heading>
