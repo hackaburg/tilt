@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { applyMiddleware, compose, createStore } from "redux";
 import thunk from "redux-thunk";
-import { RoutedConnectedApp } from "./components/app";
+import { RoutedApp } from "./components/app";
 import { apiBaseUrl, isProductionEnabled } from "./config";
 import { LoginContextProvider } from "./contexts/login-context";
 import { rootReducer } from "./reducers";
@@ -41,7 +41,7 @@ const app = (
   <LoginContextProvider>
     <Provider store={store}>
       <BrowserRouter>
-        <RoutedConnectedApp />
+        <RoutedApp />
       </BrowserRouter>
     </Provider>
   </LoginContextProvider>

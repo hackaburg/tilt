@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IApi } from "../api";
 import { BackendApi } from "../api/backend-api";
 import { StaticApi } from "../api/static-api";
@@ -13,29 +13,35 @@ const api: IApi = apiBaseUrl ? new BackendApi(apiBaseUrl) : new StaticApi();
  * @param deps Dependencies inside the callback requiring the call to run again
  */
 export const useApi = <T>(
-  callback: (api: IApi) => Promise<T>,
+  callback: (api: IApi, wasForced: boolean) => Promise<T>,
   deps: readonly any[] = [],
-): [Nullable<T>, boolean, Nullable<Error>] => {
+): [Nullable<T>, boolean, Nullable<Error>, () => void] => {
   const [isFetching, setIsFetching] = useState(false);
   const [value, setValue] = useState<Nullable<T>>(null);
   const [error, setError] = useState<Nullable<Error>>(null);
 
-  useEffect(() => {
-    (async () => {
-      setIsFetching(true);
-      setError(null);
-      setValue(null);
+  const performRequest = useCallback(async (wasForced: boolean) => {
+    setIsFetching(true);
+    setError(null);
+    setValue(null);
 
-      try {
-        const result = await callback(api);
-        setValue(result);
-      } catch (error) {
-        setError(error);
-      }
+    try {
+      const result = await callback(api, wasForced);
+      setValue(result);
+    } catch (error) {
+      setError(error);
+    }
 
-      setIsFetching(false);
-    })();
+    setIsFetching(false);
   }, deps);
 
-  return [value, isFetching, error];
+  useEffect(() => {
+    performRequest(false);
+  }, deps);
+
+  const forcePerformRequest = useCallback(() => performRequest(true), [
+    performRequest,
+  ]);
+
+  return [value, isFetching, error, forcePerformRequest];
 };

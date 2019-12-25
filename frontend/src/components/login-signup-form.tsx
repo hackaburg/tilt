@@ -1,11 +1,8 @@
 import * as React from "react";
-import { useState } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
-import { login as loginRaw } from "../actions/login";
-import { signup as signupRaw } from "../actions/signup";
-import { IState, RequestTarget } from "../state";
+import { useLoginContext } from "../contexts/login-context";
+import { useApi } from "../hooks/use-api";
 import { BlurContainer } from "./blur-container";
 import { Button } from "./button";
 import { CenteredContainer, PageSizedContainer } from "./centering";
@@ -25,7 +22,7 @@ const SignupDoneMessage = styled(FadeContainer)`
   position: absolute;
 `;
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
   margin: 2rem 0rem;
 `;
 
@@ -39,40 +36,45 @@ const Divider = styled.p`
   text-align: center;
 `;
 
-interface ILoginSignupFormProps {
-  error?: string;
-  loginInProgress: boolean;
-  signupInProgress: boolean;
-  signup: typeof signupRaw;
-  login: typeof loginRaw;
-}
-
 /**
  * A form to create an account.
  */
-export const LoginSignupForm = ({
-  loginInProgress,
-  signupInProgress,
-  error,
-  signup,
-  login,
-}: ILoginSignupFormProps) => {
+export const LoginSignupForm = () => {
+  const { login } = useLoginContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [didSignup, setDidSignup] = useState(false);
 
-  const handleLogin = () => {
-    setDidSignup(false);
-    login(email, password);
-  };
+  const [, loginInProgress, loginError, sendLoginRequest] = useApi(
+    async (api, wasTriggeredManually) => {
+      if (wasTriggeredManually) {
+        const role = await api.login(email, password);
+        login(role);
+      }
+    },
+    [email, password, login],
+  );
 
-  const handleSignup = () => {
-    setDidSignup(true);
-    signup(email, password);
-  };
+  const [didSignup, signupInProgress, signupError, sendSignupRequest] = useApi(
+    async (api, wasTriggeredManually) => {
+      if (wasTriggeredManually) {
+        await api.signup(email, password);
+        return true;
+      }
+    },
+    [email, password],
+  );
 
   const formInProgress = signupInProgress || loginInProgress;
-  const signupDone = didSignup && !signupInProgress && !error;
+  const error = loginError ?? signupError;
+  const signupDone = !!didSignup && !signupInProgress && !error;
+
+  const onSubmit = useCallback(
+    async (event: React.SyntheticEvent) => {
+      event.preventDefault();
+      await sendLoginRequest();
+    },
+    [sendLoginRequest],
+  );
 
   return (
     <PageSizedContainer>
@@ -99,11 +101,11 @@ export const LoginSignupForm = ({
 
             {error && (
               <Message error>
-                <b>Error:</b> {error}
+                <b>Error:</b> {error?.message}
               </Message>
             )}
 
-            <FormContainer>
+            <FormContainer onSubmit={onSubmit}>
               <Fields>
                 <TextInput
                   title="E-Mail"
@@ -123,7 +125,7 @@ export const LoginSignupForm = ({
               </Fields>
 
               <Button
-                onClick={handleSignup}
+                onClick={sendSignupRequest}
                 loading={signupInProgress}
                 disable={formInProgress}
                 primary
@@ -133,7 +135,7 @@ export const LoginSignupForm = ({
               </Button>
               <Divider>Already have an account?</Divider>
               <Button
-                onClick={handleLogin}
+                onClick={sendLoginRequest}
                 loading={loginInProgress}
                 disable={formInProgress}
                 fluid
@@ -147,29 +149,3 @@ export const LoginSignupForm = ({
     </PageSizedContainer>
   );
 };
-
-const mapStateToProps = (state: IState) => ({
-  error:
-    state.request[RequestTarget.Login].error ||
-    state.request[RequestTarget.Signup].error,
-  loginInProgress: state.request[RequestTarget.Login].requestInProgress,
-  signupInProgress: state.request[RequestTarget.Signup].requestInProgress,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators(
-    {
-      login: loginRaw,
-      signup: signupRaw,
-    },
-    dispatch,
-  );
-};
-
-/**
- * The signup form connected to the redux store.
- */
-export const ConnectedLoginSignupForm = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(LoginSignupForm);
