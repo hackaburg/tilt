@@ -11,57 +11,60 @@ module.exports = {
 
   output: {
     filename: isProduction ? "[name].[contenthash].js" : "[name].[hash].js",
-    chunkFilename: isProduction ? "[name].[contenthash].js" : "[name].[hash].js",
+    chunkFilename: isProduction
+      ? "[name].[contenthash].js"
+      : "[name].[hash].js",
     path: __dirname + "/dist",
   },
 
   resolve: {
-    extensions: [
-      ".ts",
-      ".tsx",
-      ".js",
-      ".json",
-    ],
+    extensions: [".ts", ".tsx", ".js", ".json"],
   },
 
-  optimization: {
-    minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          output: {
-            comments: false,
-          },
-        },
-      })
-    ],
-    runtimeChunk: "single",
-    splitChunks: {
-      chunks: "all",
-      maxInitialRequests: Infinity,
-      minSize: 0,
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: (module) => {
-            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+  optimization: isProduction
+    ? {
+        minimizer: [
+          new TerserPlugin({
+            terserOptions: {
+              output: {
+                comments: false,
+              },
+            },
+          }),
+        ],
+        runtimeChunk: "single",
+        splitChunks: {
+          chunks: "all",
+          maxInitialRequests: Infinity,
+          minSize: 0,
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: (module) => {
+                const packageName = module.context.match(
+                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/,
+                )[1];
 
-            return `vendor.${packageName.replace("@", "")}`;
+                return `vendor.${packageName.replace("@", "")}`;
+              },
+            },
           },
         },
-      },
-    },
-  },
+      }
+    : undefined,
 
   module: {
     rules: [
       {
         test: /src\/.+\.tsx?$/,
         loader: "awesome-typescript-loader",
-        options:
-          isProduction
-            ? undefined
-            : {
-              getCustomTransformers: join(__dirname, "webpack.styled-components.js"),
+        options: isProduction
+          ? undefined
+          : {
+              getCustomTransformers: join(
+                __dirname,
+                "webpack.styled-components.js",
+              ),
             },
       },
       {
@@ -74,20 +77,14 @@ module.exports = {
       {
         test: /\.css$/,
         include: resolve(__dirname, "./node_modules/monaco-editor"),
-        use: [
-          "style-loader",
-          "css-loader",
-        ],
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
 
   plugins: [
     new MonacoWebpackPlugin({
-      languages: [
-        "html",
-        "json",
-      ],
+      languages: ["html", "json"],
     }),
     new EnvironmentPlugin({
       API_BASE_URL: "/api",
@@ -100,5 +97,5 @@ module.exports = {
 
   devServer: {
     historyApiFallback: true,
-  }
+  },
 };
