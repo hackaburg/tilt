@@ -7,8 +7,8 @@ import { Routes } from "../routes";
 import { Activity } from "./activity";
 import { PageSizedContainer } from "./centering";
 import { HeaderBar } from "./headerbar";
+import { LazySettings } from "./lazy-settings";
 import { PageNotFound } from "./page-not-found";
-import { Settings } from "./settings";
 import { Sidebar } from "./sidebar";
 import { SidebarBurger } from "./sidebar-burger";
 
@@ -110,7 +110,7 @@ export const PageWrapper = () => {
         <ContentContainer>
           <Switch>
             <Route path={Routes.Activity} component={Activity} />
-            <Route path={Routes.Settings} component={Settings} />
+            <Route path={Routes.Settings} component={LazySettings} />
             <Route component={PageNotFound} />
           </Switch>
         </ContentContainer>
