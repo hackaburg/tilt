@@ -45,6 +45,3 @@ export type IQuestion =
   | INumberQuestion
   | IChoicesQuestion
   | ICountryQuestion;
-export type ISortable<T> = T & {
-  sortIndex: number;
-};

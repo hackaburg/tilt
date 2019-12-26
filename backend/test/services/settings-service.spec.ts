@@ -1,6 +1,4 @@
 import { Repository } from "typeorm";
-import { IRecursivePartial } from "../../../types/api";
-import { ISettings } from "../../../types/settings";
 import { Settings } from "../../src/entities/settings";
 import { IDatabaseService } from "../../src/services/database-service";
 import { ILoggerService } from "../../src/services/logger-service";
@@ -54,7 +52,7 @@ describe("SettingsService", () => {
   it("updates settings", async () => {
     expect.assertions(1);
 
-    const updatedSettings: IRecursivePartial<ISettings> = {
+    const updatedSettings = {
       email: {
         forgotPasswordEmail: {
           htmlTemplate: "foo",
@@ -68,33 +66,29 @@ describe("SettingsService", () => {
           textTemplate: "foobar",
         },
       },
-    };
+    } as any;
 
     await settingsService.updateSettings(updatedSettings);
     const settings = await settingsService.getSettings();
 
-    expect(settings).toMatchObject(updatedSettings);
+    expect(settings.email.forgotPasswordEmail.htmlTemplate).toBe(
+      updatedSettings.email.forgotPasswordEmail.htmlTemplate,
+    );
   });
 
   it("doesn't pollute other settings by updating settings", async () => {
     expect.assertions(2);
 
-    type PollutedSettings = Partial<ISettings> & {
-      foo: string;
-      email: {
-        bar: string;
-      };
-    };
-
-    const updatedSettings: IRecursivePartial<PollutedSettings> = {
+    const updatedSettings = {
       email: {
         bar: "test",
+        sender: "foo",
       },
       foo: "test",
-    };
+    } as any;
 
     await settingsService.updateSettings(updatedSettings);
-    const settings = (await settingsService.getSettings()) as PollutedSettings;
+    const settings = (await settingsService.getSettings()) as any;
 
     expect(settings.foo).not.toBeDefined();
     expect(settings.email.bar).not.toBeDefined();

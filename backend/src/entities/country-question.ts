@@ -1,15 +1,8 @@
-import { Equals } from "class-validator";
-import { Column, Entity, ManyToOne } from "typeorm";
+import { ChildEntity } from "typeorm";
 import { ICountryQuestion, QuestionType } from "../../../types/questions";
-import { FormSettings } from "./form-settings";
-import { QuestionBase } from "./question-base";
+import { Question } from "./question";
 
-@Entity()
-export class CountryQuestion extends QuestionBase implements ICountryQuestion {
-  @ManyToOne(() => FormSettings)
-  public form!: FormSettings;
-
-  @Equals(QuestionType.Country)
-  @Column()
+@ChildEntity(QuestionType.Country)
+export class CountryQuestion extends Question implements ICountryQuestion {
   public type: QuestionType.Country = QuestionType.Country;
 }

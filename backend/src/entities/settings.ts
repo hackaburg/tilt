@@ -1,5 +1,5 @@
 import { Exclude, Type } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { ValidateNested } from "class-validator";
 import {
   Column,
   Entity,
@@ -9,7 +9,6 @@ import {
 } from "typeorm";
 import {
   IActivatable,
-  IApplicationSettings,
   IEmailSettings,
   IFrontendSettings,
   ISettings,
@@ -20,33 +19,22 @@ import { FrontendSettings } from "./frontend-settings";
 
 @Entity()
 export class Settings implements IActivatable<ISettings> {
-  public constructor(initializeDefaults?: boolean) {
-    if (initializeDefaults) {
-      this.application = new ApplicationSettings(initializeDefaults);
-      this.frontend = new FrontendSettings(initializeDefaults);
-      this.email = new EmailSettings(initializeDefaults);
-    }
-  }
-
   @Exclude()
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @IsOptional()
   @ValidateNested()
   @Type(() => ApplicationSettings)
   @ManyToOne(() => ApplicationSettings, { cascade: true, eager: true })
   @JoinColumn()
-  public application!: IApplicationSettings;
+  public application!: ApplicationSettings;
 
-  @IsOptional()
   @ValidateNested()
   @Type(() => FrontendSettings)
   @ManyToOne(() => FrontendSettings, { cascade: true, eager: true })
   @JoinColumn()
   public frontend!: IFrontendSettings;
 
-  @IsOptional()
   @ValidateNested()
   @Type(() => EmailSettings)
   @ManyToOne(() => EmailSettings, { cascade: true, eager: true })
