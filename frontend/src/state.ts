@@ -1,4 +1,3 @@
-import { IActivity } from "../../types/activity";
 import { UserRole } from "../../types/roles";
 import { ISettings } from "../../types/settings";
 
@@ -15,7 +14,6 @@ export interface IState {
   settings: Nullable<ISettings>;
   role: Nullable<UserRole>;
   notification: INotification;
-  activity: Nullable<IActivity[]>;
 }
 
 type IRequestCollection = {
@@ -39,7 +37,6 @@ export enum RequestTarget {
   MailSettings = "mail_settings",
   ApplicationSettings = "application_settings",
   FrontendSettings = "frontend_settings",
-  Activities = "activities",
   FetchRole = "get_role",
   VerifyEmail = "verify_email",
 }

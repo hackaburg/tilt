@@ -4,7 +4,6 @@ import { Route, Switch } from "react-router";
 import styled from "styled-components";
 import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
-import { Activity } from "./activity";
 import { PageSizedContainer } from "./centering";
 import { HeaderBar } from "./headerbar";
 import { LazySettings } from "./lazy-settings";
@@ -110,7 +109,6 @@ export const PageWrapper = () => {
 
         <ContentContainer>
           <Switch>
-            <Route path={Routes.Activity} component={Activity} />
             <Route path={Routes.Settings} component={LazySettings} />
             <Route path={Routes.ProfileForm} component={ProfileForm} />
             <Route component={PageNotFound} />

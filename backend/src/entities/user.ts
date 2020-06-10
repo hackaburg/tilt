@@ -1,9 +1,8 @@
 import { Exclude } from "class-transformer";
 import { IsEmail, IsString, MinLength } from "class-validator";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { UserRole } from "../../../types/roles";
 import { IUser } from "../../../types/user";
-import { Activity } from "./activity";
 
 @Entity()
 export class User implements IUser {
@@ -32,13 +31,6 @@ export class User implements IUser {
   @Exclude()
   @Column()
   public updatedAt!: Date;
-
-  @Exclude()
-  @OneToMany(
-    () => Activity,
-    (activity) => activity.user,
-  )
-  public activity!: Activity[];
 
   @Exclude()
   @Column()

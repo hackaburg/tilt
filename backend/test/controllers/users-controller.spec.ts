@@ -1,25 +1,17 @@
-import { ActivityType, IActivityData } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { UsersController } from "../../src/controllers/users-controller";
 import { User } from "../../src/entities/user";
-import { IActivityService } from "../../src/services/activity-service";
 import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
-import { MockActivityService } from "../services/mock/mock-activity-service";
 import { MockUserService } from "../services/mock/mock-user-service";
 
 describe("UsersController", () => {
   let userService: MockedService<IUserService>;
-  let activityService: MockedService<IActivityService>;
   let controller: UsersController;
 
   beforeEach(async () => {
     userService = new MockUserService();
-    activityService = new MockActivityService();
-    controller = new UsersController(
-      userService.instance,
-      activityService.instance,
-    );
+    controller = new UsersController(userService.instance);
   });
 
   it("signs up users", async () => {
@@ -56,23 +48,6 @@ describe("UsersController", () => {
     await expect(promise).rejects.toBeDefined();
   });
 
-  it("adds signup events to the activity log", async () => {
-    expect.assertions(1);
-
-    const user = {};
-    userService.mocks.signup.mockResolvedValue(user);
-    await controller.signup({
-      data: {
-        email: "test@foo.bar",
-        password: "password",
-      },
-    });
-
-    expect(activityService.mocks.addActivity).toBeCalledWith(user, {
-      type: ActivityType.Signup,
-    } as IActivityData);
-  });
-
   it("verifies users with their token", async () => {
     expect.assertions(1);
 
@@ -87,17 +62,6 @@ describe("UsersController", () => {
     userService.mocks.verifyUserByVerifyToken.mockRejectedValue(0);
     const promise = controller.verify("");
     await expect(promise).rejects.toBeDefined();
-  });
-
-  it("adds verification events to the activity log", async () => {
-    expect.assertions(1);
-
-    const user = {};
-    userService.mocks.verifyUserByVerifyToken.mockResolvedValue(user);
-    await controller.verify("");
-    expect(activityService.mocks.addActivity).toBeCalledWith(user, {
-      type: ActivityType.EmailVerified,
-    } as IActivityData);
   });
 
   it("generates tokens for valid credentials", async () => {

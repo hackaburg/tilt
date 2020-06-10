@@ -1,6 +1,5 @@
 import { Inject, Service } from "typedi";
 import { IService } from ".";
-import { ActivityServiceToken, IActivityService } from "./activity-service";
 import { AnswerServiceToken, IAnswerService } from "./answer-service";
 import {
   BootShutdownNotificationServiceToken,
@@ -37,7 +36,6 @@ import {
   UnixSignalServiceToken,
 } from "./unix-signal-service";
 import { IUserService, UserServiceToken } from "./user-service";
-import { IWebSocketService, WebSocketServiceToken } from "./ws-service";
 
 /**
  * The tilt service in a nutshell. Contains all services required to run tilt.
@@ -57,13 +55,11 @@ export class Tilt implements IService {
     @Inject(DatabaseServiceToken) database: IDatabaseService,
     @Inject(EmailServiceToken) email: IEmailService,
     @Inject(EmailTemplateServiceToken) emailTemplates: IEmailTemplateService,
-    @Inject(ActivityServiceToken) activity: IActivityService,
     @Inject(TokenServiceToken) tokens: ITokenService<any>,
     @Inject(UserServiceToken) users: IUserService,
     @Inject(SettingsServiceToken) settings: ISettingsService,
     @Inject(QuestionGraphServiceToken) questions: IQuestionGraphService,
     @Inject(AnswerServiceToken) answers: IAnswerService,
-    @Inject(WebSocketServiceToken) ws: IWebSocketService,
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
@@ -76,13 +72,11 @@ export class Tilt implements IService {
       database,
       email,
       emailTemplates,
-      activity,
       tokens,
       users,
       settings,
       questions,
       answers,
-      ws,
       http,
     ];
   }

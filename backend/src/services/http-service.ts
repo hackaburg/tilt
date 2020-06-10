@@ -1,14 +1,11 @@
 import * as cors from "cors";
 import * as express from "express";
-import * as ws from "express-ws";
 import { createServer } from "http";
 import { join } from "path";
 import { Action, useContainer, useExpressServer } from "routing-controllers";
 import { Container, Inject, Service, Token } from "typedi";
-import * as WebSocket from "ws";
 import { IService } from ".";
 import { UserRole } from "../../../types/roles";
-import { IWebSocketMessage, WebSocketMessageType } from "../../../types/ws";
 import { User } from "../entities/user";
 import {
   ConfigurationServiceToken,
@@ -16,7 +13,6 @@ import {
 } from "./config-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { IUserService, UserServiceToken } from "./user-service";
-import { IWebSocketService, WebSocketServiceToken } from "./ws-service";
 
 /**
  * An interface describing the http service.
@@ -35,12 +31,6 @@ export interface IHttpService extends IService {
    * @param roles The roles required for the action
    */
   isActionAuthorized(action: Action, roles?: UserRole[]): Promise<boolean>;
-
-  /**
-   * Sets up the incoming websocket.
-   * @param socket The incoming websocket
-   */
-  setupWebSocketConnection(socket: WebSocket): void;
 }
 
 /**
@@ -58,7 +48,6 @@ export class HttpService implements IHttpService {
     private readonly _config: IConfigurationService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(UserServiceToken) private readonly _users: IUserService,
-    @Inject(WebSocketServiceToken) private readonly _ws: IWebSocketService,
   ) {}
 
   /**
@@ -94,10 +83,6 @@ export class HttpService implements IHttpService {
 
     this._logger.debug("initialized http controllers");
     const server = createServer(routedApp);
-
-    const wsApp = ws(routedApp, server).app;
-    wsApp.ws("/api/ws", (socket) => this.setupWebSocketConnection(socket));
-    this._logger.debug("initialized ws");
 
     const port = this._config.config.http.port;
     server.listen(port);
@@ -190,55 +175,5 @@ export class HttpService implements IHttpService {
     }
 
     return true;
-  }
-
-  /**
-   * Sets up the incoming websocket and registeres it in the injected websocket service after authentication.
-   * @param socket The incoming websocket
-   */
-  public setupWebSocketConnection(socket: WebSocket): void {
-    // close socket after 5s
-    const socketCloseTimeout = setTimeout(() => socket.close(), 5 * 1000);
-
-    const onMessage = async ({ data: messageString }: any) => {
-      if (!messageString) {
-        return;
-      }
-
-      let message: IWebSocketMessage;
-
-      try {
-        message = JSON.parse(
-          messageString instanceof Buffer
-            ? messageString.toString()
-            : messageString,
-        );
-      } catch {
-        this._logger.debug(`invalid websocket setup message`);
-        return;
-      }
-
-      if (!message || !message.data) {
-        return;
-      }
-
-      const { data } = message;
-
-      if (data.type === WebSocketMessageType.Token) {
-        const user = await this._users.findUserByLoginToken(data.token);
-
-        if (!user) {
-          this._logger.debug("unauthorized websocket access");
-          socket.close();
-          return;
-        }
-
-        socket.removeEventListener("message", onMessage);
-        this._ws.registerClient(user.role, socket);
-        clearTimeout(socketCloseTimeout);
-      }
-    };
-
-    socket.addEventListener("message", onMessage);
   }
 }

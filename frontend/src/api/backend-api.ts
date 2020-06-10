@@ -1,5 +1,4 @@
 import { IApi } from ".";
-import { IActivity } from "../../../types/activity";
 import {
   IApiRequest,
   IApiResponse,
@@ -200,12 +199,5 @@ export class BackendApi implements IApi {
       "/settings",
       settings,
     );
-  }
-
-  /**
-   * Fetches the latest activity in tilt.
-   */
-  public async getActivities(): Promise<IActivity[]> {
-    return await this.get<IActivity[]>("/activity");
   }
 }

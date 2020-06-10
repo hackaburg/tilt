@@ -5,18 +5,15 @@ import { RoutedApp } from "./components/app";
 import { LoginContextProvider } from "./contexts/login-context";
 import { NotificationContextProvider } from "./contexts/notification-context";
 import { SettingsContextProvider } from "./contexts/settings-context";
-import { WebSocketContextProvider } from "./contexts/ws-context";
 
 const container = document.getElementById("app");
 const app = (
   <NotificationContextProvider>
     <SettingsContextProvider>
       <LoginContextProvider>
-        <WebSocketContextProvider>
-          <BrowserRouter>
-            <RoutedApp />
-          </BrowserRouter>
-        </WebSocketContextProvider>
+        <BrowserRouter>
+          <RoutedApp />
+        </BrowserRouter>
       </LoginContextProvider>
     </SettingsContextProvider>
   </NotificationContextProvider>

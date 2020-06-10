@@ -1,16 +1,13 @@
 import { UserRole } from "../../../types/roles";
-import { IWebSocketMessage, WebSocketMessageType } from "../../../types/ws";
 import { User } from "../../src/entities/user";
 import { IConfigurationService } from "../../src/services/config-service";
 import { HttpService, IHttpService } from "../../src/services/http-service";
 import { ILoggerService } from "../../src/services/logger-service";
 import { IUserService } from "../../src/services/user-service";
-import { IWebSocketService } from "../../src/services/ws-service";
 import { MockedService } from "./mock";
 import { MockConfigurationService } from "./mock/mock-config-service";
 import { MockLoggerService } from "./mock/mock-logger-service";
 import { MockUserService } from "./mock/mock-user-service";
-import { MockWebSocket, MockWebSocketService } from "./mock/mock-ws-service";
 
 interface IMockedRoutingControllers {
   useExpressServer: jest.Mock;
@@ -66,7 +63,6 @@ describe("HttpService", () => {
   let config: MockedService<IConfigurationService>;
   let logger: MockedService<ILoggerService>;
   let users: MockedService<IUserService>;
-  let ws: MockedService<IWebSocketService>;
   let httpService: IHttpService;
 
   beforeAll(() => {
@@ -87,12 +83,10 @@ describe("HttpService", () => {
     } as any);
     logger = new MockLoggerService();
     users = new MockUserService();
-    ws = new MockWebSocketService();
     httpService = new HttpService(
       config.instance,
       logger.instance,
       users.instance,
-      ws.instance,
     );
 
     routingControllers.useContainer.mockReset();
@@ -211,106 +205,5 @@ describe("HttpService", () => {
         expect(result).toBe(value);
       }
     }
-  });
-
-  it("registers sockets after authentication", async () => {
-    expect.assertions(3);
-
-    const socket = new MockWebSocket();
-    let messageCallback: ((message: { data: string }) => any) | undefined;
-
-    socket.mocks.addEventListener.mockImplementation(
-      (_event: string, callback: any) => (messageCallback = callback),
-    );
-    httpService.setupWebSocketConnection(socket.instance);
-    expect(messageCallback).toBeDefined();
-
-    const user = {
-      role: UserRole.User,
-    };
-    users.mocks.findUserByLoginToken.mockResolvedValue(user);
-
-    const token = "token";
-    const tokenMessage: IWebSocketMessage = {
-      data: {
-        token,
-        type: WebSocketMessageType.Token,
-      },
-      status: "ok",
-    };
-
-    const json = JSON.stringify(tokenMessage);
-
-    if (messageCallback) {
-      await messageCallback({ data: json });
-    }
-
-    expect(socket.mocks.addEventListener).toBeCalledWith(
-      "message",
-      messageCallback,
-    );
-    expect(ws.mocks.registerClient).toBeCalledWith(user.role, socket.instance);
-  });
-
-  it("closes the socket for invalid tokens", async () => {
-    expect.assertions(3);
-
-    const socket = new MockWebSocket();
-    let messageCallback: ((message: { data: string }) => any) | undefined;
-
-    socket.mocks.addEventListener.mockImplementation(
-      (_event: string, callback: any) => (messageCallback = callback),
-    );
-    httpService.setupWebSocketConnection(socket.instance);
-    expect(messageCallback).toBeDefined();
-
-    users.mocks.findUserByLoginToken.mockResolvedValue(undefined);
-
-    const tokenMessage: IWebSocketMessage = {
-      data: {
-        token: "token",
-        type: WebSocketMessageType.Token,
-      },
-      status: "ok",
-    };
-
-    const json = JSON.stringify(tokenMessage);
-
-    if (messageCallback) {
-      await messageCallback({ data: json });
-    }
-
-    expect(socket.mocks.close).toBeCalled();
-    expect(ws.mocks.registerClient).not.toBeCalled();
-  });
-
-  it("ignores invalid message data from the websocket", async () => {
-    expect.assertions(2);
-
-    const socket = new MockWebSocket();
-    let messageCallback: ((message: string) => any) | undefined;
-
-    socket.mocks.addEventListener.mockImplementation(
-      (_event: string, callback: any) => (messageCallback = callback),
-    );
-    httpService.setupWebSocketConnection(socket.instance);
-    expect(messageCallback).toBeDefined();
-
-    if (messageCallback) {
-      await messageCallback("this is not json");
-    }
-
-    expect(ws.mocks.registerClient).not.toBeCalled();
-  });
-
-  it("drops stale websockets after 5s of not logging in", async () => {
-    expect.assertions(1);
-
-    const socket = new MockWebSocket();
-
-    httpService.setupWebSocketConnection(socket.instance);
-    jest.runAllTimers();
-
-    expect(socket.mocks.close).toBeCalled();
   });
 });

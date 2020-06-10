@@ -1,5 +1,4 @@
 import { IApi } from ".";
-import { IActivity } from "../../../types/activity";
 import { UserRole } from "../../../types/roles";
 import { ISettings } from "../../../types/settings";
 import { sleep } from "../util";
@@ -100,13 +99,5 @@ export class StaticApi implements IApi {
    */
   public async updateSettings(): Promise<ISettings> {
     return await this.getSettings();
-  }
-
-  /**
-   * Simulates fetching the activity.
-   */
-  public async getActivities(): Promise<IActivity[]> {
-    await sleep(100);
-    return [];
   }
 }
