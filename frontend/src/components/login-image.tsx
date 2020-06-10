@@ -1,5 +1,6 @@
+import { keyframes } from "@emotion/core";
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled, { keyframes } from "styled-components";
 import { transitionDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 

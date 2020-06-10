@@ -1,7 +1,7 @@
+import styled from "@emotion/styled";
 import { v4 as uuid } from "node-uuid";
 import * as React from "react";
 import * as ReactMarkdown from "react-markdown";
-import styled from "styled-components";
 import {
   IChoicesQuestionConfiguration,
   ICountryQuestionConfiguration,

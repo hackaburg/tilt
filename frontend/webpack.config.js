@@ -57,14 +57,6 @@ module.exports = {
       {
         test: /src\/.+\.tsx?$/,
         loader: "awesome-typescript-loader",
-        options: isProduction
-          ? undefined
-          : {
-              getCustomTransformers: join(
-                __dirname,
-                "webpack.styled-components.js",
-              ),
-            },
       },
       {
         test: /\.(png|jpg|svg)$/,

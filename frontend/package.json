@@ -20,11 +20,10 @@
     "@types/jest": "^24.0.11",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/node-uuid": "^0.0.28",
-    "@types/react": "^16.8.11",
-    "@types/react-dom": "^16.8.3",
+    "@types/react": "^16.9.36",
+    "@types/react-dom": "^16.9.8",
     "@types/react-router": "^4.4.5",
     "@types/react-router-dom": "^4.3.1",
-    "@types/styled-components": "4.1.8",
     "awesome-typescript-loader": "^5.2.1",
     "codecov": "^3.6.5",
     "country-json": "^1.0.9",
@@ -39,15 +38,14 @@
     "jsonwebtoken": "^8.5.1",
     "node-uuid": "^1.4.8",
     "prettier": "^1.18.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-markdown": "^4.0.8",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-spinners": "^0.5.4",
     "rimraf": "^2.6.3",
     "style-loader": "^0.23.1",
-    "styled-components": "^4.2.0",
     "terser-webpack-plugin": "^1.2.3",
     "ts-jest": "^24.0.1",
     "tslib": "^1.9.3",
@@ -58,5 +56,9 @@
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.8.1"
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27"
   }
 }

@@ -1,6 +1,7 @@
+import { css } from "@emotion/core";
+import styled from "@emotion/styled";
 import * as React from "react";
 import { useState } from "react";
-import styled, { css } from "styled-components";
 import { IEmailTemplate } from "../../../types/settings";
 import { borderRadius } from "../config";
 import { Editor } from "./editor";

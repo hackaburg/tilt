@@ -1,5 +1,5 @@
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled from "styled-components";
 import { CenteredContainer, PageHeightContainer } from "./centering";
 import { Heading } from "./headings";
 

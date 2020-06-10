@@ -1,7 +1,7 @@
+import styled from "@emotion/styled";
 import { v4 as uuid } from "node-uuid";
 import { useState } from "react";
 import * as React from "react";
-import styled from "styled-components";
 import { IQuestion, QuestionType } from "../../../types/questions";
 import { IFormSettings } from "../../../types/settings";
 import { Button } from "./button";

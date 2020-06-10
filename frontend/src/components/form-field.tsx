@@ -1,7 +1,8 @@
+import { css } from "@emotion/core";
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled, { css } from "styled-components";
 import { transitionDuration } from "../config";
-import { IThemeProps } from "../theme";
+import { variables } from "../theme";
 
 interface IContainerProps {
   active: boolean;
@@ -22,10 +23,10 @@ const Container = styled.div<IContainerProps>`
   transition-property: border-color;
   transition-duration: ${transitionDuration};
 
-  ${({ active, theme }: IContainerProps & IThemeProps) =>
+  ${({ active }: IContainerProps) =>
     active &&
     `
-    border-color: ${theme.colorGradientEnd};
+    border-color: ${variables.colorGradientEnd};
   `}
 `;
 
@@ -57,10 +58,10 @@ const Title = styled.label<ITitleProps>`
     font-weight: bold;
   `}
 
-  ${({ active, theme }) =>
+  ${({ active }) =>
     active &&
     `
-    color: ${theme.colorGradientEnd};
+    color: ${variables.colorGradientEnd};
   `}
 
   ${({ mandatory }) =>

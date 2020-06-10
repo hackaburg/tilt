@@ -1,8 +1,9 @@
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled from "styled-components";
 import { UserRole } from "../../../types/roles";
 import { useLoginContext } from "../contexts/login-context";
 import { Routes } from "../routes";
+import { variables } from "../theme";
 import { SidebarLogo } from "./sidebar-logo";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 
@@ -11,10 +12,11 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-
-  ${(props) => `
-    background: linear-gradient(to top right, ${props.theme.colorGradientStart}, ${props.theme.colorGradientEnd});
-  `}
+  background: linear-gradient(
+    to top right,
+    ${variables.colorGradientStart},
+    ${variables.colorGradientEnd}
+  );
 
   &::after {
     content: " ";

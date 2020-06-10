@@ -1,5 +1,5 @@
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled from "styled-components";
 import { useApi } from "../hooks/use-api";
 import { Routes } from "../routes";
 import { CenteredContainer, PageSizedContainer } from "./centering";

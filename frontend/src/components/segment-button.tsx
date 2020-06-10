@@ -1,12 +1,12 @@
+import styled from "@emotion/styled";
 import * as React from "react";
 import { useState } from "react";
-import styled from "styled-components";
 import { borderRadius } from "../config";
-import { IThemeProps } from "../theme";
+import { variables } from "../theme";
 
 const Container = styled.div`
   display: inline-block;
-  border: 1px solid ${(props: IThemeProps) => props.theme.colorGradientEnd};
+  border: 1px solid ${variables.colorGradientEnd};
   border-radius: ${borderRadius};
   overflow: hidden;
   font-size: 0.6rem;
@@ -29,12 +29,12 @@ const SegmentedButton = styled.div<ISegmentedButtonProps>`
 
   border: none;
   background-color: white;
-  color: ${(props: IThemeProps) => props.theme.colorGradientEnd};
+  color: ${variables.colorGradientEnd};
 
-  ${(props: ISegmentedButtonProps & IThemeProps) =>
+  ${(props: ISegmentedButtonProps) =>
     props.active &&
     `
-    background-color: ${props.theme.colorGradientEnd};
+    background-color: ${variables.colorGradientEnd};
     color: white;
   `}
 

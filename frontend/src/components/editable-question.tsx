@@ -1,10 +1,10 @@
+import styled from "@emotion/styled";
 import * as React from "react";
 import { useState } from "react";
-import styled from "styled-components";
 import { IQuestion } from "../../../types/questions";
 import { borderRadius, transitionDuration } from "../config";
 import { randomFortune } from "../fortunes";
-import { IThemeProps } from "../theme";
+import { variables } from "../theme";
 import { Question } from "./question";
 
 const Container = styled.div`
@@ -15,11 +15,9 @@ const Container = styled.div`
   background-color: white;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
 
-  & + & {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    border-top: 1px dashed #eee;
-  }
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-top: 1px dashed #eee;
 `;
 
 const Modifiers = styled.div`
@@ -49,10 +47,10 @@ const EditButton = styled.button<IEditQuestionButtonProps>`
     opacity: 1;
   }
 
-  ${({ active, theme }: IEditQuestionButtonProps & IThemeProps) =>
+  ${({ active }: IEditQuestionButtonProps) =>
     active &&
     `
-    color: ${theme.colorGradientEnd};
+    color: ${variables.colorGradientEnd};
     opacity: 1;
   `}
 `;

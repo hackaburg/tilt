@@ -1,12 +1,11 @@
 import * as React from "react";
 import { useCallback, useEffect } from "react";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router";
-import { ThemeProvider } from "styled-components";
 import { defaultThemeColor } from "../config";
 import { useLoginContext } from "../contexts/login-context";
 import { useSettingsContext } from "../contexts/settings-context";
 import { Routes } from "../routes";
-import { ITheme } from "../theme";
+import { ThemeProvider } from "../theme";
 import { LoginSignupForm } from "./login-signup-form";
 import { PageWrapper } from "./page-wrapper";
 import { VerifyEmail } from "./verify-email";
@@ -36,7 +35,7 @@ export const App = ({ history, location }: IAppProps) => {
     hash,
   ]);
 
-  let theme: ITheme = {
+  let theme = {
     colorGradientEnd: defaultThemeColor,
     colorGradientStart: defaultThemeColor,
     colorLink: defaultThemeColor,
@@ -55,7 +54,7 @@ export const App = ({ history, location }: IAppProps) => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider values={theme}>
       <Switch>
         <Route path={Routes.Login} component={LoginSignupForm} />
         <Route path={Routes.VerifyEmail} component={VerifyEmailWithToken} />

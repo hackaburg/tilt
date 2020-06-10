@@ -1,8 +1,8 @@
+import styled from "@emotion/styled";
 import * as React from "react";
 import { ScaleLoader } from "react-spinners";
-import styled from "styled-components";
 import { borderRadius, transitionDuration } from "../config";
-import { IThemeProps } from "../theme";
+import { variables } from "../theme";
 
 interface IStyledButtonProps {
   primary?: boolean;
@@ -57,11 +57,10 @@ const StyledButton = styled.button<IStyledButtonProps>`
       }
     `}
 
-  ${(props: IThemeProps & IStyledButtonProps) =>
+  ${(props: IStyledButtonProps) =>
     props.primary &&
-    props.theme.colorGradientStart &&
     `
-    background: linear-gradient(to top right, ${props.theme.colorGradientStart}, ${props.theme.colorGradientEnd});
+    background: linear-gradient(to top right, ${variables.colorGradientStart}, ${variables.colorGradientEnd});
   `}
 `;
 

@@ -1,14 +1,12 @@
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled from "styled-components";
 import { IFormSettings } from "../../../types/settings";
 import { Heading } from "./headings";
 import { Question } from "./question";
 
 const Container = styled.div`
-  & + & {
-    border-top: 1px dashed #eee;
-    margin-top: 1rem;
-  }
+  border-top: 1px dashed #eee;
+  margin-top: 1rem;
 `;
 
 interface IFormProps {

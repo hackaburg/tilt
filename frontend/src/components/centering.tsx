@@ -1,18 +1,16 @@
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled from "styled-components";
 
-const InnerCenteredContainer = styled.div``;
+const InnerCenteredContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 const OuterCenteredContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-
-  ${InnerCenteredContainer} {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
 `;
 
 interface ICenteredProps {

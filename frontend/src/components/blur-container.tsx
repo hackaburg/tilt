@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { transitionDuration } from "../config";
 
 interface IBlurContainer extends React.Props<any> {

@@ -1,18 +1,17 @@
+import styled from "@emotion/styled";
 import * as React from "react";
-import styled from "styled-components";
 import { borderRadius } from "../config";
-import { IThemeProps } from "../theme";
+import { variables } from "../theme";
 
 const Bar = styled.div`
   height: 3px;
   border-radius: ${borderRadius};
+  background-color: ${variables.colorGradientEnd};
 
-  ${(props: IThemeProps) => `
-    background-color: ${props.theme.colorGradientEnd};
-  `}
+  margin-top: 0.25rem;
 
-  & + & {
-    margin-top: 0.25rem;
+  :first-of-type {
+    margin-top: 0;
   }
 `;
 

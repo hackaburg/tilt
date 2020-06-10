@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { ISidebarAwareProps } from "./page-wrapper";
 
