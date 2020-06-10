@@ -41,10 +41,10 @@ export class UsersController {
    */
   @HttpCode(201)
   @Post("/signup")
-  public async signup(@Body()
-  {
-    data: { email, password },
-  }: UserSignupApiRequest): Promise<IUserSignupResponseBody> {
+  public async signup(
+    @Body()
+    { data: { email, password } }: UserSignupApiRequest,
+  ): Promise<IUserSignupResponseBody> {
     try {
       const user = await this._users.signup(email, password);
       await this._activity.addActivity(user, {
@@ -86,10 +86,10 @@ export class UsersController {
    * @param body The user's login credentials
    */
   @Post("/login")
-  public async login(@Body()
-  {
-    data: { email, password },
-  }: UserLoginApiRequest): Promise<IUserLoginResponseBody> {
+  public async login(
+    @Body()
+    { data: { email, password } }: UserLoginApiRequest,
+  ): Promise<IUserLoginResponseBody> {
     const user = await this._users.findUserWithCredentials(email, password);
 
     if (!user) {

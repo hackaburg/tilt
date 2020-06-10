@@ -34,12 +34,18 @@ export class User implements IUser {
   public updatedAt!: Date;
 
   @Exclude()
-  @OneToMany(() => Activity, (activity) => activity.user)
+  @OneToMany(
+    () => Activity,
+    (activity) => activity.user,
+  )
   public activity!: Activity[];
 
   @Exclude()
   @Column()
   public role!: UserRole;
+
+  @Column()
+  public admitted!: boolean;
 }
 
 /**

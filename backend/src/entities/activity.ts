@@ -10,7 +10,10 @@ export class Activity {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @ManyToOne(() => User, (user) => user.activity)
+  @ManyToOne(
+    () => User,
+    (user) => user.activity,
+  )
   public user!: IUser;
 
   @Column()

@@ -43,7 +43,10 @@ jest.mock(
   })),
 );
 
-jest.mock("express", jest.fn(() => jest.fn()));
+jest.mock(
+  "express",
+  jest.fn(() => jest.fn()),
+);
 jest.mock(
   "express-ws",
   jest.fn(() =>
