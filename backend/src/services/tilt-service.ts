@@ -1,6 +1,7 @@
 import { Inject, Service } from "typedi";
 import { IService } from ".";
 import { ActivityServiceToken, IActivityService } from "./activity-service";
+import { AnswerServiceToken, IAnswerService } from "./answer-service";
 import {
   BootShutdownNotificationServiceToken,
   IBootShutdownNotificationService,
@@ -21,6 +22,10 @@ import {
 } from "./haveibeenpwned-service";
 import { HttpServiceToken, IHttpService } from "./http-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
+import {
+  IQuestionGraphService,
+  QuestionGraphServiceToken,
+} from "./question-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import {
   ISlackNotificationService,
@@ -56,6 +61,8 @@ export class Tilt implements IService {
     @Inject(TokenServiceToken) tokens: ITokenService<any>,
     @Inject(UserServiceToken) users: IUserService,
     @Inject(SettingsServiceToken) settings: ISettingsService,
+    @Inject(QuestionGraphServiceToken) questions: IQuestionGraphService,
+    @Inject(AnswerServiceToken) answers: IAnswerService,
     @Inject(WebSocketServiceToken) ws: IWebSocketService,
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
@@ -73,6 +80,8 @@ export class Tilt implements IService {
       tokens,
       users,
       settings,
+      questions,
+      answers,
       ws,
       http,
     ];
