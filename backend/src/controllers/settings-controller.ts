@@ -34,7 +34,7 @@ export class SettingsController {
    * Updates the application settings.
    */
   @Put()
-  @Authorized(UserRole.Owner)
+  @Authorized(UserRole.Root)
   public async updateSettings(
     @Body() { data: settings }: UpdateSettingsApiRequest,
   ): Promise<ISettings> {

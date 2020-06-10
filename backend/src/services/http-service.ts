@@ -141,7 +141,7 @@ export class HttpService implements IHttpService {
             return false;
         }
 
-      case UserRole.Owner:
+      case UserRole.Root:
         return true;
 
       default:

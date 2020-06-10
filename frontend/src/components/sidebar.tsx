@@ -41,7 +41,7 @@ export const Sidebar = () => {
   }
 
   const { role, logout } = loginState;
-  const isElevatedUser = [UserRole.Moderator, UserRole.Owner].includes(role);
+  const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
 
   return (
     <Container>
@@ -58,7 +58,7 @@ export const Sidebar = () => {
           </>
         )}
 
-        {role === UserRole.Owner && (
+        {role === UserRole.Root && (
           <>
             <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
           </>

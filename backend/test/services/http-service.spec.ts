@@ -182,17 +182,17 @@ describe("HttpService", () => {
       [
         [UserRole.User, UserRole.User, true],
         [UserRole.User, UserRole.Moderator, false],
-        [UserRole.User, UserRole.Owner, false],
+        [UserRole.User, UserRole.Root, false],
       ],
       [
         [UserRole.Moderator, UserRole.User, true],
         [UserRole.Moderator, UserRole.Moderator, true],
-        [UserRole.Moderator, UserRole.Owner, false],
+        [UserRole.Moderator, UserRole.Root, false],
       ],
       [
-        [UserRole.Owner, UserRole.User, true],
-        [UserRole.Owner, UserRole.Moderator, true],
-        [UserRole.Owner, UserRole.Owner, true],
+        [UserRole.Root, UserRole.User, true],
+        [UserRole.Root, UserRole.Moderator, true],
+        [UserRole.Root, UserRole.Root, true],
       ],
     ];
 

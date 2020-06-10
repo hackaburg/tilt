@@ -1,5 +1,5 @@
 export const enum UserRole {
-  Owner = "owner",
+  Root = "root",
   Moderator = "moderator",
   User = "user",
 }
