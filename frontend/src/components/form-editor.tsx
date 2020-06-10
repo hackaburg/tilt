@@ -2,11 +2,7 @@ import { v4 as uuid } from "node-uuid";
 import { useState } from "react";
 import * as React from "react";
 import styled from "styled-components";
-import {
-  IQuestion,
-  ITextQuestion,
-  QuestionType,
-} from "../../../types/questions";
+import { IQuestion, QuestionType } from "../../../types/questions";
 import { IFormSettings } from "../../../types/settings";
 import { Button } from "./button";
 import { EditableQuestion } from "./editable-question";
@@ -64,17 +60,19 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
   };
 
   const addQuestion = () => {
-    const textQuestion: ITextQuestion = {
-      convertAnswerToUrl: false,
+    const textQuestion: IQuestion = {
+      configuration: {
+        convertAnswerToUrl: false,
+        multiline: false,
+        placeholder: "",
+        type: QuestionType.Text,
+      },
       description: "A new question",
       mandatory: false,
-      multiline: false,
       parentReferenceName: "",
-      placeholder: "",
       referenceName: uuid(),
       showIfParentHasValue: "",
       title: `Question ${questions.length + 1}`,
-      type: QuestionType.Text,
     };
 
     updateQuestions([

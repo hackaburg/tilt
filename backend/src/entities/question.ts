@@ -1,21 +1,15 @@
 import { Exclude } from "class-transformer";
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  TableInheritance,
-} from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { IQuestionConfiguration } from "../../../types/questions";
 import { FormSettings } from "./form-settings";
 
 @Entity()
-@TableInheritance({ column: { type: "varchar", name: "_class" } })
 export class Question {
   @PrimaryGeneratedColumn()
-  public id!: number;
+  public readonly id!: number;
 
-  @Column()
-  public type!: string;
+  @Column("simple-json")
+  public configuration!: IQuestionConfiguration;
 
   @Column()
   public referenceName!: string;

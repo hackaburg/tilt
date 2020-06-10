@@ -3,8 +3,11 @@ import * as React from "react";
 import * as ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import {
+  IChoicesQuestionConfiguration,
+  ICountryQuestionConfiguration,
+  INumberQuestionConfiguration,
   IQuestion,
-  IQuestionBase,
+  ITextQuestionConfiguration,
   QuestionType,
 } from "../../../types/questions";
 import { Checkboxes } from "./checkbox";
@@ -47,40 +50,40 @@ export const Question = ({
 
   const renderedQuestion = (
     <>
-      {question.type === QuestionType.Text && (
+      {question.configuration.type === QuestionType.Text && (
         <TextQuestion
           editable={editable}
-          question={question}
+          question={question as IQuestion<ITextQuestionConfiguration>}
           onQuestionChange={handleQuestionChange}
           onChange={onChange}
           value={value}
         />
       )}
 
-      {question.type === QuestionType.Number && (
+      {question.configuration.type === QuestionType.Number && (
         <NumberQuestion
           editable={editable}
-          question={question}
+          question={question as IQuestion<INumberQuestionConfiguration>}
           onQuestionChange={handleQuestionChange}
           onChange={onChange}
           value={value}
         />
       )}
 
-      {question.type === QuestionType.Choices && (
+      {question.configuration.type === QuestionType.Choices && (
         <ChoicesQuestion
           editable={editable}
-          question={question}
+          question={question as IQuestion<IChoicesQuestionConfiguration>}
           onQuestionChange={handleQuestionChange}
           onSelectedChanged={onChange}
           selected={value}
         />
       )}
 
-      {question.type === QuestionType.Country && (
+      {question.configuration.type === QuestionType.Country && (
         <CountryQuestion
           editable={editable}
-          question={question}
+          question={question as IQuestion<ICountryQuestionConfiguration>}
           onChange={onChange}
           value={value}
         />
@@ -91,7 +94,7 @@ export const Question = ({
   if (editable) {
     const mandatoryOptionName = "Mandatory";
     const handleQuestionTypeChange = (type: string) => {
-      const base: IQuestionBase = {
+      const base: Partial<IQuestion> = {
         description: "",
         mandatory: false,
         parentReferenceName: "",
@@ -104,42 +107,50 @@ export const Question = ({
         case QuestionType.Text:
           handleQuestionChange({
             ...base,
-            convertAnswerToUrl: false,
-            multiline: false,
-            placeholder: "",
+            configuration: {
+              convertAnswerToUrl: false,
+              multiline: false,
+              placeholder: "",
+              type: QuestionType.Text,
+            },
             title: "Text question",
-            type: QuestionType.Text,
           });
           break;
 
         case QuestionType.Number:
           handleQuestionChange({
             ...base,
-            allowDecimals: false,
-            maxValue: 10,
-            minValue: 0,
-            placeholder: "",
+            configuration: {
+              allowDecimals: false,
+              maxValue: 10,
+              minValue: 0,
+              placeholder: "",
+              type: QuestionType.Number,
+            },
             title: "Number question",
-            type: QuestionType.Number,
           });
           break;
 
         case QuestionType.Country:
           handleQuestionChange({
             ...base,
+            configuration: {
+              type: QuestionType.Country,
+            },
             title: "Country question",
-            type: QuestionType.Country,
           });
           break;
 
         case QuestionType.Choices:
           handleQuestionChange({
             ...base,
-            allowMultiple: true,
-            choices: [],
-            displayAsDropdown: false,
+            configuration: {
+              allowMultiple: true,
+              choices: [],
+              displayAsDropdown: false,
+              type: QuestionType.Choices,
+            },
             title: "Choice question",
-            type: QuestionType.Choices,
           });
           break;
       }
@@ -152,7 +163,7 @@ export const Question = ({
             <Col percent={50}>
               <Select
                 onChange={handleQuestionTypeChange}
-                value={question.type}
+                value={question.configuration.type}
                 values={[
                   QuestionType.Text,
                   QuestionType.Number,

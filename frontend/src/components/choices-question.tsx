@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useState } from "react";
-import { IChoicesQuestion } from "../../../types/questions";
+import {
+  IChoicesQuestionConfiguration,
+  IQuestion,
+} from "../../../types/questions";
 import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { Select } from "./select";
@@ -8,8 +11,8 @@ import { TextInput, TextInputType } from "./text-input";
 
 interface IChoicesQuestionProps {
   editable?: boolean;
-  question: IChoicesQuestion;
-  onQuestionChange?: (changes: Partial<IChoicesQuestion>) => any;
+  question: IQuestion<IChoicesQuestionConfiguration>;
+  onQuestionChange?: (changes: Partial<IQuestion>) => any;
 
   selected: string[];
   onSelectedChanged: (selected: string[]) => any;
@@ -35,29 +38,37 @@ export const ChoicesQuestion = ({
       displayAsDropdownOptionValue,
     ];
 
-    const selectedAppearanceOptions = question.allowMultiple
+    const selectedAppearanceOptions = question.configuration.allowMultiple
       ? [checkboxOptionValue]
-      : question.displayAsDropdown
+      : question.configuration.displayAsDropdown
       ? [displayAsDropdownOptionValue]
       : [radioOptionValue];
 
     const handleAppearanceChange = (selectedAppearance: string[]) => {
       onQuestionChange({
-        allowMultiple: selectedAppearance.includes(checkboxOptionValue),
-        displayAsDropdown: selectedAppearance.includes(
-          displayAsDropdownOptionValue,
-        ),
+        configuration: {
+          ...question.configuration,
+          allowMultiple: selectedAppearance.includes(checkboxOptionValue),
+          displayAsDropdown: selectedAppearance.includes(
+            displayAsDropdownOptionValue,
+          ),
+        },
       });
     };
 
-    const [choicesText, setChoicesText] = useState(question.choices.join("\n"));
+    const [choicesText, setChoicesText] = useState(
+      question.configuration.choices.join("\n"),
+    );
     const handleChoicesUpdate = (text: string) => {
       setChoicesText(text);
       onQuestionChange({
-        choices: text
-          .split("\n")
-          .map((line) => line.trim())
-          .filter((line) => line.length > 0),
+        configuration: {
+          ...question.configuration,
+          choices: text
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line.length > 0),
+        },
       });
     };
 
@@ -87,26 +98,26 @@ export const ChoicesQuestion = ({
     );
   }
 
-  if (question.displayAsDropdown) {
+  if (question.configuration.displayAsDropdown) {
     return (
       <Select
         mandatory={question.mandatory}
         onChange={(value) => onSelectedChanged([value])}
         title={question.title}
         value={selected[0]}
-        values={question.choices}
+        values={question.configuration.choices}
       />
     );
   }
 
   return (
     <Checkboxes
-      values={question.choices}
+      values={question.configuration.choices}
       selected={selected}
       onChange={onSelectedChanged}
       title={question.title}
       mandatory={question.mandatory}
-      radio={!question.allowMultiple}
+      radio={!question.configuration.allowMultiple}
     />
   );
 };

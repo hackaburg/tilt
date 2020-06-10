@@ -1,12 +1,15 @@
 import * as React from "react";
-import { INumberQuestion } from "../../../types/questions";
+import {
+  INumberQuestionConfiguration,
+  IQuestion,
+} from "../../../types/questions";
 import { Col, Row } from "./grid";
 import { TextInput, TextInputType } from "./text-input";
 
 interface INumberQuestionProps {
   editable?: boolean;
-  question: INumberQuestion;
-  onQuestionChange?: (changed: Partial<INumberQuestion>) => any;
+  question: IQuestion<INumberQuestionConfiguration>;
+  onQuestionChange?: (changed: Partial<IQuestion>) => any;
 
   value: number;
   onChange: (value: number) => any;
@@ -26,8 +29,12 @@ export const NumberQuestion = ({
     return (
       <>
         <TextInput
-          value={question.placeholder}
-          onChange={(placeholder) => onQuestionChange({ placeholder })}
+          value={question.configuration.placeholder}
+          onChange={(placeholder) =>
+            onQuestionChange({
+              configuration: { ...question.configuration, placeholder },
+            })
+          }
           placeholder="no placeholder"
           title="Input placeholder"
         />
@@ -36,8 +43,12 @@ export const NumberQuestion = ({
           <Col percent={50}>
             <TextInput
               type={TextInputType.Number}
-              value={question.minValue}
-              onChange={(minValue) => onQuestionChange({ minValue })}
+              value={question.configuration.minValue}
+              onChange={(minValue) =>
+                onQuestionChange({
+                  configuration: { ...question.configuration, minValue },
+                })
+              }
               title="Minimum"
               placeholder="No minimum"
             />
@@ -45,8 +56,12 @@ export const NumberQuestion = ({
           <Col percent={50}>
             <TextInput
               type={TextInputType.Number}
-              value={question.maxValue}
-              onChange={(maxValue) => onQuestionChange({ maxValue })}
+              value={question.configuration.maxValue}
+              onChange={(maxValue) =>
+                onQuestionChange({
+                  configuration: { ...question.configuration, maxValue },
+                })
+              }
               title="Maximum"
               placeholder="No maximum"
             />
@@ -59,10 +74,10 @@ export const NumberQuestion = ({
   return (
     <TextInput
       mandatory={question.mandatory}
-      min={question.minValue}
-      max={question.maxValue}
+      min={question.configuration.minValue}
+      max={question.configuration.maxValue}
       onChange={onChange}
-      placeholder={question.placeholder}
+      placeholder={question.configuration.placeholder}
       title={question.title}
       type={TextInputType.Number}
       value={value}

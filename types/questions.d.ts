@@ -5,23 +5,14 @@ export const enum QuestionType {
   Country = "country",
 }
 
-export interface IQuestionBase {
-  description: string;
-  title: string;
-  mandatory: boolean;
-  referenceName: string;
-  parentReferenceName?: string;
-  showIfParentHasValue?: string;
-}
-
-export interface ITextQuestion extends IQuestionBase {
+export interface ITextQuestionConfiguration {
   type: QuestionType.Text;
   placeholder: string;
   multiline: boolean;
   convertAnswerToUrl: boolean;
 }
 
-export interface INumberQuestion extends IQuestionBase {
+export interface INumberQuestionConfiguration {
   type: QuestionType.Number;
   placeholder: string;
   minValue?: number;
@@ -29,19 +20,34 @@ export interface INumberQuestion extends IQuestionBase {
   allowDecimals: boolean;
 }
 
-export interface IChoicesQuestion extends IQuestionBase {
+export interface IChoicesQuestionConfiguration {
   type: QuestionType.Choices;
   choices: string[];
   allowMultiple: boolean;
   displayAsDropdown: boolean;
 }
 
-export interface ICountryQuestion extends IQuestionBase {
+export interface ICountryQuestionConfiguration {
   type: QuestionType.Country;
 }
 
-export type IQuestion =
-  | ITextQuestion
-  | INumberQuestion
-  | IChoicesQuestion
-  | ICountryQuestion;
+export type IQuestionConfiguration =
+  | ITextQuestionConfiguration
+  | INumberQuestionConfiguration
+  | IChoicesQuestionConfiguration
+  | ICountryQuestionConfiguration;
+
+export interface IQuestion<TConfiguration = IQuestionConfiguration> {
+  description: string;
+  title: string;
+  mandatory: boolean;
+  configuration: TConfiguration;
+  referenceName: string;
+  parentReferenceName?: string;
+  showIfParentHasValue?: string;
+}
+
+export interface IAnswer {
+  referenceName: string;
+  value: string;
+}

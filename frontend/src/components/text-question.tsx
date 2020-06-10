@@ -1,13 +1,16 @@
 import * as React from "react";
-import { ITextQuestion } from "../../../types/questions";
+import {
+  IQuestion,
+  ITextQuestionConfiguration,
+} from "../../../types/questions";
 import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { TextInput, TextInputType } from "./text-input";
 
 interface ITextQuestionProps {
   editable?: boolean;
-  question: ITextQuestion;
-  onQuestionChange?: (updatedQuestion: Partial<ITextQuestion>) => any;
+  question: IQuestion<ITextQuestionConfiguration>;
+  onQuestionChange?: (updatedQuestion: Partial<IQuestion>) => any;
 
   value: string;
   onChange: (value: string) => any;
@@ -30,14 +33,19 @@ export const TextQuestion = ({
     const appearanceOptions = [multilineOptionValue, convertToUrlOptionValue];
 
     const selectedAppearanceOptions = [
-      ...(question.multiline ? [multilineOptionValue] : []),
-      ...(question.convertAnswerToUrl ? [convertToUrlOptionValue] : []),
+      ...(question.configuration.multiline ? [multilineOptionValue] : []),
+      ...(question.configuration.convertAnswerToUrl
+        ? [convertToUrlOptionValue]
+        : []),
     ];
 
     const handleAppearanceChange = (selected: string[]) => {
       onQuestionChange({
-        convertAnswerToUrl: selected.includes(convertToUrlOptionValue),
-        multiline: selected.includes(multilineOptionValue),
+        configuration: {
+          ...question.configuration,
+          convertAnswerToUrl: selected.includes(convertToUrlOptionValue),
+          multiline: selected.includes(multilineOptionValue),
+        },
       });
     };
 
@@ -46,8 +54,15 @@ export const TextQuestion = ({
         <Row>
           <Col percent={50}>
             <TextInput
-              value={question.placeholder}
-              onChange={(placeholder) => onQuestionChange({ placeholder })}
+              value={question.configuration.placeholder}
+              onChange={(placeholder) =>
+                onQuestionChange({
+                  configuration: {
+                    ...question.configuration,
+                    placeholder,
+                  },
+                })
+              }
               placeholder="no placeholder"
               title="Input placeholder"
             />
@@ -70,10 +85,14 @@ export const TextQuestion = ({
     <TextInput
       onChange={onChange}
       value={value}
-      placeholder={question.placeholder!}
+      placeholder={question.configuration.placeholder}
       title={question.title}
       mandatory={question.mandatory}
-      type={question.multiline ? TextInputType.Area : TextInputType.Text}
+      type={
+        question.configuration.multiline
+          ? TextInputType.Area
+          : TextInputType.Text
+      }
     />
   );
 };
