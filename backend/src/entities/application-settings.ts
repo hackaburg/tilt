@@ -1,37 +1,29 @@
-import { Exclude, Type } from "class-transformer";
-import { IsDate, IsNumber, IsPositive, ValidateNested } from "class-validator";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { IApplicationSettings } from "../../../types/settings";
+import { Type } from "class-transformer";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { FormSettings } from "./form-settings";
 
 @Entity()
-export class ApplicationSettings implements IApplicationSettings {
-  @Exclude()
+export class ApplicationSettings {
   @PrimaryGeneratedColumn()
-  public id!: number;
-
-  @ValidateNested()
+  public readonly id!: number;
   @Type(() => FormSettings)
-  @ManyToOne(() => FormSettings, { cascade: true, eager: true })
+  @OneToOne(() => FormSettings, { cascade: true, eager: true })
+  @JoinColumn()
   public profileForm!: FormSettings;
-
-  @ValidateNested()
   @Type(() => FormSettings)
-  @ManyToOne(() => FormSettings, { cascade: true, eager: true })
+  @OneToOne(() => FormSettings, { cascade: true, eager: true })
+  @JoinColumn()
   public confirmationForm!: FormSettings;
-
-  @IsDate()
-  @Type(() => Date)
   @Column()
   public allowProfileFormFrom!: Date;
-
-  @IsDate()
-  @Type(() => Date)
   @Column()
   public allowProfileFormUntil!: Date;
-
-  @IsNumber()
-  @IsPositive()
   @Column()
   public hoursToConfirm!: number;
 }

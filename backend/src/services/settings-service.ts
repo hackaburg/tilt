@@ -2,11 +2,13 @@ import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
 import { ApplicationSettings } from "../entities/application-settings";
-import { EmailSettings } from "../entities/email-settings";
-import { EmailTemplate } from "../entities/email-template";
 import { FormSettings } from "../entities/form-settings";
-import { FrontendSettings } from "../entities/frontend-settings";
-import { Settings } from "../entities/settings";
+import {
+  EmailSettings,
+  EmailTemplate,
+  FrontendSettings,
+  Settings,
+} from "../entities/settings";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 
@@ -52,11 +54,7 @@ export class SettingsService implements ISettingsService {
    */
   public async getSettings(): Promise<Settings> {
     try {
-      return await this._settings.findOneOrFail({
-        where: {
-          active: true,
-        },
-      });
+      return await this._settings.findOneOrFail();
     } catch (error) {
       this._logger.debug(`error loading settings: ${error.message}`);
       this._logger.info("no settings found. creating defaults");
@@ -141,15 +139,8 @@ export class SettingsService implements ISettingsService {
    * Updates all settings.
    * @param changes The updated settings
    */
-  public async updateSettings(changes: Settings): Promise<Settings> {
-    const existing = await this.getSettings();
-    existing.active = false;
-
-    delete changes.id;
-    changes.active = true;
-    await this._settings.save([existing, changes]);
-
-    return changes;
+  public async updateSettings(settings: Settings): Promise<Settings> {
+    return await this._settings.save(settings);
   }
 }
 

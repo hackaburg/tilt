@@ -8,8 +8,8 @@ interface IQuestionGraphNode {
   childNodes: IQuestionGraphNode[];
 }
 
-type ReferenceName = Question["referenceName"];
-type QuestionGraph = ReadonlyMap<ReferenceName, IQuestionGraphNode>;
+type QuestionID = Question["id"];
+type QuestionGraph = ReadonlyMap<QuestionID, IQuestionGraphNode>;
 
 /**
  * A service to build question graphs.
@@ -68,13 +68,11 @@ export class QuestionGraphService implements IQuestionGraphService {
   /**
    * @inheritdoc
    */
-  public buildQuestionGraph(
-    questions: readonly Question[],
-  ): ReadonlyMap<ReferenceName, IQuestionGraphNode> {
-    const graph = new Map<ReferenceName, IQuestionGraphNode>();
+  public buildQuestionGraph(questions: readonly Question[]): QuestionGraph {
+    const graph = new Map<QuestionID, IQuestionGraphNode>();
 
     for (const question of questions) {
-      graph.set(question.referenceName, {
+      graph.set(question.id, {
         childNodes: [],
         parentNodes: [],
         question,
@@ -82,14 +80,14 @@ export class QuestionGraphService implements IQuestionGraphService {
     }
 
     for (const question of questions) {
-      const node = graph.get(question.referenceName);
-      const parentQuestionReferenceName = node?.question?.parentReferenceName;
+      const node = graph.get(question.id);
+      const parentQuestionID = node?.question?.id;
 
-      if (!node || !parentQuestionReferenceName) {
+      if (!node || !parentQuestionID) {
         continue;
       }
 
-      const parentNode = graph.get(parentQuestionReferenceName);
+      const parentNode = graph.get(parentQuestionID);
 
       if (!parentNode) {
         throw new InvalidQuestionGraphError();

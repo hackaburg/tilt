@@ -1,41 +1,28 @@
-import { Exclude } from "class-transformer";
-import { IsEmail, IsString, MinLength } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { UserRole } from "../../../types/roles";
-import { IUser } from "../../../types/user";
 
 @Entity()
-export class User implements IUser {
-  @Exclude()
+export class User {
   @PrimaryGeneratedColumn()
-  public id!: number;
-
-  @IsEmail()
+  public readonly id!: number;
+  @CreateDateColumn()
+  public createdAt!: Date;
+  @UpdateDateColumn()
+  public updatedAt!: Date;
   @Column({ unique: true })
   public email!: string;
-
-  @Exclude({ toPlainOnly: true })
-  @IsString()
-  @MinLength(6)
   @Column({ select: false })
   public password!: string;
-
-  @Exclude()
   @Column()
   public verifyToken!: string;
-
-  @Exclude()
-  @Column()
-  public createdAt!: Date;
-
-  @Exclude()
-  @Column()
-  public updatedAt!: Date;
-
-  @Exclude()
   @Column()
   public role!: UserRole;
-
   @Column()
   public admitted!: boolean;
 }

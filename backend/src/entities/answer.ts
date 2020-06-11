@@ -6,13 +6,10 @@ import { User } from "./user";
 export class Answer {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
-
   @ManyToOne(() => User)
   public user!: User;
-
   @ManyToOne(() => Question)
   public question!: Question;
-
   @Column()
   public value!: string;
 }

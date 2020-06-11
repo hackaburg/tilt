@@ -1,46 +1,60 @@
-import { Exclude, Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import {
-  IActivatable,
-  IEmailSettings,
-  IFrontendSettings,
-  ISettings,
-} from "../../../types/settings";
 import { ApplicationSettings } from "./application-settings";
-import { EmailSettings } from "./email-settings";
-import { FrontendSettings } from "./frontend-settings";
 
 @Entity()
-export class Settings implements IActivatable<ISettings> {
-  @Exclude()
+export class Settings {
   @PrimaryGeneratedColumn()
-  public id!: number;
-
-  @ValidateNested()
+  public readonly id!: number;
   @Type(() => ApplicationSettings)
-  @ManyToOne(() => ApplicationSettings, { cascade: true, eager: true })
+  @OneToOne(() => ApplicationSettings, { cascade: true, eager: true })
   @JoinColumn()
   public application!: ApplicationSettings;
-
-  @ValidateNested()
   @Type(() => FrontendSettings)
-  @ManyToOne(() => FrontendSettings, { cascade: true, eager: true })
-  @JoinColumn()
-  public frontend!: IFrontendSettings;
-
-  @ValidateNested()
+  @Column(() => FrontendSettings)
+  public frontend!: FrontendSettings;
   @Type(() => EmailSettings)
-  @ManyToOne(() => EmailSettings, { cascade: true, eager: true })
-  @JoinColumn()
-  public email!: IEmailSettings;
+  @Column(() => EmailSettings)
+  public email!: EmailSettings;
+}
 
+export class FrontendSettings {
   @Column()
-  public active: boolean = true;
+  public colorGradientStart!: string;
+  @Column()
+  public colorGradientEnd!: string;
+  @Column()
+  public colorLink!: string;
+  @Column()
+  public colorLinkHover!: string;
+  @Column()
+  public loginSignupImage!: string;
+  @Column()
+  public sidebarImage!: string;
+}
+
+export class EmailSettings {
+  @Column()
+  public sender!: string;
+  @Type(() => EmailTemplate)
+  @Column(() => EmailTemplate)
+  public verifyEmail!: EmailTemplate;
+  @Type(() => EmailTemplate)
+  @Column(() => EmailTemplate)
+  public forgotPasswordEmail!: EmailTemplate;
+}
+
+export class EmailTemplate {
+  @Column()
+  public subject!: string;
+  @Column()
+  public htmlTemplate!: string;
+  @Column()
+  public textTemplate!: string;
 }

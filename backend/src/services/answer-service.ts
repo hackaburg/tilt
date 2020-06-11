@@ -1,13 +1,10 @@
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { IQuestion } from "../../../types/questions";
 import { Answer } from "../entities/answer";
 import { Question } from "../entities/question";
 import { User } from "../entities/user";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
-
-type IRawAnswer = any;
 
 /**
  * A service to support users answering questions.
@@ -26,8 +23,8 @@ export interface IAnswerService extends IService {
    */
   storeAnswers(
     user: User,
-    answers: readonly IRawAnswer[],
-    questions: readonly IQuestion[],
+    answers: readonly Answer[],
+    questions: readonly Question[],
   ): Promise<readonly Answer[]>;
 }
 
@@ -69,23 +66,21 @@ export class AnswerService implements IAnswerService {
    */
   public async storeAnswers(
     user: User,
-    answers: readonly IRawAnswer[],
-    questions: readonly IQuestion[],
+    answers: readonly Answer[],
+    questions: readonly Question[],
   ): Promise<readonly Answer[]> {
     const entities = answers.map((answer) => {
       const entity = new Answer();
       entity.user = user;
       entity.value = answer.value;
 
-      const question = questions.find(
-        ({ referenceName }) => answer.questionReferenceName === referenceName,
-      );
+      const question = questions.find(({ id }) => answer.question.id === id);
 
       if (question == null) {
-        throw new QuestionNotFoundError(answer.questionReferenceName);
+        throw new QuestionNotFoundError(answer.question.id);
       }
 
-      entity.question = question as Question;
+      entity.question = question;
 
       return entity;
     });
@@ -95,7 +90,7 @@ export class AnswerService implements IAnswerService {
 }
 
 export class QuestionNotFoundError extends Error {
-  constructor(referenceName: string) {
-    super(`No such question '${referenceName}'`);
+  constructor(questionID: number) {
+    super(`No such question '${questionID}'`);
   }
 }

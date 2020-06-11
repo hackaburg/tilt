@@ -1,22 +1,13 @@
-import { Exclude, Expose, Type } from "class-transformer";
-import { IsString, MinLength, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { IFormSettings } from "../../../types/settings";
 import { Question } from "./question";
 
 @Entity()
-export class FormSettings implements IFormSettings {
-  @Exclude()
+export class FormSettings {
   @PrimaryGeneratedColumn()
-  public id!: number;
-
-  @IsString()
-  @MinLength(1)
+  public readonly id!: number;
   @Column()
   public title!: string;
-
-  @Expose()
-  @ValidateNested()
   @Type(() => Question)
   @OneToMany(
     () => Question,
