@@ -1,6 +1,5 @@
-import { UserRole } from "../../../types/roles";
 import { UsersController } from "../../src/controllers/users-controller";
-import { User } from "../../src/entities/user";
+import { User, UserRole } from "../../src/entities/user";
 import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
 import { MockUserService } from "../services/mock/mock-user-service";
@@ -68,7 +67,7 @@ describe("UsersController", () => {
     expect.assertions(1);
 
     const user = new User();
-    user.id = 1;
+    (user as any).id = 1;
     userService.mocks.findUserWithCredentials.mockResolvedValue(user);
 
     const token = "token";
@@ -87,7 +86,7 @@ describe("UsersController", () => {
     expect.assertions(1);
 
     const user = new User();
-    user.id = 1;
+    (user as any).id = 1;
     user.role = UserRole.Moderator;
     userService.mocks.findUserWithCredentials.mockResolvedValue(user);
     userService.mocks.generateLoginToken.mockReturnValue("token");
@@ -115,23 +114,16 @@ describe("UsersController", () => {
     expect(promise).rejects.toBeDefined();
   });
 
-  it("returns the current user's role", async () => {
-    expect.assertions(1);
-
-    const user = new User();
-    const role = UserRole.Moderator;
-    user.role = role;
-
-    const response = await controller.getRole(user);
-    expect(response.role).toBe(role);
-  });
-
   it("returns a new token for the given user", async () => {
-    expect.assertions(1);
+    expect.assertions(2);
 
     const token = "token";
+    const role = UserRole.Moderator;
+    const user = new User();
+    user.role = role;
     userService.mocks.generateLoginToken.mockReturnValue(token);
-    const response = await controller.refreshLoginToken(new User());
+    const response = await controller.refreshLoginToken(user);
     expect(response.token).toBe(token);
+    expect(response.role).toBe(role);
   });
 });

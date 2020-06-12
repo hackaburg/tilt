@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --coverage",
     "codecov": "codecov -f coverage/*.json -F backend -p ..",
-    "prettier": "prettier --config ../.prettierrc.js '{src,test}/**/*.ts' '../types/**/*.d.ts'",
+    "prettier": "prettier --config ../.prettierrc.js '{src,test}/**/*.ts'",
     "lint": "tslint --project tsconfig.json",
     "build": "tsc --project tsconfig.prod.json",
     "clean": "rimraf dist/",

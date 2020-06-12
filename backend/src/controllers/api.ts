@@ -1,4 +1,4 @@
-import type { User } from "../entities/user";
+import { User } from "../entities/user";
 
 type ExtractArguments<T> = T extends (...args: infer Args) => any
   ? Args
@@ -15,17 +15,26 @@ type ExtractAllFunctions<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any ? T[K] : never;
 };
 
-interface IApiMethod<TArgument, TReturnValue> {
+/**
+ * Type definitions for an API method.
+ */
+export interface IApiMethod<TArgument, TReturnValue> {
   takes: TArgument;
   returns: TReturnValue;
 }
 
-interface ISuccessfulApiResponse<T> {
+/**
+ * A successful response from the API.
+ */
+export interface ISuccessfulApiResponse<T> {
   status: "ok";
   data: T;
 }
 
-interface IErrorApiResponse {
+/**
+ * A failed API response.
+ */
+export interface IErrorApiResponse {
   status: "error";
   error: string;
 }
@@ -34,6 +43,13 @@ interface IErrorApiResponse {
  * A response from the API.
  */
 export type IApiResponse<T> = ISuccessfulApiResponse<T> | IErrorApiResponse;
+
+/**
+ * Gets the actual value sent from the API.
+ */
+export type ExtractSuccessfulApiResponse<T> = T extends IApiResponse<infer K>
+  ? K
+  : never;
 
 /**
  * A request body to the API.
@@ -48,6 +64,6 @@ export interface IApiRequest<T> {
 export type ExtractControllerMethods<TController> = {
   [K in keyof ExtractAllFunctions<TController>]: IApiMethod<
     ExtractFirstArgument<TController[K]>,
-    IApiResponse<ExtractPromise<ExtractReturnType<TController[K]>>>
+    ISuccessfulApiResponse<ExtractPromise<ExtractReturnType<TController[K]>>>
   >;
 };

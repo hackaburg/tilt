@@ -1,15 +1,14 @@
 import styled from "@emotion/styled";
-import { v4 as uuid } from "node-uuid";
 import * as React from "react";
 import * as ReactMarkdown from "react-markdown";
 import {
-  IChoicesQuestionConfiguration,
-  ICountryQuestionConfiguration,
-  INumberQuestionConfiguration,
-  IQuestion,
-  ITextQuestionConfiguration,
+  ChoicesQuestionConfigurationDTO,
+  CountryQuestionConfigurationDTO,
+  NumberQuestionConfigurationDTO,
+  QuestionDTO,
   QuestionType,
-} from "../../../types/questions";
+  TextQuestionConfigurationDTO,
+} from "../api/types";
 import { Checkboxes } from "./checkbox";
 import { ChoicesQuestion } from "./choices-question";
 import { CountryQuestion } from "./country-question";
@@ -24,8 +23,8 @@ const Meta = styled.div`
 `;
 
 interface IQuestionProps {
-  question: IQuestion;
-  onQuestionChange?: (changes: Partial<IQuestion>) => any;
+  question: QuestionDTO;
+  onQuestionChange?: (changes: Partial<QuestionDTO>) => any;
   editable?: boolean;
   value: any;
   onChange: (value: any) => any;
@@ -42,7 +41,7 @@ export const Question = ({
   value,
   onChange,
 }: IQuestionProps) => {
-  const handleQuestionChange = (changes: Partial<IQuestion>) => {
+  const handleQuestionChange = (changes: Partial<QuestionDTO>) => {
     if (onQuestionChange) {
       onQuestionChange(changes);
     }
@@ -53,7 +52,7 @@ export const Question = ({
       {question.configuration.type === QuestionType.Text && (
         <TextQuestion
           editable={editable}
-          question={question as IQuestion<ITextQuestionConfiguration>}
+          question={question as QuestionDTO<TextQuestionConfigurationDTO>}
           onQuestionChange={handleQuestionChange}
           onChange={onChange}
           value={value}
@@ -63,7 +62,7 @@ export const Question = ({
       {question.configuration.type === QuestionType.Number && (
         <NumberQuestion
           editable={editable}
-          question={question as IQuestion<INumberQuestionConfiguration>}
+          question={question as QuestionDTO<NumberQuestionConfigurationDTO>}
           onQuestionChange={handleQuestionChange}
           onChange={onChange}
           value={value}
@@ -73,7 +72,7 @@ export const Question = ({
       {question.configuration.type === QuestionType.Choices && (
         <ChoicesQuestion
           editable={editable}
-          question={question as IQuestion<IChoicesQuestionConfiguration>}
+          question={question as QuestionDTO<ChoicesQuestionConfigurationDTO>}
           onQuestionChange={handleQuestionChange}
           onSelectedChanged={onChange}
           selected={value}
@@ -83,7 +82,7 @@ export const Question = ({
       {question.configuration.type === QuestionType.Country && (
         <CountryQuestion
           editable={editable}
-          question={question as IQuestion<ICountryQuestionConfiguration>}
+          question={question as QuestionDTO<CountryQuestionConfigurationDTO>}
           onChange={onChange}
           value={value}
         />
@@ -94,11 +93,10 @@ export const Question = ({
   if (editable) {
     const mandatoryOptionName = "Mandatory";
     const handleQuestionTypeChange = (type: string) => {
-      const base: Partial<IQuestion> = {
+      const base: Partial<QuestionDTO> = {
         description: "",
         mandatory: false,
-        parentReferenceName: "",
-        referenceName: uuid(),
+        parentID: undefined,
         showIfParentHasValue: "",
         title: "",
       };
@@ -210,23 +208,12 @@ export const Question = ({
             </Col>
           </Row>
 
-          <TextInput
-            value={question.referenceName!}
-            onChange={(referenceName) =>
-              handleQuestionChange({ referenceName })
-            }
-            title="Reference name"
-            placeholder="no reference name"
-            mandatory={true}
-          />
-
           <Row>
             <Col percent={50}>
               <TextInput
-                value={question.parentReferenceName!}
-                onChange={(parentReferenceName) =>
-                  handleQuestionChange({ parentReferenceName })
-                }
+                type={TextInputType.Number}
+                value={question.parentID}
+                onChange={(parentID) => handleQuestionChange({ parentID })}
                 title="Parent question reference name"
                 placeholder="no parent question"
               />

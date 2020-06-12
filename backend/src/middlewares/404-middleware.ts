@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ExpressMiddlewareInterface, Middleware } from "routing-controllers";
-import { IApiResponse } from "../../../types/api";
+import { IApiResponse } from "../controllers/api";
 
 @Middleware({ type: "after", priority: 1000 })
 export class FinalMiddleware implements ExpressMiddlewareInterface {

@@ -1,15 +1,12 @@
 import * as React from "react";
-import {
-  INumberQuestionConfiguration,
-  IQuestion,
-} from "../../../types/questions";
+import { NumberQuestionConfigurationDTO, QuestionDTO } from "../api/types";
 import { Col, Row } from "./grid";
 import { TextInput, TextInputType } from "./text-input";
 
 interface INumberQuestionProps {
   editable?: boolean;
-  question: IQuestion<INumberQuestionConfiguration>;
-  onQuestionChange?: (changed: Partial<IQuestion>) => any;
+  question: QuestionDTO<NumberQuestionConfigurationDTO>;
+  onQuestionChange?: (changed: Partial<QuestionDTO>) => any;
 
   value: number;
   onChange: (value: number) => any;

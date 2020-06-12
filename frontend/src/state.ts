@@ -1,5 +1,4 @@
-import { UserRole } from "../../types/roles";
-import { ISettings } from "../../types/settings";
+import { SettingsDTO, UserRole } from "./api/types";
 
 /**
  * T or null
@@ -11,7 +10,7 @@ export type Nullable<T> = T | null;
  */
 export interface IState {
   request: IRequestCollection;
-  settings: Nullable<ISettings>;
+  settings: Nullable<SettingsDTO>;
   role: Nullable<UserRole>;
   notification: INotification;
 }

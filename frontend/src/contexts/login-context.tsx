@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
-import { UserRole } from "../../../types/roles";
+import { UserRole } from "../api/types";
 import { clearLoginToken, isLoginTokenSet } from "../authentication";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
@@ -43,8 +43,7 @@ export const LoginContextProvider = ({
   useApi(
     async (api) => {
       if (isAlreadyLoggedIn) {
-        await api.refreshLoginToken();
-        const apiRole = await api.getRole();
+        const apiRole = await api.refreshLoginToken();
         setRole(apiRole);
       }
     },

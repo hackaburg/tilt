@@ -10,8 +10,7 @@ import {
   QueryParam,
 } from "routing-controllers";
 import { Inject } from "typedi";
-import { UserRole } from "../../../types/roles";
-import { User } from "../entities/user";
+import { User, UserRole } from "../entities/user";
 import { IUserService, UserServiceToken } from "../services/user-service";
 import {
   CredentialsRequestDTO,
@@ -99,6 +98,7 @@ export class UsersController {
   ): Promise<RefreshTokenResponseDTO> {
     const response = new RefreshTokenResponseDTO();
     response.token = this._users.generateLoginToken(user);
+    response.role = user.role;
     return response;
   }
 }

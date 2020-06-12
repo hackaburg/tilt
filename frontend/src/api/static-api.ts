@@ -1,7 +1,6 @@
 import { IApi } from ".";
-import { UserRole } from "../../../types/roles";
-import { ISettings } from "../../../types/settings";
 import { sleep } from "../util";
+import { SettingsDTO, UserRole } from "./types";
 
 /**
  * An api which yields static data.
@@ -10,7 +9,7 @@ export class StaticApi implements IApi {
   /**
    * Simulates the settings.
    */
-  public async getSettings(): Promise<ISettings> {
+  public async getSettings(): Promise<SettingsDTO> {
     await sleep(100);
 
     return {
@@ -90,14 +89,15 @@ export class StaticApi implements IApi {
   /**
    * Simulates a refresh token api call.
    */
-  public async refreshLoginToken(): Promise<void> {
+  public async refreshLoginToken(): Promise<UserRole> {
     await sleep(100);
+    return UserRole.User;
   }
 
   /**
    * Simulates an update settings api call.
    */
-  public async updateSettings(): Promise<ISettings> {
+  public async updateSettings(): Promise<SettingsDTO> {
     return await this.getSettings();
   }
 }

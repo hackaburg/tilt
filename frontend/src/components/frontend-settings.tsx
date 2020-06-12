@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { IFrontendSettings } from "../../../types/settings";
+import { FrontendSettingsDTO } from "../api/types";
 import { debounceDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import { Col, Row } from "./grid";
@@ -15,7 +15,7 @@ export const FrontendSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
 
   const [debouncedHandleSettingsChange] = useDebouncedCallback(
-    (field: keyof IFrontendSettings, value: any) => {
+    (field: keyof FrontendSettingsDTO, value: any) => {
       updateSettings({
         ...settings,
         frontend: {

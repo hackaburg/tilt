@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
-import { ISettings } from "../../../types/settings";
+import { SettingsDTO } from "../api/types";
 import { Spinner } from "../components/spinner";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
@@ -8,8 +8,8 @@ import { Nullable } from "../state";
 import { useNotificationContext } from "./notification-context";
 
 interface ISettingsContextValue {
-  settings: ISettings;
-  updateSettings: (settings: ISettings) => void;
+  settings: SettingsDTO;
+  updateSettings: (settings: SettingsDTO) => void;
   updateError: Nullable<Error>;
 }
 
@@ -28,7 +28,9 @@ export const SettingsContextProvider = ({
   children,
 }: ISettingsContextProviderProps) => {
   const { showNotification } = useNotificationContext();
-  const [localSettings, setLocalSettings] = useState<Nullable<ISettings>>(null);
+  const [localSettings, setLocalSettings] = useState<Nullable<SettingsDTO>>(
+    null,
+  );
   const [
     fetchedSettings,
     isFetchingSettings,
@@ -43,7 +45,7 @@ export const SettingsContextProvider = ({
     throw new Error("No settings received from the server");
   }
 
-  const updateSettings = useCallback((settings: ISettings) => {
+  const updateSettings = useCallback((settings: SettingsDTO) => {
     if (settings != null) {
       setLocalSettings(settings);
     }
@@ -61,7 +63,7 @@ export const SettingsContextProvider = ({
 
   const value = useMemo<ISettingsContextValue>(
     () => ({
-      settings: localSettings ?? (fetchedSettings as ISettings),
+      settings: localSettings ?? (fetchedSettings as SettingsDTO),
       updateError,
       updateSettings,
     }),

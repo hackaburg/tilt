@@ -2,7 +2,7 @@ import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useState } from "react";
-import { IEmailTemplate } from "../../../types/settings";
+import { EmailTemplateDTO } from "../api/types";
 import { borderRadius } from "../config";
 import { Editor } from "./editor";
 import { Placeholder } from "./placeholder";
@@ -45,8 +45,8 @@ enum EditorLanguage {
 
 interface IEmailTemplateEditor {
   title: string;
-  template: IEmailTemplate;
-  onTemplateChange: (template: IEmailTemplate) => any;
+  template: EmailTemplateDTO;
+  onTemplateChange: (template: EmailTemplateDTO) => any;
 }
 
 /**

@@ -1,6 +1,4 @@
-import { IRecursivePartial } from "../../../types/api";
-import { UserRole } from "../../../types/roles";
-import { ISettings } from "../../../types/settings";
+import { SettingsDTO, UserRole } from "./types";
 
 /**
  * Describes API methods provided by tilt.
@@ -9,7 +7,7 @@ export interface IApi {
   /**
    * Gets the application settings.
    */
-  getSettings(): Promise<ISettings>;
+  getSettings(): Promise<SettingsDTO>;
 
   /**
    * Creates an account.
@@ -33,18 +31,14 @@ export interface IApi {
   login(email: string, password: string): Promise<UserRole>;
 
   /**
-   * Gets the user's role.
-   */
-  getRole(): Promise<UserRole>;
-
-  /**
    * Refreshes the login token.
+   * @return The user's role
    */
-  refreshLoginToken(): Promise<void>;
+  refreshLoginToken(): Promise<UserRole>;
 
   /**
-   * Updates the settings with the given changes.
+   * Updates the settings.
    * @param settings The changed settings
    */
-  updateSettings(settings: IRecursivePartial<ISettings>): Promise<ISettings>;
+  updateSettings(settings: SettingsDTO): Promise<SettingsDTO>;
 }

@@ -1,16 +1,13 @@
 import * as countries from "country-json/src/country-by-abbreviation.json";
 import * as React from "react";
-import {
-  ICountryQuestionConfiguration,
-  IQuestion,
-} from "../../../types/questions";
+import { CountryQuestionConfigurationDTO, QuestionDTO } from "../api/types";
 import { Select } from "./select";
 
 const countryNames = countries.map(({ country }) => country).sort();
 
 interface ICountryQuestionProps {
   editable?: boolean;
-  question: IQuestion<ICountryQuestionConfiguration>;
+  question: QuestionDTO<CountryQuestionConfigurationDTO>;
   value: string;
   onChange: (value: string) => any;
 }

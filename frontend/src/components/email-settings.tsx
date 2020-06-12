@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { IEmailSettings, IEmailTemplate } from "../../../types/settings";
+import { EmailSettingsDTO, EmailTemplateDTO } from "../api/types";
 import { borderRadius, debounceDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import {
@@ -29,7 +29,7 @@ export const EmailSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
 
   const [debouncedHandleSettingsChange] = useDebouncedCallback(
-    (field: keyof IEmailSettings, value: string | IEmailTemplate) => {
+    (field: keyof EmailSettingsDTO, value: string | EmailTemplateDTO) => {
       updateSettings({
         ...settings,
         email: {

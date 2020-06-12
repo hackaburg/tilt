@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useState } from "react";
-import { IQuestion } from "../../../types/questions";
+import { QuestionDTO } from "../api/types";
 import { borderRadius, transitionDuration } from "../config";
 import { randomFortune } from "../fortunes";
 import { variables } from "../theme";
@@ -73,8 +73,8 @@ const RemoveButton = styled.button`
 `;
 
 interface IEditableQuestion {
-  question: IQuestion;
-  onQuestionChange: (changes: Partial<IQuestion>) => any;
+  question: QuestionDTO;
+  onQuestionChange: (changes: Partial<QuestionDTO>) => any;
   onDeleteQuestion: () => any;
 }
 

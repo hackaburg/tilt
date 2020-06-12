@@ -1,5 +1,4 @@
-import { UserRole } from "../../../types/roles";
-import { User } from "../../src/entities/user";
+import { User, UserRole } from "../../src/entities/user";
 import { IConfigurationService } from "../../src/services/config-service";
 import { HttpService, IHttpService } from "../../src/services/http-service";
 import { ILoggerService } from "../../src/services/logger-service";
@@ -43,16 +42,6 @@ jest.mock(
 jest.mock(
   "express",
   jest.fn(() => jest.fn()),
-);
-jest.mock(
-  "express-ws",
-  jest.fn(() =>
-    jest.fn(() => ({
-      app: {
-        ws: jest.fn(),
-      },
-    })),
-  ),
 );
 
 describe("HttpService", () => {

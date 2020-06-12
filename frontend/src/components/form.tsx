@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { IFormSettings } from "../../../types/settings";
+import { FormSettingsDTO } from "../api/types";
 import { Heading } from "./headings";
 import { Question } from "./question";
 
@@ -10,7 +10,7 @@ const Container = styled.div`
 `;
 
 interface IFormProps {
-  form: IFormSettings;
+  form: FormSettingsDTO;
   values?: readonly any[];
 }
 
@@ -20,7 +20,7 @@ interface IFormProps {
 export const Form = ({ form }: IFormProps) => {
   const questions = form.questions.map((question, index) => (
     <Container key={index}>
-      <Question onChange={() => {}} value={""} question={question} />
+      <Question onChange={() => 0} value={""} question={question} />
     </Container>
   ));
 

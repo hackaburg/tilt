@@ -1,5 +1,5 @@
 import { IsString, validate, ValidateNested } from "class-validator";
-import { IApiResponse } from "../../../types/api";
+import { IApiResponse } from "../../src/controllers/api";
 import { ErrorHandlerMiddleware } from "../../src/middlewares/error-handler-middleware";
 import { ILoggerService } from "../../src/services/logger-service";
 import { ISlackNotificationService } from "../../src/services/slack-service";

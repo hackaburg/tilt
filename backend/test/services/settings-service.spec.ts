@@ -32,11 +32,9 @@ describe("SettingsService", () => {
   it("gets existing settings", async () => {
     expect.assertions(1);
 
-    await settingsRepo.save(new Settings());
-    const settings = await settingsRepo.findOne()!;
-
+    const defaults = await settingsService.getSettings();
     const retrievedSettings = await settingsService.getSettings();
-    expect(retrievedSettings).toEqual(settings);
+    expect(retrievedSettings).toMatchObject(defaults);
   });
 
   it("loads default settings", async () => {
@@ -66,7 +64,15 @@ describe("SettingsService", () => {
           textTemplate: "foobar",
         },
       },
-    } as any;
+      frontend: {
+        colorGradientEnd: "gradient-end",
+        colorGradientStart: "gradient-start",
+        colorLink: "link",
+        colorLinkHover: "link-hover",
+        loginSignupImage: "signup",
+        sidebarImage: "sidebar",
+      },
+    } as Settings;
 
     await settingsService.updateSettings(updatedSettings);
     const settings = await settingsService.getSettings();
@@ -74,23 +80,5 @@ describe("SettingsService", () => {
     expect(settings.email.forgotPasswordEmail.htmlTemplate).toBe(
       updatedSettings.email.forgotPasswordEmail.htmlTemplate,
     );
-  });
-
-  it("doesn't pollute other settings by updating settings", async () => {
-    expect.assertions(2);
-
-    const updatedSettings = {
-      email: {
-        bar: "test",
-        sender: "foo",
-      },
-      foo: "test",
-    } as any;
-
-    await settingsService.updateSettings(updatedSettings);
-    const settings = (await settingsService.getSettings()) as any;
-
-    expect(settings.foo).not.toBeDefined();
-    expect(settings.email.bar).not.toBeDefined();
   });
 });

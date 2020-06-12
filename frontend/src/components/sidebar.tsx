@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { UserRole } from "../../../types/roles";
+import { UserRole } from "../api/types";
 import { useLoginContext } from "../contexts/login-context";
 import { Routes } from "../routes";
 import { variables } from "../theme";

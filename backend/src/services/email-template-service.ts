@@ -1,7 +1,7 @@
 import * as Handlebars from "handlebars";
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { IEmailTemplate } from "../../../types/settings";
+import { EmailTemplate } from "../entities/settings";
 import { User } from "../entities/user";
 import { EmailServiceToken, IEmailService } from "./email-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
@@ -50,9 +50,9 @@ export class EmailTemplateService implements IEmailTemplateService {
    * @param context The context to inject into the template
    */
   private compileTemplate<TContext>(
-    template: IEmailTemplate,
+    template: EmailTemplate,
     context: TContext,
-  ): IEmailTemplate {
+  ): EmailTemplate {
     return {
       htmlTemplate: Handlebars.compile(template.htmlTemplate)(context),
       subject: Handlebars.compile(template.subject)(context),

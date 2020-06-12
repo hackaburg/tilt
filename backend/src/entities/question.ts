@@ -59,11 +59,11 @@ export type IQuestionConfiguration =
   | ICountryQuestionConfiguration;
 
 @Entity()
-export class Question {
+export class Question<TQuestionConfiguration = IQuestionConfiguration> {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
   @Column("simple-json")
-  public configuration!: IQuestionConfiguration;
+  public configuration!: TQuestionConfiguration;
   @Column({ length: "1024" })
   public description!: string;
   @Column()

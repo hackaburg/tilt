@@ -1,10 +1,9 @@
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { IAnswer, IQuestion, QuestionType } from "../../../types/questions";
 import { Answer } from "../entities/answer";
 import { Application } from "../entities/application";
-import { Question } from "../entities/question";
+import { Question, QuestionType } from "../entities/question";
 import { User } from "../entities/user";
 import { enforceExhaustiveSwitch } from "../utils/switch";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
@@ -25,7 +24,7 @@ export interface IApplicationService extends IService {
    */
   storeProfileAnswersForUser(
     user: User,
-    answers: readonly IAnswer[],
+    answers: readonly Answer[],
   ): Promise<void>;
 }
 
@@ -59,7 +58,7 @@ export class ApplicationService implements IApplicationService {
    * @param question The answered question
    * @param answer The answer to the answered question
    */
-  private isAnswerValid(question: IQuestion, answer: Answer): boolean {
+  private isAnswerValid(question: Question, answer: Answer): boolean {
     const configuration = question.configuration;
 
     switch (configuration.type) {
@@ -137,7 +136,7 @@ export class ApplicationService implements IApplicationService {
     user: User,
     questions: readonly Question[],
     previousAnswers: Answer[],
-    nextAnswers: readonly IAnswer[],
+    nextAnswers: readonly Answer[],
   ) {
     const questionGraph = this._questions.buildQuestionGraph(questions);
     const answers = nextAnswers.map((rawAnswer) => {
@@ -145,10 +144,10 @@ export class ApplicationService implements IApplicationService {
       answer.user = user;
       answer.value = rawAnswer.value;
 
-      const node = questionGraph.get(rawAnswer.referenceName);
+      const node = questionGraph.get(rawAnswer.question.id);
 
       if (!node) {
-        throw new QuestionNotFoundError(rawAnswer.referenceName);
+        throw new QuestionNotFoundError(rawAnswer.question.id);
       }
 
       answer.question = node.question;
@@ -156,7 +155,7 @@ export class ApplicationService implements IApplicationService {
       const isValid = this.isAnswerValid(node.question, answer);
 
       if (!isValid) {
-        throw new InvalidAnswerError(rawAnswer.referenceName, answer.value);
+        throw new InvalidAnswerError(rawAnswer.question.id, answer.value);
       }
 
       return answer;
@@ -173,7 +172,7 @@ export class ApplicationService implements IApplicationService {
    */
   public async storeProfileAnswersForUser(
     user: User,
-    answers: readonly IAnswer[],
+    answers: readonly Answer[],
   ): Promise<void> {
     const settings = await this._settings.getSettings();
     const now = Date.now();
@@ -201,20 +200,20 @@ export class ApplicationService implements IApplicationService {
 }
 
 export class QuestionNotFoundError extends Error {
-  constructor(referenceName: string) {
-    super(`Question '${referenceName}' not found`);
+  constructor(questionID: number) {
+    super(`Question '${questionID}' not found`);
   }
 }
 
 export class QuestionNotAnsweredError extends Error {
-  constructor(referenceName: string) {
-    super(`Question '${referenceName}' was not answered`);
+  constructor(questionID: number) {
+    super(`Question '${questionID}' was not answered`);
   }
 }
 
 export class InvalidAnswerError extends Error {
-  constructor(referenceName: string, answer: string) {
-    super(`Answer '${answer}' to question '${referenceName} is not valid`);
+  constructor(questionID: number, answer: string) {
+    super(`Answer '${answer}' to question '${questionID} is not valid`);
   }
 }
 

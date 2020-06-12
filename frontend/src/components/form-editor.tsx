@@ -2,8 +2,7 @@ import styled from "@emotion/styled";
 import { v4 as uuid } from "node-uuid";
 import { useState } from "react";
 import * as React from "react";
-import { IQuestion, QuestionType } from "../../../types/questions";
-import { IFormSettings } from "../../../types/settings";
+import { FormSettingsDTO, QuestionDTO, QuestionType } from "../api/types";
 import { Button } from "./button";
 import { EditableQuestion } from "./editable-question";
 import { Col, Row } from "./grid";
@@ -29,12 +28,12 @@ const Muted = styled.p`
 
 interface IIdentifiableIQuestion {
   id: string;
-  question: IQuestion;
+  question: QuestionDTO;
 }
 
 interface IFormEditorProps {
-  initialForm: IFormSettings;
-  onFormChange: (form: IFormSettings) => any;
+  initialForm: FormSettingsDTO;
+  onFormChange: (form: FormSettingsDTO) => any;
 }
 
 /**
@@ -60,7 +59,7 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
   };
 
   const addQuestion = () => {
-    const textQuestion: IQuestion = {
+    const textQuestion: QuestionDTO = {
       configuration: {
         convertAnswerToUrl: false,
         multiline: false,
@@ -69,9 +68,8 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
       },
       description: "A new question",
       mandatory: false,
-      parentReferenceName: "",
-      referenceName: uuid(),
-      showIfParentHasValue: "",
+      parentID: undefined,
+      showIfParentHasValue: undefined,
       title: `Question ${questions.length + 1}`,
     };
 
@@ -84,14 +82,17 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
     ]);
   };
 
-  const handleQuestionChange = (changes: Partial<IQuestion>, index: number) => {
+  const handleQuestionChange = (
+    changes: Partial<QuestionDTO>,
+    index: number,
+  ) => {
     const updatedQuestions = [...questions];
 
     updatedQuestions[index] = {
       ...updatedQuestions[index],
       question: {
         ...updatedQuestions[index].question,
-        ...(changes as IQuestion),
+        ...(changes as QuestionDTO),
       },
     };
 

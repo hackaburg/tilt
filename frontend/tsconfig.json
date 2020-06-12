@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "importHelpers": true,
     "jsx": "react",
     "module": "commonjs",

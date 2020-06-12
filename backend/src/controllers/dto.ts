@@ -12,7 +12,6 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { UserRole } from "../../../types/roles";
 import { ApplicationSettings } from "../entities/application-settings";
 import { FormSettings } from "../entities/form-settings";
 import {
@@ -30,6 +29,7 @@ import {
   FrontendSettings,
   Settings,
 } from "../entities/settings";
+import { UserRole } from "../entities/user";
 import { enforceExhaustiveSwitch } from "../utils/switch";
 import { IApiRequest } from "./api";
 
@@ -154,7 +154,8 @@ export class CountryQuestionConfigurationDTO
   public type!: QuestionType.Country;
 }
 
-export class QuestionDTO implements DTO<Omit<Question, "form" | "parent">> {
+export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
+  implements DTO<Omit<Question, "form" | "parent">> {
   @Transform(
     (value) => {
       const type = value.type as QuestionType;
@@ -180,7 +181,7 @@ export class QuestionDTO implements DTO<Omit<Question, "form" | "parent">> {
     { toClassOnly: true },
   )
   @Expose()
-  public configuration!: IQuestionConfiguration;
+  public configuration!: TQuestionConfigurationDTO;
   @IsString()
   @Expose()
   public description!: string;
@@ -192,11 +193,11 @@ export class QuestionDTO implements DTO<Omit<Question, "form" | "parent">> {
   public mandatory!: boolean;
   @IsOptional()
   @Expose()
-  public parentID!: number;
+  public parentID?: number;
   @IsOptional()
   @IsString()
   @Expose()
-  public showIfParentHasValue!: string;
+  public showIfParentHasValue?: string;
 }
 
 export class FrontendSettingsDTO implements DTO<FrontendSettings> {
@@ -287,4 +288,6 @@ export class SuccessResponseDTO {
 export class RefreshTokenResponseDTO {
   @Expose()
   public token!: string;
+  @Expose()
+  public role!: UserRole;
 }

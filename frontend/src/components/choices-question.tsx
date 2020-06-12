@@ -1,9 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import {
-  IChoicesQuestionConfiguration,
-  IQuestion,
-} from "../../../types/questions";
+import { ChoicesQuestionConfigurationDTO, QuestionDTO } from "../api/types";
 import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { Select } from "./select";
@@ -11,8 +8,8 @@ import { TextInput, TextInputType } from "./text-input";
 
 interface IChoicesQuestionProps {
   editable?: boolean;
-  question: IQuestion<IChoicesQuestionConfiguration>;
-  onQuestionChange?: (changes: Partial<IQuestion>) => any;
+  question: QuestionDTO<ChoicesQuestionConfigurationDTO>;
+  onQuestionChange?: (changes: Partial<QuestionDTO>) => any;
 
   selected: string[];
   onSelectedChanged: (selected: string[]) => any;

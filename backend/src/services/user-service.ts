@@ -2,8 +2,7 @@ import { compare, genSalt, hash } from "bcrypt";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
-import { UserRole } from "../../../types/roles";
-import { User } from "../entities/user";
+import { User, UserRole } from "../entities/user";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import {
   EmailTemplateServiceToken,

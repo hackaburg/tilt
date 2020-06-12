@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { IApplicationSettings } from "../../../types/settings";
+import { ApplicationSettingsDTO } from "../api/types";
 import { debounceDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import { FormEditor } from "./form-editor";
@@ -16,7 +16,7 @@ export const ApplicationSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
 
   const [debouncedHandleUpdateApplicationSettings] = useDebouncedCallback(
-    (field: keyof IApplicationSettings, value: any) => {
+    (field: keyof ApplicationSettingsDTO, value: any) => {
       updateSettings({
         ...settings,
         application: {

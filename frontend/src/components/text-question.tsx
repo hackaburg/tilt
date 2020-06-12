@@ -1,16 +1,13 @@
 import * as React from "react";
-import {
-  IQuestion,
-  ITextQuestionConfiguration,
-} from "../../../types/questions";
+import { QuestionDTO, TextQuestionConfigurationDTO } from "../api/types";
 import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { TextInput, TextInputType } from "./text-input";
 
 interface ITextQuestionProps {
   editable?: boolean;
-  question: IQuestion<ITextQuestionConfiguration>;
-  onQuestionChange?: (updatedQuestion: Partial<IQuestion>) => any;
+  question: QuestionDTO<TextQuestionConfigurationDTO>;
+  onQuestionChange?: (updatedQuestion: Partial<QuestionDTO>) => any;
 
   value: string;
   onChange: (value: string) => any;
