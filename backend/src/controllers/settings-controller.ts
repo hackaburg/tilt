@@ -8,13 +8,17 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../../../types/roles";
-import { ISettings } from "../../../types/settings";
+import { Settings } from "../entities/settings";
 import {
   ISettingsService,
   SettingsServiceToken,
   UpdateSettingsError,
 } from "../services/settings-service";
-import { UpdateSettingsApiRequest } from "../validation/update-settings";
+import {
+  convertBetweenEntityAndDTO,
+  SettingsDTO,
+  UpdateSettingsRequestDTO,
+} from "./dto";
 
 @JsonController("/settings")
 export class SettingsController {
@@ -26,8 +30,9 @@ export class SettingsController {
    * Gets the application settings.
    */
   @Get()
-  public async getSettings(): Promise<ISettings> {
-    return await this._settings.getSettings();
+  public async getSettings(): Promise<SettingsDTO> {
+    const settings = await this._settings.getSettings();
+    return convertBetweenEntityAndDTO(settings, SettingsDTO);
   }
 
   /**
@@ -36,10 +41,12 @@ export class SettingsController {
   @Put()
   @Authorized(UserRole.Root)
   public async updateSettings(
-    @Body() { data: settings }: UpdateSettingsApiRequest,
-  ): Promise<ISettings> {
+    @Body() { data: settingsDTO }: UpdateSettingsRequestDTO,
+  ): Promise<SettingsDTO> {
     try {
-      return await this._settings.updateSettings(settings);
+      const settings = convertBetweenEntityAndDTO(settingsDTO, Settings);
+      const updatedSettings = await this._settings.updateSettings(settings);
+      return convertBetweenEntityAndDTO(updatedSettings, SettingsDTO);
     } catch (error) {
       if (error instanceof UpdateSettingsError) {
         throw new BadRequestError(error.message);

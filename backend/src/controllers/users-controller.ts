@@ -11,15 +11,15 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../../../types/roles";
-import { IUserLoginResponseBody } from "../../../types/user-login";
-import { IUserRefreshTokenResponseBody } from "../../../types/user-refreshtoken";
-import { IUserRoleResponseBody } from "../../../types/user-role";
-import { IUserSignupResponseBody } from "../../../types/user-signup";
-import { IUserVerifyResponseBody } from "../../../types/user-verify";
 import { User } from "../entities/user";
 import { IUserService, UserServiceToken } from "../services/user-service";
-import { UserLoginApiRequest } from "../validation/user-login";
-import { UserSignupApiRequest } from "../validation/user-signup";
+import {
+  CredentialsRequestDTO,
+  LoginResponseDTO,
+  RefreshTokenResponseDTO,
+  SignupResponseDTO,
+  SuccessResponseDTO,
+} from "./dto";
 
 /**
  * A controller to handle user specific tasks, e.g. signup or updating a profile.
@@ -37,14 +37,13 @@ export class UsersController {
   @Post("/signup")
   public async signup(
     @Body()
-    { data: { email, password } }: UserSignupApiRequest,
-  ): Promise<IUserSignupResponseBody> {
+    { data: { email, password } }: CredentialsRequestDTO,
+  ): Promise<SignupResponseDTO> {
     try {
       const user = await this._users.signup(email, password);
-
-      return {
-        email: user.email,
-      };
+      const response = new SignupResponseDTO();
+      response.email = user.email;
+      return response;
     } catch (error) {
       throw new BadRequestError(error.message);
     }
@@ -57,12 +56,12 @@ export class UsersController {
   @Get("/verify")
   public async verify(
     @QueryParam("token") token: string,
-  ): Promise<IUserVerifyResponseBody> {
+  ): Promise<SuccessResponseDTO> {
     try {
       await this._users.verifyUserByVerifyToken(token);
-      return {
-        success: true,
-      };
+      const response = new SuccessResponseDTO();
+      response.success = true;
+      return response;
     } catch (error) {
       throw new BadRequestError("invalid token");
     }
@@ -75,32 +74,18 @@ export class UsersController {
   @Post("/login")
   public async login(
     @Body()
-    { data: { email, password } }: UserLoginApiRequest,
-  ): Promise<IUserLoginResponseBody> {
+    { data: { email, password } }: CredentialsRequestDTO,
+  ): Promise<LoginResponseDTO> {
     const user = await this._users.findUserWithCredentials(email, password);
 
     if (!user) {
       throw new BadRequestError("invalid email or password");
     }
 
-    return {
-      role: user.role,
-      token: this._users.generateLoginToken(user),
-    };
-  }
-
-  /**
-   * Gets the current user's role.
-   * @param user The current user
-   */
-  @Get("/role")
-  @Authorized(UserRole.User)
-  public async getRole(
-    @CurrentUser() user: User,
-  ): Promise<IUserRoleResponseBody> {
-    return {
-      role: user.role,
-    };
+    const response = new LoginResponseDTO();
+    response.role = user.role;
+    response.token = this._users.generateLoginToken(user);
+    return response;
   }
 
   /**
@@ -111,9 +96,9 @@ export class UsersController {
   @Authorized(UserRole.User)
   public async refreshLoginToken(
     @CurrentUser() user: User,
-  ): Promise<IUserRefreshTokenResponseBody> {
-    return {
-      token: this._users.generateLoginToken(user),
-    };
+  ): Promise<RefreshTokenResponseDTO> {
+    const response = new RefreshTokenResponseDTO();
+    response.token = this._users.generateLoginToken(user);
+    return response;
   }
 }

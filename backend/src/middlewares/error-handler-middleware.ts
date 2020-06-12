@@ -5,7 +5,7 @@ import {
   Middleware,
 } from "routing-controllers";
 import { Inject } from "typedi";
-import { IApiResponse } from "../../../types/api";
+import { IApiResponse } from "../controllers/api";
 import { ILoggerService, LoggerServiceToken } from "../services/logger-service";
 import {
   ISlackNotificationService,

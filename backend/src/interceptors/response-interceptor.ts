@@ -1,5 +1,6 @@
+import { classToPlain } from "class-transformer";
 import { Action, Interceptor, InterceptorInterface } from "routing-controllers";
-import { IApiResponse } from "../../../types/api";
+import { IApiResponse } from "../controllers/api";
 
 /**
  * An interceptor to modify responses according to @see IApiResponse
@@ -13,7 +14,7 @@ export class ResponseInterceptor implements InterceptorInterface {
    */
   public intercept(_action: Action, data: any): IApiResponse<any> {
     return {
-      data,
+      data: classToPlain(data, { strategy: "excludeAll" }),
       status: "ok",
     };
   }
