@@ -11,25 +11,16 @@ export class FinalMiddleware implements ExpressMiddlewareInterface {
    * @param next The express next function
    */
   public use(req: Request, res: Response, next: NextFunction): void {
-    // we need to explicitly exclude the websocket endpoint, as this
-    // middleware is run before the websocket one
-    // also, we can't reorder the ws endpoint in the http service,
-    // because it requires the http server to be present already,
-    // which in turn requires the controllers and middlewares to
-    // be registered already
-    if (req.path.startsWith("/api/ws/")) {
-      next();
-      return;
-    }
-
-    if (!res.headersSent) {
+    if (!res.headersSent && req.path.startsWith("/api")) {
       res.status(404);
       res.send({
         error: `route ${req.path} not found`,
         status: "error",
       } as IApiResponse<any>);
+      res.end();
+      return;
     }
 
-    res.end();
+    next();
   }
 }

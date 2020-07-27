@@ -1,6 +1,5 @@
 import * as cors from "cors";
 import * as express from "express";
-import { createServer } from "http";
 import { join } from "path";
 import { Action, useContainer, useExpressServer } from "routing-controllers";
 import { Container, Inject, Service, Token } from "typedi";
@@ -62,7 +61,7 @@ export class HttpService implements IHttpService {
       this._logger.debug("enabled cors");
     }
 
-    const routedApp = useExpressServer(app, {
+    useExpressServer(app, {
       authorizationChecker: async (action, roles?: UserRole[]) =>
         await this.isActionAuthorized(action, roles),
       controllers: [join(__dirname, "../controllers/*")],
@@ -81,10 +80,13 @@ export class HttpService implements IHttpService {
     });
 
     this._logger.debug("initialized http controllers");
-    const server = createServer(routedApp);
+
+    const publicDirectory = this._config.config.http.publicDirectory;
+    app.use(express.static(join(publicDirectory)));
+    this._logger.debug(`initialized static serving from ${publicDirectory}`);
 
     const port = this._config.config.http.port;
-    server.listen(port);
+    app.listen(port);
     this._logger.info(`http server running on ${port}`);
   }
 

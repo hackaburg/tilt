@@ -19,6 +19,7 @@ interface IAppConfiguration {
 
 interface IHttpConfiguration {
   port: number;
+  publicDirectory: string;
 }
 
 interface ILoggerConfiguration {
@@ -146,6 +147,11 @@ export class ConfigurationService implements IConfigurationService {
           default: 3000,
           env: "PORT",
           format: "int",
+        },
+        publicDirectory: {
+          default: __dirname,
+          env: "HTTP_PUBLIC_DIRECTORY",
+          format: String,
         },
       },
       log: {
