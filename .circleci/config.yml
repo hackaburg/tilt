@@ -1,90 +1,73 @@
-version: 2
+version: 2.1
 
-jobs:
-  backend:
-    docker:
-      - image: node:latest
+commands:
+  install_dependencies:
+    description: "Installs dependencies and uses CircleCI's cache"
     steps:
       - checkout
       - restore_cache:
           keys:
-            - backend-dependencies-{{ checksum "backend/package.json" }}
-            - backend-dependencies-
+            - dependencies-{{ checksum "yarn.lock" }}
+            - dependencies-
       - run:
-          working_directory: backend
           command: |
             yarn install
       - save_cache:
           paths:
-            - backend/node_modules
-          key: backend-dependencies-{{ checksum "backend/package.json" }}
+            - node_modules
+          key: dependencies-{{ checksum "yarn.lock" }}
+
+jobs:
+  style:
+    docker:
+      - image: node:latest
+    steps:
+      - install_dependencies
       - run:
           name: prettier
-          working_directory: backend
           command: |
             yarn prettier --check
       - run:
           name: lint
-          working_directory: backend
           command: |
             yarn lint
+
+  backend:
+    docker:
+      - image: node:latest
+    steps:
+      - install_dependencies
       - run:
           name: test
-          working_directory: backend
           command: |
-            yarn test
+            yarn backend::test
       - run:
           name: codecov
-          working_directory: backend
           command: |
-            yarn codecov
+            yarn backend::codecov
 
   frontend:
     docker:
       - image: node:latest
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - frontend-dependencies-{{ checksum "frontend/package.json" }}
-            - frontend-dependencies-
-      - run:
-          working_directory: frontend
-          command: |
-            yarn install
-      - save_cache:
-          paths:
-            - frontend/node_modules
-          key: frontend-dependencies-{{ checksum "frontend/package.json" }}
-      - run:
-          name: prettier
-          working_directory: frontend
-          command: |
-            yarn prettier --check
-      - run:
-          name: lint
-          working_directory: frontend
-          command: |
-            yarn lint
+      - install_dependencies
       - run:
           name: typecheck
-          working_directory: frontend
           command: |
-            yarn typecheck
+            yarn frontend::typecheck
       - run:
           name: test
-          working_directory: frontend
           command: |
-            yarn test
+            yarn frontend::test
       - run:
           name: codecov
-          working_directory: frontend
           command: |
-            yarn codecov
+            yarn frontend::codecov
 
 workflows:
   version: 2
   tilt:
     jobs:
+      - style
       - backend
       - frontend
