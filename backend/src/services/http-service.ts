@@ -82,7 +82,7 @@ export class HttpService implements IHttpService {
     this._logger.debug("initialized http controllers");
 
     const publicDirectory = this._config.config.http.publicDirectory;
-    app.use(express.static(join(publicDirectory)));
+    app.use(express.static(publicDirectory));
     this._logger.debug(`initialized static serving from ${publicDirectory}`);
 
     const port = this._config.config.http.port;

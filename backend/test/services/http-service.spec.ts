@@ -26,6 +26,7 @@ jest.mock(
 
 type IMockedExpress = jest.Mock<{
   use: jest.Mock;
+  listen: jest.Mock;
 }>;
 
 // I heard you like jest.fn, so I put jest.fn inside jest.fn inside jest.fn inside jest.fn
@@ -48,6 +49,8 @@ describe("HttpService", () => {
   let routingControllers: IMockedRoutingControllers;
   let express: IMockedExpress;
   let expressUse: jest.Mock;
+  let expressStatic: jest.Mock;
+  let expressListen: jest.Mock;
 
   let config: MockedService<IConfigurationService>;
   let logger: MockedService<ILoggerService>;
@@ -66,6 +69,7 @@ describe("HttpService", () => {
       config: {
         http: {
           port: 3000,
+          publicDirectory: __dirname,
         },
       },
       isProductionEnabled: false,
@@ -82,8 +86,12 @@ describe("HttpService", () => {
     routingControllers.useExpressServer.mockReset();
 
     express.mockReset();
+    (express as any).static = expressStatic = jest.fn();
+
+    expressListen = jest.fn();
     expressUse = jest.fn();
     express.mockImplementation(() => ({
+      listen: expressListen,
       use: expressUse,
     }));
   });
@@ -194,5 +202,19 @@ describe("HttpService", () => {
         expect(result).toBe(value);
       }
     }
+  });
+
+  it("serves static files", async () => {
+    expect.assertions(1);
+    await httpService.bootstrap();
+    expect(expressStatic).toBeCalledWith(
+      config.instance.config.http.publicDirectory,
+    );
+  });
+
+  it("listens on the specified port", async () => {
+    expect.assertions(1);
+    await httpService.bootstrap();
+    expect(expressListen).toBeCalledWith(config.instance.config.http.port);
   });
 });
