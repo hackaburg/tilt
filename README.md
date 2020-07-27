@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/hackaburg/tilt.svg?style=shield)](https://circleci.com/gh/hackaburg/tilt)
 [![codecov](https://codecov.io/gh/hackaburg/tilt/branch/master/graph/badge.svg)](https://codecov.io/gh/hackaburg/tilt)
-[![David (path)](https://img.shields.io/david/dev/hackaburg/tilt.svg?label=dependencies&path=.)](https://github.com/hackaburg/tilt)
+[![David](https://img.shields.io/david/hackaburg/tilt)](https://github.com/hackaburg/tilt)
 [![GitHub license](https://img.shields.io/github/license/hackaburg/tilt.svg)](https://github.com/hackaburg/tilt/LICENSE)
 
 Yet another hackathon registration system.
