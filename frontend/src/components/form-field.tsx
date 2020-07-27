@@ -121,14 +121,14 @@ export const getPlaceholderStyle = (empty: boolean, focused: boolean) => css`
   }
 
   ${empty &&
-    `
+  `
     &::placeholder {
       color: white;
     }
   `}
 
   ${focused &&
-    `
+  `
     &::placeholder {
       color: #ccc;
     }

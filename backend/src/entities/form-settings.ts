@@ -9,13 +9,9 @@ export class FormSettings {
   @Column()
   public title!: string;
   @Type(() => Question)
-  @OneToMany(
-    () => Question,
-    (question) => question.form,
-    {
-      cascade: true,
-      eager: true,
-    },
-  )
+  @OneToMany(() => Question, (question) => question.form, {
+    cascade: true,
+    eager: true,
+  })
   public questions!: Question[];
 }
