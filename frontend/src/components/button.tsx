@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { ScaleLoader } from "react-spinners";
 import { borderRadius, transitionDuration } from "../config";
 import { variables } from "../theme";
 
@@ -87,19 +86,6 @@ export const Button = (props: IButtonProps) => (
     }
   >
     <Text>{props.children}</Text>
-    {props.loading && (
-      <ScaleLoader
-        height={1}
-        heightUnit="rem"
-        color="currentColor"
-        css={
-          {
-            position: "absolute",
-            right: "1rem",
-            top: "0.5rem",
-          } as any
-        }
-      />
-    )}
+    {props.loading && "Loading"}
   </StyledButton>
 );

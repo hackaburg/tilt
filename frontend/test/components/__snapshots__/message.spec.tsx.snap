@@ -1,97 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Message renders error messages 1`] = `
-<StyledComponent
-  error={true}
-  forwardedComponent={
-    Object {
-      "$$typeof": Symbol(react.forward_ref),
-      "attrs": Array [],
-      "componentStyle": ComponentStyle {
-        "componentId": "sc-bdVaJa",
-        "isStatic": false,
-        "rules": Array [
-          "
-  padding: 0.5rem;
-
-  border: 1px solid #ccc;
-  border-radius: ",
-          "5px",
-          ";
-  background-color: #f7f7f7;
-
-  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.05);
-
-  ",
-          [Function],
-          "
-
-  ",
-          [Function],
-          "
-",
-        ],
-      },
-      "displayName": "styled.div",
-      "foldedComponentIds": Array [],
-      "render": [Function],
-      "styledComponentId": "sc-bdVaJa",
-      "target": "div",
-      "toString": [Function],
-      "warnTooManyClasses": [Function],
-      "withComponent": [Function],
-    }
-  }
-  forwardedRef={null}
->
-  text
-</StyledComponent>
+<ContextConsumer>
+  <Component />
+</ContextConsumer>
 `;
 
 exports[`Message renders warning messages 1`] = `
-<StyledComponent
-  forwardedComponent={
-    Object {
-      "$$typeof": Symbol(react.forward_ref),
-      "attrs": Array [],
-      "componentStyle": ComponentStyle {
-        "componentId": "sc-bdVaJa",
-        "isStatic": false,
-        "rules": Array [
-          "
-  padding: 0.5rem;
-
-  border: 1px solid #ccc;
-  border-radius: ",
-          "5px",
-          ";
-  background-color: #f7f7f7;
-
-  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.05);
-
-  ",
-          [Function],
-          "
-
-  ",
-          [Function],
-          "
-",
-        ],
-      },
-      "displayName": "styled.div",
-      "foldedComponentIds": Array [],
-      "render": [Function],
-      "styledComponentId": "sc-bdVaJa",
-      "target": "div",
-      "toString": [Function],
-      "warnTooManyClasses": [Function],
-      "withComponent": [Function],
-    }
-  }
-  forwardedRef={null}
-  warn={true}
->
-  text
-</StyledComponent>
+<ContextConsumer>
+  <Component />
+</ContextConsumer>
 `;

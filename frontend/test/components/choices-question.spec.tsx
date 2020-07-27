@@ -10,8 +10,10 @@ describe("ChoicesQuestion", () => {
       <ChoicesQuestion
         question={
           {
-            choices,
-            displayAsDropdown: true,
+            configuration: {
+              choices,
+              displayAsDropdown: true,
+            },
           } as any
         }
         selected={[]}
@@ -28,8 +30,10 @@ describe("ChoicesQuestion", () => {
       <ChoicesQuestion
         question={
           {
-            allowMultiple: true,
-            choices,
+            configuration: {
+              allowMultiple: true,
+              choices,
+            },
           } as any
         }
         selected={[]}
@@ -46,7 +50,9 @@ describe("ChoicesQuestion", () => {
       <ChoicesQuestion
         question={
           {
-            choices,
+            configuration: {
+              choices,
+            },
           } as any
         }
         selected={[]}
