@@ -55,8 +55,16 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /src\/.+\.tsx?$/,
-        loader: "awesome-typescript-loader",
+        test: /\.tsx?$/,
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              // we use tsc to check for errors instead
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|svg)$/,
