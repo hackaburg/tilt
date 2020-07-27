@@ -15,7 +15,7 @@
     "frontend::test": "cd frontend/ && jest --coverage",
     "frontend::typecheck": "tsc --noEmit --project frontend/",
     "clean": "rimraf backend/dist/ frontend/dist/ frontend/bundle/",
-    "lint": "tslint --project backend/ && tslint --project frontend/",
+    "lint": "tslint --config ./tslint.json --project backend/ --project frontend/",
     "prettier": "prettier --config .prettierrc.js '{backend,frontend}/{src,test}/**/*.{ts,tsx}'"
   },
   "devDependencies": {
