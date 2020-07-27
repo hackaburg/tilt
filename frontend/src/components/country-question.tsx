@@ -1,6 +1,9 @@
 import * as countries from "country-json/src/country-by-abbreviation.json";
 import * as React from "react";
-import { CountryQuestionConfigurationDTO, QuestionDTO } from "../api/types";
+import type {
+  CountryQuestionConfigurationDTO,
+  QuestionDTO,
+} from "../api/types/dto";
 import { Select } from "./select";
 
 const countryNames = countries.map(({ country }) => country).sort();

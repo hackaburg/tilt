@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useState } from "react";
-import { ChoicesQuestionConfigurationDTO, QuestionDTO } from "../api/types";
+import type {
+  ChoicesQuestionConfigurationDTO,
+  QuestionDTO,
+} from "../api/types/dto";
 import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { Select } from "./select";

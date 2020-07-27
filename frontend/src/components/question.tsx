@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import * as ReactMarkdown from "react-markdown";
-import {
+import type {
   ChoicesQuestionConfigurationDTO,
   CountryQuestionConfigurationDTO,
   NumberQuestionConfigurationDTO,
   QuestionDTO,
-  QuestionType,
   TextQuestionConfigurationDTO,
-} from "../api/types";
+} from "../api/types/dto";
+import { QuestionType } from "../api/types/enums";
 import { Checkboxes } from "./checkbox";
 import { ChoicesQuestion } from "./choices-question";
 import { CountryQuestion } from "./country-question";

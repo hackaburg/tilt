@@ -1,6 +1,7 @@
 import { IApi } from ".";
 import { sleep } from "../util";
-import { SettingsDTO, UserRole } from "./types";
+import type { SettingsDTO } from "./types/dto";
+import { UserRole } from "./types/enums";
 
 /**
  * An api which yields static data.

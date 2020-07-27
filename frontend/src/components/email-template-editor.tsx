@@ -2,7 +2,7 @@ import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useState } from "react";
-import { EmailTemplateDTO } from "../api/types";
+import type { EmailTemplateDTO } from "../api/types/dto";
 import { borderRadius } from "../config";
 import { Editor } from "./editor";
 import { Placeholder } from "./placeholder";

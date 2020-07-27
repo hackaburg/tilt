@@ -1,5 +1,8 @@
 import * as React from "react";
-import { QuestionDTO, TextQuestionConfigurationDTO } from "../api/types";
+import type {
+  QuestionDTO,
+  TextQuestionConfigurationDTO,
+} from "../api/types/dto";
 import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { TextInput, TextInputType } from "./text-input";

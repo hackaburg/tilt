@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
-import { SettingsDTO } from "../api/types";
+import type { SettingsDTO } from "../api/types/dto";
 import { Spinner } from "../components/spinner";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";

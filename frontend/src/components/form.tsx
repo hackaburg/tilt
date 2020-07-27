@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { FormSettingsDTO } from "../api/types";
+import type { FormSettingsDTO } from "../api/types/dto";
 import { Heading } from "./headings";
 import { Question } from "./question";
 

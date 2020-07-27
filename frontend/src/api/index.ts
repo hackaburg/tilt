@@ -1,4 +1,5 @@
-import { SettingsDTO, UserRole } from "./types";
+import type { SettingsDTO } from "./types/dto";
+import { UserRole } from "./types/enums";
 
 /**
  * Describes API methods provided by tilt.

@@ -1,5 +1,8 @@
 import * as React from "react";
-import { NumberQuestionConfigurationDTO, QuestionDTO } from "../api/types";
+import type {
+  NumberQuestionConfigurationDTO,
+  QuestionDTO,
+} from "../api/types/dto";
 import { Col, Row } from "./grid";
 import { TextInput, TextInputType } from "./text-input";
 

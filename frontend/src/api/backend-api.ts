@@ -4,16 +4,16 @@ import {
   isLoginTokenSet,
   setLoginToken,
 } from "../authentication";
-import {
+import type {
   ExtractControllerMethods,
   IApiMethod,
   IApiRequest,
   IApiResponse,
   SettingsController,
-  SettingsDTO,
-  UserRole,
   UsersController,
-} from "./types";
+} from "./types/controllers";
+import type { SettingsDTO } from "./types/dto";
+import { UserRole } from "./types/enums";
 
 type SettingsControllerMethods = ExtractControllerMethods<SettingsController>;
 type UsersControllerMethods = ExtractControllerMethods<UsersController>;

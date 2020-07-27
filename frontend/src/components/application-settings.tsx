@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { ApplicationSettingsDTO } from "../api/types";
+import type { ApplicationSettingsDTO } from "../api/types/dto";
 import { debounceDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import { FormEditor } from "./form-editor";

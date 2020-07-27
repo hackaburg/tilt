@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { EmailSettingsDTO, EmailTemplateDTO } from "../api/types";
+import type { EmailSettingsDTO, EmailTemplateDTO } from "../api/types/dto";
 import { borderRadius, debounceDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import {

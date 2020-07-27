@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useState } from "react";
-import { QuestionDTO } from "../api/types";
+import type { QuestionDTO } from "../api/types/dto";
 import { borderRadius, transitionDuration } from "../config";
 import { randomFortune } from "../fortunes";
 import { variables } from "../theme";

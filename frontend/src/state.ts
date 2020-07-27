@@ -1,4 +1,5 @@
-import { SettingsDTO, UserRole } from "./api/types";
+import type { SettingsDTO } from "./api/types/dto";
+import { UserRole } from "./api/types/enums";
 
 /**
  * T or null

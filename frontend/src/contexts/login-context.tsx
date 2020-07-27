@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
-import { UserRole } from "../api/types";
+import { UserRole } from "../api/types/enums";
 import { clearLoginToken, isLoginTokenSet } from "../authentication";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
