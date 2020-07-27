@@ -14,7 +14,7 @@
     "frontend::start": "cd frontend && webpack-dev-server --inline --hot --mode development",
     "frontend::test": "cd frontend/ && jest --coverage",
     "frontend::typecheck": "tsc --noEmit --project frontend/",
-    "clean": "rimraf backend/dist/ frontend/dist/",
+    "clean": "rimraf backend/dist/ frontend/dist/ frontend/bundle/",
     "lint": "tslint --project backend/ && tslint --project frontend/",
     "prettier": "prettier --config .prettierrc.js '{backend,frontend}/{src,test}/**/*.{ts,tsx}'"
   },
@@ -69,6 +69,7 @@
     "typescript-plugin-styled-components": "^1.4.2",
     "use-debounce": "^1.1.2",
     "webpack": "^4.40.2",
+    "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.8.1"
   },

@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { EnvironmentPlugin } = require("webpack");
 const { join, resolve } = require("path");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -34,20 +35,6 @@ module.exports = {
         runtimeChunk: "single",
         splitChunks: {
           chunks: "all",
-          maxInitialRequests: Infinity,
-          minSize: 0,
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: (module) => {
-                const packageName = module.context.match(
-                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/,
-                )[1];
-
-                return `vendor.${packageName.replace("@", "")}`;
-              },
-            },
-          },
         },
       }
     : undefined,
@@ -83,6 +70,11 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      openAnalyzer: false,
+      reportFilename: "../bundle/report.html",
     }),
   ],
 
