@@ -1,15 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { FormSettings } from "./form-settings";
-
-/**
- * An enum containing all known question types.
- */
-export const enum QuestionType {
-  Text = "text",
-  Number = "number",
-  Choices = "choices",
-  Country = "country",
-}
+import { QuestionType } from "./question-type";
 
 /**
  * A text question.

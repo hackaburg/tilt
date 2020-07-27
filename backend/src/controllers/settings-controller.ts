@@ -8,7 +8,7 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { Settings } from "../entities/settings";
-import { UserRole } from "../entities/user";
+import { UserRole } from "../entities/user-role";
 import {
   ISettingsService,
   SettingsServiceToken,

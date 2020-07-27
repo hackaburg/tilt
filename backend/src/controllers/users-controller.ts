@@ -10,7 +10,8 @@ import {
   QueryParam,
 } from "routing-controllers";
 import { Inject } from "typedi";
-import { User, UserRole } from "../entities/user";
+import { User } from "../entities/user";
+import { UserRole } from "../entities/user-role";
 import { IUserService, UserServiceToken } from "../services/user-service";
 import {
   CredentialsRequestDTO,

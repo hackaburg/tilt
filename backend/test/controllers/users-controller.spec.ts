@@ -1,5 +1,6 @@
 import { UsersController } from "../../src/controllers/users-controller";
-import { User, UserRole } from "../../src/entities/user";
+import { User } from "../../src/entities/user";
+import { UserRole } from "../../src/entities/user-role";
 import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
 import { MockUserService } from "../services/mock/mock-user-service";

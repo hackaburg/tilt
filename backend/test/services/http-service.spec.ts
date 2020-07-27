@@ -1,4 +1,5 @@
-import { User, UserRole } from "../../src/entities/user";
+import { User } from "../../src/entities/user";
+import { UserRole } from "../../src/entities/user-role";
 import { IConfigurationService } from "../../src/services/config-service";
 import { HttpService, IHttpService } from "../../src/services/http-service";
 import { ILoggerService } from "../../src/services/logger-service";

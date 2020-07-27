@@ -21,15 +21,15 @@ import {
   IQuestionConfiguration,
   ITextQuestionConfiguration,
   Question,
-  QuestionType,
 } from "../entities/question";
+import { QuestionType } from "../entities/question-type";
 import {
   EmailSettings,
   EmailTemplate,
   FrontendSettings,
   Settings,
 } from "../entities/settings";
-import { UserRole } from "../entities/user";
+import { UserRole } from "../entities/user-role";
 import { enforceExhaustiveSwitch } from "../utils/switch";
 import { IApiRequest } from "./api";
 
@@ -157,7 +157,7 @@ export class CountryQuestionConfigurationDTO
 export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
   implements DTO<Omit<Question, "form" | "parent">> {
   @Transform(
-    (value) => {
+    (value: IQuestionConfiguration) => {
       const type = value.type as QuestionType;
 
       switch (type) {

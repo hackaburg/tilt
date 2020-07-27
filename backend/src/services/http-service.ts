@@ -4,7 +4,8 @@ import { join } from "path";
 import { Action, useContainer, useExpressServer } from "routing-controllers";
 import { Container, Inject, Service, Token } from "typedi";
 import { IService } from ".";
-import { User, UserRole } from "../entities/user";
+import { User } from "../entities/user";
+import { UserRole } from "../entities/user-role";
 import {
   ConfigurationServiceToken,
   IConfigurationService,
