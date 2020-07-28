@@ -76,9 +76,11 @@ export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
   @ValidateNested()
   @Expose()
   public confirmationForm!: FormSettingsDTO;
+  @Type(() => Date)
   @IsDate()
   @Expose()
   public allowProfileFormFrom!: Date;
+  @Type(() => Date)
   @IsDate()
   @Expose()
   public allowProfileFormUntil!: Date;
@@ -225,11 +227,11 @@ export class EmailSettingsDTO implements DTO<EmailSettings> {
   @IsString()
   @Expose()
   public sender!: string;
-  @Type(() => EmailTemplate)
+  @Type(() => EmailTemplateDTO)
   @ValidateNested()
   @Expose()
   public verifyEmail!: EmailTemplateDTO;
-  @Type(() => EmailTemplate)
+  @Type(() => EmailTemplateDTO)
   @ValidateNested()
   @Expose()
   public forgotPasswordEmail!: EmailTemplateDTO;
