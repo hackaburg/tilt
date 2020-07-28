@@ -140,7 +140,9 @@ export class SettingsService implements ISettingsService {
    * @param changes The updated settings
    */
   public async updateSettings(settings: Settings): Promise<Settings> {
-    return await this._settings.save(settings);
+    const existingSettings = await this.getSettings();
+    const merged = this._settings.merge(existingSettings, settings);
+    return this._settings.save(merged);
   }
 }
 
