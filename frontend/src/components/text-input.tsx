@@ -1,7 +1,6 @@
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useState } from "react";
 import { useFocus } from "../hooks/use-focus";
 import {
   FormField,
@@ -122,26 +121,4 @@ export const TextInput = ({
       {field}
     </FormField>
   );
-};
-
-interface IStatefulTextInputProps extends ICommonTextInputProps {
-  initialValue: any;
-}
-
-/**
- * An input, which contains state inside, i.e. can be used to use hooks "conditionally".
- * Due to state being inside the component, you can render it conditionally, making the state hook conditonal as well.
- */
-export const StatefulTextInput = ({
-  initialValue,
-  onChange,
-  ...props
-}: IStatefulTextInputProps) => {
-  const [text, setText] = useState(initialValue);
-  const handleChange = (value: string) => {
-    setText(value);
-    onChange(value);
-  };
-
-  return <TextInput value={text} onChange={handleChange} {...props} />;
 };
