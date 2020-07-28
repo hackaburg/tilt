@@ -3,7 +3,7 @@ import * as React from "react";
 import { useState } from "react";
 import type { QuestionDTO } from "../api/types/dto";
 import { borderRadius, transitionDuration } from "../config";
-import { randomFortune } from "../fortunes";
+import { useFortune } from "../hooks/use-fortune";
 import { variables } from "../theme";
 import { Question } from "./question";
 
@@ -87,6 +87,7 @@ export const EditableQuestion = ({
   onDeleteQuestion,
 }: IEditableQuestion) => {
   const [isEditing, setIsEditing] = useState(false);
+  const fortune = useFortune();
 
   return (
     <Container>
@@ -94,7 +95,7 @@ export const EditableQuestion = ({
         question={question}
         onQuestionChange={onQuestionChange}
         editable={isEditing}
-        value={randomFortune()}
+        value={fortune}
         onChange={() => 0}
       />
       <Modifiers>
