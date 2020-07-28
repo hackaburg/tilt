@@ -30,47 +30,63 @@ export const SettingsContextProvider = ({
   children,
 }: ISettingsContextProviderProps) => {
   const { showNotification } = useNotificationContext();
+
+  const [isSynchronized, setIsSynchronized] = useState(false);
   const [localSettings, setLocalSettings] = useState<Nullable<SettingsDTO>>(
     null,
   );
-  const [
-    fetchedSettings,
-    isFetchingSettings,
-    fetchError,
-  ] = useApi(async (api) => api.getSettings());
+
+  const [, isFetchingSettings, fetchError] = useApi(async (api) => {
+    const settings = await api.getSettings();
+    setLocalSettings(settings);
+    setIsSynchronized(true);
+  }, []);
 
   if (fetchError) {
     throw fetchError;
   }
 
-  if (!isFetchingSettings && fetchedSettings == null) {
+  if (!isFetchingSettings && localSettings == null) {
     throw new Error("No settings received from the server");
   }
 
   const updateSettings = useCallback((settings: SettingsDTO) => {
     if (settings != null) {
       setLocalSettings(settings);
+      setIsSynchronized(false);
     }
   }, []);
 
-  const [debouncedSettings] = useDebounce(localSettings, debounceDuration);
+  // we only want to save our settings if we know we're out of sync with the db
+  // this only happens when we locally modify the `localSettings` state. if we
+  // omit the `isSynchronized` check, we end up with an infinite loop. if we
+  // don't debounce the synchronization, we might look synced, even though we're
+  // out of date. we need to check both "from the same time"
+  const [[debouncedSettings, debouncedIsSynchronized]] = useDebounce<
+    [typeof localSettings, typeof isSynchronized]
+  >([localSettings, isSynchronized], debounceDuration);
+
   const [, , updateError] = useApi(
     async (api) => {
-      if (debouncedSettings != null) {
-        await api.updateSettings(debouncedSettings);
+      if (debouncedSettings != null && !debouncedIsSynchronized) {
+        const updatedSettings = await api.updateSettings(debouncedSettings);
+
+        setLocalSettings(updatedSettings);
+        setIsSynchronized(true);
+
         showNotification("Changes saved");
       }
     },
-    [debouncedSettings],
+    [debouncedSettings, debouncedIsSynchronized],
   );
 
   const value = useMemo<ISettingsContextValue>(
     () => ({
-      settings: localSettings ?? (fetchedSettings as SettingsDTO),
+      settings: localSettings as SettingsDTO,
       updateError,
       updateSettings,
     }),
-    [localSettings, fetchedSettings, updateSettings, updateError],
+    [localSettings, updateSettings, updateError],
   );
 
   if (isFetchingSettings) {
