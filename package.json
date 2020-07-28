@@ -64,6 +64,7 @@
     "ts-loader": "^8.0.1",
     "ts-node": "^8.0.3",
     "tslint": "^5.15.0",
+    "tslint-react-hooks": "^2.2.2",
     "typescript": "^3.9.7",
     "typescript-plugin-styled-components": "^1.4.2",
     "use-debounce": "^1.1.2",
