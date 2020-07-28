@@ -168,16 +168,28 @@ export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
 
       switch (type) {
         case QuestionType.Text:
-          return plainToClass(TextQuestionConfigurationDTO, [value]);
+          return convertBetweenEntityAndDTO(
+            value,
+            TextQuestionConfigurationDTO,
+          );
 
         case QuestionType.Number:
-          return plainToClass(NumberQuestionConfigurationDTO, [value]);
+          return convertBetweenEntityAndDTO(
+            value,
+            NumberQuestionConfigurationDTO,
+          );
 
         case QuestionType.Choices:
-          return plainToClass(ChoicesQuestionConfigurationDTO, [value]);
+          return convertBetweenEntityAndDTO(
+            value,
+            ChoicesQuestionConfigurationDTO,
+          );
 
         case QuestionType.Country:
-          return plainToClass(CountryQuestionConfigurationDTO, [value]);
+          return convertBetweenEntityAndDTO(
+            value,
+            CountryQuestionConfigurationDTO,
+          );
 
         default:
           enforceExhaustiveSwitch(type);
