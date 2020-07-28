@@ -3,9 +3,9 @@ import { useCallback } from "react";
 import type {
   NumberQuestionConfigurationDTO,
   QuestionDTO,
-} from "../api/types/dto";
-import { Col, Row } from "./grid";
-import { TextInput, TextInputType } from "./text-input";
+} from "../../api/types/dto";
+import { Col, Row } from "../grid";
+import { TextInput, TextInputType } from "../text-input";
 
 interface INumberQuestionProps {
   editable?: boolean;

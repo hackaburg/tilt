@@ -11,13 +11,13 @@ import type {
 } from "../api/types/dto";
 import { QuestionType } from "../api/types/enums";
 import { Checkboxes } from "./checkbox";
-import { ChoicesQuestion } from "./choices-question";
-import { CountryQuestion } from "./country-question";
+import { ChoicesQuestion } from "./questions/choices-question";
+import { CountryQuestion } from "./questions/country-question";
 import { Col, Row } from "./grid";
-import { NumberQuestion } from "./number-question";
+import { NumberQuestion } from "./questions/number-question";
 import { Select } from "./select";
 import { TextInput, TextInputType } from "./text-input";
-import { TextQuestion } from "./text-question";
+import { TextQuestion } from "./questions/text-question";
 
 const Meta = styled.div`
   margin-bottom: 3rem;

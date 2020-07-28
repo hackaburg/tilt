@@ -3,8 +3,8 @@ import * as React from "react";
 import type {
   CountryQuestionConfigurationDTO,
   QuestionDTO,
-} from "../api/types/dto";
-import { Select } from "./select";
+} from "../../api/types/dto";
+import { Select } from "../select";
 
 const countryNames = countries.map(({ country }) => country).sort();
 

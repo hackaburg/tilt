@@ -3,10 +3,10 @@ import { useCallback } from "react";
 import type {
   QuestionDTO,
   TextQuestionConfigurationDTO,
-} from "../api/types/dto";
-import { Checkboxes } from "./checkbox";
-import { Col, Row } from "./grid";
-import { TextInput, TextInputType } from "./text-input";
+} from "../../api/types/dto";
+import { Checkboxes } from "../checkbox";
+import { Col, Row } from "../grid";
+import { TextInput, TextInputType } from "../text-input";
 
 const multilineOptionValue = "Multiline";
 const convertToUrlOptionValue = "Convert answer to URL";

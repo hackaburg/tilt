@@ -3,11 +3,11 @@ import { useCallback, useMemo } from "react";
 import type {
   ChoicesQuestionConfigurationDTO,
   QuestionDTO,
-} from "../api/types/dto";
-import { Checkboxes } from "./checkbox";
-import { Col, Row } from "./grid";
-import { Select } from "./select";
-import { TextInput, TextInputType } from "./text-input";
+} from "../../api/types/dto";
+import { Checkboxes } from "../checkbox";
+import { Col, Row } from "../grid";
+import { Select } from "../select";
+import { TextInput, TextInputType } from "../text-input";
 
 const checkboxOptionValue = "Use checkboxes";
 const radioOptionValue = "Use radio buttons";

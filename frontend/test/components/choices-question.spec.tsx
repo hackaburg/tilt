@@ -1,6 +1,6 @@
 import { render } from "enzyme";
 import * as React from "react";
-import { ChoicesQuestion } from "../../src/components/choices-question";
+import { ChoicesQuestion } from "../../src/components/questions/choices-question";
 
 describe("ChoicesQuestion", () => {
   const choices = ["foo", "bar", "foobar"];
