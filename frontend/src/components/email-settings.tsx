@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useDebouncedCallback } from "use-debounce";
-import type { EmailSettingsDTO, EmailTemplateDTO } from "../api/types/dto";
-import { borderRadius, debounceDuration } from "../config";
+import { useCallback } from "react";
+import { EmailSettingsDTO } from "../api/types/dto";
+import { borderRadius } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import {
   EmailTemplateEditor,
@@ -11,7 +11,7 @@ import {
 import { Subheading } from "./headings";
 import { Message } from "./message";
 import { Placeholder } from "./placeholder";
-import { StatefulTextInput } from "./text-input";
+import { TextInput } from "./text-input";
 
 const Code = styled.span`
   padding: 0.1rem 0.2rem;
@@ -27,9 +27,8 @@ const Code = styled.span`
  */
 export const EmailSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
-
-  const [debouncedHandleSettingsChange] = useDebouncedCallback(
-    (field: keyof EmailSettingsDTO, value: string | EmailTemplateDTO) => {
+  const updateEmailSettings = useCallback(
+    (field: keyof EmailSettingsDTO, value: any) => {
       updateSettings({
         ...settings,
         email: {
@@ -38,8 +37,22 @@ export const EmailSettings = () => {
         },
       });
     },
-    debounceDuration,
     [updateSettings, settings],
+  );
+
+  const onSenderChange = useCallback(
+    (value) => updateEmailSettings("sender", value),
+    [updateEmailSettings, settings],
+  );
+
+  const onVerifyEmailChange = useCallback(
+    (value) => updateEmailSettings("verifyEmail", value),
+    [updateEmailSettings, settings],
+  );
+
+  const onForgotPasswordEmailChange = useCallback(
+    (value) => updateEmailSettings("forgotPasswordEmail", value),
+    [updateEmailSettings, settings],
   );
 
   return (
@@ -54,9 +67,9 @@ export const EmailSettings = () => {
       <p>Emails sent out will contain the following sender address:</p>
       {!settings && <Placeholder width="100%" height="3rem" />}
       {settings && (
-        <StatefulTextInput
-          initialValue={settings.email.sender}
-          onChange={(value) => debouncedHandleSettingsChange("sender", value)}
+        <TextInput
+          value={settings.email.sender}
+          onChange={onSenderChange}
           title="From"
           placeholder="applications@your-hackathon.org"
         />
@@ -90,16 +103,12 @@ export const EmailSettings = () => {
           <EmailTemplateEditor
             title="Verification"
             template={settings.email.verifyEmail}
-            onTemplateChange={(template) =>
-              debouncedHandleSettingsChange("verifyEmail", template)
-            }
+            onTemplateChange={onVerifyEmailChange}
           />
           <EmailTemplateEditor
             title="Forgot password"
             template={settings.email.forgotPasswordEmail}
-            onTemplateChange={(template) =>
-              debouncedHandleSettingsChange("forgotPasswordEmail", template)
-            }
+            onTemplateChange={onForgotPasswordEmailChange}
           />
         </>
       )}

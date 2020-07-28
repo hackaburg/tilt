@@ -1,12 +1,11 @@
 import * as React from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useCallback } from "react";
 import type { FrontendSettingsDTO } from "../api/types/dto";
-import { debounceDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import { Col, Row } from "./grid";
 import { Subheading } from "./headings";
 import { Message } from "./message";
-import { StatefulTextInput, TextInputType } from "./text-input";
+import { TextInput, TextInputType } from "./text-input";
 
 /**
  * A component to modify the frontend/appearance settings.
@@ -14,7 +13,7 @@ import { StatefulTextInput, TextInputType } from "./text-input";
 export const FrontendSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
 
-  const [debouncedHandleSettingsChange] = useDebouncedCallback(
+  const updateFrontendSettings = useCallback(
     (field: keyof FrontendSettingsDTO, value: any) => {
       updateSettings({
         ...settings,
@@ -24,8 +23,37 @@ export const FrontendSettings = () => {
         },
       });
     },
-    debounceDuration,
     [updateSettings, settings],
+  );
+
+  const onColorGradientStartChange = useCallback(
+    (value) => updateFrontendSettings("colorGradientStart", value),
+    [updateFrontendSettings],
+  );
+
+  const onColorGradientEndChange = useCallback(
+    (value) => updateFrontendSettings("colorGradientEnd", value),
+    [updateFrontendSettings],
+  );
+
+  const onColorLinkChange = useCallback(
+    (value) => updateFrontendSettings("colorLink", value),
+    [updateFrontendSettings],
+  );
+
+  const onColorLinkHoverChange = useCallback(
+    (value) => updateFrontendSettings("colorLinkHover", value),
+    [updateFrontendSettings],
+  );
+
+  const onLoginSignupImageChange = useCallback(
+    (value) => updateFrontendSettings("loginSignupImage", value),
+    [updateFrontendSettings],
+  );
+
+  const onSidebarImageChange = useCallback(
+    (value) => updateFrontendSettings("sidebarImage", value),
+    [updateFrontendSettings],
   );
 
   return (
@@ -41,75 +69,63 @@ export const FrontendSettings = () => {
 
       <Row>
         <Col percent={50}>
-          <StatefulTextInput
+          <TextInput
             title="Gradient start color"
             placeholder="#abcdef"
             type={TextInputType.Text}
-            initialValue={settings.frontend.colorGradientStart}
-            onChange={(value) =>
-              debouncedHandleSettingsChange("colorGradientStart", value)
-            }
+            value={settings.frontend.colorGradientStart}
+            onChange={onColorGradientStartChange}
           />
         </Col>
         <Col percent={50}>
-          <StatefulTextInput
+          <TextInput
             title="Gradient end color"
             placeholder="#abcdef"
             type={TextInputType.Text}
-            initialValue={settings.frontend.colorGradientEnd}
-            onChange={(value) =>
-              debouncedHandleSettingsChange("colorGradientEnd", value)
-            }
+            value={settings.frontend.colorGradientEnd}
+            onChange={onColorGradientEndChange}
           />
         </Col>
       </Row>
 
       <Row>
         <Col percent={50}>
-          <StatefulTextInput
+          <TextInput
             title="Link color"
             placeholder="#abcdef"
             type={TextInputType.Text}
-            initialValue={settings.frontend.colorLink}
-            onChange={(value) =>
-              debouncedHandleSettingsChange("colorLink", value)
-            }
+            value={settings.frontend.colorLink}
+            onChange={onColorLinkChange}
           />
         </Col>
         <Col percent={50}>
-          <StatefulTextInput
+          <TextInput
             title="Link hover color"
             placeholder="#abcdef"
             type={TextInputType.Text}
-            initialValue={settings.frontend.colorLinkHover}
-            onChange={(value) =>
-              debouncedHandleSettingsChange("colorLinkHover", value)
-            }
+            value={settings.frontend.colorLinkHover}
+            onChange={onColorLinkHoverChange}
           />
         </Col>
       </Row>
 
       <Row>
         <Col percent={50}>
-          <StatefulTextInput
+          <TextInput
             title="Login and signup image url"
             placeholder="absolute image url with https"
             type={TextInputType.Text}
-            initialValue={settings.frontend.loginSignupImage}
-            onChange={(value) =>
-              debouncedHandleSettingsChange("loginSignupImage", value)
-            }
+            value={settings.frontend.loginSignupImage}
+            onChange={onLoginSignupImageChange}
           />
         </Col>
         <Col percent={50}>
-          <StatefulTextInput
+          <TextInput
             title="Sidebar image url"
             placeholder="absolute image url with https"
             type={TextInputType.Text}
-            initialValue={settings.frontend.sidebarImage}
-            onChange={(value) =>
-              debouncedHandleSettingsChange("sidebarImage", value)
-            }
+            value={settings.frontend.sidebarImage}
+            onChange={onSidebarImageChange}
           />
         </Col>
       </Row>

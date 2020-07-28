@@ -1,12 +1,11 @@
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useState } from "react";
+import { useCallback, useRef } from "react";
 import type { EmailTemplateDTO } from "../api/types/dto";
 import { borderRadius } from "../config";
-import { Editor } from "./editor";
+import { Col, Row } from "./grid";
 import { Placeholder } from "./placeholder";
-import { SegmentButton } from "./segment-button";
 import { TextInput } from "./text-input";
 
 const editorContainerStyle = css`
@@ -29,19 +28,20 @@ const Title = styled.h3`
   font-weight: lighter;
 `;
 
-const ButtonContainer = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+const EditorTitle = styled.h4`
+  margin: 0;
+  margin-bottom: 0.5rem;
 `;
 
-/**
- * The language the editor currently is in.
- */
-enum EditorLanguage {
-  HTML = "html",
-  Text = "text",
-}
+const Editor = styled.textarea`
+  display: inline-block;
+  width: 100%;
+  height: 15rem;
+  resize: none;
+  font-size: inherit;
+  font-family: monospace;
+  border: none;
+`;
 
 interface IEmailTemplateEditor {
   title: string;
@@ -57,61 +57,65 @@ export const EmailTemplateEditor = ({
   template,
   onTemplateChange,
 }: IEmailTemplateEditor) => {
-  const [subject, setSubject] = useState(template.subject);
-  const [htmlTemplate, setHtmlTemplate] = useState(template.htmlTemplate);
-  const [textTemplate, setTextTemplate] = useState(template.textTemplate);
-  const [language, setLanguage] = useState(EditorLanguage.HTML);
+  const onChangeRef = useRef(onTemplateChange);
+  onChangeRef.current = onTemplateChange;
 
-  const displayedValue =
-    language === EditorLanguage.HTML ? htmlTemplate : textTemplate;
-  const onBodyChange = (value: string) => {
-    if (language === EditorLanguage.HTML) {
-      setHtmlTemplate(value);
+  const onSubjectChange = useCallback(
+    (event) => {
       onTemplateChange({
-        htmlTemplate: value,
-        subject,
-        textTemplate,
+        ...template,
+        subject: event.target.value,
       });
-    } else {
-      setTextTemplate(value);
-      onTemplateChange({
-        htmlTemplate,
-        subject,
-        textTemplate: value,
-      });
-    }
-  };
+    },
+    [onTemplateChange, template],
+  );
 
-  const onSubjectChange = (value: string) => {
-    setSubject(value);
-    onTemplateChange({
-      htmlTemplate,
-      subject: value,
-      textTemplate,
-    });
-  };
+  const onHtmlTemplateChange = useCallback(
+    (event) => {
+      onTemplateChange({
+        ...template,
+        htmlTemplate: event.target.value,
+      });
+    },
+    [onTemplateChange, template],
+  );
+
+  const onTextTemplateChange = useCallback(
+    (event) => {
+      onTemplateChange({
+        ...template,
+        textTemplate: event.target.value,
+      });
+    },
+    [onTemplateChange, template],
+  );
 
   return (
     <DropShadowContainer>
       <Title>
         <TextInput
-          value={subject}
+          value={template.subject}
           onChange={onSubjectChange}
           title={`${title} subject`}
           placeholder="e.g. 'win free money'"
         />
-        <ButtonContainer>
-          <SegmentButton
-            choices={[EditorLanguage.HTML, EditorLanguage.Text]}
-            onChoiceChanged={(choice) => setLanguage(choice as EditorLanguage)}
-          />
-        </ButtonContainer>
       </Title>
-      <Editor
-        language={language}
-        value={displayedValue}
-        onChange={onBodyChange}
-      />
+      <Row>
+        <Col percent={50}>
+          <EditorTitle>text/html</EditorTitle>
+          <Editor
+            value={template.htmlTemplate}
+            onChange={onHtmlTemplateChange}
+          />
+        </Col>
+        <Col percent={50}>
+          <EditorTitle>text/plain</EditorTitle>
+          <Editor
+            value={template.textTemplate}
+            onChange={onTextTemplateChange}
+          />
+        </Col>
+      </Row>
     </DropShadowContainer>
   );
 };

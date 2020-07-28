@@ -1,7 +1,9 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
+import { useDebounce } from "use-debounce";
 import type { SettingsDTO } from "../api/types/dto";
 import { Spinner } from "../components/spinner";
+import { debounceDuration } from "../config";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
 import { Nullable } from "../state";
@@ -51,14 +53,15 @@ export const SettingsContextProvider = ({
     }
   }, []);
 
+  const [debouncedSettings] = useDebounce(localSettings, debounceDuration);
   const [, , updateError] = useApi(
     async (api) => {
-      if (localSettings != null) {
-        await api.updateSettings(localSettings);
+      if (debouncedSettings != null) {
+        await api.updateSettings(debouncedSettings);
         showNotification("Changes saved");
       }
     },
-    [localSettings],
+    [debouncedSettings],
   );
 
   const value = useMemo<ISettingsContextValue>(

@@ -1,21 +1,19 @@
 import * as React from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useCallback } from "react";
 import type { ApplicationSettingsDTO } from "../api/types/dto";
-import { debounceDuration } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
 import { FormEditor } from "./form-editor";
 import { Col, Row } from "./grid";
 import { Subheading } from "./headings";
 import { Message } from "./message";
-import { StatefulTextInput, TextInputType } from "./text-input";
+import { TextInput, TextInputType } from "./text-input";
 
 /**
  * Settings to configure the application users have to fill out.
  */
 export const ApplicationSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
-
-  const [debouncedHandleUpdateApplicationSettings] = useDebouncedCallback(
+  const updateApplicationSettings = useCallback(
     (field: keyof ApplicationSettingsDTO, value: any) => {
       updateSettings({
         ...settings,
@@ -25,8 +23,32 @@ export const ApplicationSettings = () => {
         },
       });
     },
-    debounceDuration,
-    [settings, updateSettings],
+    [updateSettings, settings],
+  );
+
+  const onHoursToConfirmChange = useCallback(
+    (value) => updateApplicationSettings("hoursToConfirm", value),
+    [updateApplicationSettings],
+  );
+
+  const onAllowProfileFormFromChange = useCallback(
+    (value) => updateApplicationSettings("allowProfileFormFrom", value),
+    [updateApplicationSettings],
+  );
+
+  const onAllowProfileFormUntilChange = useCallback(
+    (value) => updateApplicationSettings("allowProfileFormUntil", value),
+    [updateApplicationSettings],
+  );
+
+  const onProfileFormChange = useCallback(
+    (value) => updateApplicationSettings("profileForm", value),
+    [updateApplicationSettings],
+  );
+
+  const onConfirmationFormChange = useCallback(
+    (value) => updateApplicationSettings("confirmationForm", value),
+    [updateApplicationSettings],
   );
 
   return (
@@ -48,11 +70,9 @@ export const ApplicationSettings = () => {
       </p>
       <Row>
         <Col percent={33}>
-          <StatefulTextInput
-            initialValue={settings.application.hoursToConfirm}
-            onChange={(time) =>
-              debouncedHandleUpdateApplicationSettings("hoursToConfirm", time)
-            }
+          <TextInput
+            value={settings.application.hoursToConfirm}
+            onChange={onHoursToConfirmChange}
             type={TextInputType.Number}
             min={1}
             title="Hours to confirm"
@@ -61,28 +81,18 @@ export const ApplicationSettings = () => {
         </Col>
 
         <Col percent={33}>
-          <StatefulTextInput
-            initialValue={settings.application.allowProfileFormFrom}
-            onChange={(timestring) =>
-              debouncedHandleUpdateApplicationSettings(
-                "allowProfileFormFrom",
-                timestring,
-              )
-            }
+          <TextInput
+            value={settings.application.allowProfileFormFrom}
+            onChange={onAllowProfileFormFromChange}
             title="Open registration on"
             placeholder="1970-01-01 00:00:00"
           />
         </Col>
 
         <Col percent={33}>
-          <StatefulTextInput
-            initialValue={settings.application.allowProfileFormUntil}
-            onChange={(timestring) =>
-              debouncedHandleUpdateApplicationSettings(
-                "allowProfileFormUntil",
-                timestring,
-              )
-            }
+          <TextInput
+            value={settings.application.allowProfileFormUntil}
+            onChange={onAllowProfileFormUntilChange}
             title="Close registration on"
             placeholder="1970-01-01 00:00:00"
           />
@@ -104,16 +114,12 @@ export const ApplicationSettings = () => {
 
       <FormEditor
         initialForm={settings.application.profileForm}
-        onFormChange={(form) =>
-          debouncedHandleUpdateApplicationSettings("profileForm", form)
-        }
+        onFormChange={onProfileFormChange}
       />
 
       <FormEditor
         initialForm={settings.application.confirmationForm}
-        onFormChange={(form) =>
-          debouncedHandleUpdateApplicationSettings("confirmationForm", form)
-        }
+        onFormChange={onConfirmationFormChange}
       />
     </>
   );
