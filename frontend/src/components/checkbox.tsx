@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useUniqueId, useUniqueIds } from "../hooks/use-uniqe-id";
 import { FormField } from "./form-field";
 
@@ -40,24 +40,27 @@ export const Checkboxes = ({
   const checkboxesIds = useUniqueIds(values.length);
   const valuesAsChecked = values.map((value) => selected.includes(value));
   const [checked, setChecked] = useState(valuesAsChecked);
-  const toggleChecked = (checkedIndex: number) => {
-    const updatedChecked = radio
-      ? new Array(values.length).fill(false)
-      : [...checked];
+  const toggleChecked = useCallback(
+    (checkedIndex: number) => {
+      const updatedChecked = radio
+        ? new Array(values.length).fill(false)
+        : [...checked];
 
-    updatedChecked[checkedIndex] = !updatedChecked[checkedIndex];
-    setChecked(updatedChecked);
+      updatedChecked[checkedIndex] = !updatedChecked[checkedIndex];
+      setChecked(updatedChecked);
 
-    const checkedValues = values
-      .map((value, index) => ({
-        checked: updatedChecked[index],
-        value,
-      }))
-      .filter((value) => value.checked)
-      .map(({ value }) => value);
+      const checkedValues = values
+        .map((value, index) => ({
+          checked: updatedChecked[index],
+          value,
+        }))
+        .filter((value) => value.checked)
+        .map(({ value }) => value);
 
-    onChange(checkedValues);
-  };
+      onChange(checkedValues);
+    },
+    [onChange, values],
+  );
 
   const checkboxes = values.map((checkboxValue, index) => (
     <Item key={checkboxesIds[index]}>

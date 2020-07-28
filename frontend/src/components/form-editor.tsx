@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { v4 as uuid } from "node-uuid";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import * as React from "react";
 import type { FormSettingsDTO, QuestionDTO } from "../api/types/dto";
 import { QuestionType } from "../api/types/enums";
@@ -51,15 +51,18 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
   const [questions, setQuestions] = useState(initialQuestionsWithUUIDs);
   const [title, setTitle] = useState(initialForm.title);
 
-  const updateQuestions = (updatedQuestions: IIdentifiableIQuestion[]) => {
-    setQuestions(updatedQuestions);
-    onFormChange({
-      questions: updatedQuestions.map(({ question }) => question),
-      title,
-    });
-  };
+  const updateQuestions = useCallback(
+    (updatedQuestions: IIdentifiableIQuestion[]) => {
+      setQuestions(updatedQuestions);
+      onFormChange({
+        questions: updatedQuestions.map(({ question }) => question),
+        title,
+      });
+    },
+    [onFormChange, title],
+  );
 
-  const addQuestion = () => {
+  const addQuestion = useCallback(() => {
     const textQuestion: QuestionDTO = {
       configuration: {
         convertAnswerToUrl: false,
@@ -81,24 +84,24 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
         question: textQuestion,
       },
     ]);
-  };
+  }, [updateQuestions, questions]);
 
-  const handleQuestionChange = (
-    changes: Partial<QuestionDTO>,
-    index: number,
-  ) => {
-    const updatedQuestions = [...questions];
+  const handleQuestionChange = useCallback(
+    (changes: Partial<QuestionDTO>, index: number) => {
+      const updatedQuestions = [...questions];
 
-    updatedQuestions[index] = {
-      ...updatedQuestions[index],
-      question: {
-        ...updatedQuestions[index].question,
-        ...(changes as QuestionDTO),
-      },
-    };
+      updatedQuestions[index] = {
+        ...updatedQuestions[index],
+        question: {
+          ...updatedQuestions[index].question,
+          ...(changes as QuestionDTO),
+        },
+      };
 
-    updateQuestions(updatedQuestions);
-  };
+      updateQuestions(updatedQuestions);
+    },
+    [updateQuestions, questions],
+  );
 
   const handleDeleteQuestion = (index: number) => {
     const updatedQuestions = [...questions];
@@ -107,13 +110,16 @@ export const FormEditor = ({ initialForm, onFormChange }: IFormEditorProps) => {
     updateQuestions(updatedQuestions);
   };
 
-  const handleTitleChange = (updatedTitle: string) => {
-    setTitle(updatedTitle);
-    onFormChange({
-      questions: questions.map(({ question }) => question),
-      title: updatedTitle,
-    });
-  };
+  const handleTitleChange = useCallback(
+    (updatedTitle: string) => {
+      setTitle(updatedTitle);
+      onFormChange({
+        questions: questions.map(({ question }) => question),
+        title: updatedTitle,
+      });
+    },
+    [onFormChange, questions],
+  );
 
   const editableQuestions = questions.map(({ question, id }, index) => (
     <EditableQuestion

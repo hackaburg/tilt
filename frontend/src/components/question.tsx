@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
+import { useCallback } from "react";
 import * as ReactMarkdown from "react-markdown";
 import type {
   ChoicesQuestionConfigurationDTO,
@@ -41,11 +42,14 @@ export const Question = ({
   value,
   onChange,
 }: IQuestionProps) => {
-  const handleQuestionChange = (changes: Partial<QuestionDTO>) => {
-    if (onQuestionChange) {
-      onQuestionChange(changes);
-    }
-  };
+  const handleQuestionChange = useCallback(
+    (changes: Partial<QuestionDTO>) => {
+      if (onQuestionChange) {
+        onQuestionChange(changes);
+      }
+    },
+    [onQuestionChange],
+  );
 
   const renderedQuestion = (
     <>

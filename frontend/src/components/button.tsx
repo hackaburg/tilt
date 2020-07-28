@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
+import { useCallback } from "react";
 import { borderRadius, transitionDuration } from "../config";
 import { variables } from "../theme";
 
@@ -75,17 +76,33 @@ interface IButtonProps extends IStyledButtonProps {
 /**
  * A clickable button.
  */
-export const Button = (props: IButtonProps) => (
-  <StyledButton
-    primary={props.primary}
-    fluid={props.fluid}
-    loading={props.loading}
-    disable={props.disable}
-    onClick={(event) =>
-      !props.loading && !props.disable && props.onClick && props.onClick(event)
-    }
-  >
-    <Text>{props.children}</Text>
-    {props.loading && "Loading"}
-  </StyledButton>
-);
+export const Button = ({
+  children,
+  disable,
+  fluid,
+  loading,
+  onClick,
+  primary,
+}: IButtonProps) => {
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (!loading && !disable && onClick != null) {
+        onClick(event);
+      }
+    },
+    [loading, disable, onClick],
+  );
+
+  return (
+    <StyledButton
+      primary={primary}
+      fluid={fluid}
+      loading={loading}
+      disable={disable}
+      onClick={handleClick}
+    >
+      <Text>{children}</Text>
+      {loading && "Loading"}
+    </StyledButton>
+  );
+};

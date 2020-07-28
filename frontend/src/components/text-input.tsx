@@ -1,6 +1,7 @@
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
+import { useCallback } from "react";
 import { useFocus } from "../hooks/use-focus";
 import {
   FormField,
@@ -78,19 +79,20 @@ export const TextInput = ({
     autoFocus: focus,
     empty: isEmpty,
 
-    onChange: (
-      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
-      const changedValue = event.target.value;
+    onChange: useCallback(
+      (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const changedValue = event.target.value;
 
-      if (type === TextInputType.Number) {
-        const parsedValue = Number(changedValue);
-        onChange(parsedValue);
-        return;
-      }
+        if (type === TextInputType.Number) {
+          const parsedValue = Number(changedValue);
+          onChange(parsedValue);
+          return;
+        }
 
-      onChange(changedValue);
-    },
+        onChange(changedValue);
+      },
+      [onChange, type],
+    ),
     placeholder,
     value,
 

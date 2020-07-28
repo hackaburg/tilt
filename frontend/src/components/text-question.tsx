@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useCallback } from "react";
 import type {
   QuestionDTO,
   TextQuestionConfigurationDTO,
@@ -39,15 +40,18 @@ export const TextQuestion = ({
         : []),
     ];
 
-    const handleAppearanceChange = (selected: string[]) => {
-      onQuestionChange({
-        configuration: {
-          ...question.configuration,
-          convertAnswerToUrl: selected.includes(convertToUrlOptionValue),
-          multiline: selected.includes(multilineOptionValue),
-        },
-      });
-    };
+    const handleAppearanceChange = useCallback(
+      (selected: string[]) => {
+        onQuestionChange({
+          configuration: {
+            ...question.configuration,
+            convertAnswerToUrl: selected.includes(convertToUrlOptionValue),
+            multiline: selected.includes(multilineOptionValue),
+          },
+        });
+      },
+      [onQuestionChange, question],
+    );
 
     return (
       <>
