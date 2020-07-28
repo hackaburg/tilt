@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import type { FormSettingsDTO } from "../api/types/dto";
 import { Heading } from "./headings";
-import { Question } from "./question";
+import { UnifiedQuestion } from "./questions/unified-question";
 
 const Container = styled.div`
   border-top: 1px dashed #eee;
@@ -20,7 +20,7 @@ interface IFormProps {
 export const Form = ({ form }: IFormProps) => {
   const questions = form.questions.map((question, index) => (
     <Container key={index}>
-      <Question onChange={() => 0} value={""} question={question} />
+      <UnifiedQuestion onChange={() => 0} value={""} question={question} />
     </Container>
   ));
 

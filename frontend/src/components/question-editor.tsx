@@ -5,7 +5,8 @@ import type { QuestionDTO } from "../api/types/dto";
 import { borderRadius, transitionDuration } from "../config";
 import { useFortune } from "../hooks/use-fortune";
 import { variables } from "../theme";
-import { Question } from "./question";
+import { UnifiedQuestion } from "./questions/unified-question";
+import { UnifiedQuestionEditor } from "./questions/unified-question-editor";
 
 const Container = styled.div`
   position: relative;
@@ -72,7 +73,9 @@ const RemoveButton = styled.button`
   }
 `;
 
-interface IEditableQuestion {
+const ignoreChange = () => 0;
+
+interface IQuestionEditorProps {
   question: QuestionDTO;
   onQuestionChange: (question: QuestionDTO) => any;
   onDeleteQuestion: (question: QuestionDTO) => any;
@@ -81,11 +84,11 @@ interface IEditableQuestion {
 /**
  * A question with an "Edit" and "Delete" button, and mock content.
  */
-export const EditableQuestion = ({
+export const QuestionEditor = ({
   question,
   onQuestionChange,
   onDeleteQuestion,
-}: IEditableQuestion) => {
+}: IQuestionEditorProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const fortune = useFortune();
 
@@ -95,13 +98,19 @@ export const EditableQuestion = ({
 
   return (
     <Container>
-      <Question
-        question={question}
-        onQuestionChange={onQuestionChange}
-        editable={isEditing}
-        value={fortune}
-        onChange={() => 0}
-      />
+      {isEditing ? (
+        <UnifiedQuestionEditor
+          question={question}
+          onQuestionChange={onQuestionChange}
+        />
+      ) : (
+        <UnifiedQuestion
+          question={question}
+          value={fortune}
+          onChange={ignoreChange}
+        />
+      )}
+
       <Modifiers>
         {isEditing && (
           <RemoveButton onClick={handleDelete}>Delete question</RemoveButton>

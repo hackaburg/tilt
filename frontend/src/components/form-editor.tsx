@@ -4,9 +4,9 @@ import * as React from "react";
 import type { FormSettingsDTO, QuestionDTO } from "../api/types/dto";
 import { QuestionType } from "../api/types/enums";
 import { Button } from "./button";
-import { EditableQuestion } from "./editable-question";
 import { Col, Row } from "./grid";
 import { Sectionheading } from "./headings";
+import { QuestionEditor } from "./question-editor";
 import { TextInput } from "./text-input";
 
 const Section = styled.section`
@@ -97,7 +97,7 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
   const allQuestionsHaveIDs = form.questions.every(({ id }) => id != null);
 
   const editableQuestions = form.questions.map((question) => (
-    <EditableQuestion
+    <QuestionEditor
       key={question.id ?? question.title}
       onQuestionChange={handleQuestionChange}
       question={question}

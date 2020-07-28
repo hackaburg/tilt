@@ -107,6 +107,7 @@ export abstract class QuestionConfigurationDTOBase {
 
 export class TextQuestionConfigurationDTO
   implements ITextQuestionConfiguration {
+  @Expose()
   public type!: QuestionType.Text;
   @IsString()
   @Expose()
@@ -121,6 +122,7 @@ export class TextQuestionConfigurationDTO
 
 export class NumberQuestionConfigurationDTO
   implements INumberQuestionConfiguration {
+  @Expose()
   public type!: QuestionType.Number;
   @IsString()
   @Expose()
@@ -140,6 +142,7 @@ export class NumberQuestionConfigurationDTO
 
 export class ChoicesQuestionConfigurationDTO
   implements IChoicesQuestionConfiguration {
+  @Expose()
   public type!: QuestionType.Choices;
   @IsArray()
   @Expose()
@@ -154,6 +157,7 @@ export class ChoicesQuestionConfigurationDTO
 
 export class CountryQuestionConfigurationDTO
   implements ICountryQuestionConfiguration {
+  @Expose()
   public type!: QuestionType.Country;
 }
 
