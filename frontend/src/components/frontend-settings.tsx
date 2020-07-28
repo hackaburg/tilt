@@ -26,32 +26,32 @@ export const FrontendSettings = () => {
     [updateSettings, settings],
   );
 
-  const onColorGradientStartChange = useCallback(
+  const handleColorGradientStartChange = useCallback(
     (value) => updateFrontendSettings("colorGradientStart", value),
     [updateFrontendSettings],
   );
 
-  const onColorGradientEndChange = useCallback(
+  const handleColorGradientEndChange = useCallback(
     (value) => updateFrontendSettings("colorGradientEnd", value),
     [updateFrontendSettings],
   );
 
-  const onColorLinkChange = useCallback(
+  const handleColorLinkChange = useCallback(
     (value) => updateFrontendSettings("colorLink", value),
     [updateFrontendSettings],
   );
 
-  const onColorLinkHoverChange = useCallback(
+  const handleColorLinkHoverChange = useCallback(
     (value) => updateFrontendSettings("colorLinkHover", value),
     [updateFrontendSettings],
   );
 
-  const onLoginSignupImageChange = useCallback(
+  const handleLoginSignupImageChange = useCallback(
     (value) => updateFrontendSettings("loginSignupImage", value),
     [updateFrontendSettings],
   );
 
-  const onSidebarImageChange = useCallback(
+  const handleSidebarImageChange = useCallback(
     (value) => updateFrontendSettings("sidebarImage", value),
     [updateFrontendSettings],
   );
@@ -74,7 +74,7 @@ export const FrontendSettings = () => {
             placeholder="#abcdef"
             type={TextInputType.Text}
             value={settings.frontend.colorGradientStart}
-            onChange={onColorGradientStartChange}
+            onChange={handleColorGradientStartChange}
           />
         </Col>
         <Col percent={50}>
@@ -83,7 +83,7 @@ export const FrontendSettings = () => {
             placeholder="#abcdef"
             type={TextInputType.Text}
             value={settings.frontend.colorGradientEnd}
-            onChange={onColorGradientEndChange}
+            onChange={handleColorGradientEndChange}
           />
         </Col>
       </Row>
@@ -95,7 +95,7 @@ export const FrontendSettings = () => {
             placeholder="#abcdef"
             type={TextInputType.Text}
             value={settings.frontend.colorLink}
-            onChange={onColorLinkChange}
+            onChange={handleColorLinkChange}
           />
         </Col>
         <Col percent={50}>
@@ -104,7 +104,7 @@ export const FrontendSettings = () => {
             placeholder="#abcdef"
             type={TextInputType.Text}
             value={settings.frontend.colorLinkHover}
-            onChange={onColorLinkHoverChange}
+            onChange={handleColorLinkHoverChange}
           />
         </Col>
       </Row>
@@ -116,7 +116,7 @@ export const FrontendSettings = () => {
             placeholder="absolute image url with https"
             type={TextInputType.Text}
             value={settings.frontend.loginSignupImage}
-            onChange={onLoginSignupImageChange}
+            onChange={handleLoginSignupImageChange}
           />
         </Col>
         <Col percent={50}>
@@ -125,7 +125,7 @@ export const FrontendSettings = () => {
             placeholder="absolute image url with https"
             type={TextInputType.Text}
             value={settings.frontend.sidebarImage}
-            onChange={onSidebarImageChange}
+            onChange={handleSidebarImageChange}
           />
         </Col>
       </Row>

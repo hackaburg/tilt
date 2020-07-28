@@ -68,7 +68,7 @@ export const LoginSignupForm = () => {
   const error = loginError ?? signupError;
   const signupDone = !!didSignup && !signupInProgress && !error;
 
-  const onSubmit = useCallback(
+  const handleSubmit = useCallback(
     async (event: React.SyntheticEvent) => {
       event.preventDefault();
       await sendLoginRequest();
@@ -105,7 +105,7 @@ export const LoginSignupForm = () => {
               </Message>
             )}
 
-            <FormContainer onSubmit={onSubmit}>
+            <FormContainer onSubmit={handleSubmit}>
               <Fields>
                 <TextInput
                   title="E-Mail"

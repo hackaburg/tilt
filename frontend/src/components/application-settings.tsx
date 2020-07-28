@@ -26,27 +26,27 @@ export const ApplicationSettings = () => {
     [updateSettings, settings],
   );
 
-  const onHoursToConfirmChange = useCallback(
+  const handleHoursToConfirmChange = useCallback(
     (value) => updateApplicationSettings("hoursToConfirm", value),
     [updateApplicationSettings],
   );
 
-  const onAllowProfileFormFromChange = useCallback(
+  const handleAllowProfileFormFromChange = useCallback(
     (value) => updateApplicationSettings("allowProfileFormFrom", value),
     [updateApplicationSettings],
   );
 
-  const onAllowProfileFormUntilChange = useCallback(
+  const handleAllowProfileFormUntilChange = useCallback(
     (value) => updateApplicationSettings("allowProfileFormUntil", value),
     [updateApplicationSettings],
   );
 
-  const onProfileFormChange = useCallback(
+  const handleProfileFormChange = useCallback(
     (value) => updateApplicationSettings("profileForm", value),
     [updateApplicationSettings],
   );
 
-  const onConfirmationFormChange = useCallback(
+  const handleConfirmationFormChange = useCallback(
     (value) => updateApplicationSettings("confirmationForm", value),
     [updateApplicationSettings],
   );
@@ -72,7 +72,7 @@ export const ApplicationSettings = () => {
         <Col percent={33}>
           <TextInput
             value={settings.application.hoursToConfirm}
-            onChange={onHoursToConfirmChange}
+            onChange={handleHoursToConfirmChange}
             type={TextInputType.Number}
             min={1}
             title="Hours to confirm"
@@ -83,7 +83,7 @@ export const ApplicationSettings = () => {
         <Col percent={33}>
           <TextInput
             value={settings.application.allowProfileFormFrom}
-            onChange={onAllowProfileFormFromChange}
+            onChange={handleAllowProfileFormFromChange}
             title="Open registration on"
             placeholder="1970-01-01 00:00:00"
           />
@@ -92,7 +92,7 @@ export const ApplicationSettings = () => {
         <Col percent={33}>
           <TextInput
             value={settings.application.allowProfileFormUntil}
-            onChange={onAllowProfileFormUntilChange}
+            onChange={handleAllowProfileFormUntilChange}
             title="Close registration on"
             placeholder="1970-01-01 00:00:00"
           />
@@ -114,12 +114,12 @@ export const ApplicationSettings = () => {
 
       <FormEditor
         form={settings.application.profileForm}
-        onFormChange={onProfileFormChange}
+        onFormChange={handleProfileFormChange}
       />
 
       <FormEditor
         form={settings.application.confirmationForm}
-        onFormChange={onConfirmationFormChange}
+        onFormChange={handleConfirmationFormChange}
       />
     </>
   );

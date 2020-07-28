@@ -1,7 +1,7 @@
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import type { EmailTemplateDTO } from "../api/types/dto";
 import { borderRadius } from "../config";
 import { Col, Row } from "./grid";
@@ -57,10 +57,7 @@ export const EmailTemplateEditor = ({
   template,
   onTemplateChange,
 }: IEmailTemplateEditor) => {
-  const onChangeRef = useRef(onTemplateChange);
-  onChangeRef.current = onTemplateChange;
-
-  const onSubjectChange = useCallback(
+  const handleSubjectChange = useCallback(
     (event) => {
       onTemplateChange({
         ...template,
@@ -70,7 +67,7 @@ export const EmailTemplateEditor = ({
     [onTemplateChange, template],
   );
 
-  const onHtmlTemplateChange = useCallback(
+  const handleHtmlTemplateChange = useCallback(
     (event) => {
       onTemplateChange({
         ...template,
@@ -80,7 +77,7 @@ export const EmailTemplateEditor = ({
     [onTemplateChange, template],
   );
 
-  const onTextTemplateChange = useCallback(
+  const handleTextTemplateChange = useCallback(
     (event) => {
       onTemplateChange({
         ...template,
@@ -95,7 +92,7 @@ export const EmailTemplateEditor = ({
       <Title>
         <TextInput
           value={template.subject}
-          onChange={onSubjectChange}
+          onChange={handleSubjectChange}
           title={`${title} subject`}
           placeholder="e.g. 'win free money'"
         />
@@ -105,14 +102,14 @@ export const EmailTemplateEditor = ({
           <EditorTitle>text/html</EditorTitle>
           <Editor
             value={template.htmlTemplate}
-            onChange={onHtmlTemplateChange}
+            onChange={handleHtmlTemplateChange}
           />
         </Col>
         <Col percent={50}>
           <EditorTitle>text/plain</EditorTitle>
           <Editor
             value={template.textTemplate}
-            onChange={onTextTemplateChange}
+            onChange={handleTextTemplateChange}
           />
         </Col>
       </Row>

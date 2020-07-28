@@ -40,17 +40,17 @@ export const EmailSettings = () => {
     [updateSettings, settings],
   );
 
-  const onSenderChange = useCallback(
+  const handleSenderChange = useCallback(
     (value) => updateEmailSettings("sender", value),
     [updateEmailSettings, settings],
   );
 
-  const onVerifyEmailChange = useCallback(
+  const handleVerifyEmailChange = useCallback(
     (value) => updateEmailSettings("verifyEmail", value),
     [updateEmailSettings, settings],
   );
 
-  const onForgotPasswordEmailChange = useCallback(
+  const handleForgotPasswordEmailChange = useCallback(
     (value) => updateEmailSettings("forgotPasswordEmail", value),
     [updateEmailSettings, settings],
   );
@@ -69,7 +69,7 @@ export const EmailSettings = () => {
       {settings && (
         <TextInput
           value={settings.email.sender}
-          onChange={onSenderChange}
+          onChange={handleSenderChange}
           title="From"
           placeholder="applications@your-hackathon.org"
         />
@@ -103,12 +103,12 @@ export const EmailSettings = () => {
           <EmailTemplateEditor
             title="Verification"
             template={settings.email.verifyEmail}
-            onTemplateChange={onVerifyEmailChange}
+            onTemplateChange={handleVerifyEmailChange}
           />
           <EmailTemplateEditor
             title="Forgot password"
             template={settings.email.forgotPasswordEmail}
-            onTemplateChange={onForgotPasswordEmailChange}
+            onTemplateChange={handleForgotPasswordEmailChange}
           />
         </>
       )}
