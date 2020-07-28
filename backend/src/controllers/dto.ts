@@ -5,6 +5,7 @@ import {
   IsDate,
   IsEmail,
   IsHexColor,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -158,6 +159,9 @@ export class CountryQuestionConfigurationDTO
 
 export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
   implements DTO<Omit<Question, "form" | "parent">> {
+  @IsInt()
+  @Expose()
+  public id?: number;
   @Transform(
     (value: IQuestionConfiguration) => {
       const type = value.type as QuestionType;
@@ -177,7 +181,7 @@ export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
 
         default:
           enforceExhaustiveSwitch(type);
-          break;
+          return value;
       }
     },
     { toClassOnly: true },

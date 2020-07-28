@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { QuestionDTO } from "../api/types/dto";
 import { borderRadius, transitionDuration } from "../config";
 import { useFortune } from "../hooks/use-fortune";
@@ -74,8 +74,8 @@ const RemoveButton = styled.button`
 
 interface IEditableQuestion {
   question: QuestionDTO;
-  onQuestionChange: (changes: Partial<QuestionDTO>) => any;
-  onDeleteQuestion: () => any;
+  onQuestionChange: (question: QuestionDTO) => any;
+  onDeleteQuestion: (question: QuestionDTO) => any;
 }
 
 /**
@@ -89,6 +89,10 @@ export const EditableQuestion = ({
   const [isEditing, setIsEditing] = useState(false);
   const fortune = useFortune();
 
+  const handleDelete = useCallback(() => {
+    onDeleteQuestion(question);
+  }, [onDeleteQuestion, question]);
+
   return (
     <Container>
       <Question
@@ -100,9 +104,7 @@ export const EditableQuestion = ({
       />
       <Modifiers>
         {isEditing && (
-          <RemoveButton onClick={onDeleteQuestion}>
-            Delete question
-          </RemoveButton>
+          <RemoveButton onClick={handleDelete}>Delete question</RemoveButton>
         )}
 
         <EditButton

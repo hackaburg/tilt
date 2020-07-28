@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useCallback } from "react";
 import type {
   NumberQuestionConfigurationDTO,
   QuestionDTO,
@@ -9,7 +10,7 @@ import { TextInput, TextInputType } from "./text-input";
 interface INumberQuestionProps {
   editable?: boolean;
   question: QuestionDTO<NumberQuestionConfigurationDTO>;
-  onQuestionChange?: (changed: Partial<QuestionDTO>) => any;
+  onQuestionChange?: (question: QuestionDTO) => any;
 
   value: number;
   onChange: (value: number) => any;
@@ -25,16 +26,44 @@ export const NumberQuestion = ({
   editable,
   onQuestionChange,
 }: INumberQuestionProps) => {
-  if (editable && onQuestionChange) {
+  const handleConfigurationFieldChange = useCallback(
+    (field: keyof NumberQuestionConfigurationDTO, fieldValue: any) => {
+      if (!onQuestionChange) {
+        return;
+      }
+
+      onQuestionChange({
+        ...question,
+        configuration: {
+          ...question.configuration,
+          [field]: fieldValue,
+        },
+      });
+    },
+    [onQuestionChange, question],
+  );
+
+  const handlePlaceholderChange = useCallback(
+    (v) => handleConfigurationFieldChange("placeholder", v),
+    [handleConfigurationFieldChange],
+  );
+
+  const handleMinValueChange = useCallback(
+    (v) => handleConfigurationFieldChange("minValue", isNaN(v) ? undefined : v),
+    [handleConfigurationFieldChange],
+  );
+
+  const handleMaxValueChange = useCallback(
+    (v) => handleConfigurationFieldChange("maxValue", isNaN(v) ? undefined : v),
+    [handleConfigurationFieldChange],
+  );
+
+  if (editable) {
     return (
       <>
         <TextInput
           value={question.configuration.placeholder}
-          onChange={(placeholder) =>
-            onQuestionChange({
-              configuration: { ...question.configuration, placeholder },
-            })
-          }
+          onChange={handlePlaceholderChange}
           placeholder="no placeholder"
           title="Input placeholder"
         />
@@ -44,11 +73,7 @@ export const NumberQuestion = ({
             <TextInput
               type={TextInputType.Number}
               value={question.configuration.minValue}
-              onChange={(minValue) =>
-                onQuestionChange({
-                  configuration: { ...question.configuration, minValue },
-                })
-              }
+              onChange={handleMinValueChange}
               title="Minimum"
               placeholder="No minimum"
             />
@@ -57,11 +82,7 @@ export const NumberQuestion = ({
             <TextInput
               type={TextInputType.Number}
               value={question.configuration.maxValue}
-              onChange={(maxValue) =>
-                onQuestionChange({
-                  configuration: { ...question.configuration, maxValue },
-                })
-              }
+              onChange={handleMaxValueChange}
               title="Maximum"
               placeholder="No maximum"
             />

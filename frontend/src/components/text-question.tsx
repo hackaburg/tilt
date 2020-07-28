@@ -8,10 +8,13 @@ import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { TextInput, TextInputType } from "./text-input";
 
+const multilineOptionValue = "Multiline";
+const convertToUrlOptionValue = "Convert answer to URL";
+
 interface ITextQuestionProps {
   editable?: boolean;
   question: QuestionDTO<TextQuestionConfigurationDTO>;
-  onQuestionChange?: (updatedQuestion: Partial<QuestionDTO>) => any;
+  onQuestionChange?: (updatedQuestion: QuestionDTO) => any;
 
   value: string;
   onChange: (value: string) => any;
@@ -27,10 +30,44 @@ export const TextQuestion = ({
   value,
   onChange,
 }: ITextQuestionProps) => {
-  if (editable && onQuestionChange) {
-    const multilineOptionValue = "Multiline";
-    const convertToUrlOptionValue = "Convert answer to URL";
+  const handleConfigurationFieldChange = useCallback(
+    (field: keyof TextQuestionConfigurationDTO, fieldValue: any) => {
+      if (!onQuestionChange) {
+        return;
+      }
 
+      onQuestionChange({
+        ...question,
+        configuration: {
+          ...question.configuration,
+          [field]: fieldValue,
+        },
+      });
+    },
+    [onQuestionChange, question],
+  );
+
+  const handleAppearanceChange = useCallback(
+    (selected: string[]) => {
+      handleConfigurationFieldChange(
+        "convertAnswerToUrl",
+        selected.includes(convertToUrlOptionValue),
+      );
+
+      handleConfigurationFieldChange(
+        "multiline",
+        selected.includes(multilineOptionValue),
+      );
+    },
+    [handleConfigurationFieldChange, question],
+  );
+
+  const handlePlaceholderChange = useCallback(
+    (placeholder) => handleConfigurationFieldChange("placeholder", placeholder),
+    [handleConfigurationFieldChange],
+  );
+
+  if (editable) {
     const appearanceOptions = [multilineOptionValue, convertToUrlOptionValue];
 
     const selectedAppearanceOptions = [
@@ -40,33 +77,13 @@ export const TextQuestion = ({
         : []),
     ];
 
-    const handleAppearanceChange = useCallback(
-      (selected: string[]) => {
-        onQuestionChange({
-          configuration: {
-            ...question.configuration,
-            convertAnswerToUrl: selected.includes(convertToUrlOptionValue),
-            multiline: selected.includes(multilineOptionValue),
-          },
-        });
-      },
-      [onQuestionChange, question],
-    );
-
     return (
       <>
         <Row>
           <Col percent={50}>
             <TextInput
               value={question.configuration.placeholder}
-              onChange={(placeholder) =>
-                onQuestionChange({
-                  configuration: {
-                    ...question.configuration,
-                    placeholder,
-                  },
-                })
-              }
+              onChange={handlePlaceholderChange}
               placeholder="no placeholder"
               title="Input placeholder"
             />

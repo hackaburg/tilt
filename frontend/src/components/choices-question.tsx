@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
 import type {
   ChoicesQuestionConfigurationDTO,
   QuestionDTO,
@@ -8,6 +8,15 @@ import { Checkboxes } from "./checkbox";
 import { Col, Row } from "./grid";
 import { Select } from "./select";
 import { TextInput, TextInputType } from "./text-input";
+
+const checkboxOptionValue = "Use checkboxes";
+const radioOptionValue = "Use radio buttons";
+const displayAsDropdownOptionValue = "Use a dropdown";
+const appearanceOptions = [
+  checkboxOptionValue,
+  radioOptionValue,
+  displayAsDropdownOptionValue,
+];
 
 interface IChoicesQuestionProps {
   editable?: boolean;
@@ -28,49 +37,66 @@ export const ChoicesQuestion = ({
   selected,
   onSelectedChanged,
 }: IChoicesQuestionProps) => {
-  if (editable && onQuestionChange) {
-    const checkboxOptionValue = "Use checkboxes";
-    const radioOptionValue = "Use radio buttons";
-    const displayAsDropdownOptionValue = "Use a dropdown";
-    const appearanceOptions = [
-      checkboxOptionValue,
-      radioOptionValue,
-      displayAsDropdownOptionValue,
-    ];
+  const selectedAppearanceOptions = useMemo(() => {
+    if (question.configuration.allowMultiple) {
+      return [checkboxOptionValue];
+    } else if (question.configuration.displayAsDropdown) {
+      return [displayAsDropdownOptionValue];
+    }
 
-    const selectedAppearanceOptions = question.configuration.allowMultiple
-      ? [checkboxOptionValue]
-      : question.configuration.displayAsDropdown
-      ? [displayAsDropdownOptionValue]
-      : [radioOptionValue];
+    return [radioOptionValue];
+  }, [
+    question.configuration.allowMultiple,
+    question.configuration.displayAsDropdown,
+  ]);
 
-    const handleAppearanceChange = (selectedAppearance: string[]) => {
+  const handleConfigurationChange = useCallback(
+    (field: keyof ChoicesQuestionConfigurationDTO, fieldValue: any) => {
+      if (!onQuestionChange) {
+        return;
+      }
+
       onQuestionChange({
+        ...question,
         configuration: {
           ...question.configuration,
-          allowMultiple: selectedAppearance.includes(checkboxOptionValue),
-          displayAsDropdown: selectedAppearance.includes(
-            displayAsDropdownOptionValue,
-          ),
+          [field]: fieldValue,
         },
       });
-    };
+    },
+    [onQuestionChange, question],
+  );
 
-    const [choicesText, setChoicesText] = useState(
-      question.configuration.choices.join("\n"),
-    );
-    const handleChoicesUpdate = (text: string) => {
-      setChoicesText(text);
-      onQuestionChange({
-        configuration: {
-          ...question.configuration,
-          choices: text
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line.length > 0),
-        },
-      });
-    };
+  const handleAppearanceChange = useCallback(
+    (selectedAppearance: string[]) => {
+      handleConfigurationChange(
+        "allowMultiple",
+        selectedAppearance.includes(checkboxOptionValue),
+      );
+
+      handleConfigurationChange(
+        "displayAsDropdown",
+        selectedAppearance.includes(displayAsDropdownOptionValue),
+      );
+    },
+    [handleConfigurationChange],
+  );
+
+  const handleChoicesUpdate = useCallback(
+    (text: string) => {
+      handleConfigurationChange(
+        "choices",
+        text
+          .split("\n")
+          .map((line) => line.trim())
+          .filter((line) => line.length > 0),
+      );
+    },
+    [handleConfigurationChange],
+  );
+
+  if (editable) {
+    const choicesText = question.configuration.choices.join("\n");
 
     return (
       <>

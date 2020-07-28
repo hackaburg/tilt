@@ -113,12 +113,12 @@ export const ApplicationSettings = () => {
       </p>
 
       <FormEditor
-        initialForm={settings.application.profileForm}
+        form={settings.application.profileForm}
         onFormChange={onProfileFormChange}
       />
 
       <FormEditor
-        initialForm={settings.application.confirmationForm}
+        form={settings.application.confirmationForm}
         onFormChange={onConfirmationFormChange}
       />
     </>

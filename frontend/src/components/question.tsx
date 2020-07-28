@@ -23,9 +23,51 @@ const Meta = styled.div`
   margin-bottom: 3rem;
 `;
 
+const getDefaultQuestionConfiguration = (type: string) => {
+  switch (type) {
+    case QuestionType.Text:
+      return {
+        convertAnswerToUrl: false,
+        multiline: false,
+        placeholder: "",
+        type: QuestionType.Text,
+      };
+
+    case QuestionType.Number:
+      return {
+        allowDecimals: false,
+        maxValue: 10,
+        minValue: 0,
+        placeholder: "",
+        type: QuestionType.Number,
+      };
+
+    case QuestionType.Country:
+      return {
+        type: QuestionType.Country,
+      };
+
+    case QuestionType.Choices:
+      return {
+        allowMultiple: true,
+        choices: [],
+        displayAsDropdown: false,
+        type: QuestionType.Choices,
+      };
+
+    default:
+      throw new Error(`unknown question type '${type}'`);
+  }
+};
+
+const mandatoryOptionName = "Mandatory";
+const mandatoryAllCheckboxOptions = [mandatoryOptionName];
+const mandatorySelectedCheckboxOptions = mandatoryAllCheckboxOptions;
+const mandatoryNotSelectedCheckboxOptions = [] as string[];
+
 interface IQuestionProps {
   question: QuestionDTO;
-  onQuestionChange?: (changes: Partial<QuestionDTO>) => any;
+  onQuestionChange?: (question: QuestionDTO) => any;
   editable?: boolean;
   value: any;
   onChange: (value: any) => any;
@@ -42,22 +84,13 @@ export const Question = ({
   value,
   onChange,
 }: IQuestionProps) => {
-  const handleQuestionChange = useCallback(
-    (changes: Partial<QuestionDTO>) => {
-      if (onQuestionChange) {
-        onQuestionChange(changes);
-      }
-    },
-    [onQuestionChange],
-  );
-
   const renderedQuestion = (
     <>
       {question.configuration.type === QuestionType.Text && (
         <TextQuestion
           editable={editable}
           question={question as QuestionDTO<TextQuestionConfigurationDTO>}
-          onQuestionChange={handleQuestionChange}
+          onQuestionChange={onQuestionChange}
           onChange={onChange}
           value={value}
         />
@@ -67,7 +100,7 @@ export const Question = ({
         <NumberQuestion
           editable={editable}
           question={question as QuestionDTO<NumberQuestionConfigurationDTO>}
-          onQuestionChange={handleQuestionChange}
+          onQuestionChange={onQuestionChange}
           onChange={onChange}
           value={value}
         />
@@ -77,7 +110,7 @@ export const Question = ({
         <ChoicesQuestion
           editable={editable}
           question={question as QuestionDTO<ChoicesQuestionConfigurationDTO>}
-          onQuestionChange={handleQuestionChange}
+          onQuestionChange={onQuestionChange}
           onSelectedChanged={onChange}
           selected={value}
         />
@@ -94,70 +127,58 @@ export const Question = ({
     </>
   );
 
-  if (editable) {
-    const mandatoryOptionName = "Mandatory";
-    const handleQuestionTypeChange = (type: string) => {
-      const base: Partial<QuestionDTO> = {
-        description: "",
-        mandatory: false,
-        parentID: undefined,
-        showIfParentHasValue: "",
-        title: "",
-      };
-
-      switch (type) {
-        case QuestionType.Text:
-          handleQuestionChange({
-            ...base,
-            configuration: {
-              convertAnswerToUrl: false,
-              multiline: false,
-              placeholder: "",
-              type: QuestionType.Text,
-            },
-            title: "Text question",
-          });
-          break;
-
-        case QuestionType.Number:
-          handleQuestionChange({
-            ...base,
-            configuration: {
-              allowDecimals: false,
-              maxValue: 10,
-              minValue: 0,
-              placeholder: "",
-              type: QuestionType.Number,
-            },
-            title: "Number question",
-          });
-          break;
-
-        case QuestionType.Country:
-          handleQuestionChange({
-            ...base,
-            configuration: {
-              type: QuestionType.Country,
-            },
-            title: "Country question",
-          });
-          break;
-
-        case QuestionType.Choices:
-          handleQuestionChange({
-            ...base,
-            configuration: {
-              allowMultiple: true,
-              choices: [],
-              displayAsDropdown: false,
-              type: QuestionType.Choices,
-            },
-            title: "Choice question",
-          });
-          break;
+  const handleQuestionFieldChange = useCallback(
+    (field: keyof QuestionDTO, fieldValue: any) => {
+      if (!onQuestionChange) {
+        return;
       }
-    };
 
+      onQuestionChange({
+        ...question,
+        [field]: fieldValue,
+      });
+    },
+    [onQuestionChange, question],
+  );
+
+  const handleQuestionTypeChange = useCallback(
+    (type: string) => {
+      const configuration = getDefaultQuestionConfiguration(type);
+      handleQuestionFieldChange("configuration", configuration);
+    },
+    [handleQuestionFieldChange],
+  );
+
+  const handleQuestionTitleChange = useCallback(
+    (v) => handleQuestionFieldChange("title", v),
+    [handleQuestionFieldChange],
+  );
+
+  const handleQuestionDescriptionChange = useCallback(
+    (v) => handleQuestionFieldChange("description", v),
+    [handleQuestionFieldChange],
+  );
+
+  const handleQuestionMandatoryChange = useCallback(
+    (selected: string[]) =>
+      handleQuestionFieldChange(
+        "mandatory",
+        selected.includes(mandatoryOptionName),
+      ),
+    [handleQuestionFieldChange, mandatoryOptionName],
+  );
+
+  const handleQuestionParentIDChange = useCallback(
+    (v) => handleQuestionFieldChange("parentID", v),
+    [handleQuestionFieldChange],
+  );
+
+  const handleQuestionParentValueChange = useCallback(
+    (v) => handleQuestionFieldChange("showIfParentHasValue", v),
+    [handleQuestionFieldChange],
+  );
+
+  if (editable) {
     return (
       <>
         <Meta>
@@ -179,8 +200,8 @@ export const Question = ({
             <Col percent={50}>
               <TextInput
                 value={question.title}
-                onChange={(title) => handleQuestionChange({ title })}
-                placeholder="no title"
+                onChange={handleQuestionTitleChange}
+                placeholder="Title"
                 title="Title"
               />
             </Col>
@@ -190,23 +211,21 @@ export const Question = ({
             <Col percent={50}>
               <TextInput
                 value={question.description}
-                onChange={(description) =>
-                  handleQuestionChange({ description })
-                }
-                placeholder="no description"
+                onChange={handleQuestionDescriptionChange}
+                placeholder="Description"
                 title="Description"
                 type={TextInputType.Area}
               />
             </Col>
             <Col percent={50}>
               <Checkboxes
-                values={[mandatoryOptionName]}
-                selected={question.mandatory ? [mandatoryOptionName] : []}
-                onChange={(selected) =>
-                  handleQuestionChange({
-                    mandatory: selected.includes(mandatoryOptionName),
-                  })
+                values={mandatoryAllCheckboxOptions}
+                selected={
+                  question.mandatory
+                    ? mandatorySelectedCheckboxOptions
+                    : mandatoryNotSelectedCheckboxOptions
                 }
+                onChange={handleQuestionMandatoryChange}
                 title="Behaviour"
               />
             </Col>
@@ -217,7 +236,7 @@ export const Question = ({
               <TextInput
                 type={TextInputType.Number}
                 value={question.parentID}
-                onChange={(parentID) => handleQuestionChange({ parentID })}
+                onChange={handleQuestionParentIDChange}
                 title="Parent question reference name"
                 placeholder="no parent question"
               />
@@ -226,9 +245,7 @@ export const Question = ({
             <Col percent={50}>
               <TextInput
                 value={question.showIfParentHasValue!}
-                onChange={(showIfParentHasValue) =>
-                  handleQuestionChange({ showIfParentHasValue })
-                }
+                onChange={handleQuestionParentValueChange}
                 title="Only show this question if the parent question has this value"
                 placeholder="no value"
               />
