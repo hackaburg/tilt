@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { FormSettings } from "./form-settings";
 import { QuestionType } from "./question-type";
 
@@ -53,6 +59,8 @@ export type IQuestionConfiguration =
 export class Question<TQuestionConfiguration = IQuestionConfiguration> {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
+  @CreateDateColumn()
+  public readonly createdAt!: Date;
   @Column("simple-json")
   public configuration!: TQuestionConfiguration;
   @Column({ length: "1024" })

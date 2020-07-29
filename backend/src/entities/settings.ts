@@ -5,6 +5,7 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { ApplicationSettings } from "./application-settings";
 
@@ -12,6 +13,8 @@ import { ApplicationSettings } from "./application-settings";
 export class Settings {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
+  @UpdateDateColumn()
+  public readonly updatedAt!: Date;
   @Type(() => ApplicationSettings)
   @OneToOne(() => ApplicationSettings, { cascade: true, eager: true })
   @JoinColumn()

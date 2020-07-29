@@ -53,7 +53,7 @@ export const convertBetweenEntityAndDTO = <TOutput>(
   outputClass: ClassDeclaration<TOutput>,
 ): TOutput => plainToClass(outputClass, [input])[0];
 
-export class SettingsDTO implements DTO<Settings> {
+export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
   @Type(() => ApplicationSettingsDTO)
   @ValidateNested()
   @Expose()
@@ -163,7 +163,7 @@ export class CountryQuestionConfigurationDTO
 }
 
 export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
-  implements DTO<Omit<Question, "form" | "parent">> {
+  implements DTO<Omit<Question, "form" | "parent" | "createdAt">> {
   @IsInt()
   @Expose()
   public id?: number;
