@@ -6,6 +6,10 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { IApiResponse } from "../controllers/api";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "../services/config-service";
 import { ILoggerService, LoggerServiceToken } from "../services/logger-service";
 import {
   ISlackNotificationService,
@@ -44,6 +48,8 @@ const findFirstValidationError = (errors: ValidationError[]): string => {
 @Middleware({ type: "after", priority: 100 })
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public constructor(
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(SlackNotificationServiceToken)
     private readonly _slack: ISlackNotificationService,
@@ -63,7 +69,9 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     _next: NextFunction,
   ): void {
     const response: IApiResponse<never> = {
-      error: error.message,
+      error: this._config.isProductionEnabled
+        ? "An internal error ocurred"
+        : error.message,
       status: "error",
     };
 
