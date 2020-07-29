@@ -164,6 +164,7 @@ export class CountryQuestionConfigurationDTO
 
 export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
   implements DTO<Omit<Question, "form" | "parent" | "createdAt">> {
+  @IsOptional()
   @IsInt()
   @Expose()
   public id?: number;
