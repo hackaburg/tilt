@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { IApi } from "../api";
-import { BackendApi } from "../api/backend-api";
-import { StaticApi } from "../api/static-api";
+import { ApiClient } from "../api";
 import { apiBaseUrl } from "../config";
 import { Nullable } from "../state";
 
-const api: IApi = apiBaseUrl ? new BackendApi(apiBaseUrl) : new StaticApi();
+const api = new ApiClient(apiBaseUrl);
 
 /**
  * Gets a result from the api.
@@ -13,7 +11,7 @@ const api: IApi = apiBaseUrl ? new BackendApi(apiBaseUrl) : new StaticApi();
  * @param deps Dependencies inside the callback requiring the call to run again
  */
 export const useApi = <T>(
-  callback: (api: IApi, wasForced: boolean) => Promise<T>,
+  callback: (api: ApiClient, wasForced: boolean) => Promise<T>,
   deps: readonly any[] = [],
 ): [Nullable<T>, boolean, Nullable<Error>, () => void] => {
   const [isFetching, setIsFetching] = useState(true);

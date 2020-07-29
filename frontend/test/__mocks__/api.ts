@@ -1,7 +1,8 @@
-import { IApi } from "../../src/api";
+import { ApiClient } from "../../src/api";
+import { PublicFields } from "../../src/util";
 
 type IMockedApi = {
-  [K in keyof IApi]: jest.Mock;
+  [K in keyof PublicFields<ApiClient>]: jest.Mock;
 };
 
 /**

@@ -58,3 +58,11 @@ export const dateToString = (date: Date) =>
   )} at ${prependZero(date.getHours())}:${prependZero(
     date.getMinutes(),
   )}:${prependZero(date.getSeconds())}`;
+
+/**
+ * Extracts all public fields from a type to a new type. This is mainly used to
+ * implement classes that contain non-public fields.
+ */
+export type PublicFields<T> = {
+  [K in keyof T]: T[K];
+};
