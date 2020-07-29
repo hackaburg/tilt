@@ -22,7 +22,7 @@ export const TextQuestionEditor = ({
   onQuestionChange,
 }: ITextQuestionEditorProps) => {
   const handleConfigurationFieldChange = useCallback(
-    (field: keyof TextQuestionConfigurationDTO, fieldValue: any) => {
+    (changes: Partial<TextQuestionConfigurationDTO>) => {
       if (!onQuestionChange) {
         return;
       }
@@ -31,7 +31,7 @@ export const TextQuestionEditor = ({
         ...question,
         configuration: {
           ...question.configuration,
-          [field]: fieldValue,
+          ...changes,
         },
       });
     },
@@ -40,21 +40,16 @@ export const TextQuestionEditor = ({
 
   const handleAppearanceChange = useCallback(
     (selected: string[]) => {
-      handleConfigurationFieldChange(
-        "convertAnswerToUrl",
-        selected.includes(convertToUrlOptionValue),
-      );
-
-      handleConfigurationFieldChange(
-        "multiline",
-        selected.includes(multilineOptionValue),
-      );
+      handleConfigurationFieldChange({
+        convertAnswerToUrl: selected.includes(convertToUrlOptionValue),
+        multiline: selected.includes(multilineOptionValue),
+      });
     },
     [handleConfigurationFieldChange, question],
   );
 
   const handlePlaceholderChange = useCallback(
-    (placeholder) => handleConfigurationFieldChange("placeholder", placeholder),
+    (placeholder) => handleConfigurationFieldChange({ placeholder }),
     [handleConfigurationFieldChange],
   );
 

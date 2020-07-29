@@ -21,7 +21,7 @@ export const NumberQuestionEditor = ({
   onQuestionChange,
 }: INumberQuestionEditorProps) => {
   const handleConfigurationFieldChange = useCallback(
-    (field: keyof NumberQuestionConfigurationDTO, fieldValue: any) => {
+    (changes: Partial<NumberQuestionConfigurationDTO>) => {
       if (!onQuestionChange) {
         return;
       }
@@ -30,7 +30,7 @@ export const NumberQuestionEditor = ({
         ...question,
         configuration: {
           ...question.configuration,
-          [field]: fieldValue,
+          ...changes,
         },
       });
     },
@@ -38,17 +38,23 @@ export const NumberQuestionEditor = ({
   );
 
   const handlePlaceholderChange = useCallback(
-    (v) => handleConfigurationFieldChange("placeholder", v),
+    (value) => handleConfigurationFieldChange({ placeholder: value }),
     [handleConfigurationFieldChange],
   );
 
   const handleMinValueChange = useCallback(
-    (v) => handleConfigurationFieldChange("minValue", isNaN(v) ? undefined : v),
+    (value) =>
+      handleConfigurationFieldChange({
+        minValue: isNaN(value) ? undefined : value,
+      }),
     [handleConfigurationFieldChange],
   );
 
   const handleMaxValueChange = useCallback(
-    (v) => handleConfigurationFieldChange("maxValue", isNaN(v) ? undefined : v),
+    (value) =>
+      handleConfigurationFieldChange({
+        maxValue: isNaN(value) ? undefined : value,
+      }),
     [handleConfigurationFieldChange],
   );
 

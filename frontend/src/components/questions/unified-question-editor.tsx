@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
+import { IQuestionConfiguration } from "../../../../backend/src/entities/question";
 import { enforceExhaustiveSwitch } from "../../../../backend/src/utils/switch";
 import {
   ChoicesQuestionConfigurationDTO,
@@ -67,7 +68,9 @@ const QuestionEditor = ({
   }
 };
 
-const getDefaultQuestionConfiguration = (type: string) => {
+const getDefaultQuestionConfiguration = (
+  type: string,
+): IQuestionConfiguration => {
   switch (type) {
     case QuestionType.Text:
       return {
@@ -124,14 +127,14 @@ export const UnifiedQuestionEditor = ({
   onQuestionChange,
 }: IUnifiedQuestionEditorProps) => {
   const handleQuestionFieldChange = useCallback(
-    (field: keyof QuestionDTO, value: any) => {
+    (changes: Partial<QuestionDTO>) => {
       if (!onQuestionChange) {
         return;
       }
 
       onQuestionChange({
         ...question,
-        [field]: value,
+        ...changes,
       });
     },
     [onQuestionChange, question],
@@ -140,37 +143,35 @@ export const UnifiedQuestionEditor = ({
   const handleQuestionTypeChange = useCallback(
     (type: string) => {
       const configuration = getDefaultQuestionConfiguration(type);
-      handleQuestionFieldChange("configuration", configuration);
+      handleQuestionFieldChange({ configuration });
     },
     [handleQuestionFieldChange],
   );
 
   const handleQuestionTitleChange = useCallback(
-    (value) => handleQuestionFieldChange("title", value),
+    (title) => handleQuestionFieldChange({ title }),
     [handleQuestionFieldChange],
   );
 
   const handleQuestionDescriptionChange = useCallback(
-    (value) => handleQuestionFieldChange("description", value),
+    (description) => handleQuestionFieldChange({ description }),
     [handleQuestionFieldChange],
   );
 
   const handleQuestionMandatoryChange = useCallback(
     (selected: string[]) =>
-      handleQuestionFieldChange(
-        "mandatory",
-        selected.includes(mandatoryOptionName),
-      ),
+      handleQuestionFieldChange({
+        mandatory: selected.includes(mandatoryOptionName),
+      }),
     [handleQuestionFieldChange, mandatoryOptionName],
   );
 
   const handleQuestionParentIDChange = useCallback(
     (value) => {
       const trimmed = value.trim();
-      handleQuestionFieldChange(
-        "parentID",
-        trimmed === "" ? undefined : trimmed,
-      );
+      handleQuestionFieldChange({
+        parentID: trimmed === "" ? undefined : trimmed,
+      });
     },
     [handleQuestionFieldChange],
   );
@@ -178,10 +179,9 @@ export const UnifiedQuestionEditor = ({
   const handleQuestionParentValueChange = useCallback(
     (value) => {
       const trimmed = value.trim();
-      handleQuestionFieldChange(
-        "showIfParentHasValue",
-        trimmed === "" ? undefined : trimmed,
-      );
+      handleQuestionFieldChange({
+        showIfParentHasValue: trimmed === "" ? undefined : trimmed,
+      });
     },
     [handleQuestionFieldChange],
   );

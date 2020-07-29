@@ -28,12 +28,12 @@ const Code = styled.span`
 export const EmailSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
   const updateEmailSettings = useCallback(
-    (field: keyof EmailSettingsDTO, value: any) => {
+    (changes: Partial<EmailSettingsDTO>) => {
       updateSettings({
         ...settings,
         email: {
           ...settings.email,
-          [field]: value,
+          ...changes,
         },
       });
     },
@@ -41,17 +41,17 @@ export const EmailSettings = () => {
   );
 
   const handleSenderChange = useCallback(
-    (value) => updateEmailSettings("sender", value),
+    (sender) => updateEmailSettings({ sender }),
     [updateEmailSettings, settings],
   );
 
   const handleVerifyEmailChange = useCallback(
-    (value) => updateEmailSettings("verifyEmail", value),
+    (verifyEmail) => updateEmailSettings({ verifyEmail }),
     [updateEmailSettings, settings],
   );
 
   const handleForgotPasswordEmailChange = useCallback(
-    (value) => updateEmailSettings("forgotPasswordEmail", value),
+    (forgotPasswordEmail) => updateEmailSettings({ forgotPasswordEmail }),
     [updateEmailSettings, settings],
   );
 

@@ -14,12 +14,12 @@ export const FrontendSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
 
   const updateFrontendSettings = useCallback(
-    (field: keyof FrontendSettingsDTO, value: any) => {
+    (changes: Partial<FrontendSettingsDTO>) => {
       updateSettings({
         ...settings,
         frontend: {
           ...settings.frontend,
-          [field]: value,
+          ...changes,
         },
       });
     },
@@ -27,32 +27,32 @@ export const FrontendSettings = () => {
   );
 
   const handleColorGradientStartChange = useCallback(
-    (value) => updateFrontendSettings("colorGradientStart", value),
+    (colorGradientStart) => updateFrontendSettings({ colorGradientStart }),
     [updateFrontendSettings],
   );
 
   const handleColorGradientEndChange = useCallback(
-    (value) => updateFrontendSettings("colorGradientEnd", value),
+    (colorGradientEnd) => updateFrontendSettings({ colorGradientEnd }),
     [updateFrontendSettings],
   );
 
   const handleColorLinkChange = useCallback(
-    (value) => updateFrontendSettings("colorLink", value),
+    (colorLink) => updateFrontendSettings({ colorLink }),
     [updateFrontendSettings],
   );
 
   const handleColorLinkHoverChange = useCallback(
-    (value) => updateFrontendSettings("colorLinkHover", value),
+    (colorLinkHover) => updateFrontendSettings({ colorLinkHover }),
     [updateFrontendSettings],
   );
 
   const handleLoginSignupImageChange = useCallback(
-    (value) => updateFrontendSettings("loginSignupImage", value),
+    (loginSignupImage) => updateFrontendSettings({ loginSignupImage }),
     [updateFrontendSettings],
   );
 
   const handleSidebarImageChange = useCallback(
-    (value) => updateFrontendSettings("sidebarImage", value),
+    (sidebarImage) => updateFrontendSettings({ sidebarImage }),
     [updateFrontendSettings],
   );
 

@@ -36,10 +36,10 @@ interface IFormEditorProps {
  */
 export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
   const handleFormFieldChange = useCallback(
-    (field: keyof FormSettingsDTO, value: any) => {
+    (changes: Partial<FormSettingsDTO>) => {
       onFormChange({
         ...form,
-        [field]: value,
+        ...changes,
       });
     },
     [onFormChange, form],
@@ -55,13 +55,13 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
         return changedQuestion;
       });
 
-      handleFormFieldChange("questions", updatedQuestions);
+      handleFormFieldChange({ questions: updatedQuestions });
     },
     [handleFormFieldChange],
   );
 
   const handleTitleChange = useCallback(
-    (value) => handleFormFieldChange("title", value),
+    (title) => handleFormFieldChange({ title }),
     [handleFormFieldChange],
   );
 
@@ -80,7 +80,7 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
       title: `Question ${form.questions.length + 1}`,
     };
 
-    handleFormFieldChange("questions", [...form.questions, textQuestion]);
+    handleFormFieldChange({ questions: [...form.questions, textQuestion] });
   }, [handleFormFieldChange, form]);
 
   const handleDeleteQuestion = useCallback(
@@ -89,7 +89,7 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
         ({ id }) => question.id !== id,
       );
 
-      handleFormFieldChange("questions", updatedQuestions);
+      handleFormFieldChange({ questions: updatedQuestions });
     },
     [handleFormFieldChange, form],
   );

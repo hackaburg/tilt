@@ -1,11 +1,11 @@
 import { v4 as uuid } from "node-uuid";
-import { useState } from "react";
+import { useRef } from "react";
 
 /**
  * Generates a unique id.
  */
-export const useUniqueId = () => {
-  const [id] = useState(uuid());
+export const useUniqueID = () => {
+  const { current: id } = useRef(uuid());
   return id;
 };
 
@@ -13,9 +13,9 @@ export const useUniqueId = () => {
  * Generates an array of unique ids.
  * @param count The amount of ids to generate
  */
-export const useUniqueIds = (count: number) => {
+export const useUniqueIDs = (count: number) => {
   const idArray = new Array(count).fill(0).map(() => uuid());
-  const [ids] = useState(idArray);
+  const { current: ids } = useRef(idArray);
 
   return ids;
 };

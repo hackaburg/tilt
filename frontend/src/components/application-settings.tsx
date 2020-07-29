@@ -14,12 +14,12 @@ import { TextInput, TextInputType } from "./text-input";
 export const ApplicationSettings = () => {
   const { settings, updateSettings, updateError } = useSettingsContext();
   const updateApplicationSettings = useCallback(
-    (field: keyof ApplicationSettingsDTO, value: any) => {
+    (changes: Partial<ApplicationSettingsDTO>) => {
       updateSettings({
         ...settings,
         application: {
           ...settings.application,
-          [field]: value,
+          ...changes,
         },
       });
     },
@@ -27,27 +27,29 @@ export const ApplicationSettings = () => {
   );
 
   const handleHoursToConfirmChange = useCallback(
-    (value) => updateApplicationSettings("hoursToConfirm", value),
+    (hoursToConfirm) => updateApplicationSettings({ hoursToConfirm }),
     [updateApplicationSettings],
   );
 
   const handleAllowProfileFormFromChange = useCallback(
-    (value) => updateApplicationSettings("allowProfileFormFrom", value),
+    (allowProfileFormFrom) =>
+      updateApplicationSettings({ allowProfileFormFrom }),
     [updateApplicationSettings],
   );
 
   const handleAllowProfileFormUntilChange = useCallback(
-    (value) => updateApplicationSettings("allowProfileFormUntil", value),
+    (allowProfileFormUntil) =>
+      updateApplicationSettings({ allowProfileFormUntil }),
     [updateApplicationSettings],
   );
 
   const handleProfileFormChange = useCallback(
-    (value) => updateApplicationSettings("profileForm", value),
+    (profileForm) => updateApplicationSettings({ profileForm }),
     [updateApplicationSettings],
   );
 
   const handleConfirmationFormChange = useCallback(
-    (value) => updateApplicationSettings("confirmationForm", value),
+    (confirmationForm) => updateApplicationSettings({ confirmationForm }),
     [updateApplicationSettings],
   );
 

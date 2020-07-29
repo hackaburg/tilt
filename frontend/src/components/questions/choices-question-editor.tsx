@@ -8,6 +8,7 @@ import { Checkboxes } from "../checkbox";
 import { Col, Row } from "../grid";
 import { TextInput, TextInputType } from "../text-input";
 
+const separator = "\n";
 const checkboxOptionValue = "Use checkboxes";
 const radioOptionValue = "Use radio buttons";
 const displayAsDropdownOptionValue = "Use a dropdown";
@@ -44,7 +45,7 @@ export const ChoicesQuestionEditor = ({
   ]);
 
   const handleConfigurationChange = useCallback(
-    (field: keyof ChoicesQuestionConfigurationDTO, fieldValue: any) => {
+    (changes: Partial<ChoicesQuestionConfigurationDTO>) => {
       if (!onQuestionChange) {
         return;
       }
@@ -53,7 +54,7 @@ export const ChoicesQuestionEditor = ({
         ...question,
         configuration: {
           ...question.configuration,
-          [field]: fieldValue,
+          ...changes,
         },
       });
     },
@@ -62,33 +63,35 @@ export const ChoicesQuestionEditor = ({
 
   const handleAppearanceChange = useCallback(
     (selectedAppearance: string[]) => {
-      handleConfigurationChange(
-        "allowMultiple",
-        selectedAppearance.includes(checkboxOptionValue),
-      );
-
-      handleConfigurationChange(
-        "displayAsDropdown",
-        selectedAppearance.includes(displayAsDropdownOptionValue),
-      );
+      handleConfigurationChange({
+        allowMultiple: selectedAppearance.includes(checkboxOptionValue),
+        displayAsDropdown: selectedAppearance.includes(
+          displayAsDropdownOptionValue,
+        ),
+      });
     },
     [handleConfigurationChange],
   );
 
   const handleChoicesUpdate = useCallback(
     (text: string) => {
-      handleConfigurationChange(
-        "choices",
-        text
-          .split("\n")
-          .map((line) => line.trim())
-          .filter((line) => line.length > 0),
-      );
+      const choices = text
+        .split(separator)
+        .map((option) => option.trim())
+        .filter((option) => option.length > 0);
+
+      const choicesWithTrailingComma = text.endsWith(separator)
+        ? [...choices, ""]
+        : choices;
+
+      handleConfigurationChange({
+        choices: choicesWithTrailingComma,
+      });
     },
     [handleConfigurationChange],
   );
 
-  const choicesText = question.configuration.choices.join("\n");
+  const choicesText = question.configuration.choices.join(separator);
 
   return (
     <>
@@ -96,7 +99,7 @@ export const ChoicesQuestionEditor = ({
         <Col percent={50}>
           <TextInput
             type={TextInputType.Area}
-            title="Options"
+            title="Options (one per line)"
             placeholder="no options"
             value={choicesText}
             onChange={handleChoicesUpdate}
