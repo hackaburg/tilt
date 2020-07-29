@@ -1,6 +1,6 @@
 import { Tilt } from "../../src/services/tilt-service";
 import { MockedService } from "./mock";
-import { MockAnswerService } from "./mock/mock-answer-service";
+import { MockApplicationService } from "./mock/mock-application-service";
 import { MockBootShutdownNotifier } from "./mock/mock-boot-shutdown-notification-service";
 import { MockConfigurationService } from "./mock/mock-config-service";
 import { MockDatabaseService } from "./mock/mock-database-service";
@@ -33,7 +33,7 @@ describe("TiltService", () => {
     const tokens = addService(new MockTokenService());
     const settings = addService(new MockSettingsService());
     const questions = addService(new MockQuestionGraphService());
-    const answers = addService(new MockAnswerService());
+    const application = addService(new MockApplicationService());
     const email = addService(new MockEmailService());
     const haveibeenpwned = addService(new MockHaveibeenpwnedService());
     const emailTemplates = addService(new MockEmailTemplateService());
@@ -54,7 +54,7 @@ describe("TiltService", () => {
       users.instance,
       settings.instance,
       questions.instance,
-      answers.instance,
+      application.instance,
       http.instance,
     ];
 

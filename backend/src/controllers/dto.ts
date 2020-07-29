@@ -31,6 +31,7 @@ import {
   Settings,
 } from "../entities/settings";
 import { UserRole } from "../entities/user-role";
+import { IForm } from "../services/application-service";
 import { enforceExhaustiveSwitch } from "../utils/switch";
 import { IApiRequest } from "./api";
 
@@ -314,4 +315,27 @@ export class RefreshTokenResponseDTO {
   public token!: string;
   @Expose()
   public role!: UserRole;
+}
+
+export class FormDTO implements DTO<IForm> {
+  @Expose()
+  public questions!: readonly QuestionDTO[];
+  @Expose()
+  public answers!: readonly AnswerDTO[];
+}
+
+export class AnswerDTO {
+  @IsInt()
+  @Expose()
+  public questionID!: number;
+  @IsString()
+  @Expose()
+  public value!: string;
+}
+
+export class StoreAnswersRequestDTO
+  implements IApiRequest<readonly AnswerDTO[]> {
+  @ValidateNested({ each: true })
+  @Type(() => AnswerDTO)
+  public data!: readonly AnswerDTO[];
 }

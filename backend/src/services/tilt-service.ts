@@ -1,6 +1,9 @@
 import { Inject, Service } from "typedi";
 import { IService } from ".";
-import { AnswerServiceToken, IAnswerService } from "./answer-service";
+import {
+  ApplicationServiceToken,
+  IApplicationService,
+} from "./application-service";
 import {
   BootShutdownNotificationServiceToken,
   IBootShutdownNotificationService,
@@ -59,7 +62,7 @@ export class Tilt implements IService {
     @Inject(UserServiceToken) users: IUserService,
     @Inject(SettingsServiceToken) settings: ISettingsService,
     @Inject(QuestionGraphServiceToken) questions: IQuestionGraphService,
-    @Inject(AnswerServiceToken) answers: IAnswerService,
+    @Inject(ApplicationServiceToken) application: IApplicationService,
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
@@ -76,7 +79,7 @@ export class Tilt implements IService {
       users,
       settings,
       questions,
-      answers,
+      application,
       http,
     ];
   }

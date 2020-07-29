@@ -48,7 +48,10 @@ export class QuestionGraphService implements IQuestionGraphService {
   ) {
     for (const child of node.childNodes) {
       if (path.includes(child)) {
-        throw new CyclicQuestionGraphError();
+        throw new CyclicQuestionGraphError([
+          ...path.map(({ question: { id } }) => id),
+          child.question.id,
+        ]);
       }
 
       this.throwOnCycleInNode(child, [...path, child]);
@@ -81,15 +84,19 @@ export class QuestionGraphService implements IQuestionGraphService {
 
     for (const question of questions) {
       const node = graph.get(question.id);
-      const parentQuestionID = node?.question?.id;
+      const parentQuestionID = node?.question?.parentID;
 
-      if (!node || !parentQuestionID) {
+      if (!node || parentQuestionID == null) {
         continue;
       }
 
       const parentNode = graph.get(parentQuestionID);
 
-      if (!parentNode || node.parentNode != null) {
+      if (!parentNode) {
+        throw new InvalidQuestionGraphError();
+      }
+
+      if (node.parentNode != null) {
         throw new InvalidQuestionGraphError();
       }
 
@@ -110,7 +117,7 @@ export class InvalidQuestionGraphError extends Error {
 }
 
 export class CyclicQuestionGraphError extends Error {
-  constructor() {
-    super("Cycle in question graph detected");
+  constructor(questionIDs: number[]) {
+    super(`Cycle in question graph detected: ${questionIDs.join(" => ")}`);
   }
 }

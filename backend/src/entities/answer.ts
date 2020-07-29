@@ -1,14 +1,14 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { FormAnswers } from "./form-answers";
 import { Question } from "./question";
-import { User } from "./user";
 
 @Entity()
 export class Answer {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
-  @ManyToOne(() => User)
-  public user!: User;
-  @ManyToOne(() => Question)
+  @ManyToOne(() => FormAnswers)
+  public form!: FormAnswers;
+  @ManyToOne(() => Question, { cascade: true, eager: true })
   public question!: Question;
   @Column()
   public value!: string;

@@ -1,12 +1,12 @@
 import {
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Answer } from "./answer";
+import { FormAnswers } from "./form-answers";
 import { User } from "./user";
 
 @Entity()
@@ -18,9 +18,18 @@ export class Application {
   @UpdateDateColumn()
   public readonly updatedAt!: Date;
   @OneToOne(() => User)
+  @JoinColumn()
   public user!: User;
-  @ManyToOne(() => Answer)
-  public profileAnswers!: Answer[];
-  @ManyToOne(() => Answer)
-  public confirmationAnswers!: Answer[];
+  @OneToOne(() => FormAnswers, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  public profileFormAnswers!: FormAnswers;
+  @OneToOne(() => FormAnswers, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  public confirmationFormAnswers!: FormAnswers;
 }
