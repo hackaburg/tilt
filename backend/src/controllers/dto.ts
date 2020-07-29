@@ -96,6 +96,7 @@ export class FormSettingsDTO implements DTO<FormSettings> {
   public title!: string;
   @IsArray()
   @Type(() => QuestionDTO)
+  @ValidateNested({ each: true })
   @Expose()
   public questions!: QuestionDTO[];
 }
