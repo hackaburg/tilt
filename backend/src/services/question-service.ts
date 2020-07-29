@@ -4,7 +4,7 @@ import { Question } from "../entities/question";
 
 interface IQuestionGraphNode {
   question: Question;
-  parentNodes: IQuestionGraphNode[];
+  parentNode: IQuestionGraphNode | null;
   childNodes: IQuestionGraphNode[];
 }
 
@@ -74,7 +74,7 @@ export class QuestionGraphService implements IQuestionGraphService {
     for (const question of questions) {
       graph.set(question.id, {
         childNodes: [],
-        parentNodes: [],
+        parentNode: null,
         question,
       });
     }
@@ -89,11 +89,11 @@ export class QuestionGraphService implements IQuestionGraphService {
 
       const parentNode = graph.get(parentQuestionID);
 
-      if (!parentNode) {
+      if (!parentNode || node.parentNode != null) {
         throw new InvalidQuestionGraphError();
       }
 
-      node.parentNodes.push(parentNode);
+      node.parentNode = parentNode;
       parentNode.childNodes.push(node);
     }
 
