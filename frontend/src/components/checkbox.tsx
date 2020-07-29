@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useCallback, useState } from "react";
-import { useUniqueId, useUniqueIds } from "../hooks/use-uniqe-id";
+import { useCallback } from "react";
+import { useUniqueID, useUniqueIDs } from "../hooks/use-uniqe-id";
 import { FormField } from "./form-field";
 
 const Container = styled.div`
@@ -36,42 +36,39 @@ export const Checkboxes = ({
   title,
   mandatory,
 }: ICheckboxesProps) => {
-  const groupId = useUniqueId();
-  const checkboxesIds = useUniqueIds(values.length);
-  const valuesAsChecked = values.map((value) => selected.includes(value));
-  const [checked, setChecked] = useState(valuesAsChecked);
+  const groupID = useUniqueID();
+  const checkboxIDs = useUniqueIDs(values.length);
+
   const toggleChecked = useCallback(
-    (checkedIndex: number) => {
-      const updatedChecked = radio
-        ? new Array(values.length).fill(false)
-        : [...checked];
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const checkedLookup = values.map((value, index) => {
+        const isTriggeringInput = event.target.id === checkboxIDs[index];
 
-      updatedChecked[checkedIndex] = !updatedChecked[checkedIndex];
-      setChecked(updatedChecked);
+        if (isTriggeringInput) {
+          return event.target.checked;
+        } else if (radio) {
+          return false;
+        }
 
-      const checkedValues = values
-        .map((value, index) => ({
-          checked: updatedChecked[index],
-          value,
-        }))
-        .filter((value) => value.checked)
-        .map(({ value }) => value);
+        return selected.includes(value);
+      });
 
-      onChange(checkedValues);
+      const selectedValues = values.filter((_, index) => checkedLookup[index]);
+      onChange(selectedValues);
     },
-    [onChange, values],
+    [onChange, values, selected],
   );
 
   const checkboxes = values.map((checkboxValue, index) => (
-    <Item key={checkboxesIds[index]}>
+    <Item key={checkboxIDs[index]}>
       <Input
-        id={checkboxesIds[index]}
-        name={radio ? groupId : undefined}
+        id={checkboxIDs[index]}
+        name={radio ? groupID : undefined}
         checked={selected.includes(checkboxValue)}
         type={radio ? "radio" : "checkbox"}
-        onChange={() => toggleChecked(index)}
+        onChange={toggleChecked}
       />
-      <label htmlFor={checkboxesIds[index]}>{checkboxValue}</label>
+      <label htmlFor={checkboxIDs[index]}>{checkboxValue}</label>
     </Item>
   ));
 
