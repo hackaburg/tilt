@@ -3,6 +3,7 @@ import { Repository } from "typeorm";
 import { IService } from ".";
 import { ApplicationSettings } from "../entities/application-settings";
 import { FormSettings } from "../entities/form-settings";
+import { Question } from "../entities/question";
 import {
   EmailSettings,
   EmailTemplate,
@@ -36,6 +37,7 @@ export const SettingsServiceToken = new Token<ISettingsService>();
 @Service(SettingsServiceToken)
 export class SettingsService implements ISettingsService {
   private _settings!: Repository<Settings>;
+  private _questions!: Repository<Question>;
 
   public constructor(
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
@@ -47,6 +49,7 @@ export class SettingsService implements ISettingsService {
    */
   public async bootstrap(): Promise<void> {
     this._settings = this._database.getRepository(Settings);
+    this._questions = this._database.getRepository(Question);
   }
 
   /**
@@ -136,12 +139,51 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
+   * Gets the question IDs from the given settings.
+   * @param settings The settings to retrieve the questions from
+   */
+  private getAllQuestionIDs(settings: Settings): ReadonlyArray<Question["id"]> {
+    return [
+      ...settings.application.profileForm.questions,
+      ...settings.application.confirmationForm.questions,
+    ].map(({ id }) => id);
+  }
+
+  /**
+   * Removes questions that are not included in the updated settings.
+   * @param existingSettings The existing settings from the database
+   * @param updatedSettings The updated settings
+   */
+  private async removeOrphanQuestions(
+    existingSettings: Settings,
+    updatedSettings: Settings,
+  ): Promise<void> {
+    const existingQuestionIDs = this.getAllQuestionIDs(existingSettings);
+    const questionIDs = this.getAllQuestionIDs(updatedSettings);
+
+    const orphanQuestionIDs = existingQuestionIDs.filter(
+      (id) => !questionIDs.includes(id),
+    );
+
+    if (orphanQuestionIDs.length > 0) {
+      await this._questions.delete(orphanQuestionIDs);
+    }
+  }
+
+  /**
    * Updates all settings.
    * @param changes The updated settings
    */
   public async updateSettings(settings: Settings): Promise<Settings> {
     const existingSettings = await this.getSettings();
-    const merged = this._settings.merge(existingSettings, settings);
+    await this.removeOrphanQuestions(existingSettings, settings);
+
+    const existingSettingsWithoutOrphanQuestions = await this.getSettings();
+    const merged = this._settings.merge(
+      existingSettingsWithoutOrphanQuestions,
+      settings,
+    );
+
     return this._settings.save(merged);
   }
 }

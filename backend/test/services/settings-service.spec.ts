@@ -1,4 +1,5 @@
 import { Repository } from "typeorm";
+import { Question } from "../../src/entities/question";
 import { Settings } from "../../src/entities/settings";
 import { IDatabaseService } from "../../src/services/database-service";
 import { ILoggerService } from "../../src/services/logger-service";
@@ -51,6 +52,14 @@ describe("SettingsService", () => {
     expect.assertions(1);
 
     const updatedSettings = {
+      application: {
+        confirmationForm: {
+          questions: [],
+        },
+        profileForm: {
+          questions: [],
+        },
+      } as any,
       email: {
         forgotPasswordEmail: {
           htmlTemplate: "foo",
@@ -80,5 +89,62 @@ describe("SettingsService", () => {
     expect(settings.email.forgotPasswordEmail.htmlTemplate).toBe(
       updatedSettings.email.forgotPasswordEmail.htmlTemplate,
     );
+  });
+
+  it("removes orphan questions", async () => {
+    expect.assertions(2);
+
+    const updatedSettings = {
+      application: {
+        confirmationForm: {
+          questions: [
+            {
+              configuration: {},
+              description: "",
+              mandatory: false,
+              title: "",
+            } as Question,
+          ],
+        },
+        profileForm: {
+          questions: [],
+        },
+      } as any,
+      email: {
+        forgotPasswordEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+        sender: "test@foo.bar",
+        verifyEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+      },
+      frontend: {
+        colorGradientEnd: "gradient-end",
+        colorGradientStart: "gradient-start",
+        colorLink: "link",
+        colorLinkHover: "link-hover",
+        loginSignupImage: "signup",
+        sidebarImage: "sidebar",
+      },
+    } as Settings;
+
+    await settingsService.updateSettings(updatedSettings);
+    const settingsWithQuestion = await settingsService.getSettings();
+    expect(
+      settingsWithQuestion.application.confirmationForm.questions,
+    ).toHaveLength(1);
+
+    updatedSettings.application.confirmationForm.questions = [];
+    await settingsService.updateSettings(updatedSettings);
+    const settiingsWithoutQuestion = await settingsService.getSettings();
+
+    expect(
+      settiingsWithoutQuestion.application.confirmationForm.questions,
+    ).toHaveLength(0);
   });
 });
