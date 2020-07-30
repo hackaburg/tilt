@@ -89,14 +89,30 @@ export class ApplicationService implements IApplicationService {
 
     switch (configuration.type) {
       case QuestionType.Choices:
-        return configuration.choices.includes(answer.value);
+        const parsedAnswers = answer.value.split(",");
+
+        if (!configuration.allowMultiple && parsedAnswers.length > 1) {
+          return false;
+        }
+
+        const allAnswersAreChoices = parsedAnswers.every((value) =>
+          configuration.choices.includes(value),
+        );
+
+        return allAnswersAreChoices;
 
       case QuestionType.Country:
       case QuestionType.Text:
-        return true;
+        return answer.value.trim().length > 0;
 
       case QuestionType.Number:
         const numberValue = Number(answer.value);
+        const hasDecimals = Math.floor(numberValue) !== numberValue;
+
+        if (!configuration.allowDecimals && hasDecimals) {
+          return false;
+        }
+
         const biggerThanMin =
           configuration.minValue == null ||
           configuration.minValue <= numberValue;
@@ -293,11 +309,7 @@ export class ApplicationService implements IApplicationService {
     }
 
     const questions = settings.application.profileForm.questions;
-    const application = await this.findExistingApplication(user);
-
-    if (!application) {
-      return;
-    }
+    const application = await this.findOrCreateApplication(user);
 
     await this.replaceAnswers(
       application.profileFormAnswers,
@@ -344,7 +356,7 @@ export class QuestionNotAnsweredError extends Error {
 
 export class InvalidAnswerError extends Error {
   constructor(questionID: number, answer: string) {
-    super(`Answer '${answer}' to question '${questionID} is not valid`);
+    super(`Answer '${answer}' to question '${questionID}' is not valid`);
   }
 }
 
