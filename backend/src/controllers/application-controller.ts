@@ -18,7 +18,6 @@ import {
   InvalidAnswerError,
   IRawAnswer,
   QuestionNotAnsweredError,
-  QuestionNotFoundError,
 } from "../services/application-service";
 import {
   AnswerDTO,
@@ -78,7 +77,6 @@ export class ApplicationController {
       await this._application.storeProfileFormAnswers(user, answers);
     } catch (error) {
       if (
-        error instanceof QuestionNotFoundError ||
         error instanceof QuestionNotAnsweredError ||
         error instanceof InvalidAnswerError
       ) {

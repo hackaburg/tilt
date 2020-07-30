@@ -342,12 +342,6 @@ export class ApplicationService implements IApplicationService {
   }
 }
 
-export class QuestionNotFoundError extends Error {
-  constructor(questionID: number) {
-    super(`Question '${questionID}' not found`);
-  }
-}
-
 export class QuestionNotAnsweredError extends Error {
   constructor(questionID: number) {
     super(`Question '${questionID}' was not answered`);
