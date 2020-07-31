@@ -6,7 +6,10 @@ import {
   Get,
   JsonController,
   NotAcceptableError,
+  NotFoundError,
+  Param,
   Post,
+  Put,
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { User } from "../entities/user";
@@ -15,10 +18,16 @@ import {
   ApplicationServiceToken,
   FormNotAvailableError,
   IApplicationService,
+  IForm,
+  IncompleteProfileFormError,
   InvalidAnswerError,
   IRawAnswer,
+  NotAdmittedError,
+  ProfileFormNotSubmittedError,
   QuestionNotAnsweredError,
+  QuestionNotFoundError,
 } from "../services/application-service";
+import { IUserService, UserServiceToken } from "../services/user-service";
 import {
   AnswerDTO,
   convertBetweenEntityAndDTO,
@@ -32,7 +41,67 @@ export class ApplicationController {
   public constructor(
     @Inject(ApplicationServiceToken)
     private readonly _application: IApplicationService,
+    @Inject(UserServiceToken)
+    private readonly _users: IUserService,
   ) {}
+
+  /**
+   * Converts a form from the internal representation to DTO.
+   * @param form A form received from the `IApplicationService`
+   */
+  private convertFormToDTO(form: IForm): FormDTO {
+    const dto = new FormDTO();
+
+    dto.questions = form.questions.map((question) =>
+      convertBetweenEntityAndDTO(question, QuestionDTO),
+    );
+
+    dto.answers = form.answers.map(({ questionID, value }) => {
+      const answerDTO = new AnswerDTO();
+      answerDTO.questionID = questionID;
+      answerDTO.value = value;
+      return answerDTO;
+    });
+
+    return dto;
+  }
+
+  /**
+   * Converts request answers to raw answers for the service.
+   * @param answerDTOs The answers from the request
+   */
+  private convertAnswerDTOsToRawAnswers(
+    answerDTOs: readonly AnswerDTO[],
+  ): readonly IRawAnswer[] {
+    return answerDTOs.map<IRawAnswer>(({ questionID, value }) => ({
+      questionID,
+      value,
+    }));
+  }
+
+  /**
+   * Wraps a service error to an HTTP error.
+   * @param error The error received from the service
+   */
+  private convertErrorToHTTP(error: Error): Error {
+    if (error instanceof QuestionNotFoundError) {
+      return new NotFoundError(error.message);
+    } else if (
+      error instanceof IncompleteProfileFormError ||
+      error instanceof InvalidAnswerError ||
+      error instanceof NotAdmittedError ||
+      error instanceof ProfileFormNotSubmittedError ||
+      error instanceof QuestionNotAnsweredError ||
+      error instanceof QuestionNotFoundError ||
+      false
+    ) {
+      return new BadRequestError(error.message);
+    } else if (error instanceof FormNotAvailableError) {
+      return new NotAcceptableError(error.message);
+    }
+
+    return error;
+  }
 
   /**
    * Gets the profile form for the given user.
@@ -42,50 +111,81 @@ export class ApplicationController {
   @Authorized(UserRole.User)
   public async getProfileForm(@CurrentUser() user: User): Promise<FormDTO> {
     const form = await this._application.getProfileForm(user);
-    const dto = new FormDTO();
-
-    dto.questions = form.questions.map((question) =>
-      convertBetweenEntityAndDTO(question, QuestionDTO),
-    );
-
-    dto.answers = form.answers.map((answer) => {
-      const answerDTO = new AnswerDTO();
-      answerDTO.questionID = answer.questionID;
-      answerDTO.value = answer.value;
-      return answerDTO;
-    });
-
-    return dto;
+    return this.convertFormToDTO(form);
   }
 
   /**
    * Stores the given answers for the current user.
    * @param user The currently logged in user
    */
-  @Post("/profile/answers")
+  @Post("/profile")
   @Authorized(UserRole.User)
   public async storeProfileFormAnswers(
     @CurrentUser() user: User,
     @Body() { data: answerDTOs }: StoreAnswersRequestDTO,
   ): Promise<void> {
-    const answers = answerDTOs.map<IRawAnswer>((answerDTO) => ({
-      questionID: answerDTO.questionID,
-      value: answerDTO.value,
-    }));
+    const answers = this.convertAnswerDTOsToRawAnswers(answerDTOs);
 
     try {
       await this._application.storeProfileFormAnswers(user, answers);
     } catch (error) {
-      if (
-        error instanceof QuestionNotAnsweredError ||
-        error instanceof InvalidAnswerError
-      ) {
-        throw new BadRequestError(error.message);
-      } else if (error instanceof FormNotAvailableError) {
-        throw new NotAcceptableError(error.message);
-      }
+      throw this.convertErrorToHTTP(error);
+    }
+  }
 
-      throw error;
+  /**
+   * Admits a user.
+   */
+  @Put("/admit/:id")
+  @Authorized(UserRole.Moderator)
+  public async admit(@Param("id") userID: number): Promise<void> {
+    const user = await this._users.findUserByID(userID);
+
+    if (!user) {
+      throw new NotFoundError(`no user with id ${userID} found`);
+    }
+
+    try {
+      await this._application.admit(user);
+    } catch (error) {
+      throw this.convertErrorToHTTP(error);
+    }
+  }
+
+  /**
+   * Gets the confirmation form with all not yet answered questions from the
+   * profile form.
+   * @param user The currently logged in user
+   */
+  @Get("/confirm")
+  @Authorized(UserRole.User)
+  public async getConfirmationForm(
+    @CurrentUser() user: User,
+  ): Promise<FormDTO> {
+    try {
+      const form = await this._application.getConfirmationForm(user);
+      return this.convertFormToDTO(form);
+    } catch (error) {
+      throw this.convertErrorToHTTP(error);
+    }
+  }
+
+  /**
+   * Stores the answers to the confirmation form.
+   * @param user The currently logged in user
+   */
+  @Post("/confirm")
+  @Authorized(UserRole.User)
+  public async storeConfirmationFormAnswers(
+    @CurrentUser() user: User,
+    @Body() { data: answerDTOs }: StoreAnswersRequestDTO,
+  ): Promise<void> {
+    const answers = this.convertAnswerDTOsToRawAnswers(answerDTOs);
+
+    try {
+      await this._application.storeConfirmationFormAnswers(user, answers);
+    } catch (error) {
+      throw this.convertErrorToHTTP(error);
     }
   }
 }
