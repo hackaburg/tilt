@@ -437,11 +437,11 @@ describe(ApplicationService.name, () => {
       service.storeProfileFormAnswers(user, [
         {
           questionID: multipleAnswersQuestionID,
-          // no option selected
+          // no option selected, but not mandatory
           value: "",
         },
       ]),
-    ).rejects.toBeDefined();
+    ).resolves.toBeUndefined();
 
     await expect(
       service.storeProfileFormAnswers(user, [

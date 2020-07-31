@@ -107,6 +107,10 @@ export class ApplicationService implements IApplicationService {
   private isAnswerValid(question: Question, answer: Answer): boolean {
     const configuration = question.configuration;
 
+    if (!question.mandatory && answer.value === "") {
+      return true;
+    }
+
     switch (configuration.type) {
       case QuestionType.Choices:
         const parsedAnswers = answer.value.split(",");
