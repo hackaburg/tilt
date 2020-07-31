@@ -206,6 +206,7 @@ export class ApplicationService implements IApplicationService {
       );
 
       if (existingAnswer) {
+        existingAnswer.value = rawAnswer.value;
         return existingAnswer;
       }
 
