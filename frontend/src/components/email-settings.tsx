@@ -80,7 +80,7 @@ export const EmailSettings = () => {
         HTML and plain text templates will be sent in the same mail.
         <br />
         You may use Handlebars syntax to access variables injected into the
-        template like <Code>email</Code> or <Code>questions.id</Code>.
+        template like <Code>email</Code>, but try to keep the emails short.
       </p>
       <p>
         tilt will inject the <Code>verifyToken</Code> into the verification

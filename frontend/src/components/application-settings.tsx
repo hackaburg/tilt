@@ -63,12 +63,13 @@ export const ApplicationSettings = () => {
       )}
 
       <p>
-        An application is divided into two parts: the application and the
+        An application is divided into two parts: the profile form and the
         confirmation phase. Once you accept applications, the users will be
         moved to the confirmation queue, where they'll need to fill out the
         remaining questions. If you add questions to the first phase after users
         submitted the first answers, tilt will ask these new questions in the
-        confirmation phase.
+        confirmation phase. Depending on whether you need their consent, ensure
+        these added questions are mandatory.
       </p>
       <Row>
         <Col percent={33}>
@@ -107,11 +108,13 @@ export const ApplicationSettings = () => {
         the description, but please keep it short.
       </p>
       <p>
-        Questions can have reference names, which you can use to conditionally
-        show other questions. For instance, if you have a question, whether
-        someone is a student, you could give that question the reference name
-        "student" and modify subsequent questions by referencing the user's
-        answer to that question.
+        Questions can have parents, which you can use to conditionally show
+        other questions. For instance, if you have a question, whether someone
+        is a student, you could use it to modify subsequent questions by
+        referencing the user's answer to that question. Tilt checks for cycles,
+        but consider your users filling out the form, i.e. don't conditionally
+        show questions on the top when selecting something at the bottom of the
+        form.
       </p>
 
       <FormEditor
