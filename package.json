@@ -10,7 +10,7 @@
     "backend::start": "cd backend/ && nodemon",
     "backend::test": "cd backend/ && jest --coverage --runInBand",
     "frontend::build": "cd frontend/ && NODE_ENV=production webpack --mode production",
-    "frontend::codecov": "cd frontend/ && codecov -f frontend/coverage/*.json -F frontend -p ..",
+    "frontend::codecov": "codecov -f frontend/coverage/*.json -F frontend",
     "frontend::start": "cd frontend && webpack-dev-server --inline --hot --mode development",
     "frontend::test": "cd frontend/ && jest --coverage --runInBand",
     "frontend::typecheck": "tsc --noEmit --project frontend/",
