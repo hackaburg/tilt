@@ -144,7 +144,7 @@ export const Form = ({ type }: IFormProps) => {
     }
 
     return (
-      <QuestionContainer key={question.id}>
+      <QuestionContainer key={String(question.id)}>
         <StringifiedUnifiedQuestion
           onChange={(value) => handleQuestionValueChange(question.id!, value)}
           value={state[question.id!] ?? ""}
