@@ -243,4 +243,14 @@ describe("UserService", () => {
     const promise = userService.signup("test@foo.bar", password);
     expect(promise).rejects.toBeDefined();
   });
+
+  it("finds users by their id", async () => {
+    expect.assertions(1);
+
+    const email = "test@foo.bar";
+    const user = await userService.signup(email, "password");
+    const result = await userService.findUserByID(user.id);
+
+    expect(result?.email).toBe(user.email);
+  });
 });

@@ -55,6 +55,12 @@ export interface IUserService extends IService {
     email: string,
     password: string,
   ): Promise<User | undefined>;
+
+  /**
+   * Finds a user by their id.
+   * @param id The user's id
+   */
+  findUserByID(id: number): Promise<User | null>;
 }
 
 /**
@@ -214,5 +220,18 @@ export class UserService implements IUserService {
     if (passwordsMatch) {
       return user;
     }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async findUserByID(id: number): Promise<User | null> {
+    const users = await this._users!.findByIds([id]);
+
+    if (users.length === 0) {
+      return null;
+    }
+
+    return users[0];
   }
 }
