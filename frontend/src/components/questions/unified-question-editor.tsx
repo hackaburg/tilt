@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { IQuestionConfiguration } from "../../../../backend/src/entities/question";
 import { enforceExhaustiveSwitch } from "../../../../backend/src/utils/switch";
 import {
@@ -23,7 +23,7 @@ const Meta = styled.div`
   margin-bottom: 3rem;
 `;
 
-interface IUnifiedQuestionEditorProps {
+interface IQuestionEditorProps {
   question: QuestionDTO;
   onQuestionChange: (question: QuestionDTO) => any;
 }
@@ -31,7 +31,7 @@ interface IUnifiedQuestionEditorProps {
 const QuestionEditor = ({
   question,
   onQuestionChange,
-}: IUnifiedQuestionEditorProps) => {
+}: IQuestionEditorProps) => {
   const type = question.configuration.type;
 
   switch (type) {
@@ -119,12 +119,24 @@ const mandatoryAllCheckboxOptions = [mandatoryOptionName];
 const mandatorySelectedCheckboxOptions = mandatoryAllCheckboxOptions;
 const mandatoryNotSelectedCheckboxOptions = [] as string[];
 
+interface IChoiceWithID {
+  id: number | undefined;
+  title: string;
+}
+
+interface IUnifiedQuestionEditorProps {
+  question: QuestionDTO;
+  onQuestionChange: (question: QuestionDTO) => any;
+  allQuestions: readonly QuestionDTO[];
+}
+
 /**
  * A unified editor for all questions.
  */
 export const UnifiedQuestionEditor = ({
   question,
   onQuestionChange,
+  allQuestions,
 }: IUnifiedQuestionEditorProps) => {
   const handleQuestionFieldChange = useCallback(
     (changes: Partial<QuestionDTO>) => {
@@ -166,11 +178,37 @@ export const UnifiedQuestionEditor = ({
     [handleQuestionFieldChange, mandatoryOptionName],
   );
 
+  const [parentChoices, parentChoicesWithIDs] = useMemo(() => {
+    const questionsWithoutSelf = allQuestions.filter(
+      ({ id }) => question.id !== id,
+    );
+
+    const questionChoicesWithID = questionsWithoutSelf.map(({ id, title }) => ({
+      id,
+      title: `${id} - ${title}`,
+    }));
+
+    const choicesWithID: readonly IChoiceWithID[] = [
+      { id: undefined, title: "No parent question" },
+      ...questionChoicesWithID,
+    ];
+
+    const choiceTitles = choicesWithID.map(({ title }) => title);
+
+    return [choiceTitles, choicesWithID];
+  }, [allQuestions, question]);
+
+  const currentParentChoice =
+    parentChoicesWithIDs.find(({ id }) => id === question.parentID)?.title ??
+    parentChoices[0];
+
   const handleQuestionParentIDChange = useCallback(
     (value) => {
-      const trimmed = value.trim();
+      const parentID = parentChoicesWithIDs.find(({ title }) => title === value)
+        ?.id;
+
       handleQuestionFieldChange({
-        parentID: trimmed === "" ? undefined : trimmed,
+        parentID,
       });
     },
     [handleQuestionFieldChange],
@@ -235,12 +273,11 @@ export const UnifiedQuestionEditor = ({
 
         <Row>
           <Col percent={50}>
-            <TextInput
-              type={TextInputType.Number}
-              value={question.parentID ?? ""}
+            <Select
+              values={parentChoices}
+              value={currentParentChoice}
               onChange={handleQuestionParentIDChange}
-              title="Parent question reference name"
-              placeholder="no parent question"
+              title="Parent question"
             />
           </Col>
 

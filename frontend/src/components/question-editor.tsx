@@ -79,6 +79,7 @@ interface IQuestionEditorProps {
   question: QuestionDTO;
   onQuestionChange: (question: QuestionDTO) => any;
   onDeleteQuestion: (question: QuestionDTO) => any;
+  allQuestions: readonly QuestionDTO[];
 }
 
 /**
@@ -88,6 +89,7 @@ export const QuestionEditor = ({
   question,
   onQuestionChange,
   onDeleteQuestion,
+  allQuestions,
 }: IQuestionEditorProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const fortune = useFortune();
@@ -102,6 +104,7 @@ export const QuestionEditor = ({
         <UnifiedQuestionEditor
           question={question}
           onQuestionChange={onQuestionChange}
+          allQuestions={allQuestions}
         />
       ) : (
         <UnifiedQuestion

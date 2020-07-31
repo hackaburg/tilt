@@ -102,6 +102,7 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
       onQuestionChange={handleQuestionChange}
       question={question}
       onDeleteQuestion={handleDeleteQuestion}
+      allQuestions={form.questions}
     />
   ));
 
