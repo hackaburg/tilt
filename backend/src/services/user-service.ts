@@ -130,10 +130,6 @@ export class UserService implements IUserService {
     user.role = UserRole.User;
     user.admitted = false;
 
-    const now = new Date();
-    user.createdAt = now;
-    user.updatedAt = now;
-
     try {
       await this._users!.save(user);
     } catch (error) {
@@ -158,7 +154,6 @@ export class UserService implements IUserService {
     });
 
     user.verifyToken = "";
-    user.updatedAt = new Date();
 
     await this._users!.save(user);
     this._logger.debug(`${user.email} verified their email`);

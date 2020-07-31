@@ -12,9 +12,9 @@ export class User {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
   @CreateDateColumn()
-  public createdAt!: Date;
+  public readonly createdAt!: Date;
   @UpdateDateColumn()
-  public updatedAt!: Date;
+  public readonly updatedAt!: Date;
   @Column({ unique: true })
   public email!: string;
   @Column({ select: false })
