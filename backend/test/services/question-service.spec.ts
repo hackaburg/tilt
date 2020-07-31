@@ -10,7 +10,7 @@ describe("QuestionGraphService", () => {
   const createQuestion = (id: number, parent?: Question): Question => {
     const question = new Question();
     (question as any).id = id;
-    question.parentID = parent?.id;
+    question.parentID = parent?.id ?? null;
     return question;
   };
 
