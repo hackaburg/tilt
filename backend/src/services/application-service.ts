@@ -3,7 +3,6 @@ import { Repository } from "typeorm";
 import { IService } from ".";
 import { Answer } from "../entities/answer";
 import { Application } from "../entities/application";
-import { FormAnswers } from "../entities/form-answers";
 import { Question } from "../entities/question";
 import { QuestionType } from "../entities/question-type";
 import { User } from "../entities/user";
@@ -11,6 +10,7 @@ import { enforceExhaustiveSwitch } from "../utils/switch";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import {
   IQuestionGraphService,
+  QuestionGraph,
   QuestionGraphServiceToken,
 } from "./question-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
@@ -50,6 +50,30 @@ export interface IApplicationService extends IService {
     user: User,
     answers: readonly IRawAnswer[],
   ): Promise<void>;
+
+  /**
+   * Admits the given user.
+   * @param user The user to admit
+   */
+  admit(user: User): Promise<void>;
+
+  /**
+   * Gets the confirmation form with the user's previously given answers. This
+   * form includes questions the user didn't answer in the profile form because
+   * they were added after the user submitted the profile form.
+   * @param user The user requesting their confirmation form
+   */
+  getConfirmationForm(user: User): Promise<IForm>;
+
+  /**
+   * Saves the answers for the confirmation form for the given user.
+   * @param user The user storing their confirmation form
+   * @param answers The given answers
+   */
+  storeConfirmationFormAnswers(
+    user: User,
+    answers: readonly IRawAnswer[],
+  ): Promise<void>;
 }
 
 /**
@@ -59,13 +83,11 @@ export const ApplicationServiceToken = new Token<IApplicationService>();
 
 @Service(ApplicationServiceToken)
 export class ApplicationService implements IApplicationService {
-  private _formAnswers!: Repository<FormAnswers>;
-  private _answers!: Repository<Answer>;
   private _applications!: Repository<Application>;
 
   constructor(
     @Inject(QuestionGraphServiceToken)
-    private readonly _questions: IQuestionGraphService,
+    private readonly _graph: IQuestionGraphService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
   ) {}
@@ -74,8 +96,6 @@ export class ApplicationService implements IApplicationService {
    * @inheritdoc
    */
   public async bootstrap(): Promise<void> {
-    this._formAnswers = this._database.getRepository(FormAnswers);
-    this._answers = this._database.getRepository(Answer);
     this._applications = this._database.getRepository(Application);
   }
 
@@ -84,7 +104,7 @@ export class ApplicationService implements IApplicationService {
    * @param question The answered question
    * @param answer The answer to the answered question
    */
-  private isAnswerValid(question: Question, answer: IRawAnswer): boolean {
+  private isAnswerValid(question: Question, answer: Answer): boolean {
     const configuration = question.configuration;
 
     switch (configuration.type) {
@@ -160,12 +180,7 @@ export class ApplicationService implements IApplicationService {
     if (existingApplication == null) {
       const application = new Application();
       application.user = user;
-
-      application.profileFormAnswers = new FormAnswers();
-      application.profileFormAnswers.answers = [];
-
-      application.confirmationFormAnswers = new FormAnswers();
-      application.confirmationFormAnswers.answers = [];
+      application.answers = [];
 
       return await this._applications.save(application);
     }
@@ -174,22 +189,63 @@ export class ApplicationService implements IApplicationService {
   }
 
   /**
+   * Resolves the given raw answers from the user to either existing @see Answer
+   * entities or creates fresh ones.
+   * @param application The user's application
+   * @param questionGraph The question graph for the user's current form
+   * @param rawAnswers The answers provided by the user
+   */
+  private resolveAnswersToEntities(
+    application: Application,
+    questionGraph: QuestionGraph,
+    rawAnswers: readonly IRawAnswer[],
+  ): readonly Answer[] {
+    return rawAnswers.map((rawAnswer) => {
+      const existingAnswer = application.answers.find(
+        ({ question: { id } }) => rawAnswer.questionID === id,
+      );
+
+      if (existingAnswer) {
+        return existingAnswer;
+      }
+
+      const answer = new Answer();
+      answer.value = rawAnswer.value;
+
+      const node = questionGraph.get(rawAnswer.questionID);
+
+      if (!node) {
+        throw new QuestionNotFoundError(rawAnswer.questionID);
+      }
+
+      answer.question = node.question;
+
+      return answer;
+    });
+  }
+
+  /**
    * Replaces a user's answers to a given set of questions.
-   * @param user The user to update the answers for
+   * @param application The user's application
    * @param questions A set of questions the user should answer
-   * @param nextAnswers The user's new answers for these questions
+   * @param givenAnswers The user's new answers for these questions
    */
   private async replaceAnswers(
-    form: FormAnswers,
+    application: Application,
     questions: readonly Question[],
-    nextAnswers: readonly IRawAnswer[],
+    givenAnswers: readonly IRawAnswer[],
   ) {
-    const questionGraph = this._questions.buildQuestionGraph(questions);
+    const questionGraph = this._graph.buildQuestionGraph(questions);
     const startNodes = [...questionGraph.values()].filter(
       ({ parentNode }) => parentNode == null,
     );
 
-    const answers = [] as Answer[];
+    const answers = this.resolveAnswersToEntities(
+      application,
+      questionGraph,
+      givenAnswers,
+    );
+    const modifiedAnswers = [] as Answer[];
 
     for (const node of startNodes) {
       let nodesToVisit = [node];
@@ -199,8 +255,8 @@ export class ApplicationService implements IApplicationService {
         nodesToVisit = [...rest, ...currentNode.childNodes];
 
         const currentQuestion = currentNode.question;
-        const answerForCurrentQuestion = nextAnswers.find(
-          ({ questionID }) => questionID === currentQuestion.id,
+        const answerForCurrentQuestion = answers.find(
+          ({ question: { id } }) => id === currentQuestion.id,
         );
 
         if (!answerForCurrentQuestion) {
@@ -218,7 +274,7 @@ export class ApplicationService implements IApplicationService {
           }
 
           const parentQuestion = parentNode.question;
-          const parentAnswer = nextAnswers.find(
+          const parentAnswer = givenAnswers.find(
             ({ questionID }) => questionID === parentQuestion.id,
           );
 
@@ -254,19 +310,12 @@ export class ApplicationService implements IApplicationService {
           );
         }
 
-        const answer = new Answer();
-        answer.question = currentQuestion;
-        answer.value = answerForCurrentQuestion.value;
-        answers.push(answer);
+        modifiedAnswers.push(answerForCurrentQuestion);
       }
     }
 
-    if (form.answers.length > 0) {
-      await this._answers.remove(form.answers);
-    }
-
-    form.answers = answers;
-    await this._formAnswers.save(form);
+    application.answers = modifiedAnswers;
+    await this._applications.save(application);
   }
 
   /**
@@ -276,12 +325,24 @@ export class ApplicationService implements IApplicationService {
     const settings = await this._settings.getSettings();
     const application = await this.findOrCreateApplication(user);
 
-    return {
-      answers: application.profileFormAnswers.answers.map((answer) => ({
+    const questions = settings.application.profileForm.questions.filter(
+      ({ createdAt }) =>
+        application.initialProfileFormSubmittedAt == null ||
+        createdAt.getTime() <=
+          application.initialProfileFormSubmittedAt.getTime(),
+    );
+
+    const questionIDs = questions.map(({ id }) => id);
+    const answers = application.answers
+      .filter(({ question: { id } }) => questionIDs.includes(id))
+      .map((answer) => ({
         questionID: answer.question.id,
         value: answer.value,
-      })),
-      questions: settings.application.profileForm.questions,
+      }));
+
+    return {
+      answers,
+      questions,
     };
   }
 
@@ -311,34 +372,118 @@ export class ApplicationService implements IApplicationService {
     const questions = settings.application.profileForm.questions;
     const application = await this.findOrCreateApplication(user);
 
-    await this.replaceAnswers(
-      application.profileFormAnswers,
-      questions,
-      answers,
-    );
+    await this.replaceAnswers(application, questions, answers);
+
+    if (application.initialProfileFormSubmittedAt == null) {
+      application.initialProfileFormSubmittedAt = new Date();
+      await this._applications.save(application);
+    }
   }
 
   /**
    * @inheritdoc
    */
-  public async getConfirmationQuestionsForUser(
-    user: User,
-  ): Promise<readonly Question[]> {
+  public async admit(user: User): Promise<void> {
     const settings = await this._settings.getSettings();
     const application = await this.findExistingApplication(user);
 
     if (application == null) {
-      return [];
+      throw new ProfileFormNotSubmittedError();
+    }
+
+    const now = Date.now();
+    application.confirmationExpiresAt = new Date(
+      now + settings.application.hoursToConfirm * 60 * 1000,
+    );
+
+    await this._applications.save(application);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async getConfirmationForm(user: User): Promise<IForm> {
+    const settings = await this._settings.getSettings();
+    const application = await this.findExistingApplication(user);
+
+    if (application == null || application.confirmationExpiresAt == null) {
+      throw new NotAdmittedError();
     }
 
     const skippedProfileQuestions = settings.application.profileForm.questions.filter(
-      ({ createdAt }) => createdAt.getTime() > application.updatedAt.getTime(),
+      ({ createdAt }) =>
+        createdAt.getTime() >
+        application.initialProfileFormSubmittedAt!.getTime(),
     );
 
-    return [
+    try {
+      // if the graph built correctly, then the skipped questions are a locally
+      // connected subgraph of the profile form
+      this._graph.buildQuestionGraph(skippedProfileQuestions);
+
+      // in the future, we might allow conditional questions, but that requires
+      // more work and isn't really worth it. we mostly need this feature to add
+      // questions that were exempt during the initial process while, e.g., MLH
+      // registration is pending and we need users to, e.g., consent to a CoC.
+      // if people don't confirm their spot over this question, their place will
+      // be freed anyways. therefore, something like a "if you're a student,
+      // what's your major and minor" question can be implemented as a separate
+      // two questions again checking the student situation. and in the end,
+      // there are humans checking registrations anyways
+    } catch (error) {
+      throw new IncompleteProfileFormError();
+    }
+
+    const questions = [
       ...skippedProfileQuestions,
       ...settings.application.confirmationForm.questions,
     ];
+
+    const questionIDs = questions.map(({ id }) => id);
+    const answers = application.answers
+      .filter(({ question: { id } }) => questionIDs.includes(id))
+      .map<IRawAnswer>(({ question: { id }, value }) => ({
+        questionID: id,
+        value,
+      }));
+
+    return {
+      answers,
+      questions,
+    };
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async storeConfirmationFormAnswers(
+    user: User,
+    answers: readonly IRawAnswer[],
+  ): Promise<void> {
+    const application = await this.findExistingApplication(user);
+
+    if (application == null || application.confirmationExpiresAt == null) {
+      throw new NotAdmittedError();
+    }
+
+    const isAfterDeadline =
+      application.confirmationExpiresAt.getTime() < Date.now();
+
+    if (isAfterDeadline) {
+      throw new ConfirmationDeadlineFailedError(
+        application.confirmationExpiresAt,
+      );
+    }
+
+    const { questions } = await this.getConfirmationForm(user);
+
+    await this.replaceAnswers(application, questions, answers);
+  }
+}
+
+export class QuestionNotFoundError extends Error {
+  constructor(questionID: number) {
+    super(`Question '${questionID}' not found`);
   }
 }
 
@@ -367,5 +512,29 @@ export class FormNotAvailableError extends Error {
 export class QuestionGraphBrokenError extends Error {
   constructor() {
     super("The question graph is apparently broken. Nice");
+  }
+}
+
+export class ProfileFormNotSubmittedError extends Error {
+  constructor() {
+    super("Profile form not submitted yet");
+  }
+}
+
+export class NotAdmittedError extends Error {
+  constructor() {
+    super("Your application was not yet admitted. Be patient");
+  }
+}
+
+export class IncompleteProfileFormError extends Error {
+  constructor() {
+    super("The profile form was incomplete");
+  }
+}
+
+export class ConfirmationDeadlineFailedError extends Error {
+  constructor(deadline: Date) {
+    super(`Your confirmation deadline was on ${deadline.toISOString()}`);
   }
 }

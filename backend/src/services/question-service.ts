@@ -9,7 +9,11 @@ interface IQuestionGraphNode {
 }
 
 type QuestionID = Question["id"];
-type QuestionGraph = ReadonlyMap<QuestionID, IQuestionGraphNode>;
+
+/**
+ * A graph of parent and child questions.
+ */
+export type QuestionGraph = ReadonlyMap<QuestionID, IQuestionGraphNode>;
 
 /**
  * A service to build question graphs.

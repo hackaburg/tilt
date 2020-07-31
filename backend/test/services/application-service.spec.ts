@@ -27,8 +27,10 @@ describe(ApplicationService.name, () => {
   let questionGraph: IQuestionGraphService;
   let database: TestDatabaseService;
 
-  // we can't use a mocked settings service, as questions and answers rely on the
-  // database schema through foreign key relationships
+  /**
+   * A non-mocked / actual settings service. We can't use a mocked service here,
+   * since our database schema relies on existing questions through foreign keys
+   */
   let settings: ISettingsService;
   let user: User;
 
@@ -51,6 +53,32 @@ describe(ApplicationService.name, () => {
     };
 
     return question;
+  };
+
+  /**
+   * TypeORM and SQLite3 drop milliseconds by default. Instead of fixing the
+   * root cause, we'll fight symptoms, since relying on timestamps alone is
+   * flaky anyways, and patch the `settings.getSettings` method manually.
+   * @warning This relies on resetting `settings` for each test
+   */
+  const patchSettingsServiceToReturnProfileFormQuestionsFromTheFuture = async (): Promise<
+    void
+  > => {
+    const currentSettings = await settings.getSettings();
+    currentSettings.application.profileForm.questions.push(
+      createTextQuestion(),
+    );
+    await settings.updateSettings(currentSettings);
+
+    const updatedSettings = await settings.getSettings();
+    const questions = updatedSettings.application.profileForm.questions;
+    const lastQuestion = questions[questions.length - 1];
+    const oneDay = 24 * 60 * 60 * 1000;
+    (lastQuestion as any).createdAt = new Date(
+      lastQuestion.createdAt.getTime() + oneDay,
+    );
+
+    settings.getSettings = async () => updatedSettings;
   };
 
   const oneWeekMS = 7 * 24 * 60 * 60 * 1000;
@@ -104,7 +132,35 @@ describe(ApplicationService.name, () => {
     );
   });
 
-  it("prevents early form submissions", async () => {
+  it("returns only profile questions the user saw when they submitted it first", async () => {
+    expect.assertions(2);
+
+    const temporarySettings = await settings.getSettings();
+    temporarySettings.application.allowProfileFormFrom = todayLastWeek;
+    temporarySettings.application.allowProfileFormUntil = todayNextWeek;
+    temporarySettings.application.profileForm.questions = [
+      createTextQuestion(),
+    ];
+    await settings.updateSettings(temporarySettings);
+
+    const initialForm = await service.getProfileForm(user);
+    await service.storeProfileFormAnswers(user, [
+      {
+        questionID: initialForm.questions[0].id,
+        value: "test",
+      },
+    ]);
+
+    await patchSettingsServiceToReturnProfileFormQuestionsFromTheFuture();
+    const updatedButSameForm = await service.getProfileForm(user);
+
+    expect(updatedButSameForm.questions).toHaveLength(1);
+    expect(updatedButSameForm.questions[0].id).toBe(
+      initialForm.questions[0].id,
+    );
+  });
+
+  it("prevents early profile form submissions", async () => {
     expect.assertions(1);
 
     const temporarySettings = await settings.getSettings();
@@ -122,7 +178,7 @@ describe(ApplicationService.name, () => {
     ).rejects.toBeDefined();
   });
 
-  it("prevents late form submissions", async () => {
+  it("prevents late profile form submissions", async () => {
     expect.assertions(1);
 
     const todayBefore2Weeks = new Date(todayLastWeek.getTime() - oneWeekMS);
@@ -426,5 +482,122 @@ describe(ApplicationService.name, () => {
         },
       ]),
     ).resolves.toBeUndefined();
+  });
+
+  it("requires users to be admitted to see the confirmation form", async () => {
+    expect.assertions(3);
+
+    const temporarySettings = await settings.getSettings();
+    temporarySettings.application.allowProfileFormFrom = todayLastWeek;
+    temporarySettings.application.allowProfileFormUntil = todayNextWeek;
+    await settings.updateSettings(temporarySettings);
+
+    // no existing application
+    await expect(service.getConfirmationForm(user)).rejects.toBeDefined();
+
+    await service.getProfileForm(user);
+
+    // not admitted yet
+    await expect(service.getConfirmationForm(user)).rejects.toBeDefined();
+
+    await service.storeProfileFormAnswers(user, []);
+    await service.admit(user);
+
+    await expect(service.getConfirmationForm(user)).resolves.toBeDefined();
+  });
+
+  it("returns all confirmation questions", async () => {
+    expect.assertions(1);
+
+    const temporarySettings = await settings.getSettings();
+    temporarySettings.application.allowProfileFormFrom = todayLastWeek;
+    temporarySettings.application.allowProfileFormUntil = todayNextWeek;
+    temporarySettings.application.profileForm.questions = [
+      createTextQuestion(),
+    ];
+    temporarySettings.application.confirmationForm.questions = [
+      createTextQuestion(),
+    ];
+    await settings.updateSettings(temporarySettings);
+
+    // no need for question ids, since neither are mandatory
+    await service.storeProfileFormAnswers(user, []);
+
+    await service.admit(user);
+    const { questions } = await service.getConfirmationForm(user);
+
+    expect(questions).toHaveLength(1);
+  });
+
+  it("returns profile questions for the confirmation form when they weren't asked in the profile form", async () => {
+    expect.assertions(3);
+
+    const temporarySettings = await settings.getSettings();
+    temporarySettings.application.allowProfileFormFrom = todayLastWeek;
+    temporarySettings.application.allowProfileFormUntil = todayNextWeek;
+    temporarySettings.application.profileForm.questions = [
+      createTextQuestion(),
+    ];
+    temporarySettings.application.confirmationForm.questions = [
+      createTextQuestion(),
+    ];
+    await settings.updateSettings(temporarySettings);
+
+    // no need for question ids, since neither are mandatory
+    await service.storeProfileFormAnswers(user, []);
+
+    await patchSettingsServiceToReturnProfileFormQuestionsFromTheFuture();
+
+    await service.admit(user);
+    const { questions } = await service.getConfirmationForm(user);
+
+    expect(questions).toHaveLength(2);
+
+    const updatedSettings = await settings.getSettings();
+    expect(questions[0].id).toBe(
+      updatedSettings.application.profileForm.questions[1].id,
+    );
+    expect(questions[1].id).toBe(
+      updatedSettings.application.confirmationForm.questions[0].id,
+    );
+  });
+
+  it("requires users to be admitted to fill out the confirmation form", async () => {
+    expect.assertions(2);
+
+    const temporarySettings = await settings.getSettings();
+    temporarySettings.application.allowProfileFormFrom = todayLastWeek;
+    temporarySettings.application.allowProfileFormUntil = todayNextWeek;
+    await settings.updateSettings(temporarySettings);
+
+    await service.storeProfileFormAnswers(user, []);
+
+    await expect(
+      service.storeConfirmationFormAnswers(user, []),
+    ).rejects.toBeDefined();
+
+    await service.admit(user);
+
+    await expect(
+      service.storeConfirmationFormAnswers(user, []),
+    ).resolves.toBeUndefined();
+  });
+
+  it("prevents confirming after the deadline", async () => {
+    expect.assertions(1);
+
+    const temporarySettings = await settings.getSettings();
+    temporarySettings.application.allowProfileFormFrom = todayLastWeek;
+    temporarySettings.application.allowProfileFormUntil = todayNextWeek;
+    // basically "confirm by yesterday"
+    temporarySettings.application.hoursToConfirm = -24;
+    await settings.updateSettings(temporarySettings);
+
+    await service.storeProfileFormAnswers(user, []);
+    await service.admit(user);
+
+    await expect(
+      service.storeConfirmationFormAnswers(user, []),
+    ).rejects.toBeDefined();
   });
 });
