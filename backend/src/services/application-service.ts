@@ -264,7 +264,10 @@ export class ApplicationService implements IApplicationService {
           ({ question: { id } }) => id === currentQuestion.id,
         );
 
-        if (!answerForCurrentQuestion) {
+        if (
+          !answerForCurrentQuestion ||
+          answerForCurrentQuestion.value === ""
+        ) {
           // if a question is purely optional, we can ignore that it's missing
           if (!currentQuestion.mandatory) {
             continue;
