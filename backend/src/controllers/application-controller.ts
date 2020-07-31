@@ -92,8 +92,7 @@ export class ApplicationController {
       error instanceof NotAdmittedError ||
       error instanceof ProfileFormNotSubmittedError ||
       error instanceof QuestionNotAnsweredError ||
-      error instanceof QuestionNotFoundError ||
-      false
+      error instanceof QuestionNotFoundError
     ) {
       return new BadRequestError(error.message);
     } else if (error instanceof FormNotAvailableError) {
