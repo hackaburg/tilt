@@ -69,10 +69,10 @@ export class Question<TQuestionConfiguration = IQuestionConfiguration> {
   public title!: string;
   @Column()
   public mandatory!: boolean;
-  @Column({ default: null })
-  public parentID?: number;
-  @Column({ name: "parentValue", default: null })
-  public showIfParentHasValue?: string;
+  @Column({ default: null, type: "int" })
+  public parentID!: number | null;
+  @Column({ name: "parentValue", default: null, type: "varchar" })
+  public showIfParentHasValue!: string | null;
   @ManyToOne(() => FormSettings)
   public readonly form!: FormSettings;
 }

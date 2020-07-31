@@ -74,9 +74,10 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
         type: QuestionType.Text,
       },
       description: "A new question",
+      id: null,
       mandatory: false,
-      parentID: undefined,
-      showIfParentHasValue: undefined,
+      parentID: null,
+      showIfParentHasValue: null,
       title: `Question ${form.questions.length + 1}`,
     };
 

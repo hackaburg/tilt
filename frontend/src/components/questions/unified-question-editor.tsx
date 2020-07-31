@@ -120,7 +120,7 @@ const mandatorySelectedCheckboxOptions = mandatoryAllCheckboxOptions;
 const mandatoryNotSelectedCheckboxOptions = [] as string[];
 
 interface IChoiceWithID {
-  id: number | undefined;
+  id: number | null;
   title: string;
 }
 
@@ -189,7 +189,7 @@ export const UnifiedQuestionEditor = ({
     }));
 
     const choicesWithID: readonly IChoiceWithID[] = [
-      { id: undefined, title: "No parent question" },
+      { id: null, title: "No parent question" },
       ...questionChoicesWithID,
     ];
 
@@ -204,8 +204,8 @@ export const UnifiedQuestionEditor = ({
 
   const handleQuestionParentIDChange = useCallback(
     (value) => {
-      const parentID = parentChoicesWithIDs.find(({ title }) => title === value)
-        ?.id;
+      const parentID =
+        parentChoicesWithIDs.find(({ title }) => title === value)?.id ?? null;
 
       handleQuestionFieldChange({
         parentID,
@@ -218,7 +218,7 @@ export const UnifiedQuestionEditor = ({
     (value) => {
       const trimmed = value.trim();
       handleQuestionFieldChange({
-        showIfParentHasValue: trimmed === "" ? undefined : trimmed,
+        showIfParentHasValue: trimmed === "" ? null : trimmed,
       });
     },
     [handleQuestionFieldChange],

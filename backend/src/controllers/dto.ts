@@ -168,7 +168,7 @@ export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
   @IsOptional()
   @IsInt()
   @Expose()
-  public id?: number;
+  public id!: number | null;
   @Transform(
     (value: IQuestionConfiguration) => {
       const type = value.type as QuestionType;
@@ -218,11 +218,11 @@ export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
   public mandatory!: boolean;
   @IsOptional()
   @Expose()
-  public parentID?: number;
+  public parentID!: number | null;
   @IsOptional()
   @IsString()
   @Expose()
-  public showIfParentHasValue?: string;
+  public showIfParentHasValue!: string | null;
 }
 
 export class FrontendSettingsDTO implements DTO<FrontendSettings> {
