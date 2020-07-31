@@ -36,11 +36,14 @@ export const SettingsContextProvider = ({
     null,
   );
 
-  const [, isFetchingSettings, fetchError] = useApi(async (api) => {
-    const settings = await api.getSettings();
-    setLocalSettings(settings);
-    setIsSynchronized(true);
-  }, []);
+  const { isFetching: isFetchingSettings, error: fetchError } = useApi(
+    async (api) => {
+      const settings = await api.getSettings();
+      setLocalSettings(settings);
+      setIsSynchronized(true);
+    },
+    [],
+  );
 
   if (fetchError) {
     throw fetchError;
@@ -66,7 +69,7 @@ export const SettingsContextProvider = ({
     [typeof localSettings, typeof isSynchronized]
   >([localSettings, isSynchronized], debounceDuration);
 
-  const [, , updateError] = useApi(
+  const { error: updateError } = useApi(
     async (api) => {
       if (debouncedSettings != null && !debouncedIsSynchronized) {
         const updatedSettings = await api.updateSettings(debouncedSettings);

@@ -23,7 +23,7 @@ export const VerifyEmail = ({ token }: IVerifyEmailProps) => {
     token = token.substring(1);
   }
 
-  const [, verificationInProgress, error] = useApi(
+  const { isFetching: verificationInProgress, error } = useApi(
     async (api) => api.verifyEmail(token),
     [token],
   );

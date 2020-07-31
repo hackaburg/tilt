@@ -44,7 +44,11 @@ export const LoginSignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [, loginInProgress, loginError, sendLoginRequest] = useApi(
+  const {
+    isFetching: loginInProgress,
+    error: loginError,
+    forcePerformRequest: sendLoginRequest,
+  } = useApi(
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
         const role = await api.login(email, password);
@@ -54,7 +58,12 @@ export const LoginSignupForm = () => {
     [email, password, login],
   );
 
-  const [didSignup, signupInProgress, signupError, sendSignupRequest] = useApi(
+  const {
+    value: didSignup,
+    isFetching: signupInProgress,
+    error: signupError,
+    forcePerformRequest: sendSignupRequest,
+  } = useApi(
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
         await api.signup(email, password);

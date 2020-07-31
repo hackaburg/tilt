@@ -5,6 +5,13 @@ import { Nullable } from "../state";
 
 const api = new ApiClient(apiBaseUrl);
 
+interface IApiResult<T> {
+  value: Nullable<T>;
+  isFetching: boolean;
+  error: Nullable<Error>;
+  forcePerformRequest: () => void;
+}
+
 /**
  * Gets a result from the api.
  * @param callback A consumer returning values from the api
@@ -13,7 +20,7 @@ const api = new ApiClient(apiBaseUrl);
 export const useApi = <T>(
   callback: (api: ApiClient, wasForced: boolean) => Promise<T>,
   deps: readonly any[] = [],
-): [Nullable<T>, boolean, Nullable<Error>, () => void] => {
+): IApiResult<T> => {
   const [isFetching, setIsFetching] = useState(true);
   const [value, setValue] = useState<Nullable<T>>(null);
   const [error, setError] = useState<Nullable<Error>>(null);
@@ -41,5 +48,10 @@ export const useApi = <T>(
     performRequest,
   ]);
 
-  return [value, isFetching, error, forcePerformRequest];
+  return {
+    error,
+    forcePerformRequest,
+    isFetching,
+    value,
+  };
 };
