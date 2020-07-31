@@ -4,6 +4,7 @@ import {
   setLoginToken,
 } from "../authentication";
 import type {
+  ApplicationController,
   ExtractControllerMethods,
   IApiMethod,
   IApiRequest,
@@ -11,11 +12,14 @@ import type {
   SettingsController,
   UsersController,
 } from "./types/controllers";
-import type { SettingsDTO } from "./types/dto";
+import type { AnswerDTO, FormDTO, SettingsDTO } from "./types/dto";
 import { UserRole } from "./types/enums";
 
 type SettingsControllerMethods = ExtractControllerMethods<SettingsController>;
 type UsersControllerMethods = ExtractControllerMethods<UsersController>;
+type ApplicationControllerMethods = ExtractControllerMethods<
+  ApplicationController
+>;
 type ExtractData<T> = T extends { data: infer K } ? K : never;
 
 /**
@@ -193,5 +197,58 @@ export class ApiClient {
       "/settings",
       settings,
     );
+  }
+
+  /**
+   * Gets the profile form for the current user.
+   */
+  public async getProfileForm(): Promise<FormDTO> {
+    return await this.get<ApplicationControllerMethods["getProfileForm"]>(
+      "/application/profile",
+    );
+  }
+
+  /**
+   * Stores the answers to the profile form.
+   * @param answers The given answers
+   */
+  public async storeProfileFormAnswers(
+    answers: readonly AnswerDTO[],
+  ): Promise<void> {
+    return await this.post<
+      ApplicationControllerMethods["storeProfileFormAnswers"]
+    >("/application/profile", answers);
+  }
+
+  /**
+   * Admits the given user.
+   * @param userID The user to admit
+   */
+  public async admit(userID: number): Promise<void> {
+    return await this.put<ApplicationControllerMethods["admit"]>(
+      `/application/admit/${userID}`,
+      null as never,
+    );
+  }
+
+  /**
+   * Gets the confirmation form for the current user.
+   */
+  public async getConfirmationForm(): Promise<FormDTO> {
+    return await this.get<ApplicationControllerMethods["getConfirmationForm"]>(
+      "/application/confirm",
+    );
+  }
+
+  /**
+   * Stores the answers to the confirmation form.
+   * @param answers The given answers
+   */
+  public async storeConfirmationFormAnswers(
+    answers: readonly AnswerDTO[],
+  ): Promise<void> {
+    return await this.post<
+      ApplicationControllerMethods["storeConfirmationFormAnswers"]
+    >("/application/confirm", answers);
   }
 }

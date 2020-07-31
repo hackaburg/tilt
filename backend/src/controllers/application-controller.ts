@@ -121,8 +121,8 @@ export class ApplicationController {
   @Post("/profile")
   @Authorized(UserRole.User)
   public async storeProfileFormAnswers(
-    @CurrentUser() user: User,
     @Body() { data: answerDTOs }: StoreAnswersRequestDTO,
+    @CurrentUser() user: User,
   ): Promise<void> {
     const answers = this.convertAnswerDTOsToRawAnswers(answerDTOs);
 
@@ -177,8 +177,8 @@ export class ApplicationController {
   @Post("/confirm")
   @Authorized(UserRole.User)
   public async storeConfirmationFormAnswers(
-    @CurrentUser() user: User,
     @Body() { data: answerDTOs }: StoreAnswersRequestDTO,
+    @CurrentUser() user: User,
   ): Promise<void> {
     const answers = this.convertAnswerDTOsToRawAnswers(answerDTOs);
 

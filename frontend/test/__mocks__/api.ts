@@ -9,10 +9,15 @@ type IMockedApi = {
  * A mocked api client.
  */
 export const api: IMockedApi = {
+  admit: jest.fn(),
+  getConfirmationForm: jest.fn(),
+  getProfileForm: jest.fn(),
   getSettings: jest.fn(),
   login: jest.fn(),
   refreshLoginToken: jest.fn(),
   signup: jest.fn(),
+  storeConfirmationFormAnswers: jest.fn(),
+  storeProfileFormAnswers: jest.fn(),
   updateSettings: jest.fn(),
   verifyEmail: jest.fn(),
 };
