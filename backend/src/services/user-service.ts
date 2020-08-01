@@ -134,7 +134,6 @@ export class UserService implements IUserService {
     user.password = await hash(password, 10);
     user.verifyToken = await genSalt(10);
     user.role = UserRole.User;
-    user.admitted = false;
 
     try {
       await this._users!.save(user);

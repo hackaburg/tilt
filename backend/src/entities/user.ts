@@ -23,8 +23,6 @@ export class User {
   public verifyToken!: string;
   @Column()
   public role!: UserRole;
-  @Column()
-  public admitted!: boolean;
 }
 
 /**

@@ -99,7 +99,6 @@ describe(ApplicationService.name, () => {
     user.password = "";
     user.role = UserRole.User;
     user.verifyToken = "";
-    user.admitted = false;
 
     const userRepo = database.getRepository(User);
     await userRepo.save(user);
