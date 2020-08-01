@@ -8,6 +8,6 @@ export enum Routes {
   ProfileForm = "/profile",
   Settings = "/settings",
   Statistics = "/statistics",
-  Users = "/users",
+  AdmissionCenter = "/admissions",
   VerifyEmail = "/verify",
 }

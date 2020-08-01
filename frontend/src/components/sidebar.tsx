@@ -55,7 +55,9 @@ export const Sidebar = () => {
 
         {isElevatedUser && (
           <>
-            <SidebarMenuItem to={Routes.Users}>Users</SidebarMenuItem>
+            <SidebarMenuItem to={Routes.AdmissionCenter}>
+              Admission Center
+            </SidebarMenuItem>
             <SidebarMenuItem to={Routes.Statistics}>Statistics</SidebarMenuItem>
           </>
         )}

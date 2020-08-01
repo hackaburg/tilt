@@ -6,6 +6,7 @@ import { headerBarHeight, sidebarWidth, transitionDuration } from "../config";
 import { Routes } from "../routes";
 import { PageSizedContainer } from "./centering";
 import { HeaderBar } from "./headerbar";
+import { LazyAdmissionCenter } from "./lazy-admission-center";
 import { LazySettings } from "./lazy-settings";
 import { PageNotFound } from "./page-not-found";
 import { ProfileForm } from "./profile-form";
@@ -80,11 +81,9 @@ const PageContainer = styled.div<ISidebarAwareProps>`
 `;
 
 const ContentContainer = styled.div`
-  display: flex;
   max-width: 960px;
   min-height: 100vh;
   margin: auto;
-  flex-direction: column;
   overflow-x: hidden;
   padding-top: calc(${headerBarHeight} + 10px);
 `;
@@ -111,6 +110,10 @@ export const PageWrapper = () => {
           <Switch>
             <Route path={Routes.Settings} component={LazySettings} />
             <Route path={Routes.ProfileForm} component={ProfileForm} />
+            <Route
+              path={Routes.AdmissionCenter}
+              component={LazyAdmissionCenter}
+            />
             <Route component={PageNotFound} />
           </Switch>
         </ContentContainer>
