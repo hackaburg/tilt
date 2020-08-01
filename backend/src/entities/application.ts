@@ -17,6 +17,8 @@ export class Application {
   public initialProfileFormSubmittedAt!: Date | null;
   @Column({ default: null, type: "datetime" })
   public confirmationExpiresAt!: Date | null;
+  @Column({ default: false })
+  public confirmed!: boolean;
   @OneToOne(() => User, { eager: true })
   @JoinColumn()
   public user!: User;

@@ -480,6 +480,11 @@ export class ApplicationService implements IApplicationService {
     const { questions } = await this.getConfirmationForm(user);
 
     await this.replaceAnswers(application, questions, answers);
+
+    if (!application.confirmed) {
+      application.confirmed = true;
+      await this._applications.save(application);
+    }
   }
 }
 
