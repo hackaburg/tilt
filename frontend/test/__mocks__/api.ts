@@ -10,6 +10,7 @@ type IMockedApi = {
  */
 export const api: IMockedApi = {
   admit: jest.fn(),
+  getAllApplications: jest.fn(),
   getConfirmationForm: jest.fn(),
   getProfileForm: jest.fn(),
   getSettings: jest.fn(),

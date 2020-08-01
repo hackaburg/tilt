@@ -12,7 +12,12 @@ import type {
   SettingsController,
   UsersController,
 } from "./types/controllers";
-import type { AnswerDTO, FormDTO, SettingsDTO } from "./types/dto";
+import type {
+  AnswerDTO,
+  ApplicationDTO,
+  FormDTO,
+  SettingsDTO,
+} from "./types/dto";
 import { UserRole } from "./types/enums";
 
 type SettingsControllerMethods = ExtractControllerMethods<SettingsController>;
@@ -250,5 +255,14 @@ export class ApiClient {
     return await this.post<
       ApplicationControllerMethods["storeConfirmationFormAnswers"]
     >("/application/confirm", answers);
+  }
+
+  /**
+   * Gets all applications with users and their answers.
+   */
+  public async getAllApplications(): Promise<readonly ApplicationDTO[]> {
+    return await this.get<ApplicationControllerMethods["getAllApplications"]>(
+      "/applications/all",
+    );
   }
 }
