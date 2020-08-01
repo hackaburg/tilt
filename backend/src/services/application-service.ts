@@ -401,6 +401,8 @@ export class ApplicationService implements IApplicationService {
       now + settings.application.hoursToConfirm * 60 * 1000,
     );
 
+    application.admitted = true;
+
     await this._applications.save(application);
   }
 

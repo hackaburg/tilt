@@ -18,6 +18,8 @@ export class Application {
   @Column({ default: null, type: "datetime" })
   public confirmationExpiresAt!: Date | null;
   @Column({ default: false })
+  public admitted!: boolean;
+  @Column({ default: false })
   public confirmed!: boolean;
   @OneToOne(() => User, { eager: true })
   @JoinColumn()
