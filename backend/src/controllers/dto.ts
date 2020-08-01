@@ -13,6 +13,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import { Answer } from "../entities/answer";
 import { ApplicationSettings } from "../entities/application-settings";
 import { FormSettings } from "../entities/form-settings";
 import {
@@ -327,6 +328,12 @@ export class FormDTO implements DTO<IForm> {
 export class AnswerDTO {
   @IsInt()
   @Expose()
+  @Transform(
+    (_, obj: Answer) => {
+      return obj.question.id;
+    },
+    { toClassOnly: true },
+  )
   public questionID!: number;
   @IsString()
   @Expose()

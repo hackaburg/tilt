@@ -56,12 +56,9 @@ export class ApplicationController {
       convertBetweenEntityAndDTO(question, QuestionDTO),
     );
 
-    dto.answers = form.answers.map(({ questionID, value }) => {
-      const answerDTO = new AnswerDTO();
-      answerDTO.questionID = questionID;
-      answerDTO.value = value;
-      return answerDTO;
-    });
+    dto.answers = form.answers.map((answer) =>
+      convertBetweenEntityAndDTO(answer, AnswerDTO),
+    );
 
     return dto;
   }

@@ -20,7 +20,7 @@ import { ISettingsService, SettingsServiceToken } from "./settings-service";
  */
 export interface IForm {
   questions: readonly Question[];
-  answers: readonly IRawAnswer[];
+  answers: readonly Answer[];
 }
 
 /**
@@ -341,12 +341,9 @@ export class ApplicationService implements IApplicationService {
     );
 
     const questionIDs = questions.map(({ id }) => id);
-    const answers = application.answers
-      .filter(({ question: { id } }) => questionIDs.includes(id))
-      .map((answer) => ({
-        questionID: answer.question.id,
-        value: answer.value,
-      }));
+    const answers = application.answers.filter(({ question: { id } }) =>
+      questionIDs.includes(id),
+    );
 
     return {
       answers,
@@ -448,12 +445,9 @@ export class ApplicationService implements IApplicationService {
     ];
 
     const questionIDs = questions.map(({ id }) => id);
-    const answers = application.answers
-      .filter(({ question: { id } }) => questionIDs.includes(id))
-      .map<IRawAnswer>(({ question: { id }, value }) => ({
-        questionID: id,
-        value,
-      }));
+    const answers = application.answers.filter(({ question: { id } }) =>
+      questionIDs.includes(id),
+    );
 
     return {
       answers,
