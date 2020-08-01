@@ -1,4 +1,4 @@
-import * as countries from "country-json/src/country-by-abbreviation.json";
+import countries from "country-json/src/country-by-abbreviation.json";
 import * as React from "react";
 import type {
   CountryQuestionConfigurationDTO,
