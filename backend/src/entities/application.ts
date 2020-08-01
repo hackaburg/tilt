@@ -1,12 +1,10 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 import { Answer } from "./answer";
 import { User } from "./user";
@@ -15,10 +13,6 @@ import { User } from "./user";
 export class Application {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
-  @CreateDateColumn()
-  public readonly createdAt!: Date;
-  @UpdateDateColumn()
-  public readonly updatedAt!: Date;
   @Column({ default: null, type: "datetime" })
   public initialProfileFormSubmittedAt?: Date | null;
   @Column({ default: null, type: "datetime" })
