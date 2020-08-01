@@ -9,6 +9,7 @@ export const MockApplicationService = jest.fn(
     new MockedService<IApplicationService>({
       admit: jest.fn(),
       bootstrap: jest.fn(),
+      getAll: jest.fn(),
       getConfirmationForm: jest.fn(),
       getProfileForm: jest.fn(),
       storeConfirmationFormAnswers: jest.fn(),

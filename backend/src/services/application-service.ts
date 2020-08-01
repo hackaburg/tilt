@@ -74,6 +74,11 @@ export interface IApplicationService extends IService {
     user: User,
     answers: readonly IRawAnswer[],
   ): Promise<void>;
+
+  /**
+   * Gets all existing applications.
+   */
+  getAll(): Promise<readonly Application[]>;
 }
 
 /**
@@ -487,6 +492,13 @@ export class ApplicationService implements IApplicationService {
       application.confirmed = true;
       await this._applications.save(application);
     }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async getAll(): Promise<readonly Application[]> {
+    return this._applications.find();
   }
 }
 

@@ -30,6 +30,7 @@ import {
 import { IUserService, UserServiceToken } from "../services/user-service";
 import {
   AnswerDTO,
+  ApplicationDTO,
   convertBetweenEntityAndDTO,
   FormDTO,
   QuestionDTO,
@@ -183,5 +184,18 @@ export class ApplicationController {
     } catch (error) {
       throw this.convertErrorToHTTP(error);
     }
+  }
+
+  /**
+   * Gets all existing application. This only includes applications where users
+   * actually applied.
+   */
+  @Get("/all")
+  @Authorized(UserRole.Moderator)
+  public async getAllApplications(): Promise<readonly ApplicationDTO[]> {
+    const applications = await this._application.getAll();
+    return applications.map((application) =>
+      convertBetweenEntityAndDTO(application, ApplicationDTO),
+    );
   }
 }

@@ -14,6 +14,7 @@ import {
   ValidateNested,
 } from "class-validator";
 import { Answer } from "../entities/answer";
+import { Application } from "../entities/application";
 import { ApplicationSettings } from "../entities/application-settings";
 import { FormSettings } from "../entities/form-settings";
 import {
@@ -31,6 +32,7 @@ import {
   FrontendSettings,
   Settings,
 } from "../entities/settings";
+import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
 import { IForm } from "../services/application-service";
 import { enforceExhaustiveSwitch } from "../utils/switch";
@@ -345,4 +347,40 @@ export class StoreAnswersRequestDTO
   @ValidateNested({ each: true })
   @Type(() => AnswerDTO)
   public data!: readonly AnswerDTO[];
+}
+
+export class UserDTO {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public email!: string;
+  @Expose()
+  public createdAt!: Date;
+  @Transform(
+    (_, obj: User) => {
+      return !obj.verifyToken;
+    },
+    { toClassOnly: true },
+  )
+  @Expose()
+  public isVerified!: boolean;
+  @Expose()
+  public role!: UserRole;
+}
+
+export class ApplicationDTO implements DTO<Application> {
+  @Expose()
+  public initialProfileFormSubmittedAt!: Date | null;
+  @Expose()
+  public confirmationExpiresAt!: Date | null;
+  @Expose()
+  public admitted!: boolean;
+  @Expose()
+  public confirmed!: boolean;
+  @Expose()
+  @Type(() => UserDTO)
+  public user!: UserDTO;
+  @Expose()
+  @Type(() => AnswerDTO)
+  public answers!: AnswerDTO[];
 }
