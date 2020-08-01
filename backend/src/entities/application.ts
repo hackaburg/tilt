@@ -14,10 +14,9 @@ export class Application {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
   @Column({ default: null, type: "datetime" })
-  public initialProfileFormSubmittedAt?: Date | null;
+  public initialProfileFormSubmittedAt!: Date | null;
   @Column({ default: null, type: "datetime" })
-  public confirmationExpiresAt?: Date | null;
-  @OneToOne(() => User)
+  public confirmationExpiresAt!: Date | null;
   @JoinColumn()
   public user!: User;
   @OneToMany(() => Answer, (answer) => answer.application, {
