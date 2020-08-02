@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Spinner } from "../base/spinner";
+import { SuspenseFallback } from "../base/suspense-fallback";
 
 const LazyLoadedSettings = React.lazy(async () => {
   const settings = await import("../pages/settings");
@@ -12,7 +12,7 @@ const LazyLoadedSettings = React.lazy(async () => {
  * Lazy loaded settings, since only moderators need this.
  */
 export const LazySettings = () => (
-  <React.Suspense fallback={<Spinner />}>
+  <React.Suspense fallback={<SuspenseFallback />}>
     <LazyLoadedSettings />
   </React.Suspense>
 );
