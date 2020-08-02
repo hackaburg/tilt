@@ -8,15 +8,17 @@ import { SettingsContextProvider } from "./contexts/settings-context";
 
 const container = document.getElementById("app");
 const app = (
-  <NotificationContextProvider>
-    <SettingsContextProvider>
-      <LoginContextProvider>
-        <BrowserRouter>
-          <RoutedApp />
-        </BrowserRouter>
-      </LoginContextProvider>
-    </SettingsContextProvider>
-  </NotificationContextProvider>
+  <React.StrictMode>
+    <NotificationContextProvider>
+      <SettingsContextProvider>
+        <LoginContextProvider>
+          <BrowserRouter>
+            <RoutedApp />
+          </BrowserRouter>
+        </LoginContextProvider>
+      </SettingsContextProvider>
+    </NotificationContextProvider>
+  </React.StrictMode>
 );
 
 ReactDOM.render(app, container);
