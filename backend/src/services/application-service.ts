@@ -283,7 +283,10 @@ export class ApplicationService implements IApplicationService {
           // if we don't have a parent question and didn't find an answer, the
           // user didn't answer it and we expected an answer
           if (!parentNode) {
-            throw new QuestionNotAnsweredError(currentQuestion.id);
+            throw new QuestionNotAnsweredError(
+              currentQuestion.title,
+              currentQuestion.id,
+            );
           }
 
           const parentQuestion = parentNode.question;
@@ -308,7 +311,10 @@ export class ApplicationService implements IApplicationService {
           // if we want to ask which semester a student is in, we expect
           // "Student" and thus require the question to be answered
           if (parentQuestionAnswerMatchedExpectedValue) {
-            throw new QuestionNotAnsweredError(currentQuestion.id);
+            throw new QuestionNotAnsweredError(
+              currentQuestion.title,
+              currentQuestion.id,
+            );
           }
 
           // the question might be mandatory, but we didn't show it to the user
@@ -318,6 +324,7 @@ export class ApplicationService implements IApplicationService {
 
         if (!this.isAnswerValid(currentQuestion, answerForCurrentQuestion)) {
           throw new InvalidAnswerError(
+            currentQuestion.title,
             currentQuestion.id,
             answerForCurrentQuestion.value,
           );
@@ -509,14 +516,16 @@ export class QuestionNotFoundError extends Error {
 }
 
 export class QuestionNotAnsweredError extends Error {
-  constructor(questionID: number) {
-    super(`Question '${questionID}' was not answered`);
+  constructor(questionTitle: string, questionID: number) {
+    super(`Question '${questionTitle}' (#${questionID}) was not answered`);
   }
 }
 
 export class InvalidAnswerError extends Error {
-  constructor(questionID: number, answer: string) {
-    super(`Answer '${answer}' to question '${questionID}' is not valid`);
+  constructor(questionTitle: string, questionID: number, answer: string) {
+    super(
+      `Answer '${answer}' to question '${questionTitle}' (#${questionID}) is not valid`,
+    );
   }
 }
 
