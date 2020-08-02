@@ -1,8 +1,9 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
+import FlexView from "react-flexview";
 import { useDebounce } from "use-debounce";
 import type { SettingsDTO } from "../api/types/dto";
-import { Spinner } from "../components/base/spinner";
+import { SuspenseFallback } from "../components/base/suspense-fallback";
 import { debounceDuration } from "../config";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
@@ -93,7 +94,11 @@ export const SettingsContextProvider = ({
   );
 
   if (isFetchingSettings) {
-    return <Spinner />;
+    return (
+      <FlexView height="100vh" grow>
+        <SuspenseFallback />
+      </FlexView>
+    );
   }
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
