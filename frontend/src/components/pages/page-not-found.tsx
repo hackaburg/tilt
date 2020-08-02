@@ -6,7 +6,6 @@ import { Text } from "../base/text";
 import { Page } from "../pages/page";
 
 const Container = styled(FlexView)`
-  text-align: center;
   color: #555;
 `;
 
@@ -16,7 +15,7 @@ const Container = styled(FlexView)`
 export const PageNotFound = () => (
   <Page>
     <FlexView hAlignContent="center" vAlignContent="center" grow>
-      <Container column>
+      <Container hAlignContent="center" column>
         <Heading>Oops, that link didn't work.</Heading>
         <Text>Try selecting a page from the sidebar</Text>
       </Container>
