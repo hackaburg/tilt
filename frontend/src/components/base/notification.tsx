@@ -3,14 +3,7 @@ import * as React from "react";
 import FlexView from "react-flexview";
 import { borderRadius, transitionDuration } from "../../config";
 
-interface INotificationContainerProps {
-  show: boolean;
-}
-
-const NotificationContainer = styled<
-  typeof FlexView,
-  INotificationContainerProps
->(FlexView)`
+const NotificationContainer = styled(FlexView)`
   position: fixed;
   top: 1rem;
   right: -5rem;
@@ -30,14 +23,12 @@ const NotificationContainer = styled<
   transition-duration: ${transitionDuration};
 
   z-index: 100;
-
-  ${(props) =>
-    props.show &&
-    `
-    right: 1rem;
-    opacity: 1;
-  `}
 `;
+
+const shownStyles = {
+  opacity: 1,
+  right: "1rem",
+};
 
 interface INotificationProps {
   message: string;
@@ -48,5 +39,7 @@ interface INotificationProps {
  * A notification displayed in the top right corner.
  */
 export const Notification = ({ message, show }: INotificationProps) => (
-  <NotificationContainer show={show}>{message}</NotificationContainer>
+  <NotificationContainer style={show ? shownStyles : undefined}>
+    {message}
+  </NotificationContainer>
 );
