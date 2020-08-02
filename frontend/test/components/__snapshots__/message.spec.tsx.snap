@@ -1,13 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Message renders error messages 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
+<Styled(Component)
+  level={1}
+>
+  text
+</Styled(Component)>
 `;
 
 exports[`Message renders warning messages 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
+<Styled(Component)
+  level={1}
+>
+  text
+</Styled(Component)>
 `;

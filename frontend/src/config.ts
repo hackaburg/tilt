@@ -49,9 +49,9 @@ export const shimmerBackgroundColor = "#f7f7f7";
 export const shimmerColor = "#fefefe";
 
 /**
- * The size of the column's padding.
+ * The size of the grid's spacers.
  */
-export const gridColumnPadding = "0.5rem";
+export const gridSpacing = "1rem";
 
 /**
  * The CSS breakpoints to determine whether a device is a tablet or a phone.

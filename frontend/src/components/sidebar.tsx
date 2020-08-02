@@ -1,41 +1,34 @@
 import styled from "@emotion/styled";
 import * as React from "react";
+import FlexView from "react-flexview";
 import { UserRole } from "../api/types/enums";
+import { sidebarWidth } from "../config";
 import { useLoginContext } from "../contexts/login-context";
+import { useSettingsContext } from "../contexts/settings-context";
 import { Routes } from "../routes";
 import { variables } from "../theme";
-import { SidebarLogo } from "./sidebar-logo";
+import { Image } from "./image";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 
-const Container = styled.div`
-  overflow: auto;
-  position: relative;
-  width: 100%;
-  height: 100%;
+const BackgroundContainer = styled(FlexView)`
+  overflow-y: auto;
   background: linear-gradient(
     to top right,
     ${variables.colorGradientStart},
     ${variables.colorGradientEnd}
   );
+`;
 
-  &::after {
-    content: " ";
-    display: block;
-    width: 1px;
-
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.05);
-  }
+const ImageContainer = styled(FlexView)`
+  padding: 2rem;
+  width: ${sidebarWidth};
 `;
 
 /**
  * The sidebar containing the menu and a logo
  */
 export const Sidebar = () => {
+  const { settings } = useSettingsContext();
   const loginState = useLoginContext();
 
   if (!loginState.isLoggedIn) {
@@ -46,8 +39,10 @@ export const Sidebar = () => {
   const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
 
   return (
-    <Container>
-      <SidebarLogo />
+    <BackgroundContainer column grow>
+      <ImageContainer vAlignContent="top" shrink={false}>
+        <Image src={settings?.frontend.sidebarImage} label="Hackathon logo" />
+      </ImageContainer>
 
       <SidebarMenu>
         <SidebarMenuItem to={Routes.Dashboard}>Dashboard</SidebarMenuItem>
@@ -72,6 +67,6 @@ export const Sidebar = () => {
           Logout
         </SidebarMenuItem>
       </SidebarMenu>
-    </Container>
+    </BackgroundContainer>
   );
 };

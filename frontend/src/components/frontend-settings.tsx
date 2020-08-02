@@ -2,9 +2,10 @@ import * as React from "react";
 import { useCallback } from "react";
 import type { FrontendSettingsDTO } from "../api/types/dto";
 import { useSettingsContext } from "../contexts/settings-context";
-import { Col, Row } from "./grid";
-import { Subheading } from "./headings";
+import { Col, ColSpacer, Row } from "./grid";
 import { Message } from "./message";
+import { SettingsSection } from "./settings-section";
+import { Text } from "./text";
 import { TextInput, TextInputType } from "./text-input";
 
 /**
@@ -57,18 +58,16 @@ export const FrontendSettings = () => {
   );
 
   return (
-    <>
-      <Subheading>Appearance</Subheading>
-
+    <SettingsSection title="Appearance">
       {updateError && <Message error>{updateError.message}</Message>}
 
-      <p>
+      <Text>
         Adjust these settings to modify the appearance of tilt, using hex colors
         and absolute image urls.
-      </p>
+      </Text>
 
       <Row>
-        <Col percent={50}>
+        <Col>
           <TextInput
             title="Gradient start color"
             placeholder="#abcdef"
@@ -77,7 +76,8 @@ export const FrontendSettings = () => {
             onChange={handleColorGradientStartChange}
           />
         </Col>
-        <Col percent={50}>
+        <ColSpacer />
+        <Col>
           <TextInput
             title="Gradient end color"
             placeholder="#abcdef"
@@ -89,7 +89,7 @@ export const FrontendSettings = () => {
       </Row>
 
       <Row>
-        <Col percent={50}>
+        <Col>
           <TextInput
             title="Link color"
             placeholder="#abcdef"
@@ -98,7 +98,8 @@ export const FrontendSettings = () => {
             onChange={handleColorLinkChange}
           />
         </Col>
-        <Col percent={50}>
+        <ColSpacer />
+        <Col>
           <TextInput
             title="Link hover color"
             placeholder="#abcdef"
@@ -110,7 +111,7 @@ export const FrontendSettings = () => {
       </Row>
 
       <Row>
-        <Col percent={50}>
+        <Col>
           <TextInput
             title="Login and signup image url"
             placeholder="absolute image url with https"
@@ -119,7 +120,8 @@ export const FrontendSettings = () => {
             onChange={handleLoginSignupImageChange}
           />
         </Col>
-        <Col percent={50}>
+        <ColSpacer />
+        <Col>
           <TextInput
             title="Sidebar image url"
             placeholder="absolute image url with https"
@@ -129,6 +131,6 @@ export const FrontendSettings = () => {
           />
         </Col>
       </Row>
-    </>
+    </SettingsSection>
   );
 };

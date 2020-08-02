@@ -1,144 +1,38 @@
-import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
-import { transitionDuration } from "../config";
-import { variables } from "../theme";
+import FlexView from "react-flexview";
 
-interface IContainerProps {
-  active: boolean;
-  borderBottom: boolean;
-}
-
-const Container = styled.div<IContainerProps>`
-  position: relative;
-  margin: 0.75rem 0rem;
-  padding-top: 0.5rem;
-
-  ${({ borderBottom }) =>
-    borderBottom &&
-    `
-    border-bottom: 1.5px solid #aaa;
-  `}
-
-  transition-property: border-color;
-  transition-duration: ${transitionDuration};
-
-  ${({ active }: IContainerProps) =>
-    active &&
-    `
-    border-color: ${variables.colorGradientEnd};
-  `}
+const FormFieldContainer = styled(FlexView)`
+  padding: 1rem 0;
 `;
 
-interface ITitleProps {
-  active: boolean;
-  moveUp: boolean;
-  mandatory: boolean;
-}
-
-const Title = styled.label<ITitleProps>`
-  position: absolute;
-  top: 1.25rem;
+const Title = styled.label`
   display: block;
-
-  color: currentColor;
+  padding-bottom: 0.5rem;
   font-size: 0.9rem;
-  font-weight: normal;
-  pointer-events: none;
+  font-weight: bold;
+`;
 
-  transition-property: top, color, font-weight, font-size;
-  transition-duration: ${transitionDuration};
-
-  ${({ moveUp }: ITitleProps) =>
-    moveUp &&
-    `
-    top: 0rem;
-
-    font-size: 0.7rem;
-    font-weight: bold;
-  `}
-
-  ${({ active }) =>
-    active &&
-    `
-    color: ${variables.colorGradientEnd};
-  `}
-
-  ${({ mandatory }) =>
-    mandatory &&
-    `
-    &::after {
-      content: "*";
-      display: inline;
-      color: red;
-    }
-  `}
+const MandatoryIndicator = styled.span`
+  color: red;
 `;
 
 interface IFormFieldProps {
-  active: boolean;
-  empty: boolean;
   children: React.ReactChild;
-  borderBottom?: boolean;
-  title?: string;
+  title: string;
   mandatory?: boolean;
 }
 
 /**
- * A form field, whose label moves up when the field is active.
+ * A form field.
  */
-export const FormField = ({
-  active,
-  empty,
-  title,
-  children,
-  borderBottom,
-  mandatory,
-}: IFormFieldProps) => (
-  <Container
-    active={active}
-    borderBottom={borderBottom === undefined || borderBottom}
-  >
-    {title && (
-      <Title active={active} moveUp={active || !empty} mandatory={!!mandatory}>
-        {title}
-      </Title>
-    )}
+export const FormField = ({ title, children, mandatory }: IFormFieldProps) => (
+  <FormFieldContainer column>
+    <Title>
+      {title}
+      {mandatory && <MandatoryIndicator>*</MandatoryIndicator>}
+    </Title>
 
     {children}
-  </Container>
+  </FormFieldContainer>
 );
-
-/**
- * Creates the placeholder style, depending on the fields state.
- * @param empty Whether the field is empty
- * @param focused Whether the field is currently focused
- */
-export const getPlaceholderStyle = (empty: boolean, focused: boolean) => css`
-  &::placeholder {
-    transition-property: color;
-    transition-duration: ${transitionDuration};
-  }
-
-  ${empty &&
-  `
-    &::placeholder {
-      color: white;
-    }
-  `}
-
-  ${focused &&
-  `
-    &::placeholder {
-      color: #ccc;
-    }
-  `}
-`;
-
-/**
- * Props for components, whose placeholder should change depending on the field's state.
- */
-export interface IPlaceholderAwareProps {
-  active: boolean;
-  empty: boolean;
-}

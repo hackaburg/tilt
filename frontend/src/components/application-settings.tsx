@@ -1,12 +1,19 @@
+import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
+import FlexView from "react-flexview";
 import type { ApplicationSettingsDTO } from "../api/types/dto";
 import { useSettingsContext } from "../contexts/settings-context";
 import { FormEditor } from "./form-editor";
-import { Col, Row } from "./grid";
-import { Subheading } from "./headings";
+import { Col, ColSpacer, Row } from "./grid";
 import { Message } from "./message";
+import { SettingsSection } from "./settings-section";
+import { Text } from "./text";
 import { TextInput, TextInputType } from "./text-input";
+
+const FormEditorContainer = styled(FlexView)`
+  padding-top: 1rem;
+`;
 
 /**
  * Settings to configure the application users have to fill out.
@@ -54,15 +61,14 @@ export const ApplicationSettings = () => {
   );
 
   return (
-    <>
-      <Subheading>Application</Subheading>
+    <SettingsSection title="Application">
       {updateError && (
         <Message error>
           <b>Error:</b> {updateError.message}
         </Message>
       )}
 
-      <p>
+      <Text>
         An application is divided into two parts: the profile form and the
         confirmation phase. Once you accept applications, the users will be
         moved to the confirmation queue, where they'll need to fill out the
@@ -70,9 +76,10 @@ export const ApplicationSettings = () => {
         submitted the first answers, tilt will ask these new questions in the
         confirmation phase. Depending on whether you need their consent, ensure
         these added questions are mandatory.
-      </p>
+      </Text>
+
       <Row>
-        <Col percent={33}>
+        <Col>
           <TextInput
             value={settings.application.hoursToConfirm}
             onChange={handleHoursToConfirmChange}
@@ -82,8 +89,8 @@ export const ApplicationSettings = () => {
             placeholder="keep it fair, e.g. 240 for 10 days"
           />
         </Col>
-
-        <Col percent={33}>
+        <ColSpacer />
+        <Col>
           <TextInput
             value={settings.application.allowProfileFormFrom}
             onChange={handleAllowProfileFormFromChange}
@@ -91,8 +98,8 @@ export const ApplicationSettings = () => {
             placeholder="1970-01-01 00:00:00"
           />
         </Col>
-
-        <Col percent={33}>
+        <ColSpacer />
+        <Col>
           <TextInput
             value={settings.application.allowProfileFormUntil}
             onChange={handleAllowProfileFormUntilChange}
@@ -102,12 +109,13 @@ export const ApplicationSettings = () => {
         </Col>
       </Row>
 
-      <p>
+      <Text>
         Use the add button to add new questions and the edit button in the top
         right of each question to modify them. You may use Markdown syntax in
         the description, but please keep it short.
-      </p>
-      <p>
+      </Text>
+
+      <Text>
         Questions can have parents, which you can use to conditionally show
         other questions. For instance, if you have a question, whether someone
         is a student, you could use it to modify subsequent questions by
@@ -115,17 +123,23 @@ export const ApplicationSettings = () => {
         but consider your users filling out the form, i.e. don't conditionally
         show questions on the top when selecting something at the bottom of the
         form.
-      </p>
+      </Text>
 
-      <FormEditor
-        form={settings.application.profileForm}
-        onFormChange={handleProfileFormChange}
-      />
+      <FormEditorContainer column>
+        <FormEditor
+          heading="Profile form"
+          form={settings.application.profileForm}
+          onFormChange={handleProfileFormChange}
+        />
+      </FormEditorContainer>
 
-      <FormEditor
-        form={settings.application.confirmationForm}
-        onFormChange={handleConfirmationFormChange}
-      />
-    </>
+      <FormEditorContainer column>
+        <FormEditor
+          heading="Confirmation form"
+          form={settings.application.confirmationForm}
+          onFormChange={handleConfirmationFormChange}
+        />
+      </FormEditorContainer>
+    </SettingsSection>
   );
 };

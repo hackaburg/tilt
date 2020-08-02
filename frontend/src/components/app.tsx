@@ -1,14 +1,13 @@
 import * as React from "react";
-import { useCallback, useEffect } from "react";
-import { Route, RouteComponentProps, Switch, withRouter } from "react-router";
+import { useEffect } from "react";
+import { RouteComponentProps, withRouter } from "react-router";
 import { defaultThemeColor } from "../config";
 import { useLoginContext } from "../contexts/login-context";
 import { useSettingsContext } from "../contexts/settings-context";
 import { Routes } from "../routes";
 import { ThemeProvider } from "../theme";
-import { LoginSignupForm } from "./login-signup-form";
-import { PageWrapper } from "./page-wrapper";
-import { VerifyEmail } from "./verify-email";
+import { LazyAuthenticatedRouter } from "./lazy-authenticated-router";
+import { UnauthenticatedRouter } from "./unauthenticated-router";
 
 interface IAppProps extends RouteComponentProps<any> {}
 
@@ -17,7 +16,7 @@ interface IAppProps extends RouteComponentProps<any> {}
  */
 export const App = ({ history, location }: IAppProps) => {
   const { isLoggedIn } = useLoginContext();
-  const { hash, pathname } = location;
+  const { pathname } = location;
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -30,10 +29,6 @@ export const App = ({ history, location }: IAppProps) => {
       }
     }
   }, [isLoggedIn, pathname]);
-
-  const VerifyEmailWithToken = useCallback(() => <VerifyEmail token={hash} />, [
-    hash,
-  ]);
 
   let theme = {
     colorGradientEnd: defaultThemeColor,
@@ -53,18 +48,16 @@ export const App = ({ history, location }: IAppProps) => {
     };
   }
 
-  return (
-    <ThemeProvider values={theme}>
-      <Switch>
-        <Route path={Routes.Login} component={LoginSignupForm} />
-        <Route path={Routes.VerifyEmail} component={VerifyEmailWithToken} />
-        <Route component={PageWrapper} />
-      </Switch>
-    </ThemeProvider>
+  const router = isLoggedIn ? (
+    <LazyAuthenticatedRouter />
+  ) : (
+    <UnauthenticatedRouter />
   );
+
+  return <ThemeProvider values={theme}>{router}</ThemeProvider>;
 };
 
 /**
- * The main app component, connected to the redux store and react-router.
+ * The main app component, connected to react-router.
  */
 export const RoutedApp = withRouter(App);

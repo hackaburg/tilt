@@ -1,5 +1,7 @@
 import { keyframes } from "@emotion/core";
 import styled from "@emotion/styled";
+import * as React from "react";
+import FlexView from "react-flexview";
 import { shimmerBackgroundColor, shimmerColor } from "../config";
 
 const ShimmerKeyframes = keyframes`
@@ -12,15 +14,7 @@ const ShimmerKeyframes = keyframes`
   }
 `;
 
-interface IPlaceholderProps {
-  width: string;
-  height: string;
-}
-
-/**
- * A placeholder components, which can be displayed while content is loading.
- */
-export const Placeholder = styled.div<IPlaceholderProps>`
+const PlaceholderContainer = styled(FlexView)`
   position: relative;
 
   display: block;
@@ -55,3 +49,15 @@ export const Placeholder = styled.div<IPlaceholderProps>`
     background-size: 100% 200%;
   }
 `;
+
+interface IPlaceholderProps {
+  width: string;
+  height: string;
+}
+
+/**
+ * A placeholder component, which can be displayed while content is loading.
+ */
+export const Placeholder = ({ width, height }: IPlaceholderProps) => (
+  <PlaceholderContainer width={width} height={height} />
+);

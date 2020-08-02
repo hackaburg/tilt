@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactMarkdown from "react-markdown";
+import FlexView from "react-flexview";
 import { enforceExhaustiveSwitch } from "../../../../backend/src/utils/switch";
 import type {
   ChoicesQuestionConfigurationDTO,
@@ -9,6 +9,7 @@ import type {
   TextQuestionConfigurationDTO,
 } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
+import { Markdown } from "../markdown";
 import { ChoicesQuestion } from "./choices-question";
 import { CountryQuestion } from "./country-question";
 import { NumberQuestion } from "./number-question";
@@ -74,8 +75,8 @@ export const UnifiedQuestion = ({
   value,
   onChange,
 }: IQuestionProps) => (
-  <>
-    <ReactMarkdown source={question.description} linkTarget="_blank" />
+  <FlexView column grow>
+    <Markdown text={question.description} />
     <Question question={question} value={value} onChange={onChange} />
-  </>
+  </FlexView>
 );

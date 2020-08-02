@@ -4,7 +4,7 @@ import {
   NumberQuestionConfigurationDTO,
   QuestionDTO,
 } from "../../api/types/dto";
-import { Col, Row } from "../grid";
+import { Col, ColSpacer, Row } from "../grid";
 import { TextInput, TextInputType } from "../text-input";
 
 interface INumberQuestionEditorProps {
@@ -68,7 +68,7 @@ export const NumberQuestionEditor = ({
       />
 
       <Row>
-        <Col percent={50}>
+        <Col>
           <TextInput
             type={TextInputType.Number}
             value={question.configuration.minValue}
@@ -77,7 +77,8 @@ export const NumberQuestionEditor = ({
             placeholder="No minimum"
           />
         </Col>
-        <Col percent={50}>
+        <ColSpacer />
+        <Col>
           <TextInput
             type={TextInputType.Number}
             value={question.configuration.maxValue}

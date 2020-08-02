@@ -1,17 +1,20 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
+import FlexView from "react-flexview";
 import { EmailSettingsDTO } from "../api/types/dto";
 import { borderRadius } from "../config";
 import { useSettingsContext } from "../contexts/settings-context";
-import {
-  EmailTemplateEditor,
-  EmailTemplateEditorPlaceholder,
-} from "./email-template-editor";
-import { Subheading } from "./headings";
+import { EmailTemplateEditor } from "./email-template-editor";
 import { Message } from "./message";
 import { Placeholder } from "./placeholder";
+import { SettingsSection } from "./settings-section";
+import { Text } from "./text";
 import { TextInput } from "./text-input";
+
+const EmailTemplateEditorContainer = styled(FlexView)`
+  padding-top: 1rem;
+`;
 
 const Code = styled.span`
   padding: 0.1rem 0.2rem;
@@ -56,8 +59,7 @@ export const EmailSettings = () => {
   );
 
   return (
-    <>
-      <Subheading>Mail settings</Subheading>
+    <SettingsSection title="Mail settings">
       {updateError && (
         <Message error>
           <b>Error:</b> {updateError.message}
@@ -75,43 +77,49 @@ export const EmailSettings = () => {
         />
       )}
 
-      <p>
+      <Text>
         Use the editors to configure the email templates sent to applicants. The
         HTML and plain text templates will be sent in the same mail.
         <br />
         You may use Handlebars syntax to access variables injected into the
         template like <Code>email</Code>, but try to keep the emails short.
-      </p>
-      <p>
+      </Text>
+      <Text>
         tilt will inject the <Code>verifyToken</Code> into the verification
         email template. To actually verify users, supply the url to your hosted
         instance, e.g.{" "}
         <Code>{"https://hackathon.com/apply/verify#{{verifyToken}}"}</Code> -
         the frontend will expect the token to be at{" "}
         <Code>{"/verify#token"}</Code>.
-      </p>
+      </Text>
 
       {!settings && (
         <>
-          <EmailTemplateEditorPlaceholder />
-          <EmailTemplateEditorPlaceholder />
+          <Placeholder width="100%" height="10rem" />
+          <br />
+          <Placeholder width="100%" height="10rem" />
         </>
       )}
 
       {settings && (
         <>
-          <EmailTemplateEditor
-            title="Verification"
-            template={settings.email.verifyEmail}
-            onTemplateChange={handleVerifyEmailChange}
-          />
-          <EmailTemplateEditor
-            title="Forgot password"
-            template={settings.email.forgotPasswordEmail}
-            onTemplateChange={handleForgotPasswordEmailChange}
-          />
+          <EmailTemplateEditorContainer column>
+            <EmailTemplateEditor
+              title="Verification email"
+              template={settings.email.verifyEmail}
+              onTemplateChange={handleVerifyEmailChange}
+            />
+          </EmailTemplateEditorContainer>
+
+          <EmailTemplateEditorContainer column>
+            <EmailTemplateEditor
+              title="Forgot password email"
+              template={settings.email.forgotPasswordEmail}
+              onTemplateChange={handleForgotPasswordEmailChange}
+            />
+          </EmailTemplateEditorContainer>
         </>
       )}
-    </>
+    </SettingsSection>
   );
 };

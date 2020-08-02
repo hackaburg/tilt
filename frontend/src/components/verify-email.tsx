@@ -1,60 +1,46 @@
-import styled from "@emotion/styled";
 import * as React from "react";
+import FlexView from "react-flexview";
+import { RouteComponentProps, withRouter } from "react-router";
 import { useApi } from "../hooks/use-api";
 import { Routes } from "../routes";
-import { CenteredContainer, PageSizedContainer } from "./centering";
+import { Heading } from "./headings";
 import { Link } from "./link";
-import { LoginImage } from "./login-image";
 import { Message } from "./message";
+import { Text } from "./text";
 
-const Container = styled.div`
-  width: 300px;
-`;
-
-interface IVerifyEmailProps {
-  token: string;
-}
+interface IVerifyEmailProps extends RouteComponentProps<any> {}
 
 /**
  * A dialog to verify the user's email address via the given token.
  */
-export const VerifyEmail = ({ token }: IVerifyEmailProps) => {
-  if (token.startsWith("#")) {
-    token = token.substring(1);
-  }
-
+export const VerifyEmail = ({ location: { hash } }: IVerifyEmailProps) => {
+  const token = hash.startsWith("#") ? hash.substring(1) : hash;
   const { isFetching: verificationInProgress, error } = useApi(
     async (api) => api.verifyEmail(token),
     [token],
   );
 
   return (
-    <PageSizedContainer>
-      <CenteredContainer>
-        <Container>
-          <LoginImage />
-          {error && (
-            <Message error>
-              <b>Error:</b> {error.message}
-            </Message>
-          )}
+    <FlexView column>
+      <Heading>Verifying your email</Heading>
 
-          {!error && (
-            <>
-              {verificationInProgress && (
-                <p>Verifying your email address... hang tight</p>
-              )}
-
-              {!verificationInProgress && (
-                <>
-                  <p>Successfully verified your email!</p>
-                  <Link to={Routes.Login}>Back to login...</Link>
-                </>
-              )}
-            </>
-          )}
-        </Container>
-      </CenteredContainer>
-    </PageSizedContainer>
+      {error ? (
+        <Message error>
+          <b>Error:</b> {error.message}
+        </Message>
+      ) : verificationInProgress ? (
+        <Text>This will only take a second...</Text>
+      ) : (
+        <>
+          <Text>Successfully verified your email!</Text>
+          <Link to={Routes.Login}>Back to login...</Link>
+        </>
+      )}
+    </FlexView>
   );
 };
+
+/**
+ * The email verification component, but connected to react-router.
+ */
+export const RoutedVerifyEmail = withRouter(VerifyEmail);

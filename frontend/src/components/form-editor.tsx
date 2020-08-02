@@ -1,24 +1,27 @@
 import styled from "@emotion/styled";
 import { useCallback } from "react";
 import * as React from "react";
+import FlexView from "react-flexview";
 import type { FormSettingsDTO, QuestionDTO } from "../api/types/dto";
 import { QuestionType } from "../api/types/enums";
 import { Button } from "./button";
-import { Col, Row } from "./grid";
-import { Sectionheading } from "./headings";
+import { Divider } from "./divider";
+import { Elevated } from "./elevated";
+import { Subsubheading } from "./headings";
 import { QuestionEditor } from "./question-editor";
 import { TextInput } from "./text-input";
 
-const Section = styled.section`
-  margin-bottom: 2rem;
+const FormEditorContainer = styled(Elevated)`
+  padding: 1rem;
 `;
 
-const AddButtonContainer = styled.div`
-  display: inline-block;
-  margin-left: 1rem;
-  margin-top: 1rem;
-  transform: scale(0.8);
-  vertical-align: center;
+const TitleEditorContainer = styled(FlexView)`
+  padding-bottom: 1rem;
+`;
+
+const AddQuestionContainer = styled(FlexView)`
+  padding-left: 1rem;
+  padding-bottom: 1.25rem;
 `;
 
 const Muted = styled.p`
@@ -27,6 +30,7 @@ const Muted = styled.p`
 `;
 
 interface IFormEditorProps {
+  heading: string;
   form: FormSettingsDTO;
   onFormChange: (form: FormSettingsDTO) => any;
 }
@@ -34,7 +38,11 @@ interface IFormEditorProps {
 /**
  * An editor to edit an editable collection of questions, only for editing.
  */
-export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
+export const FormEditor = ({
+  heading,
+  form,
+  onFormChange,
+}: IFormEditorProps) => {
   const handleFormFieldChange = useCallback(
     (changes: Partial<FormSettingsDTO>) => {
       onFormChange({
@@ -98,36 +106,37 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
   const allQuestionsHaveIDs = form.questions.every(({ id }) => id != null);
 
   const editableQuestions = form.questions.map((question) => (
-    <QuestionEditor
-      key={question.id ?? question.title}
-      onQuestionChange={handleQuestionChange}
-      question={question}
-      onDeleteQuestion={handleDeleteQuestion}
-      allQuestions={form.questions}
-    />
+    <FlexView key={question.id ?? question.title} column shrink={false}>
+      <Divider />
+
+      <QuestionEditor
+        onQuestionChange={handleQuestionChange}
+        question={question}
+        onDeleteQuestion={handleDeleteQuestion}
+        allQuestions={form.questions}
+      />
+    </FlexView>
   ));
 
   return (
-    <Section>
-      <Sectionheading>
-        <Row>
-          <Col percent={50}>
-            <TextInput
-              value={form.title}
-              onChange={handleTitleChange}
-              title="Form title"
-            />
-          </Col>
+    <FormEditorContainer level={1}>
+      <Subsubheading>{heading}</Subsubheading>
 
-          <Col percent={50}>
-            <AddButtonContainer>
-              <Button onClick={handleAddQuestion} primary>
-                Add question
-              </Button>
-            </AddButtonContainer>
-          </Col>
-        </Row>
-      </Sectionheading>
+      <TitleEditorContainer vAlignContent="bottom">
+        <FlexView column grow>
+          <TextInput
+            value={form.title}
+            onChange={handleTitleChange}
+            title="Form title"
+          />
+        </FlexView>
+
+        <AddQuestionContainer column shrink>
+          <Button onClick={handleAddQuestion} primary>
+            Add question
+          </Button>
+        </AddQuestionContainer>
+      </TitleEditorContainer>
 
       {form.questions.length === 0 && (
         <Muted>No questions yet. Go ahead and add some.</Muted>
@@ -138,6 +147,6 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
       ) : (
         <Muted>Preparing questions, just a sec</Muted>
       )}
-    </Section>
+    </FormEditorContainer>
   );
 };

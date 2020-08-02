@@ -1,13 +1,16 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useState } from "react";
+import FlexView from "react-flexview";
 import type { AnswerDTO } from "../api/types/dto";
 import { useSettingsContext } from "../contexts/settings-context";
 import { useApi } from "../hooks/use-api";
 import { useDerivedState } from "../hooks/use-derived-state";
 import { Button } from "./button";
+import { Divider } from "./divider";
 import { Heading } from "./headings";
 import { Message } from "./message";
+import { Page } from "./page";
 import { Placeholder } from "./placeholder";
 import { StringifiedUnifiedQuestion } from "./questions/stringified-unified-question";
 
@@ -19,14 +22,8 @@ export enum FormType {
   ConfirmationForm = "confirmation_form",
 }
 
-const QuestionContainer = styled.div`
-  border-top: 1px dashed #ddd;
-  margin-top: 1rem;
-`;
-
-const SubmitContainer = styled.div`
+const SubmitContainer = styled(FlexView)`
   padding: 3rem 0;
-  align-self: flex-end;
 `;
 
 interface IFormProps {
@@ -123,14 +120,14 @@ export const Form = ({ type }: IFormProps) => {
 
   if (!form) {
     return (
-      <>
+      <Page>
         <Heading>{title}</Heading>
         <Placeholder width="100%" height="7rem" />
         <br />
         <Placeholder width="100%" height="7rem" />
         <br />
         <Placeholder width="100%" height="7rem" />
-      </>
+      </Page>
     );
   }
 
@@ -144,26 +141,28 @@ export const Form = ({ type }: IFormProps) => {
     }
 
     return (
-      <QuestionContainer key={String(question.id)}>
+      <FlexView key={String(question.id)} column shrink={false}>
+        <Divider />
+
         <StringifiedUnifiedQuestion
           onChange={(value) => handleQuestionValueChange(question.id!, value)}
           value={state[question.id!] ?? ""}
           question={question}
         />
-      </QuestionContainer>
+      </FlexView>
     );
   });
 
   return (
-    <>
+    <Page>
       <Heading>{title}</Heading>
       {questions}
 
-      <SubmitContainer>
+      <SubmitContainer hAlignContent="right" shrink={false}>
         <Button primary onClick={handleSubmit} loading={isSubmitting}>
           Submit
         </Button>
       </SubmitContainer>
-    </>
+    </Page>
   );
 };

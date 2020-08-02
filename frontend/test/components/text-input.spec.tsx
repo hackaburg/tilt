@@ -11,7 +11,12 @@ const generateEvent = (value: string) => ({
 describe("TextInput", () => {
   it("renders a textarea", () => {
     const component = render(
-      <TextInput type={TextInputType.Area} value="" onChange={jest.fn()} />,
+      <TextInput
+        title=""
+        type={TextInputType.Area}
+        value=""
+        onChange={jest.fn()}
+      />,
     );
 
     const area = component.find("textarea");
@@ -19,7 +24,9 @@ describe("TextInput", () => {
   });
 
   it("renders a text input for no type", () => {
-    const component = render(<TextInput value="" onChange={jest.fn()} />);
+    const component = render(
+      <TextInput title="" value="" onChange={jest.fn()} />,
+    );
 
     const input = component.find("input[type='text']");
     expect(input).toHaveLength(1);
@@ -27,7 +34,12 @@ describe("TextInput", () => {
 
   it("renders a text input", () => {
     const component = render(
-      <TextInput type={TextInputType.Text} value="" onChange={jest.fn()} />,
+      <TextInput
+        title=""
+        type={TextInputType.Text}
+        value=""
+        onChange={jest.fn()}
+      />,
     );
 
     const input = component.find("input[type='text']");
@@ -36,7 +48,12 @@ describe("TextInput", () => {
 
   it("renders a password input", () => {
     const component = render(
-      <TextInput type={TextInputType.Password} value="" onChange={jest.fn()} />,
+      <TextInput
+        title=""
+        type={TextInputType.Password}
+        value=""
+        onChange={jest.fn()}
+      />,
     );
 
     const input = component.find("input[type='password']");
@@ -45,7 +62,12 @@ describe("TextInput", () => {
 
   it("renders a number input", () => {
     const component = render(
-      <TextInput type={TextInputType.Number} value="" onChange={jest.fn()} />,
+      <TextInput
+        title=""
+        type={TextInputType.Number}
+        value=""
+        onChange={jest.fn()}
+      />,
     );
 
     const input = component.find("input[type='number']");
@@ -55,7 +77,12 @@ describe("TextInput", () => {
   it("parses the input for number inputs", () => {
     const onChange = jest.fn();
     const component = mount(
-      <TextInput type={TextInputType.Number} value="" onChange={onChange} />,
+      <TextInput
+        title=""
+        type={TextInputType.Number}
+        value=""
+        onChange={onChange}
+      />,
     );
 
     const input = component.find("input");
@@ -65,7 +92,9 @@ describe("TextInput", () => {
 
   it("leaves the input for regular inputs untouched", () => {
     const onChange = jest.fn();
-    const component = mount(<TextInput value="" onChange={onChange} />);
+    const component = mount(
+      <TextInput title="" value="" onChange={onChange} />,
+    );
 
     const input = component.find("input");
     const value = "foo";

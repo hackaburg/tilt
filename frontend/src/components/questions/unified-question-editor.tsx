@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useMemo } from "react";
+import FlexView from "react-flexview";
 import { IQuestionConfiguration } from "../../../../backend/src/entities/question";
 import { enforceExhaustiveSwitch } from "../../../../backend/src/utils/switch";
 import {
@@ -11,7 +12,7 @@ import {
 } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { Checkboxes } from "../checkbox";
-import { Col, Row } from "../grid";
+import { Col, ColSpacer, Row } from "../grid";
 import { Select } from "../select";
 import { TextInput, TextInputType } from "../text-input";
 import { ChoicesQuestionEditor } from "./choices-question-editor";
@@ -19,8 +20,8 @@ import { CountryQuestionEditor } from "./country-question-editor";
 import { NumberQuestionEditor } from "./number-question-editor";
 import { TextQuestionEditor } from "./text-question-editor";
 
-const Meta = styled.div`
-  margin-bottom: 3rem;
+const Meta = styled(FlexView)`
+  padding-bottom: 3rem;
 `;
 
 interface IQuestionEditorProps {
@@ -226,9 +227,9 @@ export const UnifiedQuestionEditor = ({
 
   return (
     <>
-      <Meta>
+      <Meta column>
         <Row>
-          <Col percent={50}>
+          <Col>
             <Select
               onChange={handleQuestionTypeChange}
               value={question.configuration.type}
@@ -236,8 +237,8 @@ export const UnifiedQuestionEditor = ({
               title="Question type"
             />
           </Col>
-
-          <Col percent={50}>
+          <ColSpacer />
+          <Col>
             <TextInput
               value={question.title}
               onChange={handleQuestionTitleChange}
@@ -248,7 +249,7 @@ export const UnifiedQuestionEditor = ({
         </Row>
 
         <Row>
-          <Col percent={50}>
+          <Col>
             <TextInput
               value={question.description}
               onChange={handleQuestionDescriptionChange}
@@ -257,7 +258,8 @@ export const UnifiedQuestionEditor = ({
               type={TextInputType.Area}
             />
           </Col>
-          <Col percent={50}>
+          <ColSpacer />
+          <Col>
             <Checkboxes
               values={mandatoryAllCheckboxOptions}
               selected={
@@ -272,7 +274,7 @@ export const UnifiedQuestionEditor = ({
         </Row>
 
         <Row>
-          <Col percent={50}>
+          <Col>
             <Select
               values={parentChoices}
               value={currentParentChoice}
@@ -280,8 +282,8 @@ export const UnifiedQuestionEditor = ({
               title="Parent question"
             />
           </Col>
-
-          <Col percent={50}>
+          <ColSpacer />
+          <Col>
             <TextInput
               value={question.showIfParentHasValue ?? ""}
               onChange={handleQuestionParentValueChange}

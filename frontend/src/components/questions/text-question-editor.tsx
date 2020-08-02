@@ -2,7 +2,7 @@ import * as React from "react";
 import { useCallback } from "react";
 import { QuestionDTO, TextQuestionConfigurationDTO } from "../../api/types/dto";
 import { Checkboxes } from "../checkbox";
-import { Col, Row } from "../grid";
+import { Col, ColSpacer, Row } from "../grid";
 import { TextInput } from "../text-input";
 
 const multilineOptionValue = "Multiline";
@@ -64,7 +64,7 @@ export const TextQuestionEditor = ({
 
   return (
     <Row>
-      <Col percent={50}>
+      <Col>
         <TextInput
           value={question.configuration.placeholder}
           onChange={handlePlaceholderChange}
@@ -72,8 +72,8 @@ export const TextQuestionEditor = ({
           title="Input placeholder"
         />
       </Col>
-
-      <Col percent={50}>
+      <ColSpacer />
+      <Col>
         <Checkboxes
           onChange={handleAppearanceChange}
           selected={selectedAppearanceOptions}

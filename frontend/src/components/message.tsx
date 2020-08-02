@@ -1,36 +1,48 @@
 import styled from "@emotion/styled";
-import { borderRadius } from "../config";
+import * as React from "react";
+import FlexView from "react-flexview";
+import { Elevated } from "./elevated";
+
+const MessageContainer = styled(Elevated)`
+  background-color: #f7f7f7;
+  padding: 0.5rem;
+`;
+
+const ErrorMessageContainer = styled(MessageContainer)`
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+`;
+
+const WarnMessageContainer = styled(MessageContainer)`
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+`;
 
 interface IMessageProps {
   error?: boolean;
   warn?: boolean;
+  children: FlexView.Props["children"];
 }
 
 /**
  * A message to display some text.
  */
-export const Message = styled.div<IMessageProps>`
-  padding: 0.5rem;
+export const Message = ({ error, warn, children }: IMessageProps) => {
+  const level = 1;
 
-  border: 1px solid #ccc;
-  border-radius: ${borderRadius};
-  background-color: #f7f7f7;
+  if (error) {
+    return (
+      <ErrorMessageContainer level={level}>{children}</ErrorMessageContainer>
+    );
+  }
 
-  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.05);
+  if (warn) {
+    return (
+      <WarnMessageContainer level={level}>{children}</WarnMessageContainer>
+    );
+  }
 
-  ${(props) =>
-    props.error &&
-    `
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-  `}
-
-  ${(props) =>
-    props.warn &&
-    `
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-  `}
-`;
+  return <MessageContainer level={level}>{children}</MessageContainer>;
+};

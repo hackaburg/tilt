@@ -1,46 +1,14 @@
-import { css } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
 import type { EmailTemplateDTO } from "../api/types/dto";
-import { borderRadius } from "../config";
-import { Col, Row } from "./grid";
-import { Placeholder } from "./placeholder";
-import { TextInput } from "./text-input";
+import { Elevated } from "./elevated";
+import { Col, ColSpacer, Row } from "./grid";
+import { Subsubheading } from "./headings";
+import { TextInput, TextInputType } from "./text-input";
 
-const editorContainerStyle = css`
-  margin: 1rem 0rem;
-
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-  border-radius: ${borderRadius};
-  overflow: hidden;
-`;
-
-const DropShadowContainer = styled.div`
-  ${editorContainerStyle}
+const EmailTemplateEditorContainer = styled(Elevated)`
   padding: 1rem;
-  position: relative;
-`;
-
-const Title = styled.h3`
-  margin-top: 0rem;
-  margin-bottom: 1rem;
-  font-weight: lighter;
-`;
-
-const EditorTitle = styled.h4`
-  margin: 0;
-  margin-bottom: 0.5rem;
-`;
-
-const Editor = styled.textarea`
-  display: inline-block;
-  width: 100%;
-  height: 15rem;
-  resize: none;
-  font-size: inherit;
-  font-family: monospace;
-  border: none;
 `;
 
 interface IEmailTemplateEditor {
@@ -57,73 +25,63 @@ export const EmailTemplateEditor = ({
   template,
   onTemplateChange,
 }: IEmailTemplateEditor) => {
-  const handleSubjectChange = useCallback(
-    (event) => {
+  const handleEmailTemplateChange = useCallback(
+    (changes: Partial<EmailTemplateDTO>) => {
       onTemplateChange({
         ...template,
-        subject: event.target.value,
+        ...changes,
       });
     },
     [onTemplateChange, template],
+  );
+
+  const handleSubjectChange = useCallback(
+    (value) => handleEmailTemplateChange({ subject: value }),
+    [handleEmailTemplateChange],
   );
 
   const handleHtmlTemplateChange = useCallback(
-    (event) => {
-      onTemplateChange({
-        ...template,
-        htmlTemplate: event.target.value,
-      });
-    },
-    [onTemplateChange, template],
+    (value) => handleEmailTemplateChange({ htmlTemplate: value }),
+    [handleEmailTemplateChange],
   );
 
   const handleTextTemplateChange = useCallback(
-    (event) => {
-      onTemplateChange({
-        ...template,
-        textTemplate: event.target.value,
-      });
-    },
-    [onTemplateChange, template],
+    (value) => handleEmailTemplateChange({ textTemplate: value }),
+    [handleEmailTemplateChange],
   );
 
   return (
-    <DropShadowContainer>
-      <Title>
-        <TextInput
-          value={template.subject}
-          onChange={handleSubjectChange}
-          title={`${title} subject`}
-          placeholder="e.g. 'win free money'"
-        />
-      </Title>
+    <EmailTemplateEditorContainer level={1}>
+      <Subsubheading>{title}</Subsubheading>
+
+      <TextInput
+        value={template.subject}
+        onChange={handleSubjectChange}
+        title="Subject"
+        placeholder="e.g. 'win free money'"
+      />
+
       <Row>
-        <Col percent={50}>
-          <EditorTitle>text/html</EditorTitle>
-          <Editor
+        <Col>
+          <TextInput
+            title="text/html"
+            type={TextInputType.Area}
             value={template.htmlTemplate}
             onChange={handleHtmlTemplateChange}
+            placeholder="<html>"
           />
         </Col>
-        <Col percent={50}>
-          <EditorTitle>text/plain</EditorTitle>
-          <Editor
+        <ColSpacer />
+        <Col>
+          <TextInput
+            title="text/plain"
+            type={TextInputType.Area}
             value={template.textTemplate}
             onChange={handleTextTemplateChange}
+            placeholder="Hi there!"
           />
         </Col>
       </Row>
-    </DropShadowContainer>
+    </EmailTemplateEditorContainer>
   );
 };
-
-const PlaceholderContainer = styled(Placeholder)`
-  ${editorContainerStyle}
-`;
-
-/**
- * A placeholder version of an email tempalte editor. Essentially a gray block the size of the editor.
- */
-export const EmailTemplateEditorPlaceholder = () => (
-  <PlaceholderContainer width="100%" height="45vh" />
-);

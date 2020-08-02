@@ -1,76 +1,37 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
+import FlexView from "react-flexview";
 import type { QuestionDTO } from "../api/types/dto";
-import { borderRadius, transitionDuration } from "../config";
+import { transitionDuration } from "../config";
 import { useFortune } from "../hooks/use-fortune";
+import { useToggle } from "../hooks/use-toggle";
 import { variables } from "../theme";
 import { UnifiedQuestion } from "./questions/unified-question";
 import { UnifiedQuestionEditor } from "./questions/unified-question-editor";
 
-const Container = styled.div`
-  position: relative;
-
-  padding: 1rem 2rem;
-  border-radius: ${borderRadius};
-  background-color: white;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-  border-top: 1px dashed #eee;
-`;
-
-const Modifiers = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 2rem;
-`;
-
-interface IEditQuestionButtonProps {
-  active: boolean;
-}
-
-const EditButton = styled.button<IEditQuestionButtonProps>`
-  display: inline-block;
+const MetaButton = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
   text-transform: uppercase;
   color: currentColor;
-  opacity: 0.3;
   font-weight: bold;
-
-  transition-property: opacity;
-  transition-duration: ${transitionDuration};
-
-  &:hover {
-    opacity: 1;
-  }
-
-  ${({ active }: IEditQuestionButtonProps) =>
-    active &&
-    `
-    color: ${variables.colorGradientEnd};
-    opacity: 1;
-  `}
 `;
 
-const RemoveButton = styled.button`
-  display: inline-block;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  text-transform: uppercase;
+const RemoveButton = styled(MetaButton)`
   color: red;
-  font-weight: bold;
-  opacity: 0.3;
   transition-property: opacity;
   transition-duration: ${transitionDuration};
+  opacity: 0.3;
 
   &:hover {
     opacity: 1;
   }
+`;
+
+const FinishButton = styled(MetaButton)`
+  color: ${variables.colorGradientStart};
 `;
 
 const ignoreChange = () => 0;
@@ -91,7 +52,7 @@ export const QuestionEditor = ({
   onDeleteQuestion,
   allQuestions,
 }: IQuestionEditorProps) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, toggleEditing] = useToggle(false);
   const fortune = useFortune();
 
   const handleDelete = useCallback(() => {
@@ -99,7 +60,18 @@ export const QuestionEditor = ({
   }, [onDeleteQuestion, question]);
 
   return (
-    <Container>
+    <FlexView column grow>
+      <FlexView hAlignContent="right">
+        {isEditing ? (
+          <FlexView>
+            <RemoveButton onClick={handleDelete}>Delete question</RemoveButton>
+            <FinishButton onClick={toggleEditing}>Finish editing</FinishButton>
+          </FlexView>
+        ) : (
+          <MetaButton onClick={toggleEditing}>Edit</MetaButton>
+        )}
+      </FlexView>
+
       {isEditing ? (
         <UnifiedQuestionEditor
           question={question}
@@ -113,19 +85,6 @@ export const QuestionEditor = ({
           onChange={ignoreChange}
         />
       )}
-
-      <Modifiers>
-        {isEditing && (
-          <RemoveButton onClick={handleDelete}>Delete question</RemoveButton>
-        )}
-
-        <EditButton
-          active={isEditing}
-          onClick={() => setIsEditing((value) => !value)}
-        >
-          {isEditing ? "Finish Editing" : "Edit"}
-        </EditButton>
-      </Modifiers>
-    </Container>
+    </FlexView>
   );
 };

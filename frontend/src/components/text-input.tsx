@@ -3,31 +3,23 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
 import { useFocus } from "../hooks/use-focus";
-import {
-  FormField,
-  getPlaceholderStyle,
-  IPlaceholderAwareProps,
-} from "./form-field";
+import { Elevated } from "./elevated";
+import { FormField } from "./form-field";
 
 const FieldStyle = css`
   width: 100%;
-  padding: 0.5rem 0rem 0.25rem 0rem;
-
+  padding: 0.75rem 1rem;
   font-size: 14px;
   border: none;
 `;
 
-const Area = styled.textarea<IPlaceholderAwareProps>`
+const Area = styled.textarea`
   ${FieldStyle}
   resize: vertical;
-
-  ${({ empty, active }) => getPlaceholderStyle(empty, active)}
 `;
 
-const Input = styled.input<IPlaceholderAwareProps>`
+const Input = styled.input`
   ${FieldStyle}
-
-  ${({ empty, active }) => getPlaceholderStyle(empty, active)}
 `;
 
 /**
@@ -42,8 +34,8 @@ export enum TextInputType {
 
 interface ICommonTextInputProps {
   placeholder?: string;
-  focus?: boolean;
-  title?: string;
+  autoFocus?: boolean;
+  title: string;
   mandatory?: boolean;
   type?: TextInputType;
   onChange: (value: any) => any;
@@ -64,20 +56,21 @@ export const TextInput = ({
   onChange,
   title,
   placeholder,
-  type,
-  focus,
+  type = TextInputType.Text,
+  autoFocus = false,
   mandatory,
   min,
   max,
   allowDecimals,
 }: ITextInputProps) => {
-  const [isFocused, onFocus, onBlur] = useFocus();
-  const isEmpty = `${value}`.trim().length === 0;
+  const [isFocused, onFocus, onBlur] = useFocus(autoFocus);
   const fieldType = type || TextInputType.Text;
   const fieldProps = {
-    active: isFocused,
-    autoFocus: focus,
-    empty: isEmpty,
+    autoFocus,
+    onBlur,
+    onFocus,
+    placeholder,
+    value,
 
     onChange: useCallback(
       (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -93,11 +86,6 @@ export const TextInput = ({
       },
       [onChange, type],
     ),
-    placeholder,
-    value,
-
-    onBlur,
-    onFocus,
   };
 
   const field =
@@ -109,18 +97,16 @@ export const TextInput = ({
         min={min}
         max={max}
         step={allowDecimals ? "any" : 1}
+        spellCheck={false}
         {...fieldProps}
       />
     );
 
+  const elevationLevel = isFocused ? 2 : 1;
+
   return (
-    <FormField
-      active={isFocused}
-      empty={isEmpty}
-      title={title}
-      mandatory={mandatory}
-    >
-      {field}
+    <FormField title={title} mandatory={mandatory}>
+      <Elevated level={elevationLevel}>{field}</Elevated>
     </FormField>
   );
 };

@@ -1,39 +1,17 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useState } from "react";
+import FlexView from "react-flexview";
 import { useLoginContext } from "../contexts/login-context";
 import { useApi } from "../hooks/use-api";
-import { BlurContainer } from "./blur-container";
 import { Button } from "./button";
-import { CenteredContainer, PageSizedContainer } from "./centering";
-import { FadeContainer } from "./fade-container";
 import { Heading } from "./headings";
-import { LoginImage } from "./login-image";
 import { Message } from "./message";
+import { Text } from "./text";
 import { TextInput, TextInputType } from "./text-input";
 
-const Container = styled.div`
-  margin: 2rem 0rem;
-  width: 300px;
-  max-height: 100vh;
-`;
-
-const SignupDoneMessage = styled(FadeContainer)`
-  position: absolute;
-`;
-
-const FormContainer = styled.form`
-  margin: 2rem 0rem;
-`;
-
-const Fields = styled.div`
-  margin-bottom: 3rem;
-  color: #aaa;
-`;
-
-const Divider = styled.p`
-  padding: 1rem 0rem;
-  text-align: center;
+const ButtonContainer = styled(FlexView)`
+  padding-top: 1rem;
 `;
 
 /**
@@ -77,84 +55,73 @@ export const LoginSignupForm = () => {
   const error = loginError ?? signupError;
   const signupDone = !!didSignup && !signupInProgress && !error;
 
-  const handleSubmit = useCallback(
-    async (event: React.SyntheticEvent) => {
-      event.preventDefault();
-      await sendLoginRequest();
-    },
-    [sendLoginRequest],
-  );
+  const handleSubmit = useCallback((event: React.SyntheticEvent) => {
+    event.preventDefault();
+  }, []);
+
+  if (signupDone) {
+    return (
+      <FlexView column grow>
+        <Heading>Done.</Heading>
+        <Text>We've sent you an email with a button to verify yourself.</Text>
+        <Text>
+          It might take a minute or two to arrive, and to be safe, please also
+          check your junk mail.
+        </Text>
+      </FlexView>
+    );
+  }
 
   return (
-    <PageSizedContainer>
-      <CenteredContainer>
-        <Container>
-          <LoginImage />
+    <FlexView column grow>
+      <Heading>Register to apply</Heading>
 
-          <SignupDoneMessage show={signupDone}>
-            <Heading>Done.</Heading>
-            <p>We've sent you an email with a button to verify yourself.</p>
-            <p>
-              It might take a minute or two to arrive, and to be safe, please
-              also check your junk mail.
-            </p>
-          </SignupDoneMessage>
+      {error && (
+        <Message error>
+          <b>Error:</b> {error?.message}
+        </Message>
+      )}
 
-          <BlurContainer blur={signupDone}>
-            {!error && (
-              <>
-                <Heading>Apply</Heading>
-                <p>Create an account or login.</p>
-              </>
-            )}
+      <form onSubmit={handleSubmit}>
+        <TextInput
+          title="E-Mail"
+          placeholder="me@foo.bar"
+          value={email}
+          onChange={(value) => setEmail(value)}
+          autoFocus
+        />
 
-            {error && (
-              <Message error>
-                <b>Error:</b> {error?.message}
-              </Message>
-            )}
+        <TextInput
+          title="Password"
+          placeholder="please don't use 'password'"
+          value={password}
+          onChange={(value) => setPassword(value)}
+          type={TextInputType.Password}
+        />
 
-            <FormContainer onSubmit={handleSubmit}>
-              <Fields>
-                <TextInput
-                  title="E-Mail"
-                  placeholder="me@foo.bar"
-                  value={email}
-                  onChange={(value) => setEmail(value)}
-                  focus
-                />
+        <ButtonContainer column grow hAlignContent="center">
+          <Button
+            onClick={sendLoginRequest}
+            loading={loginInProgress}
+            disable={formInProgress}
+            primary
+            fluid
+          >
+            Let me in
+          </Button>
 
-                <TextInput
-                  title="Password"
-                  placeholder="please don't use 'password'"
-                  value={password}
-                  onChange={(value) => setPassword(value)}
-                  type={TextInputType.Password}
-                />
-              </Fields>
+          <Text>Don't have an account?</Text>
 
-              <Button
-                onClick={sendSignupRequest}
-                loading={signupInProgress}
-                disable={formInProgress}
-                primary
-                fluid
-              >
-                Create my account
-              </Button>
-              <Divider>Already have an account?</Divider>
-              <Button
-                onClick={sendLoginRequest}
-                loading={loginInProgress}
-                disable={formInProgress}
-                fluid
-              >
-                Let me in
-              </Button>
-            </FormContainer>
-          </BlurContainer>
-        </Container>
-      </CenteredContainer>
-    </PageSizedContainer>
+          <Button
+            onClick={sendSignupRequest}
+            loading={signupInProgress}
+            disable={formInProgress}
+            fluid
+          >
+            Create my account
+          </Button>
+        </ButtonContainer>
+      </form>
+    </FlexView>
   );
 };

@@ -1,12 +1,16 @@
 import styled from "@emotion/styled";
 import * as React from "react";
+import FlexView from "react-flexview";
 import { borderRadius, transitionDuration } from "../config";
 
-interface IContainerProps {
+interface INotificationContainerProps {
   show: boolean;
 }
 
-const Container = styled.div<IContainerProps>`
+const NotificationContainer = styled<
+  typeof FlexView,
+  INotificationContainerProps
+>(FlexView)`
   position: fixed;
   top: 1rem;
   right: -5rem;
@@ -44,5 +48,5 @@ interface INotificationProps {
  * A notification displayed in the top right corner.
  */
 export const Notification = ({ message, show }: INotificationProps) => (
-  <Container show={show}>{message}</Container>
+  <NotificationContainer show={show}>{message}</NotificationContainer>
 );

@@ -5,7 +5,7 @@ import {
   QuestionDTO,
 } from "../../api/types/dto";
 import { Checkboxes } from "../checkbox";
-import { Col, Row } from "../grid";
+import { Col, ColSpacer, Row } from "../grid";
 import { TextInput, TextInputType } from "../text-input";
 
 const separator = "\n";
@@ -96,7 +96,7 @@ export const ChoicesQuestionEditor = ({
   return (
     <>
       <Row>
-        <Col percent={50}>
+        <Col>
           <TextInput
             type={TextInputType.Area}
             title="Options (one per line)"
@@ -105,7 +105,8 @@ export const ChoicesQuestionEditor = ({
             onChange={handleChoicesUpdate}
           />
         </Col>
-        <Col percent={50}>
+        <ColSpacer />
+        <Col>
           <Checkboxes
             values={appearanceOptions}
             selected={selectedAppearanceOptions}

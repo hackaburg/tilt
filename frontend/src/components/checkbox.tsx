@@ -1,19 +1,16 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
+import FlexView from "react-flexview";
 import { useUniqueID, useUniqueIDs } from "../hooks/use-uniqe-id";
 import { FormField } from "./form-field";
 
-const Container = styled.div`
-  margin: 0.75rem 0rem;
+const ItemContainer = styled(FlexView)`
+  padding: 0.5rem 0rem;
 `;
 
-const Item = styled.div`
-  margin: 0.5rem 0rem;
-`;
-
-const Input = styled.input`
-  margin-right: 1rem;
+const Label = styled.label`
+  padding-left: 0.5rem;
 `;
 
 interface ICheckboxesProps {
@@ -21,7 +18,7 @@ interface ICheckboxesProps {
   values: string[];
   selected: string[];
   onChange: (selected: string[]) => any;
-  title?: string;
+  title: string;
   mandatory?: boolean;
 }
 
@@ -60,27 +57,23 @@ export const Checkboxes = ({
   );
 
   const checkboxes = values.map((checkboxValue, index) => (
-    <Item key={checkboxIDs[index]}>
-      <Input
+    <ItemContainer key={checkboxIDs[index]} shrink={false}>
+      <input
         id={checkboxIDs[index]}
         name={radio ? groupID : undefined}
         checked={selected.includes(checkboxValue)}
         type={radio ? "radio" : "checkbox"}
         onChange={toggleChecked}
       />
-      <label htmlFor={checkboxIDs[index]}>{checkboxValue}</label>
-    </Item>
+      <Label htmlFor={checkboxIDs[index]}>{checkboxValue}</Label>
+    </ItemContainer>
   ));
 
   return (
-    <FormField
-      active={false}
-      empty={false}
-      borderBottom={false}
-      title={title}
-      mandatory={mandatory}
-    >
-      <Container>{checkboxes}</Container>
+    <FormField title={title} mandatory={mandatory}>
+      <FlexView column grow>
+        {checkboxes}
+      </FlexView>
     </FormField>
   );
 };

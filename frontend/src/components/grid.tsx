@@ -1,36 +1,33 @@
-import styled from "@emotion/styled";
-import { gridColumnPadding, mediaBreakpoints } from "../config";
+import * as React from "react";
+import FlexView from "react-flexview";
+import { gridSpacing } from "../config";
+
+interface IProps {
+  children: FlexView.Props["children"];
+}
 
 /**
  * A row in a grid layout.
  */
-export const Row = styled.div`
-  display: block;
-  margin: 0rem -${gridColumnPadding};
-
-  &::after {
-    content: " ";
-    display: table;
-    clear: both;
-  }
-`;
-
-interface IColProps {
-  percent: number;
-}
+export const Row = ({ children }: IProps) => (
+  <FlexView grow>{children}</FlexView>
+);
 
 /**
- * A column in a grid row with a dynamic width.
+ * An equally-sized column in a `Row`.
  */
-export const Col = styled.div<IColProps>`
-  display: block;
-  float: left;
-  width: ${(props) => props.percent}%;
+export const Col = ({ children }: IProps) => (
+  <FlexView column grow={1}>
+    {children}
+  </FlexView>
+);
 
-  padding: 0rem ${gridColumnPadding};
+/**
+ * A vertical spacer between rows.
+ */
+export const RowSpacer = () => <FlexView height={gridSpacing} shrink={false} />;
 
-  @media screen and (max-width: ${mediaBreakpoints.tablet}) {
-    float: none;
-    width: 100%;
-  }
-`;
+/**
+ * A horizontal spacer between columns.
+ */
+export const ColSpacer = () => <FlexView width={gridSpacing} shrink={false} />;

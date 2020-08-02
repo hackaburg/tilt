@@ -1,9 +1,11 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { CenteredContainer, PageHeightContainer } from "./centering";
+import FlexView from "react-flexview";
 import { Heading } from "./headings";
+import { Page } from "./page";
+import { Text } from "./text";
 
-const Text = styled.div`
+const Container = styled(FlexView)`
   text-align: center;
   color: #555;
 `;
@@ -12,12 +14,12 @@ const Text = styled.div`
  * 404.
  */
 export const PageNotFound = () => (
-  <PageHeightContainer>
-    <CenteredContainer>
-      <Text>
+  <Page>
+    <FlexView hAlignContent="center" vAlignContent="center" grow>
+      <Container column>
         <Heading>Oops, that link didn't work.</Heading>
-        <p>Try selecting a page from the sidebar</p>
-      </Text>
-    </CenteredContainer>
-  </PageHeightContainer>
+        <Text>Try selecting a page from the sidebar</Text>
+      </Container>
+    </FlexView>
+  </Page>
 );
