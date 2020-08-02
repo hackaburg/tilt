@@ -31,18 +31,15 @@ interface IMessageProps {
  */
 export const Message = ({ error, warn, children }: IMessageProps) => {
   const level = 1;
+  const Component = error
+    ? ErrorMessageContainer
+    : warn
+    ? WarnMessageContainer
+    : MessageContainer;
 
-  if (error) {
-    return (
-      <ErrorMessageContainer level={level}>{children}</ErrorMessageContainer>
-    );
-  }
-
-  if (warn) {
-    return (
-      <WarnMessageContainer level={level}>{children}</WarnMessageContainer>
-    );
-  }
-
-  return <MessageContainer level={level}>{children}</MessageContainer>;
+  return (
+    <Component level={level}>
+      <FlexView>{children}</FlexView>
+    </Component>
+  );
 };
