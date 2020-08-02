@@ -2,7 +2,7 @@ import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import type { SettingsDTO } from "../api/types/dto";
-import { Spinner } from "../components/spinner";
+import { Spinner } from "../components/base/spinner";
 import { debounceDuration } from "../config";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
-import { Notification } from "../components/notification";
+import { Notification } from "../components/base/notification";
 import { notificationDuration } from "../config";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
 import { Nullable } from "../state";

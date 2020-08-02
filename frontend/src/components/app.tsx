@@ -6,8 +6,8 @@ import { useLoginContext } from "../contexts/login-context";
 import { useSettingsContext } from "../contexts/settings-context";
 import { Routes } from "../routes";
 import { ThemeProvider } from "../theme";
-import { LazyAuthenticatedRouter } from "./lazy-authenticated-router";
-import { UnauthenticatedRouter } from "./unauthenticated-router";
+import { LazyAuthenticatedRouter } from "./routers/lazy-authenticated-router";
+import { UnauthenticatedRouter } from "./routers/unauthenticated-router";
 
 interface IAppProps extends RouteComponentProps<any> {}
 

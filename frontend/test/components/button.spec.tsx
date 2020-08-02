@@ -1,6 +1,6 @@
 import { shallow } from "enzyme";
 import * as React from "react";
-import { Button } from "../../src/components/button";
+import { Button } from "../../src/components/base/button";
 
 describe("Button", () => {
   it("renders the given text inside the button", () => {

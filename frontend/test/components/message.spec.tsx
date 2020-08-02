@@ -1,6 +1,6 @@
 import { shallow } from "enzyme";
 import * as React from "react";
-import { Message } from "../../src/components/message";
+import { Message } from "../../src/components/base/message";
 
 describe("Message", () => {
   it("renders error messages", () => {

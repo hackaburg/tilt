@@ -1,6 +1,6 @@
 import { mount, render } from "enzyme";
 import * as React from "react";
-import { TextInput, TextInputType } from "../../src/components/text-input";
+import { TextInput, TextInputType } from "../../src/components/base/text-input";
 
 const generateEvent = (value: string) => ({
   target: {
