@@ -10,6 +10,7 @@ import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
+import { Muted } from "../base/muted";
 import { Placeholder } from "../base/placeholder";
 import { Page } from "../pages/page";
 import { StringifiedUnifiedQuestion } from "./stringified-unified-question";
@@ -87,6 +88,7 @@ export const Form = ({ type }: IFormProps) => {
     );
   }, [state]);
 
+  const [isDirty, setIsDirty] = useState(false);
   const { error: submitError, isFetching: isSubmitting } = useApi(
     async (api) => {
       if (synchronizedAnswers == null) {
@@ -94,10 +96,12 @@ export const Form = ({ type }: IFormProps) => {
       }
 
       if (type === FormType.ProfileForm) {
-        api.storeProfileFormAnswers(synchronizedAnswers);
+        await api.storeProfileFormAnswers(synchronizedAnswers);
       } else {
-        api.storeConfirmationFormAnswers(synchronizedAnswers);
+        await api.storeConfirmationFormAnswers(synchronizedAnswers);
       }
+
+      setIsDirty(false);
     },
     [type, synchronizedAnswers],
   );
@@ -107,13 +111,13 @@ export const Form = ({ type }: IFormProps) => {
       ...currentState,
       [questionID]: value,
     }));
+    setIsDirty(true);
   };
 
-  if (initialFetchError || submitError) {
-    const message = initialFetchError?.message ?? submitError?.message;
+  if (initialFetchError) {
     return (
       <Message error>
-        <b>Error:</b> {message}
+        <b>Error fetching form:</b> {initialFetchError.message}
       </Message>
     );
   }
@@ -159,10 +163,33 @@ export const Form = ({ type }: IFormProps) => {
       {questions}
 
       <SubmitContainer hAlignContent="right" shrink={false}>
-        <FlexView>
-          <Button primary onClick={handleSubmit} loading={isSubmitting}>
-            Submit
-          </Button>
+        <FlexView vAlignContent="center" grow>
+          <FlexView column grow>
+            {submitError && (
+              <Message error>
+                <b>Error: </b> {submitError.message}
+              </Message>
+            )}
+          </FlexView>
+
+          {!isDirty && (
+            <FlexView shrink={false}>
+              <Muted>All changes saved</Muted>
+            </FlexView>
+          )}
+
+          <FlexView width="1rem" shrink={false} />
+
+          <FlexView shrink>
+            <Button
+              primary
+              onClick={handleSubmit}
+              loading={isSubmitting}
+              disable={!isDirty}
+            >
+              Submit
+            </Button>
+          </FlexView>
         </FlexView>
       </SubmitContainer>
     </Page>
