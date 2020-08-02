@@ -18,11 +18,7 @@ const renderers: ReactMarkdown.Renderers = {
 
     return <Subsubheading>{children}</Subsubheading>;
   },
-  image: ({ src, alt }) => (
-    <FlexView vAlignContent="top" hAlignContent="center" shrink={false}>
-      <Image src={src} label={alt} />
-    </FlexView>
-  ),
+  image: ({ src, alt }) => <Image src={src} label={alt} />,
   paragraph: ({ children }) => <Text>{children}</Text>,
   root: ({ children }) => (
     <FlexView column grow>
