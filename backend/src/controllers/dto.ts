@@ -34,7 +34,7 @@ import {
 } from "../entities/settings";
 import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
-import { IForm } from "../services/application-service";
+import { IForm, IRawAnswer } from "../services/application-service";
 import { enforceExhaustiveSwitch } from "../utils/switch";
 import { IApiRequest } from "./api";
 
@@ -331,8 +331,12 @@ export class AnswerDTO {
   @IsInt()
   @Expose()
   @Transform(
-    (_, obj: Answer) => {
-      return obj.question.id;
+    (_, obj: IRawAnswer | Answer) => {
+      if (obj instanceof Answer) {
+        return obj.question.id;
+      }
+
+      return obj.questionID;
     },
     { toClassOnly: true },
   )
