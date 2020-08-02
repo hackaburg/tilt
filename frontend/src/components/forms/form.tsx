@@ -158,10 +158,12 @@ export const Form = ({ type }: IFormProps) => {
       <Heading>{title}</Heading>
       {questions}
 
-      <SubmitContainer hAlignContent="right" shrink={false}>
-        <Button primary onClick={handleSubmit} loading={isSubmitting}>
-          Submit
-        </Button>
+      <SubmitContainer hAlignContent="right">
+        <FlexView>
+          <Button primary onClick={handleSubmit} loading={isSubmitting}>
+            Submit
+          </Button>
+        </FlexView>
       </SubmitContainer>
     </Page>
   );

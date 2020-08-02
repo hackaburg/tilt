@@ -17,13 +17,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
 
   display: inline-block;
   padding: 0.75rem 2rem;
-  margin: 0rem;
-
-  ${(props) =>
-    props.fluid &&
-    `
-    width: 100%;
-  `}
+  width: 100%;
 
   border: none;
   border-radius: ${borderRadius};

@@ -105,7 +105,6 @@ export const LoginSignupForm = () => {
             loading={loginInProgress}
             disable={formInProgress}
             primary
-            fluid
           >
             Let me in
           </Button>
@@ -116,7 +115,6 @@ export const LoginSignupForm = () => {
             onClick={sendSignupRequest}
             loading={signupInProgress}
             disable={formInProgress}
-            fluid
           >
             Create my account
           </Button>
