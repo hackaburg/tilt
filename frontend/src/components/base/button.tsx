@@ -3,17 +3,10 @@ import * as React from "react";
 import { useCallback } from "react";
 import { borderRadius, transitionDuration } from "../../config";
 import { variables } from "../../theme";
+import { Spinner } from "./spinner";
 
-interface IStyledButtonProps {
-  primary?: boolean;
-  fluid?: boolean;
-  loading?: boolean;
-  disable?: boolean;
-}
-
-const StyledButton = styled.button<IStyledButtonProps>`
+const RegularButton = styled.button`
   position: relative;
-  top: 0px;
 
   display: inline-block;
   padding: 0.75rem 2rem;
@@ -36,35 +29,42 @@ const StyledButton = styled.button<IStyledButtonProps>`
   transition-duration: ${transitionDuration};
 
   ${(props) =>
-    props.disable || props.loading
+    props.disabled
       ? `
-      cursor: default;
-      opacity: 0.7;
-    `
+        cursor: default;
+        opacity: 0.7;
+      `
       : `
-      opacity: 1;
+        opacity: 1;
 
-      &:hover {
-        color: white;
-        top: -3px;
-        box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.15);
-      }
+        &:hover {
+          color: white;
+          box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.15);
+        }
     `}
-
-  ${(props: IStyledButtonProps) =>
-    props.primary &&
-    `
-    background: linear-gradient(to top right, ${variables.colorGradientStart}, ${variables.colorGradientEnd});
-  `}
 `;
 
-const Text = styled.span`
-  display: inline-block;
+const PrimaryButton = styled(RegularButton)`
+  background: linear-gradient(
+    to top right,
+    ${variables.colorGradientStart},
+    ${variables.colorGradientEnd}
+  );
 `;
 
-interface IButtonProps extends IStyledButtonProps {
+const SpinnerContainer = styled.div`
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+interface IButtonProps {
   children?: string;
   onClick?: (event: React.MouseEvent) => any;
+  disable?: boolean;
+  primary?: boolean;
+  loading?: boolean;
 }
 
 /**
@@ -72,11 +72,10 @@ interface IButtonProps extends IStyledButtonProps {
  */
 export const Button = ({
   children,
-  disable,
-  fluid,
-  loading,
   onClick,
-  primary,
+  disable = false,
+  primary = false,
+  loading = false,
 }: IButtonProps) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
@@ -87,16 +86,16 @@ export const Button = ({
     [loading, disable, onClick],
   );
 
+  const Component = primary ? PrimaryButton : RegularButton;
+
   return (
-    <StyledButton
-      primary={primary}
-      fluid={fluid}
-      loading={loading}
-      disable={disable}
-      onClick={handleClick}
-    >
-      <Text>{children}</Text>
-      {loading && "Loading"}
-    </StyledButton>
+    <Component disabled={disable || loading} onClick={handleClick}>
+      {children}
+      {loading && (
+        <SpinnerContainer>
+          <Spinner color={primary ? "black" : "white"} size={20} width={0.15} />
+        </SpinnerContainer>
+      )}
+    </Component>
   );
 };
