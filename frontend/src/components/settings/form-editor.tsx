@@ -8,6 +8,7 @@ import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import { Elevated } from "../base/elevated";
 import { Subsubheading } from "../base/headings";
+import { Muted } from "../base/muted";
 import { TextInput } from "../base/text-input";
 import { QuestionEditor } from "./question-editor";
 
@@ -22,11 +23,6 @@ const TitleEditorContainer = styled(FlexView)`
 const AddQuestionContainer = styled(FlexView)`
   padding-left: 1rem;
   padding-bottom: 1.25rem;
-`;
-
-const Muted = styled.p`
-  padding: 1rem 0rem;
-  color: #ccc;
 `;
 
 interface IFormEditorProps {
