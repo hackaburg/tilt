@@ -255,6 +255,7 @@ export const Admission = () => {
               type="checkbox"
               checked={isRowSelected}
               onClick={handleSelectRow}
+              readOnly
             />
           </TableCell>
 
