@@ -145,15 +145,14 @@ export const Admission = () => {
 
   const visibleApplications = useMemo(() => {
     const trimmedQuery = debouncedQuery.trim();
-    const applications = applicationsSortedByDate ?? [];
 
     if (trimmedQuery === "") {
-      return applications;
+      return applicationsSortedByDate;
     }
 
     const queryFields = trimmedQuery.toLowerCase().split(/(\s|,)/);
 
-    return (applicationsSortedByDate ?? []).filter(({ user: { id } }) => {
+    return applicationsSortedByDate.filter(({ user: { id } }) => {
       const { answers } = applicationsByUserID[id];
 
       return answers.some((answer) =>
