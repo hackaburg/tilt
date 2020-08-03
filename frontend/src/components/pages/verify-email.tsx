@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { Heading } from "../base/headings";
-import { Link } from "../base/link";
+import { InternalLink } from "../base/link";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
 
@@ -33,7 +33,7 @@ export const VerifyEmail = ({ location: { hash } }: IVerifyEmailProps) => {
       ) : (
         <>
           <Text>Successfully verified your email!</Text>
-          <Link to={Routes.Login}>Back to login...</Link>
+          <InternalLink to={Routes.Login}>Back to login...</InternalLink>
         </>
       )}
     </FlexView>
