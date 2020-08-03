@@ -50,9 +50,7 @@ export const Sidebar = () => {
 
         {isElevatedUser && (
           <>
-            <SidebarMenuItem to={Routes.AdmissionCenter}>
-              Admission Center
-            </SidebarMenuItem>
+            <SidebarMenuItem to={Routes.Admission}>Admission</SidebarMenuItem>
             <SidebarMenuItem to={Routes.Statistics}>Statistics</SidebarMenuItem>
           </>
         )}

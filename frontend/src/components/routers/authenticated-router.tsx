@@ -4,7 +4,7 @@ import FlexView from "react-flexview";
 import { Route, Switch } from "react-router";
 import { sidebarWidth, transitionDuration } from "../../config";
 import { Routes } from "../../routes";
-import { LazyAdmissionCenter } from "../pages/lazy-admission-center";
+import { LazyAdmission } from "../pages/lazy-admission";
 import { LazySettings } from "../pages/lazy-settings";
 import { PageNotFound } from "../pages/page-not-found";
 import { ProfileForm } from "../pages/profile-form";
@@ -43,10 +43,7 @@ export const AuthenticatedRouter = () => {
         <Switch>
           <Route path={Routes.Settings} component={LazySettings} />
           <Route path={Routes.ProfileForm} component={ProfileForm} />
-          <Route
-            path={Routes.AdmissionCenter}
-            component={LazyAdmissionCenter}
-          />
+          <Route path={Routes.Admission} component={LazyAdmission} />
           <Route component={PageNotFound} />
         </Switch>
       </FlexView>

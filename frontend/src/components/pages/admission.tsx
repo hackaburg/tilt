@@ -85,7 +85,7 @@ interface IApplicationsByUserID {
 /**
  * One table to admit them all.
  */
-export const AdmissionCenter = () => {
+export const Admission = () => {
   const { settings } = useSettingsContext();
   const questions = [
     ...settings.application.profileForm.questions,
@@ -286,7 +286,7 @@ export const AdmissionCenter = () => {
 
   return (
     <Page>
-      <Heading>Admission Center</Heading>
+      <Heading>Admission</Heading>
 
       {isFetching && <SuspenseFallback />}
       {fetchError && (
