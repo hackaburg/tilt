@@ -3,6 +3,7 @@ import {
   isLoginTokenSet,
   setLoginToken,
 } from "../authentication";
+import { Nullable } from "../state";
 import type {
   ApplicationController,
   ExtractControllerMethods,
@@ -125,6 +126,18 @@ export class ApiClient {
     body: ExtractData<TControllerMethod["takes"]>,
   ): Promise<ExtractData<TControllerMethod["returns"]>> {
     return await this.request<TControllerMethod>(url, "put", body);
+  }
+
+  /**
+   * Attempts to revive a stringified date to an actual `Date` object.
+   * @param date The date to revive
+   */
+  private reviveDate(date: Nullable<Date>): Nullable<Date> {
+    if (date == null) {
+      return null;
+    }
+
+    return new Date(date as any);
   }
 
   /**
@@ -261,8 +274,22 @@ export class ApiClient {
    * Gets all applications with users and their answers.
    */
   public async getAllApplications(): Promise<readonly ApplicationDTO[]> {
-    return await this.get<ApplicationControllerMethods["getAllApplications"]>(
-      "/application/all",
-    );
+    const response = await this.get<
+      ApplicationControllerMethods["getAllApplications"]
+    >("/application/all");
+
+    return response.map((application) => ({
+      ...application,
+      confirmationExpiresAt: this.reviveDate(
+        application.initialProfileFormSubmittedAt,
+      ),
+      initialProfileFormSubmittedAt: this.reviveDate(
+        application.confirmationExpiresAt,
+      ),
+      user: {
+        ...application.user,
+        createdAt: this.reviveDate(application.user.createdAt)!,
+      },
+    }));
   }
 }
