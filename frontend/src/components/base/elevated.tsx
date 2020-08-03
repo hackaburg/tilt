@@ -9,6 +9,7 @@ const ElevatedContainer = styled(FlexView)`
   transition-property: box-shadow;
   transition-duration: ${transitionDuration};
   background-color: white;
+  overflow: hidden;
 `;
 
 interface IElevatedProps {
