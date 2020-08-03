@@ -8,7 +8,7 @@ import { useSettingsContext } from "../../contexts/settings-context";
 import { isNameQuestion } from "../../heuristics";
 import { useApi } from "../../hooks/use-api";
 import { Nullable } from "../../state";
-import { Button } from "../base/button";
+import { Chevron } from "../base/chevron";
 import { Elevated } from "../base/elevated";
 import { Heading, Subheading } from "../base/headings";
 import { ExternalLink } from "../base/link";
@@ -67,6 +67,14 @@ const ExpandedCell = styled.td`
 
 const QuestionaireContainer = styled(FlexView)`
   padding: 1rem;
+`;
+
+const DetailsButton = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: inherit;
+  color: currentColor;
 `;
 
 interface IAnswersByQuestionID {
@@ -240,7 +248,7 @@ export const Admission = () => {
         }
 
         return (
-          <Text>
+          <Text key={String(question.id)}>
             <b>{question.title}:</b> {answer}
           </Text>
         );
@@ -259,15 +267,20 @@ export const Admission = () => {
           </TableCell>
 
           <TableCell>
+            <DetailsButton onClick={handleExpandRow}>
+              <FlexView vAlignContent="center">
+                {isRowExpanded ? "Collapse" : "Expand"}
+                <FlexView width="0.5rem" />
+                <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
+              </FlexView>
+            </DetailsButton>
+          </TableCell>
+
+          <TableCell>
             <ExternalLink to={`mailto:${email}`}>{email}</ExternalLink>
           </TableCell>
 
           <TableCell>{name}</TableCell>
-          <TableCell>
-            <Button onClick={handleExpandRow}>
-              {isRowExpanded ? "Hide details" : "Show more"}
-            </Button>
-          </TableCell>
         </TableRow>
 
         <tr>
@@ -324,10 +337,10 @@ export const Admission = () => {
           <Elevated level={1}>
             <Table>
               <colgroup>
+                <col style={{ width: "5%" }} />
                 <col style={{ width: "10%" }} />
-                <col style={{ width: "30%" }} />
-                <col style={{ width: "30%" }} />
-                <col style={{ width: "30%" }} />
+                <col style={{ width: "40%" }} />
+                <col style={{ width: "45%" }} />
               </colgroup>
 
               <TableHead>
@@ -339,9 +352,9 @@ export const Admission = () => {
                       onClick={handleSelectHeaderCheckbox}
                     />
                   </TableHeaderCell>
+                  <TableHeaderCell />
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Name</TableHeaderCell>
-                  <TableHeaderCell>Actions</TableHeaderCell>
                 </tr>
               </TableHead>
 
