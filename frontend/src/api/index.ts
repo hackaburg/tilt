@@ -262,7 +262,7 @@ export class ApiClient {
    */
   public async getAllApplications(): Promise<readonly ApplicationDTO[]> {
     return await this.get<ApplicationControllerMethods["getAllApplications"]>(
-      "/applications/all",
+      "/application/all",
     );
   }
 }
