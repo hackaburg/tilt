@@ -27,7 +27,7 @@ interface IFormFieldProps {
  * A form field.
  */
 export const FormField = ({ title, children, mandatory }: IFormFieldProps) => (
-  <FormFieldContainer column>
+  <FormFieldContainer column shrink={false}>
     <Title>
       {title}
       {mandatory && <MandatoryIndicator>*</MandatoryIndicator>}
