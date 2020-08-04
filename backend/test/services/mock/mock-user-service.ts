@@ -8,6 +8,7 @@ export const MockUserService = jest.fn(
   () =>
     new MockedService<IUserService>({
       bootstrap: jest.fn(),
+      deleteUser: jest.fn(),
       findAll: jest.fn(),
       findUserByID: jest.fn(),
       findUserByLoginToken: jest.fn(),

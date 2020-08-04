@@ -6,8 +6,9 @@ import { useDebounce } from "use-debounce";
 import { debounceDuration } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { isNameQuestion } from "../../heuristics";
-import { useApi } from "../../hooks/use-api";
+import { performApiRequest, useApi } from "../../hooks/use-api";
 import { Nullable } from "../../state";
+import { Button } from "../base/button";
 import { Chevron } from "../base/chevron";
 import { Elevated } from "../base/elevated";
 import { Heading, Subheading } from "../base/headings";
@@ -100,10 +101,12 @@ export const Admission = () => {
     ...settings.application.confirmationForm.questions,
   ];
 
-  const { isFetching, value: allApplications, error: fetchError } = useApi(
-    async (api) => api.getAllApplications(),
-    [],
-  );
+  const {
+    isFetching,
+    value: allApplications,
+    error: fetchError,
+    forcePerformRequest: reloadApplications,
+  } = useApi(async (api) => api.getAllApplications(), []);
 
   const safeApplications = allApplications ?? [];
 
@@ -254,6 +257,19 @@ export const Admission = () => {
         );
       });
 
+    const handleDeleteAccount = async () => {
+      if (!confirm(`Are you sure you want to delete ${name}'s account?`)) {
+        return;
+      }
+
+      try {
+        await performApiRequest(async (api) => api.deleteUser(id));
+        reloadApplications();
+      } catch {
+        // delete errors can be ignored
+      }
+    };
+
     return (
       <React.Fragment key={String(id)}>
         <TableRow>
@@ -287,7 +303,18 @@ export const Admission = () => {
           {isRowExpanded && (
             <ExpandedCell colSpan={4}>
               <QuestionaireContainer column grow>
-                <Subheading>{name}</Subheading>
+                <FlexView vAlignContent="center" grow>
+                  <FlexView grow>
+                    <Subheading>{name}</Subheading>
+                  </FlexView>
+
+                  <FlexView column shrink>
+                    <Button onClick={handleDeleteAccount}>
+                      Delete account
+                    </Button>
+                  </FlexView>
+                </FlexView>
+
                 {questionsAndAnswers}
               </QuestionaireContainer>
             </ExpandedCell>

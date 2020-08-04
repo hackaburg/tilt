@@ -72,6 +72,12 @@ export interface IUserService extends IService {
    * Finds all users.
    */
   findAll(): Promise<readonly User[]>;
+
+  /**
+   * Deletes the given user.
+   * @param user The user to delete
+   */
+  deleteUser(user: User): Promise<void>;
 }
 
 /**
@@ -257,5 +263,14 @@ export class UserService implements IUserService {
    */
   public async findAll(): Promise<readonly User[]> {
     return await this._users!.find();
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async deleteUser(user: User): Promise<void> {
+    await this._users!.delete({
+      id: user.id,
+    });
   }
 }

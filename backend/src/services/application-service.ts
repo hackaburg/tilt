@@ -87,6 +87,12 @@ export interface IApplicationService extends IService {
    * Gets all existing applications.
    */
   getAll(): Promise<readonly IApplication[]>;
+
+  /**
+   * Delete a user's answers.
+   * @param user The user whose answers to delete
+   */
+  deleteAnswers(user: User): Promise<void>;
 }
 
 /**
@@ -498,6 +504,17 @@ export class ApplicationService implements IApplicationService {
     );
 
     return applications;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async deleteAnswers(user: User): Promise<void> {
+    await this._answers.delete({
+      user: {
+        id: user.id,
+      },
+    });
   }
 }
 

@@ -108,7 +108,8 @@ export class ApiClient {
 
   /**
    * Sends a POST request to the given resource.
-   * @param url The resource to get
+   * @param url The resource to post
+   * @param body The body to send
    */
   private async post<TControllerMethod extends IApiMethod<any, any>>(
     url: string,
@@ -119,13 +120,24 @@ export class ApiClient {
 
   /**
    * Sends a PUT request to the given resource.
-   * @param url The resource to get
+   * @param url The resource to put
+   * @param body The body to send
    */
   private async put<TControllerMethod extends IApiMethod<any, any>>(
     url: string,
     body: ExtractData<TControllerMethod["takes"]>,
   ): Promise<ExtractData<TControllerMethod["returns"]>> {
     return await this.request<TControllerMethod>(url, "put", body);
+  }
+
+  /**
+   * Sends a DELETE request to the given resource.
+   * @param url The resource to delete
+   */
+  private async delete<TControllerMethod extends IApiMethod<any, any>>(
+    url: string,
+  ): Promise<ExtractData<TControllerMethod["returns"]>> {
+    return await this.request<TControllerMethod>(url, "delete");
   }
 
   /**
@@ -291,5 +303,13 @@ export class ApiClient {
         ),
       },
     }));
+  }
+
+  /**
+   * Deletes the user with the given id.
+   * @param userID The id of the user to delete
+   */
+  public async deleteUser(userID: number): Promise<void> {
+    await this.delete<UsersControllerMethods["deleteUser"]>(`/user/${userID}`);
   }
 }

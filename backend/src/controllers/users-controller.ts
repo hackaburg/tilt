@@ -3,15 +3,21 @@ import {
   BadRequestError,
   Body,
   CurrentUser,
+  Delete,
   Get,
   HttpCode,
   JsonController,
+  Param,
   Post,
   QueryParam,
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
+import {
+  ApplicationServiceToken,
+  IApplicationService,
+} from "../services/application-service";
 import { IUserService, UserServiceToken } from "../services/user-service";
 import {
   CredentialsRequestDTO,
@@ -28,6 +34,8 @@ import {
 export class UsersController {
   public constructor(
     @Inject(UserServiceToken) private readonly _users: IUserService,
+    @Inject(ApplicationServiceToken)
+    private readonly _applications: IApplicationService,
   ) {}
 
   /**
@@ -101,5 +109,22 @@ export class UsersController {
     response.token = this._users.generateLoginToken(user);
     response.role = user.role;
     return response;
+  }
+
+  /**
+   * Deletes the user with the given id.
+   * @param userID The id of the user to delete
+   */
+  @Delete("/:id")
+  @Authorized(UserRole.Moderator)
+  public async deleteUser(@Param("id") userID: number): Promise<void> {
+    const user = await this._users.findUserByID(userID);
+
+    if (!user) {
+      return;
+    }
+
+    await this._applications.deleteAnswers(user);
+    await this._users.deleteUser(user);
   }
 }

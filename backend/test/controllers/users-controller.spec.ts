@@ -1,17 +1,24 @@
 import { UsersController } from "../../src/controllers/users-controller";
 import { User } from "../../src/entities/user";
 import { UserRole } from "../../src/entities/user-role";
+import { IApplicationService } from "../../src/services/application-service";
 import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
+import { MockApplicationService } from "../services/mock/mock-application-service";
 import { MockUserService } from "../services/mock/mock-user-service";
 
 describe("UsersController", () => {
   let userService: MockedService<IUserService>;
+  let applicationService: MockedService<IApplicationService>;
   let controller: UsersController;
 
   beforeEach(async () => {
     userService = new MockUserService();
-    controller = new UsersController(userService.instance);
+    applicationService = new MockApplicationService();
+    controller = new UsersController(
+      userService.instance,
+      applicationService.instance,
+    );
   });
 
   it("signs up users", async () => {

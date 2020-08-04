@@ -55,3 +55,11 @@ export const useApi = <T>(
     value,
   };
 };
+
+/**
+ * Gets a result from the api without a hook.
+ * @param callback A consumer returning values from the api
+ */
+export const performApiRequest = <T>(
+  callback: (api: ApiClient) => Promise<T>,
+): Promise<T> => callback(api);
