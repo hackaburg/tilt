@@ -1,4 +1,4 @@
-import { decode } from "jsonwebtoken";
+import decode from "jwt-decode";
 
 interface ITokenContent {
   exp: number;
