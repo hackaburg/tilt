@@ -7,6 +7,7 @@ import { QuestionType } from "../../api/types/enums";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import { Elevated } from "../base/elevated";
+import { FormFieldButton } from "../base/form-field-button";
 import { Subsubheading } from "../base/headings";
 import { Muted } from "../base/muted";
 import { TextInput } from "../base/text-input";
@@ -14,15 +15,6 @@ import { QuestionEditor } from "./question-editor";
 
 const FormEditorContainer = styled(Elevated)`
   padding: 1rem;
-`;
-
-const TitleEditorContainer = styled(FlexView)`
-  padding-bottom: 1rem;
-`;
-
-const AddQuestionContainer = styled(FlexView)`
-  padding-left: 1rem;
-  padding-bottom: 1.25rem;
 `;
 
 interface IFormEditorProps {
@@ -117,22 +109,22 @@ export const FormEditor = ({
   return (
     <FormEditorContainer level={1}>
       <Subsubheading>{heading}</Subsubheading>
-
-      <TitleEditorContainer vAlignContent="bottom">
-        <FlexView column grow>
+      <FormFieldButton
+        field={
           <TextInput
             value={form.title}
             onChange={handleTitleChange}
             title="Form title"
           />
-        </FlexView>
-
-        <AddQuestionContainer column shrink>
+        }
+        button={
           <Button onClick={handleAddQuestion} primary>
             Add question
           </Button>
-        </AddQuestionContainer>
-      </TitleEditorContainer>
+        }
+      />
+
+      <FlexView height="1rem" shrink={false} />
 
       {form.questions.length === 0 && (
         <Muted>No questions yet. Go ahead and add some.</Muted>
