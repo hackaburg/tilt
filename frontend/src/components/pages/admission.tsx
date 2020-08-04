@@ -113,8 +113,8 @@ export const Admission = () => {
 
     sorted.sort(
       (a, b) =>
-        (a.initialProfileFormSubmittedAt?.getTime() ?? now) -
-        (b.initialProfileFormSubmittedAt?.getTime() ?? now),
+        (a.user.initialProfileFormSubmittedAt?.getTime() ?? now) -
+        (b.user.initialProfileFormSubmittedAt?.getTime() ?? now),
     );
 
     return sorted;

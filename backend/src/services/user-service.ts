@@ -61,6 +61,17 @@ export interface IUserService extends IService {
    * @param id The user's id
    */
   findUserByID(id: number): Promise<User | null>;
+
+  /**
+   * Updates the given user.
+   * @param user The user to update
+   */
+  updateUser(user: User): Promise<void>;
+
+  /**
+   * Finds all users.
+   */
+  findAll(): Promise<readonly User[]>;
 }
 
 /**
@@ -232,5 +243,19 @@ export class UserService implements IUserService {
     }
 
     return users[0];
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async updateUser(user: User): Promise<void> {
+    await this._users!.save(user);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async findAll(): Promise<readonly User[]> {
+    return await this._users!.find();
   }
 }

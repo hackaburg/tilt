@@ -14,7 +14,6 @@ import {
   ValidateNested,
 } from "class-validator";
 import { Answer } from "../entities/answer";
-import { Application } from "../entities/application";
 import { ApplicationSettings } from "../entities/application-settings";
 import { FormSettings } from "../entities/form-settings";
 import {
@@ -370,9 +369,6 @@ export class UserDTO {
   public isVerified!: boolean;
   @Expose()
   public role!: UserRole;
-}
-
-export class ApplicationDTO implements DTO<Application> {
   @Expose()
   public initialProfileFormSubmittedAt!: Date | null;
   @Expose()
@@ -381,6 +377,9 @@ export class ApplicationDTO implements DTO<Application> {
   public admitted!: boolean;
   @Expose()
   public confirmed!: boolean;
+}
+
+export class ApplicationDTO {
   @Expose()
   @Type(() => UserDTO)
   public user!: UserDTO;

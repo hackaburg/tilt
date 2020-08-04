@@ -23,6 +23,14 @@ export class User {
   public verifyToken!: string;
   @Column()
   public role!: UserRole;
+  @Column({ default: null, type: "datetime" })
+  public initialProfileFormSubmittedAt!: Date | null;
+  @Column({ default: null, type: "datetime" })
+  public confirmationExpiresAt!: Date | null;
+  @Column({ default: false })
+  public admitted!: boolean;
+  @Column({ default: false })
+  public confirmed!: boolean;
 }
 
 /**

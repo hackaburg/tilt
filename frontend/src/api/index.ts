@@ -280,15 +280,15 @@ export class ApiClient {
 
     return response.map((application) => ({
       ...application,
-      confirmationExpiresAt: this.reviveDate(
-        application.initialProfileFormSubmittedAt,
-      ),
-      initialProfileFormSubmittedAt: this.reviveDate(
-        application.confirmationExpiresAt,
-      ),
       user: {
         ...application.user,
+        confirmationExpiresAt: this.reviveDate(
+          application.user.initialProfileFormSubmittedAt,
+        ),
         createdAt: this.reviveDate(application.user.createdAt)!,
+        initialProfileFormSubmittedAt: this.reviveDate(
+          application.user.confirmationExpiresAt,
+        ),
       },
     }));
   }

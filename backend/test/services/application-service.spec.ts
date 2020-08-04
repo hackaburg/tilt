@@ -21,6 +21,7 @@ import {
 } from "../../src/services/settings-service";
 import { TestDatabaseService } from "./mock/mock-database-service";
 import { MockLoggerService } from "./mock/mock-logger-service";
+import { MockUserService } from "./mock/mock-user-service";
 
 describe(ApplicationService.name, () => {
   let service: IApplicationService;
@@ -110,7 +111,14 @@ describe(ApplicationService.name, () => {
     settings = new SettingsService(database, logger.instance);
     await settings.bootstrap();
 
-    service = new ApplicationService(questionGraph, database, settings);
+    const users = new MockUserService();
+
+    service = new ApplicationService(
+      questionGraph,
+      database,
+      settings,
+      users.instance,
+    );
     await service.bootstrap();
   });
 
@@ -598,5 +606,38 @@ describe(ApplicationService.name, () => {
     await expect(
       service.storeConfirmationFormAnswers(user, []),
     ).rejects.toBeDefined();
+  });
+
+  it("returns answers to answered questions", async () => {
+    expect.assertions(3);
+
+    const temporarySettings = await settings.getSettings();
+    temporarySettings.application.allowProfileFormFrom = todayLastWeek;
+    temporarySettings.application.allowProfileFormUntil = todayNextWeek;
+    temporarySettings.application.profileForm.questions = [
+      createTextQuestion(),
+      createTextQuestion(),
+    ];
+    await settings.updateSettings(temporarySettings);
+
+    const updatedSettings = await settings.getSettings();
+    const value1 = "foo";
+    const value2 = "bar";
+    await service.storeProfileFormAnswers(user, [
+      {
+        questionID: updatedSettings.application.profileForm.questions[0].id,
+        value: value1,
+      },
+      {
+        questionID: updatedSettings.application.profileForm.questions[1].id,
+        value: value2,
+      },
+    ]);
+
+    const { answers } = await service.getProfileForm(user);
+
+    expect(answers).toHaveLength(2);
+    expect(answers[0].value).toBe(value1);
+    expect(answers[1].value).toBe(value2);
   });
 });

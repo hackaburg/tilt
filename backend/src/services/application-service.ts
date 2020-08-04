@@ -2,7 +2,6 @@ import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
 import { Answer } from "../entities/answer";
-import { Application } from "../entities/application";
 import { Question } from "../entities/question";
 import { QuestionType } from "../entities/question-type";
 import { User } from "../entities/user";
@@ -14,6 +13,7 @@ import {
   QuestionGraphServiceToken,
 } from "./question-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
+import { IUserService, UserServiceToken } from "./user-service";
 
 /**
  * A form containing questions and given answers.
@@ -29,6 +29,14 @@ export interface IForm {
 export interface IRawAnswer {
   questionID: number;
   value: string;
+}
+
+/**
+ * An application for a user and their answers.
+ */
+export interface IApplication {
+  user: User;
+  answers: readonly Answer[];
 }
 
 /**
@@ -78,7 +86,7 @@ export interface IApplicationService extends IService {
   /**
    * Gets all existing applications.
    */
-  getAll(): Promise<readonly Application[]>;
+  getAll(): Promise<readonly IApplication[]>;
 }
 
 /**
@@ -88,20 +96,21 @@ export const ApplicationServiceToken = new Token<IApplicationService>();
 
 @Service(ApplicationServiceToken)
 export class ApplicationService implements IApplicationService {
-  private _applications!: Repository<Application>;
+  private _answers!: Repository<Answer>;
 
   constructor(
     @Inject(QuestionGraphServiceToken)
     private readonly _graph: IQuestionGraphService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
+    @Inject(UserServiceToken) private readonly _users: IUserService,
   ) {}
 
   /**
    * @inheritdoc
    */
   public async bootstrap(): Promise<void> {
-    this._applications = this._database.getRepository(Application);
+    this._answers = this._database.getRepository(Answer);
   }
 
   /**
@@ -158,59 +167,21 @@ export class ApplicationService implements IApplicationService {
   }
 
   /**
-   * Finds the existing application of a user or `null`.
-   * @param user The user requesting their application
-   */
-  private async findExistingApplication(
-    user: User,
-  ): Promise<Application | null> {
-    const application = await this._applications.findOne({
-      where: {
-        user: {
-          id: user.id,
-        },
-      },
-    });
-
-    if (!application) {
-      return null;
-    }
-
-    return application;
-  }
-
-  /**
-   * Finds an existing application or creates a new one.
-   * @param user A user applying here
-   */
-  private async findOrCreateApplication(user: User): Promise<Application> {
-    const existingApplication = await this.findExistingApplication(user);
-
-    if (existingApplication == null) {
-      const application = new Application();
-      application.user = user;
-      application.answers = [];
-
-      return await this._applications.save(application);
-    }
-
-    return existingApplication;
-  }
-
-  /**
    * Resolves the given raw answers from the user to either existing @see Answer
    * entities or creates fresh ones.
-   * @param application The user's application
+   * @param user The user giving the answers
+   * @param existingAnswers The user's already given answers
    * @param questionGraph The question graph for the user's current form
    * @param rawAnswers The answers provided by the user
    */
   private resolveAnswersToEntities(
-    application: Application,
+    user: User,
+    existingAnswers: readonly Answer[],
     questionGraph: QuestionGraph,
     rawAnswers: readonly IRawAnswer[],
   ): readonly Answer[] {
     return rawAnswers.map((rawAnswer) => {
-      const existingAnswer = application.answers.find(
+      const existingAnswer = existingAnswers.find(
         ({ question: { id } }) => rawAnswer.questionID === id,
       );
 
@@ -221,6 +192,7 @@ export class ApplicationService implements IApplicationService {
 
       const answer = new Answer();
       answer.value = rawAnswer.value;
+      answer.user = user;
 
       const node = questionGraph.get(rawAnswer.questionID);
 
@@ -236,12 +208,12 @@ export class ApplicationService implements IApplicationService {
 
   /**
    * Replaces a user's answers to a given set of questions.
-   * @param application The user's application
+   * @param user The user giving the answers
    * @param questions A set of questions the user should answer
    * @param givenAnswers The user's new answers for these questions
    */
   private async replaceAnswers(
-    application: Application,
+    user: User,
     questions: readonly Question[],
     givenAnswers: readonly IRawAnswer[],
   ) {
@@ -250,8 +222,10 @@ export class ApplicationService implements IApplicationService {
       ({ parentNode }) => parentNode == null,
     );
 
+    const existingAnswers = await this.findAllExistingAnswers(user);
     const answers = this.resolveAnswersToEntities(
-      application,
+      user,
+      existingAnswers,
       questionGraph,
       givenAnswers,
     );
@@ -334,8 +308,19 @@ export class ApplicationService implements IApplicationService {
       }
     }
 
-    application.answers = modifiedAnswers;
-    await this._applications.save(application);
+    await this._answers.save(modifiedAnswers);
+  }
+
+  /**
+   * Finds all answers for the given user.
+   * @param user A user whose answers we want to get
+   */
+  private async findAllExistingAnswers(user: User): Promise<Answer[]> {
+    return await this._answers.find({
+      user: {
+        id: user.id,
+      },
+    });
   }
 
   /**
@@ -343,17 +328,16 @@ export class ApplicationService implements IApplicationService {
    */
   public async getProfileForm(user: User): Promise<IForm> {
     const settings = await this._settings.getSettings();
-    const application = await this.findOrCreateApplication(user);
 
     const questions = settings.application.profileForm.questions.filter(
       ({ createdAt }) =>
-        application.initialProfileFormSubmittedAt == null ||
-        createdAt.getTime() <=
-          application.initialProfileFormSubmittedAt.getTime(),
+        user.initialProfileFormSubmittedAt == null ||
+        createdAt.getTime() <= user.initialProfileFormSubmittedAt.getTime(),
     );
 
     const questionIDs = questions.map(({ id }) => id);
-    const answers = application.answers.filter(({ question: { id } }) =>
+    const allAnswers = await this.findAllExistingAnswers(user);
+    const answers = allAnswers.filter(({ question: { id } }) =>
       questionIDs.includes(id),
     );
 
@@ -387,13 +371,12 @@ export class ApplicationService implements IApplicationService {
     }
 
     const questions = settings.application.profileForm.questions;
-    const application = await this.findOrCreateApplication(user);
 
-    await this.replaceAnswers(application, questions, answers);
+    await this.replaceAnswers(user, questions, answers);
 
-    if (application.initialProfileFormSubmittedAt == null) {
-      application.initialProfileFormSubmittedAt = new Date();
-      await this._applications.save(application);
+    if (user.initialProfileFormSubmittedAt == null) {
+      user.initialProfileFormSubmittedAt = new Date();
+      await this._users.updateUser(user);
     }
   }
 
@@ -402,20 +385,15 @@ export class ApplicationService implements IApplicationService {
    */
   public async admit(user: User): Promise<void> {
     const settings = await this._settings.getSettings();
-    const application = await this.findExistingApplication(user);
-
-    if (application == null) {
-      throw new ProfileFormNotSubmittedError();
-    }
 
     const now = Date.now();
-    application.confirmationExpiresAt = new Date(
+    user.confirmationExpiresAt = new Date(
       now + settings.application.hoursToConfirm * 60 * 1000,
     );
 
-    application.admitted = true;
+    user.admitted = true;
 
-    await this._applications.save(application);
+    await this._users.updateUser(user);
   }
 
   /**
@@ -423,16 +401,14 @@ export class ApplicationService implements IApplicationService {
    */
   public async getConfirmationForm(user: User): Promise<IForm> {
     const settings = await this._settings.getSettings();
-    const application = await this.findExistingApplication(user);
 
-    if (application == null || application.confirmationExpiresAt == null) {
+    if (user.confirmationExpiresAt == null) {
       throw new NotAdmittedError();
     }
 
     const skippedProfileQuestions = settings.application.profileForm.questions.filter(
       ({ createdAt }) =>
-        createdAt.getTime() >
-        application.initialProfileFormSubmittedAt!.getTime(),
+        createdAt.getTime() > user.initialProfileFormSubmittedAt!.getTime(),
     );
 
     try {
@@ -459,7 +435,8 @@ export class ApplicationService implements IApplicationService {
     ];
 
     const questionIDs = questions.map(({ id }) => id);
-    const answers = application.answers.filter(({ question: { id } }) =>
+    const allAnswers = await this.findAllExistingAnswers(user);
+    const answers = allAnswers.filter(({ question: { id } }) =>
       questionIDs.includes(id),
     );
 
@@ -476,36 +453,51 @@ export class ApplicationService implements IApplicationService {
     user: User,
     answers: readonly IRawAnswer[],
   ): Promise<void> {
-    const application = await this.findExistingApplication(user);
-
-    if (application == null || application.confirmationExpiresAt == null) {
+    if (user.confirmationExpiresAt == null) {
       throw new NotAdmittedError();
     }
 
-    const isAfterDeadline =
-      application.confirmationExpiresAt.getTime() < Date.now();
+    const isAfterDeadline = user.confirmationExpiresAt.getTime() < Date.now();
 
     if (isAfterDeadline) {
-      throw new ConfirmationDeadlineFailedError(
-        application.confirmationExpiresAt,
-      );
+      throw new ConfirmationDeadlineFailedError(user.confirmationExpiresAt);
     }
 
     const { questions } = await this.getConfirmationForm(user);
 
-    await this.replaceAnswers(application, questions, answers);
+    await this.replaceAnswers(user, questions, answers);
 
-    if (!application.confirmed) {
-      application.confirmed = true;
-      await this._applications.save(application);
+    if (!user.confirmed) {
+      user.confirmed = true;
+      await this._users.updateUser(user);
     }
   }
 
   /**
    * @inheritdoc
    */
-  public async getAll(): Promise<readonly Application[]> {
-    return this._applications.find();
+  public async getAll(): Promise<readonly IApplication[]> {
+    const allAnswers = await this._answers.find();
+    const allUsers = await this._users.findAll();
+
+    const answersByUserID = new Map<User["id"], Answer[]>();
+
+    for (const answer of allAnswers) {
+      const answers = answersByUserID.get(answer.user.id) ?? [];
+      answers.push(answer);
+      answersByUserID.set(answer.user.id, answers);
+    }
+
+    const applications = allUsers.map<IApplication>((user) => ({
+      answers: answersByUserID.get(user.id) ?? [],
+      user,
+    }));
+
+    applications.sort(
+      (a, b) => a.user.createdAt.getTime() - b.user.createdAt.getTime(),
+    );
+
+    return applications;
   }
 }
 
