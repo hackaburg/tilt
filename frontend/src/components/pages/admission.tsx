@@ -260,6 +260,7 @@ export const Admission = () => {
   ).length;
 
   const allVisibleSelected =
+    visibleApplications.length > 0 &&
     visibleApplicationsSelectedCount === visibleApplications.length;
   const noVisibleSelected = visibleApplicationsSelectedCount === 0;
   const someVisibleSelected = !allVisibleSelected && !noVisibleSelected;
