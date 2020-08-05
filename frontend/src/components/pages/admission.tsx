@@ -46,14 +46,17 @@ const TableHeaderCell = styled.th`
   }
 `;
 
-const TableRow = styled.tr`
-  :nth-of-type(4n - 1) {
-    background-color: #f7f7f7;
-  }
+const TableRow = styled.tr``;
+const AdmittedRow = styled.tr`
+  background-color: #fefacc;
+`;
 
-  :hover {
-    background-color: #efefef;
-  }
+const ConfirmedRow = styled.tr`
+  background-color: #d1f8bf;
+`;
+
+const ExpiredConfirmationRow = styled.tr`
+  background-color: #ff9090;
 `;
 
 const TableCell = styled.td`
@@ -251,6 +254,8 @@ export const Admission = () => {
         createdAt,
         initialProfileFormSubmittedAt,
         confirmationExpiresAt,
+        admitted,
+        confirmed,
       },
     }) => {
       const name =
@@ -355,9 +360,22 @@ export const Admission = () => {
         }
       };
 
+      let RowComponent = TableRow;
+
+      if (confirmed) {
+        RowComponent = ConfirmedRow;
+      } else if (
+        confirmationExpiresAt != null &&
+        confirmationExpiresAt.getTime() < Date.now()
+      ) {
+        RowComponent = ExpiredConfirmationRow;
+      } else if (admitted) {
+        RowComponent = AdmittedRow;
+      }
+
       return (
         <React.Fragment key={String(id)}>
-          <TableRow>
+          <RowComponent>
             <TableCell align="center">
               <input
                 type="checkbox"
@@ -382,7 +400,7 @@ export const Admission = () => {
             </TableCell>
 
             <TableCell>{name}</TableCell>
-          </TableRow>
+          </RowComponent>
 
           <tr>
             {isRowExpanded && (
