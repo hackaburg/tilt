@@ -10,6 +10,6 @@ export class Answer {
   public user!: User;
   @ManyToOne(() => Question, { eager: true })
   public question!: Question;
-  @Column()
+  @Column({ length: 1024 })
   public value!: string;
 }

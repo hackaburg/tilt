@@ -74,7 +74,7 @@ export const TextInput = ({
 
     onChange: useCallback(
       (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const changedValue = event.target.value;
+        const changedValue = event.target.value.substr(0, 1024);
 
         if (type === TextInputType.Number) {
           const parsedValue = Number(changedValue);
