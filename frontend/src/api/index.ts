@@ -251,13 +251,13 @@ export class ApiClient {
   }
 
   /**
-   * Admits the given user.
-   * @param userID The user to admit
+   * Admits the given users.
+   * @param userIDs The users to admit
    */
-  public async admit(userID: number): Promise<void> {
+  public async admit(userIDs: readonly number[]): Promise<void> {
     return await this.put<ApplicationControllerMethods["admit"]>(
-      `/application/admit/${userID}`,
-      null as never,
+      "/application/admit",
+      userIDs,
     );
   }
 

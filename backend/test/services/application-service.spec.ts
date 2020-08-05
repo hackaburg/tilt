@@ -508,7 +508,7 @@ describe(ApplicationService.name, () => {
     await expect(service.getConfirmationForm(user)).rejects.toBeDefined();
 
     await service.storeProfileFormAnswers(user, []);
-    await service.admit(user);
+    await service.admit([user]);
 
     await expect(service.getConfirmationForm(user)).resolves.toBeDefined();
   });
@@ -530,7 +530,7 @@ describe(ApplicationService.name, () => {
     // no need for question ids, since neither are mandatory
     await service.storeProfileFormAnswers(user, []);
 
-    await service.admit(user);
+    await service.admit([user]);
     const { questions } = await service.getConfirmationForm(user);
 
     expect(questions).toHaveLength(1);
@@ -555,7 +555,7 @@ describe(ApplicationService.name, () => {
 
     await patchSettingsServiceToReturnProfileFormQuestionsFromTheFuture();
 
-    await service.admit(user);
+    await service.admit([user]);
     const { questions } = await service.getConfirmationForm(user);
 
     expect(questions).toHaveLength(2);
@@ -583,7 +583,7 @@ describe(ApplicationService.name, () => {
       service.storeConfirmationFormAnswers(user, []),
     ).rejects.toBeDefined();
 
-    await service.admit(user);
+    await service.admit([user]);
 
     await expect(
       service.storeConfirmationFormAnswers(user, []),
@@ -601,7 +601,7 @@ describe(ApplicationService.name, () => {
     await settings.updateSettings(temporarySettings);
 
     await service.storeProfileFormAnswers(user, []);
-    await service.admit(user);
+    await service.admit([user]);
 
     await expect(
       service.storeConfirmationFormAnswers(user, []),

@@ -118,7 +118,7 @@ export class UsersController {
   @Delete("/:id")
   @Authorized(UserRole.Moderator)
   public async deleteUser(@Param("id") userID: number): Promise<void> {
-    const user = await this._users.findUserByID(userID);
+    const [user] = await this._users.findUsersByIDs([userID]);
 
     if (!user) {
       return;

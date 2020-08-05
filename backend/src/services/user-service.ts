@@ -57,16 +57,24 @@ export interface IUserService extends IService {
   ): Promise<User | undefined>;
 
   /**
-   * Finds a user by their id.
-   * @param id The user's id
+   * Finds users by their ids.
+   * @param userIDs The users' id
    */
-  findUserByID(id: number): Promise<User | null>;
+  findUsersByIDs(
+    userIDs: readonly number[],
+  ): Promise<ReadonlyArray<User | null>>;
 
   /**
    * Updates the given user.
    * @param user The user to update
    */
   updateUser(user: User): Promise<void>;
+
+  /**
+   * Updates all given users.
+   * @param users The users to update
+   */
+  updateUsers(users: readonly User[]): Promise<void>;
 
   /**
    * Finds all users.
@@ -241,14 +249,11 @@ export class UserService implements IUserService {
   /**
    * @inheritdoc
    */
-  public async findUserByID(id: number): Promise<User | null> {
-    const users = await this._users!.findByIds([id]);
-
-    if (users.length === 0) {
-      return null;
-    }
-
-    return users[0];
+  public async findUsersByIDs(
+    userIDs: readonly number[],
+  ): Promise<ReadonlyArray<User | null>> {
+    const users = await this._users!.findByIds(userIDs as number[]);
+    return users.map((user) => user ?? null);
   }
 
   /**
@@ -256,6 +261,13 @@ export class UserService implements IUserService {
    */
   public async updateUser(user: User): Promise<void> {
     await this._users!.save(user);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async updateUsers(users: readonly User[]): Promise<void> {
+    await this._users!.save(users as User[]);
   }
 
   /**

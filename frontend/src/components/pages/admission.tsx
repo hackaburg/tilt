@@ -11,6 +11,7 @@ import { Nullable } from "../../state";
 import { Button } from "../base/button";
 import { Chevron } from "../base/chevron";
 import { Elevated } from "../base/elevated";
+import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
 import { ExternalLink } from "../base/link";
 import { Message } from "../base/message";
@@ -85,6 +86,7 @@ interface IAnswersByQuestionID {
 interface IUserApplication {
   answersByQuestionID: IAnswersByQuestionID;
   answers: string[];
+  email: string;
 }
 
 interface IApplicationsByUserID {
@@ -136,14 +138,14 @@ export const Admission = () => {
           {},
         );
 
+        const email = application.user.email;
+
         return {
           ...accumulatedApplicationsByUserID,
           [application.user.id]: {
-            answers: [
-              ...Object.values(answersByQuestionID),
-              application.user.email,
-            ],
+            answers: [...Object.values(answersByQuestionID), email],
             answersByQuestionID,
+            email,
           },
         };
       },
@@ -206,6 +208,33 @@ export const Admission = () => {
       return [...set];
     });
   }, [allVisibleSelected, visibleApplications]);
+
+  const {
+    error: admitError,
+    isFetching: isAdmitting,
+    forcePerformRequest: admit,
+  } = useApi(
+    async (api, wasForced) => {
+      if (wasForced) {
+        const applicationList = selectedRowIDs
+          .map((id) => `- ${applicationsByUserID[id].email}`)
+          .join("\n");
+
+        const confirmed = confirm(
+          `Are you sure you want to admit the following ${selectedRowIDs.length} application(s):\n\n${applicationList}\n\nThis will send out admission emails, which you can't undo.`,
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        await api.admit(selectedRowIDs);
+        setSelectedRowIDs([]);
+        reloadApplications();
+      }
+    },
+    [selectedRowIDs, reloadApplications],
+  );
 
   if (headerCheckboxRef.current) {
     headerCheckboxRef.current.checked = allVisibleSelected;
@@ -324,14 +353,16 @@ export const Admission = () => {
     );
   });
 
+  const error = fetchError ?? admitError;
+
   return (
     <Page>
       <Heading>Admission</Heading>
 
       {isFetching && <SuspenseFallback />}
-      {fetchError && (
+      {error && (
         <Message error>
-          <b>Error:</b> {fetchError.message}
+          <b>Error:</b> {error.message}
         </Message>
       )}
 
@@ -351,12 +382,26 @@ export const Admission = () => {
         <Muted>No applications found</Muted>
       ) : (
         <FlexView column grow>
-          <TextInput
-            autoFocus
-            placeholder="search for anything somebody might've answered"
-            value={query}
-            onChange={setQuery}
-            title="Search applications"
+          <FormFieldButton
+            field={
+              <TextInput
+                autoFocus
+                placeholder="search for anything somebody might've answered"
+                value={query}
+                onChange={setQuery}
+                title="Search applications"
+              />
+            }
+            button={
+              <Button
+                disable={selectedRowIDs.length === 0}
+                loading={isAdmitting}
+                onClick={admit}
+                primary
+              >
+                Admit
+              </Button>
+            }
           />
 
           <FlexView height="1rem" />

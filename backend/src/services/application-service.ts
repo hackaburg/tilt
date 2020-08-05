@@ -60,10 +60,10 @@ export interface IApplicationService extends IService {
   ): Promise<void>;
 
   /**
-   * Admits the given user.
-   * @param user The user to admit
+   * Admits the given users.
+   * @param users The users to admit
    */
-  admit(user: User): Promise<void>;
+  admit(users: readonly User[]): Promise<void>;
 
   /**
    * Gets the confirmation form with the user's previously given answers. This
@@ -389,17 +389,19 @@ export class ApplicationService implements IApplicationService {
   /**
    * @inheritdoc
    */
-  public async admit(user: User): Promise<void> {
+  public async admit(users: readonly User[]): Promise<void> {
     const settings = await this._settings.getSettings();
-
     const now = Date.now();
-    user.confirmationExpiresAt = new Date(
-      now + settings.application.hoursToConfirm * 60 * 1000,
-    );
 
-    user.admitted = true;
+    for (const user of users) {
+      user.confirmationExpiresAt = new Date(
+        now + settings.application.hoursToConfirm * 60 * 1000,
+      );
 
-    await this._users.updateUser(user);
+      user.admitted = true;
+    }
+
+    await this._users.updateUsers(users);
   }
 
   /**

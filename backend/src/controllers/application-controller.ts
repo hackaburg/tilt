@@ -7,7 +7,6 @@ import {
   JsonController,
   NotAcceptableError,
   NotFoundError,
-  Param,
   Post,
   Put,
 } from "routing-controllers";
@@ -33,6 +32,7 @@ import {
   ApplicationDTO,
   convertBetweenEntityAndDTO,
   FormDTO,
+  IDsRequestDTO,
   QuestionDTO,
   StoreAnswersRequestDTO,
 } from "./dto";
@@ -131,19 +131,22 @@ export class ApplicationController {
   }
 
   /**
-   * Admits a user.
+   * Admits a list of users.
    */
-  @Put("/admit/:id")
+  @Put("/admit")
   @Authorized(UserRole.Moderator)
-  public async admit(@Param("id") userID: number): Promise<void> {
-    const user = await this._users.findUserByID(userID);
+  public async admit(@Body() { data: userIDs }: IDsRequestDTO): Promise<void> {
+    const users = await this._users.findUsersByIDs(userIDs);
+    const firstMissingIndex = users.findIndex((user) => user == null);
 
-    if (!user) {
-      throw new NotFoundError(`no user with id ${userID} found`);
+    if (firstMissingIndex !== -1) {
+      throw new NotFoundError(
+        `no user with id ${userIDs[firstMissingIndex]} found`,
+      );
     }
 
     try {
-      await this._application.admit(user);
+      await this._application.admit(users as readonly User[]);
     } catch (error) {
       throw this.convertErrorToHTTP(error);
     }

@@ -249,8 +249,8 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const user = await userService.signup(email, "password");
-    const result = await userService.findUserByID(user.id);
+    const result = await userService.findUsersByIDs([user.id]);
 
-    expect(result?.email).toBe(user.email);
+    expect(result[0]?.email).toBe(user.email);
   });
 });

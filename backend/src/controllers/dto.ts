@@ -387,3 +387,8 @@ export class ApplicationDTO {
   @Type(() => AnswerDTO)
   public answers!: AnswerDTO[];
 }
+
+export class IDsRequestDTO implements IApiRequest<readonly number[]> {
+  @IsInt({ each: true })
+  public data!: readonly number[];
+}
