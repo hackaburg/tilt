@@ -3,8 +3,8 @@ import * as React from "react";
 import { useCallback } from "react";
 import FlexView from "react-flexview";
 import { EmailSettingsDTO } from "../../api/types/dto";
-import { borderRadius } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
+import { Code } from "../base/code";
 import { Message } from "../base/message";
 import { Placeholder } from "../base/placeholder";
 import { Text } from "../base/text";
@@ -14,15 +14,6 @@ import { SettingsSection } from "./settings-section";
 
 const EmailTemplateEditorContainer = styled(FlexView)`
   padding-top: 1rem;
-`;
-
-const Code = styled.span`
-  padding: 0.1rem 0.2rem;
-  font-family: Monaco, Consolata, Inconsolata, monospace;
-  font-size: 0.75rem;
-  background-color: #f7f7f7;
-  border: 1px solid #eee;
-  border-radius: ${borderRadius};
 `;
 
 /**
