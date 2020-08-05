@@ -3,6 +3,7 @@ import * as React from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import FlexView from "react-flexview";
 import { useDebounce } from "use-debounce";
+import { QuestionType } from "../../api/types/enums";
 import { debounceDuration } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { isNameQuestion } from "../../heuristics";
@@ -273,16 +274,55 @@ export const Admission = () => {
     const questionsAndAnswers =
       isRowExpanded &&
       questions.map((question) => {
-        const answer = answersByQuestionID[question.id!];
+        const answerValue = answersByQuestionID[question.id!];
 
-        if (answer == null) {
+        if (answerValue == null) {
           return;
         }
 
+        let answer: FlexView.Props["children"] = <Text>{answerValue}</Text>;
+
+        if (question.configuration.type === QuestionType.Text) {
+          if (question.configuration.convertAnswerToUrl) {
+            const url = /^https?:\/\//.test(answerValue)
+              ? answerValue
+              : `http://${answerValue}`;
+            answer = (
+              <Text>
+                <ExternalLink to={url}>{url}</ExternalLink>
+              </Text>
+            );
+          } else if (question.configuration.multiline) {
+            answer = answerValue
+              .trim()
+              .split("\n")
+              .filter((line) => line.length > 0)
+              .map((line, index) => (
+                <Text key={`${line}-${index}`}>{line}</Text>
+              ));
+          }
+        } else if (question.configuration.type === QuestionType.Choices) {
+          const choices = answerValue
+            .split(",")
+            .map((choice, index) => (
+              <li key={`${choice}-${index}`}>{choice}</li>
+            ));
+
+          answer = <ul>{choices}</ul>;
+        }
+
         return (
-          <Text key={String(question.id)}>
-            <b>{question.title}:</b> {answer}
-          </Text>
+          <FlexView key={String(question.id)} vAlignContent="top">
+            <FlexView shrink>
+              <Text>
+                <b>{question.title}</b>
+              </Text>
+            </FlexView>
+            <FlexView width="1rem" shrink={false} />
+            <FlexView grow column>
+              {answer}
+            </FlexView>
+          </FlexView>
         );
       });
 
