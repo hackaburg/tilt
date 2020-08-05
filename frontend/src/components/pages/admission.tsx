@@ -9,9 +9,10 @@ import { useSettingsContext } from "../../contexts/settings-context";
 import { isNameQuestion } from "../../heuristics";
 import { performApiRequest, useApi } from "../../hooks/use-api";
 import { Nullable } from "../../state";
-import { dateToString } from "../../util";
+import { dateToString, filterSplit } from "../../util";
 import { Button } from "../base/button";
 import { Chevron } from "../base/chevron";
+import { Code } from "../base/code";
 import { Elevated } from "../base/elevated";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
@@ -90,12 +91,25 @@ interface IAnswersByQuestionID {
 
 interface IUserApplication {
   answersByQuestionID: IAnswersByQuestionID;
-  answers: string[];
+  concatinatedAnswers: string;
   email: string;
 }
 
 interface IApplicationsByUserID {
   [userID: number]: IUserApplication;
+}
+
+/**
+ * Describes the type of a filter.
+ */
+const enum FilterType {
+  Is,
+  Not,
+}
+
+interface IFilter {
+  type: FilterType;
+  field: string;
 }
 
 /**
@@ -148,8 +162,10 @@ export const Admission = () => {
         return {
           ...accumulatedApplicationsByUserID,
           [application.user.id]: {
-            answers: [...Object.values(answersByQuestionID), email],
             answersByQuestionID,
+            concatinatedAnswers: [...Object.values(answersByQuestionID), email]
+              .join(" ")
+              .toLowerCase(),
             email,
           },
         };
@@ -162,23 +178,76 @@ export const Admission = () => {
   const [debouncedQuery] = useDebounce(query, debounceDuration);
 
   const visibleApplications = useMemo(() => {
-    const trimmedQuery = debouncedQuery.trim();
+    const allFilters = debouncedQuery
+      .trim()
+      .toLowerCase()
+      .split(/(\s|,)/)
+      .filter((filter) => filter.trim().length > 0);
 
-    if (trimmedQuery === "") {
+    if (allFilters.length === 0) {
       return applicationsSortedByDate;
     }
 
-    const queryFields = trimmedQuery.toLowerCase().split(/(\s|,)/);
+    const [specialFilters, exactFilters] = filterSplit(allFilters, (filter) =>
+      /^(is|not):/.test(filter),
+    );
+    const compiledFilters = specialFilters.map<IFilter>((filter) => {
+      const groups = filter.match(/(is|not):(.*)/)!;
 
-    return applicationsSortedByDate.filter(({ user: { id } }) => {
-      const { answers } = applicationsByUserID[id];
-
-      return answers.some((answer) =>
-        queryFields.some((queryField) =>
-          answer.toLowerCase().includes(queryField),
-        ),
-      );
+      return {
+        field: groups[2],
+        type: groups[1] === "is" ? FilterType.Is : FilterType.Not,
+      };
     });
+
+    return applicationsSortedByDate.filter(
+      ({ user: { id, admitted, confirmed, confirmationExpiresAt } }) => {
+        const { concatinatedAnswers } = applicationsByUserID[id];
+
+        const matchesSpecialFilters =
+          compiledFilters.length === 0 ||
+          compiledFilters.every(({ field, type }) => {
+            switch (field) {
+              case "admitted":
+                if (type === FilterType.Is) {
+                  return admitted;
+                } else {
+                  return !admitted;
+                }
+
+              case "confirmed":
+                if (type === FilterType.Is) {
+                  return confirmed;
+                } else {
+                  return !confirmed;
+                }
+
+              case "expired":
+                const isExpired =
+                  confirmationExpiresAt != null &&
+                  confirmationExpiresAt.getTime() < Date.now();
+
+                if (type === FilterType.Is) {
+                  return isExpired;
+                } else {
+                  return !isExpired;
+                }
+            }
+
+            return false;
+          });
+
+        if (!matchesSpecialFilters) {
+          return false;
+        }
+
+        const matchesExactFilters =
+          exactFilters.length === 0 ||
+          exactFilters.every((filter) => concatinatedAnswers.includes(filter));
+
+        return matchesExactFilters;
+      },
+    );
   }, [debouncedQuery, applicationsSortedByDate, applicationsByUserID]);
 
   const probableNameQuestion = questions.find(isNameQuestion);
@@ -477,6 +546,16 @@ export const Admission = () => {
           </ul>
         </Message>
       )}
+
+      <Text>
+        You can search for applications in the table below and admit multiple
+        users at once. The below search bar will search all answers that match
+        all space-separated filters provided, and also supports special filters
+        such as <Code>is:admitted</Code>, <Code>not:confirmed</Code> and{" "}
+        <Code>is:expired</Code>. You can exchange <Code>is</Code> and{" "}
+        <Code>not</Code> freely, however these three fields are the only
+        available special filters.
+      </Text>
 
       {allApplications == null ? (
         <Muted>No applications found</Muted>

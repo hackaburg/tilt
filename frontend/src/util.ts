@@ -66,3 +66,30 @@ export const dateToString = (date: Date) =>
 export type PublicFields<T> = {
   [K in keyof T]: T[K];
 };
+
+/**
+ * Splits an array based on a filter function. The first returned value includes
+ * items matching the predicate and the second returned value resembles the rest.
+ * @param array The array to filter
+ * @param predicate A function to call on each item to check whether it should be included
+ */
+export const filterSplit = <T>(
+  array: readonly T[],
+  predicate: (value: T, index: number) => boolean,
+): [readonly T[], readonly T[]] => {
+  const matches = [] as T[];
+  const rest = [] as T[];
+
+  for (let index = 0; index < array.length; index++) {
+    const value = array[index];
+    const isMatch = predicate(value, index);
+
+    if (isMatch) {
+      matches.push(value);
+    } else {
+      rest.push(value);
+    }
+  }
+
+  return [matches, rest];
+};
