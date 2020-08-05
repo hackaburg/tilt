@@ -295,11 +295,11 @@ export class ApiClient {
       user: {
         ...application.user,
         confirmationExpiresAt: this.reviveDate(
-          application.user.initialProfileFormSubmittedAt,
+          application.user.confirmationExpiresAt,
         ),
         createdAt: this.reviveDate(application.user.createdAt)!,
         initialProfileFormSubmittedAt: this.reviveDate(
-          application.user.confirmationExpiresAt,
+          application.user.initialProfileFormSubmittedAt,
         ),
       },
     }));
