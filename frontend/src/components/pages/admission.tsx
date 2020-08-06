@@ -201,7 +201,7 @@ export const Admission = () => {
     });
 
     return applicationsSortedByDate.filter(({ user }) => {
-      const { id, admitted, confirmed } = user;
+      const { id, admitted, confirmed, declined } = user;
       const { concatinatedAnswers } = applicationsByUserID[id];
 
       const matchesSpecialFilters =
@@ -229,6 +229,13 @@ export const Admission = () => {
                 return isExpired;
               } else {
                 return !isExpired;
+              }
+
+            case "declined":
+              if (type === FilterType.Is) {
+                return declined;
+              } else {
+                return !declined;
               }
           }
 
@@ -322,6 +329,7 @@ export const Admission = () => {
       confirmationExpiresAt,
       admitted,
       confirmed,
+      declined,
     } = user;
 
     const name =
@@ -422,11 +430,12 @@ export const Admission = () => {
       }
     };
 
+    const isNotAttending = isConfirmationExpired(user) || declined;
     let RowComponent = TableRow;
 
     if (confirmed) {
       RowComponent = ConfirmedRow;
-    } else if (isConfirmationExpired(user)) {
+    } else if (isNotAttending) {
       RowComponent = ExpiredConfirmationRow;
     } else if (admitted) {
       RowComponent = AdmittedRow;
@@ -503,6 +512,12 @@ export const Admission = () => {
                     {dateToString(confirmationExpiresAt)}
                   </Text>
                 )}
+
+                {declined && (
+                  <Text>
+                    This application was <b>declined</b>.
+                  </Text>
+                )}
               </QuestionaireContainer>
             </ExpandedCell>
           )}
@@ -540,10 +555,10 @@ export const Admission = () => {
         You can search for applications in the table below and admit multiple
         users at once. The below search bar will search all answers that match
         all space-separated filters provided, and also supports special filters
-        such as <Code>is:admitted</Code>, <Code>not:confirmed</Code> and{" "}
-        <Code>is:expired</Code>. You can exchange <Code>is</Code> and{" "}
-        <Code>not</Code> freely, however these three fields are the only
-        available special filters.
+        such as <Code>is:admitted</Code>, <Code>not:confirmed</Code>,
+        <Code>is:expired</Code> or <Code>not:declined</Code>. You can exchange{" "}
+        <Code>is</Code> and <Code>not</Code> freely, however these four fields
+        are the only available special filters.
       </Text>
 
       {allApplications == null ? (
@@ -572,7 +587,7 @@ export const Admission = () => {
             }
           />
 
-          <FlexView height="1rem" />
+          <FlexView height="1rem" shrink={false} />
 
           <Elevated level={1}>
             <Table>
@@ -611,6 +626,8 @@ export const Admission = () => {
               </tbody>
             </Table>
           </Elevated>
+
+          <FlexView height="1rem" shrink={false} />
         </FlexView>
       )}
     </Page>

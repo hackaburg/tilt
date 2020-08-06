@@ -3,6 +3,7 @@ import {
   BadRequestError,
   Body,
   CurrentUser,
+  Delete,
   Get,
   JsonController,
   NotAcceptableError,
@@ -187,6 +188,16 @@ export class ApplicationController {
     } catch (error) {
       throw this.convertErrorToHTTP(error);
     }
+  }
+
+  /**
+   * Declines the spot of the current user.
+   * @param user The currently logged in user
+   */
+  @Delete("/confirm")
+  @Authorized(UserRole.User)
+  public async declineSpot(@CurrentUser() user: User) {
+    await this._application.declineSpot(user);
   }
 
   /**

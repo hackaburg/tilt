@@ -31,6 +31,8 @@ export class User {
   public admitted!: boolean;
   @Column({ default: false })
   public confirmed!: boolean;
+  @Column({ default: false })
+  public declined!: boolean;
 }
 
 /**

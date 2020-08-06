@@ -339,4 +339,13 @@ export class ApiClient {
   public async deleteUser(userID: number): Promise<void> {
     await this.delete<UsersControllerMethods["deleteUser"]>(`/user/${userID}`);
   }
+
+  /**
+   * Declines the user's spot.
+   */
+  public async declineSpot(): Promise<void> {
+    await this.delete<ApplicationControllerMethods["declineSpot"]>(
+      "/application/confirm",
+    );
+  }
 }

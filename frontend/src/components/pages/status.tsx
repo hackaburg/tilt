@@ -1,7 +1,11 @@
 import * as React from "react";
+import { useCallback } from "react";
+import FlexView from "react-flexview";
 import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
+import { useApi } from "../../hooks/use-api";
 import { dateToString, isConfirmationExpired } from "../../util";
+import { Button } from "../base/button";
 import { Heading } from "../base/headings";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
@@ -12,11 +16,45 @@ import { Page } from "./page";
  */
 export const Status = () => {
   const { settings } = useSettingsContext();
-  const { user } = useLoginContext();
+  const { user, updateUser } = useLoginContext();
 
   const confirmationDays = Math.floor(settings.application.hoursToConfirm / 24);
   const isExpired = user == null ? false : isConfirmationExpired(user);
+  const isNotAttending = isExpired || user?.declined;
   const deadline = user?.confirmationExpiresAt;
+
+  const {
+    isFetching: isDecliningSpot,
+    forcePerformRequest: declineSpot,
+  } = useApi(
+    async (api, wasForced) => {
+      if (wasForced) {
+        await api.declineSpot();
+
+        updateUser((value) =>
+          value == null
+            ? null
+            : {
+                ...value,
+                declined: true,
+              },
+        );
+      }
+    },
+    [updateUser],
+  );
+
+  const handleDeclineSpot = useCallback(() => {
+    const isSure = confirm(
+      "Are you sure you want to decline your spot?\n\nThis action is irreversible!",
+    );
+
+    if (!isSure) {
+      return;
+    }
+
+    declineSpot();
+  }, [declineSpot]);
 
   return (
     <Page>
@@ -70,7 +108,7 @@ export const Status = () => {
         state={
           user?.confirmed
             ? ProgressStepState.Completed
-            : isExpired
+            : isNotAttending
             ? ProgressStepState.Failed
             : ProgressStepState.Pending
         }
@@ -90,10 +128,32 @@ export const Status = () => {
         </Text>
 
         {deadline != null && (
-          <Text>
-            Your confirmation {isExpired ? <b>was</b> : "is"} due on{" "}
-            <b>{dateToString(deadline)}</b>.
-          </Text>
+          <>
+            <Text>
+              Your confirmation {isExpired ? <b>was</b> : "is"} due on{" "}
+              <b>{dateToString(deadline)}</b>
+              {user?.declined && (
+                <>
+                  , but you <b>declined</b> your spot
+                </>
+              )}
+              .
+            </Text>
+
+            <FlexView height="1rem" shrink={false} />
+
+            <FlexView hAlignContent="left">
+              <FlexView shrink>
+                <Button
+                  loading={isDecliningSpot}
+                  disable={isNotAttending}
+                  onClick={handleDeclineSpot}
+                >
+                  Decline my spot
+                </Button>
+              </FlexView>
+            </FlexView>
+          </>
         )}
       </ProgressStep>
 
@@ -103,7 +163,7 @@ export const Status = () => {
         state={
           user?.confirmed
             ? ProgressStepState.Completed
-            : isExpired
+            : isNotAttending
             ? ProgressStepState.Failed
             : ProgressStepState.Pending
         }

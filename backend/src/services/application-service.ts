@@ -93,6 +93,12 @@ export interface IApplicationService extends IService {
    * @param user The user whose answers to delete
    */
   deleteAnswers(user: User): Promise<void>;
+
+  /**
+   * Declines the given user's spot.
+   * @param user The user declining their spot
+   */
+  declineSpot(user: User): Promise<void>;
 }
 
 /**
@@ -517,6 +523,14 @@ export class ApplicationService implements IApplicationService {
         id: user.id,
       },
     });
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async declineSpot(user: User): Promise<void> {
+    user.declined = true;
+    await this._users.updateUser(user);
   }
 }
 

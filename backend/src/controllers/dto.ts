@@ -370,6 +370,8 @@ export class UserDTO {
   public admitted!: boolean;
   @Expose()
   public confirmed!: boolean;
+  @Expose()
+  public declined!: boolean;
 }
 
 export class ApplicationDTO {
