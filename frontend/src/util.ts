@@ -1,3 +1,5 @@
+import { UserDTO } from "./api/types/dto";
+
 /**
  * Async equivalent of a sleep/wait call.
  * @param ms The duration to sleep
@@ -93,3 +95,11 @@ export const filterSplit = <T>(
 
   return [matches, rest];
 };
+
+/**
+ * Checks whether the given user's confirmation deadline passed.
+ * @param user The user to check for expiration
+ */
+export const isConfirmationExpired = (user: UserDTO): boolean =>
+  user.confirmationExpiresAt != null &&
+  user.confirmationExpiresAt.getTime() <= Date.now();
