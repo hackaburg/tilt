@@ -433,10 +433,10 @@ export const Admission = () => {
     const isNotAttending = isConfirmationExpired(user) || declined;
     let RowComponent = TableRow;
 
-    if (confirmed) {
-      RowComponent = ConfirmedRow;
-    } else if (isNotAttending) {
+    if (isNotAttending) {
       RowComponent = ExpiredConfirmationRow;
+    } else if (confirmed) {
+      RowComponent = ConfirmedRow;
     } else if (admitted) {
       RowComponent = AdmittedRow;
     }
