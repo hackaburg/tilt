@@ -77,8 +77,7 @@ export const ChoicesQuestionEditor = ({
     (text: string) => {
       const choices = text
         .split(separator)
-        .map((option) => option.trim())
-        .filter((option) => option.length > 0);
+        .filter((option) => option.trim().length > 0);
 
       const choicesWithTrailingComma = text.endsWith(separator)
         ? [...choices, ""]
