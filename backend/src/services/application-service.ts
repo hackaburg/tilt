@@ -467,6 +467,10 @@ export class ApplicationService implements IApplicationService {
     user: User,
     answers: readonly IRawAnswer[],
   ): Promise<void> {
+    if (user.declined) {
+      throw new AlreadyDeclinedError();
+    }
+
     if (user.confirmationExpiresAt == null) {
       throw new NotAdmittedError();
     }
@@ -591,5 +595,11 @@ export class IncompleteProfileFormError extends Error {
 export class ConfirmationDeadlineFailedError extends Error {
   constructor(deadline: Date) {
     super(`Your confirmation deadline was on ${deadline.toISOString()}`);
+  }
+}
+
+export class AlreadyDeclinedError extends Error {
+  constructor() {
+    super("You already declined your application");
   }
 }
