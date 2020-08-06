@@ -300,23 +300,16 @@ export class SignupResponseDTO {
   public email!: string;
 }
 
-export class LoginResponseDTO {
-  @Expose()
-  public token!: string;
-  @Expose()
-  public role!: UserRole;
-}
-
 export class SuccessResponseDTO {
   @Expose()
   public success!: boolean;
 }
 
-export class RefreshTokenResponseDTO {
+export class UserTokenResponseDTO {
   @Expose()
   public token!: string;
   @Expose()
-  public role!: UserRole;
+  public user!: UserDTO;
 }
 
 export class FormDTO implements DTO<IForm> {

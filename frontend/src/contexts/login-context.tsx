@@ -1,24 +1,23 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
-import { UserRole } from "../api/types/enums";
+import type { UserDTO } from "../api/types/dto";
 import { clearLoginToken, isLoginTokenSet } from "../authentication";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
 import { Nullable } from "../state";
 
 interface ILoginBaseContextValue {
-  login: (role: UserRole) => void;
+  updateLogin: (user: UserDTO) => void;
   logout: () => void;
+  user: Nullable<UserDTO>;
 }
 
 interface ILoggedOutContextValue extends ILoginBaseContextValue {
   isLoggedIn: false;
-  role: Nullable<UserRole>;
 }
 
 interface ILoggedInContextValue extends ILoginBaseContextValue {
   isLoggedIn: true;
-  role: UserRole;
 }
 
 type ILoginContextValue = ILoggedOutContextValue | ILoggedInContextValue;
@@ -38,13 +37,13 @@ export const LoginContextProvider = ({
   children,
 }: ILoginContextProviderProps) => {
   const isAlreadyLoggedIn = isLoginTokenSet();
-  const [role, setRole] = useState<Nullable<UserRole>>(null);
+  const [user, setUser] = useState<Nullable<UserDTO>>(null);
 
   useApi(
     async (api) => {
       if (isAlreadyLoggedIn) {
         const apiRole = await api.refreshLoginToken();
-        setRole(apiRole);
+        setUser(apiRole);
       }
     },
     [
@@ -53,23 +52,23 @@ export const LoginContextProvider = ({
     ],
   );
 
-  const login = useCallback((newRole: UserRole) => {
-    setRole(newRole);
+  const updateLogin = useCallback((newUser: UserDTO) => {
+    setUser(newUser);
   }, []);
 
   const logout = useCallback(() => {
     clearLoginToken();
-    setRole(null);
+    setUser(null);
   }, []);
 
   const value = useMemo<ILoginContextValue>(
     () => ({
-      isLoggedIn: role != null || isAlreadyLoggedIn,
-      login,
+      isLoggedIn: user != null || isAlreadyLoggedIn,
       logout,
-      role: role as any,
+      updateLogin,
+      user,
     }),
-    [role, isAlreadyLoggedIn, login, logout],
+    [user, isAlreadyLoggedIn, updateLogin, logout],
   );
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

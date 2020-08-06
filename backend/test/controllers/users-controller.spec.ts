@@ -105,7 +105,7 @@ describe("UsersController", () => {
       },
     });
 
-    expect(response.role).toBe(UserRole.Moderator);
+    expect(response.user.role).toBe(UserRole.Moderator);
   });
 
   it("throws on invalid credentials", async () => {
@@ -132,6 +132,6 @@ describe("UsersController", () => {
     userService.mocks.generateLoginToken.mockReturnValue(token);
     const response = await controller.refreshLoginToken(user);
     expect(response.token).toBe(token);
-    expect(response.role).toBe(role);
+    expect(response.user.role).toBe(role);
   });
 });

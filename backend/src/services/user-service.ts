@@ -242,7 +242,7 @@ export class UserService implements IUserService {
     const passwordsMatch = await compare(password, user.password);
 
     if (passwordsMatch) {
-      return user;
+      return await this._users!.findOneOrFail(user.id);
     }
   }
 

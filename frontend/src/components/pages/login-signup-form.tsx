@@ -18,7 +18,7 @@ const ButtonContainer = styled(FlexView)`
  * A form to create an account.
  */
 export const LoginSignupForm = () => {
-  const { login } = useLoginContext();
+  const { updateLogin } = useLoginContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,11 +29,11 @@ export const LoginSignupForm = () => {
   } = useApi(
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        const role = await api.login(email, password);
-        login(role);
+        const user = await api.login(email, password);
+        updateLogin(user);
       }
     },
-    [email, password, login],
+    [email, password, updateLogin],
   );
 
   const {

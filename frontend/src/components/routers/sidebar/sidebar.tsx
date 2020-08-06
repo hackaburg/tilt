@@ -35,7 +35,8 @@ export const Sidebar = () => {
     return null;
   }
 
-  const { role, logout } = loginState;
+  const { user, logout } = loginState;
+  const role = user?.role ?? UserRole.User;
   const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
 
   return (

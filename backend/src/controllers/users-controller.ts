@@ -20,11 +20,12 @@ import {
 } from "../services/application-service";
 import { IUserService, UserServiceToken } from "../services/user-service";
 import {
+  convertBetweenEntityAndDTO,
   CredentialsRequestDTO,
-  LoginResponseDTO,
-  RefreshTokenResponseDTO,
   SignupResponseDTO,
   SuccessResponseDTO,
+  UserDTO,
+  UserTokenResponseDTO,
 } from "./dto";
 
 /**
@@ -83,16 +84,16 @@ export class UsersController {
   public async login(
     @Body()
     { data: { email, password } }: CredentialsRequestDTO,
-  ): Promise<LoginResponseDTO> {
+  ): Promise<UserTokenResponseDTO> {
     const user = await this._users.findUserWithCredentials(email, password);
 
     if (!user) {
       throw new BadRequestError("invalid email or password");
     }
 
-    const response = new LoginResponseDTO();
-    response.role = user.role;
+    const response = new UserTokenResponseDTO();
     response.token = this._users.generateLoginToken(user);
+    response.user = convertBetweenEntityAndDTO(user, UserDTO);
     return response;
   }
 
@@ -104,10 +105,10 @@ export class UsersController {
   @Authorized(UserRole.User)
   public async refreshLoginToken(
     @CurrentUser() user: User,
-  ): Promise<RefreshTokenResponseDTO> {
-    const response = new RefreshTokenResponseDTO();
+  ): Promise<UserTokenResponseDTO> {
+    const response = new UserTokenResponseDTO();
     response.token = this._users.generateLoginToken(user);
-    response.role = user.role;
+    response.user = convertBetweenEntityAndDTO(user, UserDTO);
     return response;
   }
 

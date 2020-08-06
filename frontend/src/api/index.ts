@@ -18,8 +18,8 @@ import type {
   ApplicationDTO,
   FormDTO,
   SettingsDTO,
+  UserDTO,
 } from "./types/dto";
-import { UserRole } from "./types/enums";
 
 type SettingsControllerMethods = ExtractControllerMethods<SettingsController>;
 type UsersControllerMethods = ExtractControllerMethods<UsersController>;
@@ -189,11 +189,11 @@ export class ApiClient {
   }
 
   /**
-   * Logs a user in.
+   * Logs a user in and gets the user's status.
    * @param email The user's email
    * @param password The user's password
    */
-  public async login(email: string, password: string): Promise<UserRole> {
+  public async login(email: string, password: string): Promise<UserDTO> {
     const response = await this.post<UsersControllerMethods["login"]>(
       "/user/login",
       {
@@ -203,19 +203,18 @@ export class ApiClient {
     );
 
     setLoginToken(response.token);
-    return response.role;
+    return response.user;
   }
 
   /**
-   * Refreshes the login token.
-   * @return The user's role
+   * Refreshes the login token and returns the current user status.
    */
-  public async refreshLoginToken(): Promise<UserRole> {
+  public async refreshLoginToken(): Promise<UserDTO> {
     const response = await this.get<
       UsersControllerMethods["refreshLoginToken"]
     >("/user/refreshtoken");
     setLoginToken(response.token);
-    return response.role;
+    return response.user;
   }
 
   /**
