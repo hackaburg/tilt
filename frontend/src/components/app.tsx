@@ -21,7 +21,7 @@ export const App = ({ history, location }: IAppProps) => {
   useEffect(() => {
     if (isLoggedIn) {
       if (pathname === Routes.Login) {
-        history.push(Routes.Dashboard);
+        history.push(Routes.Status);
       }
     } else {
       if (pathname !== Routes.VerifyEmail) {

@@ -8,6 +8,7 @@ import { LazyAdmission } from "../pages/lazy-admission";
 import { LazySettings } from "../pages/lazy-settings";
 import { PageNotFound } from "../pages/page-not-found";
 import { ProfileForm } from "../pages/profile-form";
+import { Status } from "../pages/status";
 import { Sidebar } from "./sidebar/sidebar";
 import { SidebarToggle } from "./sidebar/sidebar-toggle";
 
@@ -41,6 +42,7 @@ export const AuthenticatedRouter = () => {
 
       <FlexView grow>
         <Switch>
+          <Route path={Routes.Status} component={Status} />
           <Route path={Routes.Settings} component={LazySettings} />
           <Route path={Routes.ProfileForm} component={ProfileForm} />
           <Route path={Routes.Admission} component={LazyAdmission} />

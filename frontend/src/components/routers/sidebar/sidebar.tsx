@@ -45,7 +45,7 @@ export const Sidebar = () => {
       </ImageContainer>
 
       <SidebarMenu>
-        <SidebarMenuItem to={Routes.Dashboard}>Dashboard</SidebarMenuItem>
+        <SidebarMenuItem to={Routes.Status}>Status</SidebarMenuItem>
         <SidebarMenuItem to={Routes.ProfileForm}>Profile</SidebarMenuItem>
 
         {isElevatedUser && (

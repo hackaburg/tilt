@@ -2,7 +2,7 @@
  * The routes in the frontend.
  */
 export enum Routes {
-  Dashboard = "/dashboard",
+  Status = "/status",
   Login = "/login",
   Logout = "/logout",
   ProfileForm = "/profile",
