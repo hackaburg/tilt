@@ -6,6 +6,7 @@ import { useLoginContext } from "../contexts/login-context";
 import { useSettingsContext } from "../contexts/settings-context";
 import { Routes } from "../routes";
 import { ThemeProvider } from "../theme";
+import { ErrorBoundary } from "./base/error-boundary";
 import { LazyAuthenticatedRouter } from "./routers/lazy-authenticated-router";
 import { UnauthenticatedRouter } from "./routers/unauthenticated-router";
 
@@ -54,7 +55,11 @@ export const App = ({ history, location }: IAppProps) => {
     <UnauthenticatedRouter />
   );
 
-  return <ThemeProvider values={theme}>{router}</ThemeProvider>;
+  return (
+    <ThemeProvider values={theme}>
+      <ErrorBoundary>{router}</ErrorBoundary>
+    </ThemeProvider>
+  );
 };
 
 /**
