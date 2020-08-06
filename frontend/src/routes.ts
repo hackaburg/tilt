@@ -6,6 +6,7 @@ export enum Routes {
   Login = "/login",
   Logout = "/logout",
   ProfileForm = "/profile",
+  ConfirmationForm = "/confirm",
   Settings = "/settings",
   Statistics = "/statistics",
   Admission = "/admission",

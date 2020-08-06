@@ -37,6 +37,7 @@ export const Sidebar = () => {
 
   const { user, logout } = loginState;
   const role = user?.role ?? UserRole.User;
+  const isAdmitted = user?.admitted ?? false;
   const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
 
   return (
@@ -48,6 +49,12 @@ export const Sidebar = () => {
       <SidebarMenu>
         <SidebarMenuItem to={Routes.Status}>Status</SidebarMenuItem>
         <SidebarMenuItem to={Routes.ProfileForm}>Profile</SidebarMenuItem>
+
+        {isAdmitted && (
+          <SidebarMenuItem to={Routes.ConfirmationForm}>
+            Confirmation
+          </SidebarMenuItem>
+        )}
 
         {isElevatedUser && (
           <>
