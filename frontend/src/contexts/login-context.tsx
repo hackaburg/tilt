@@ -7,7 +7,7 @@ import { useContextOrThrow } from "../hooks/use-context-or-throw";
 import { Nullable } from "../state";
 
 interface ILoginBaseContextValue {
-  updateLogin: (user: UserDTO) => void;
+  updateUser: (reducer: (user: Nullable<UserDTO>) => Nullable<UserDTO>) => void;
   logout: () => void;
   user: Nullable<UserDTO>;
 }
@@ -52,10 +52,6 @@ export const LoginContextProvider = ({
     ],
   );
 
-  const updateLogin = useCallback((newUser: UserDTO) => {
-    setUser(newUser);
-  }, []);
-
   const logout = useCallback(() => {
     clearLoginToken();
     setUser(null);
@@ -65,10 +61,10 @@ export const LoginContextProvider = ({
     () => ({
       isLoggedIn: user != null || isAlreadyLoggedIn,
       logout,
-      updateLogin,
+      updateUser: setUser,
       user,
     }),
-    [user, isAlreadyLoggedIn, updateLogin, logout],
+    [user, isAlreadyLoggedIn, logout],
   );
 
   return <Context.Provider value={value}>{children}</Context.Provider>;

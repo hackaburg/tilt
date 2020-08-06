@@ -3,6 +3,7 @@ import * as React from "react";
 import { useCallback, useState } from "react";
 import FlexView from "react-flexview";
 import type { AnswerDTO } from "../../api/types/dto";
+import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { useDerivedState } from "../../hooks/use-derived-state";
@@ -88,6 +89,7 @@ export const Form = ({ type }: IFormProps) => {
     );
   }, [state]);
 
+  const { updateUser } = useLoginContext();
   const [isDirty, setIsDirty] = useState(false);
   const { error: submitError, isFetching: isSubmitting } = useApi(
     async (api) => {
@@ -97,8 +99,24 @@ export const Form = ({ type }: IFormProps) => {
 
       if (type === FormType.ProfileForm) {
         await api.storeProfileFormAnswers(synchronizedAnswers);
+        updateUser((user) =>
+          user == null
+            ? null
+            : {
+                ...user,
+                initialProfileFormSubmittedAt: new Date(),
+              },
+        );
       } else {
         await api.storeConfirmationFormAnswers(synchronizedAnswers);
+        updateUser((user) =>
+          user == null
+            ? null
+            : {
+                ...user,
+                confirmed: true,
+              },
+        );
       }
 
       setIsDirty(false);
