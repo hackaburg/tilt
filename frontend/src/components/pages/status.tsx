@@ -106,7 +106,7 @@ export const Status = () => {
         index={4}
         title="Confirm your spot"
         state={
-          user?.confirmed
+          user?.confirmed && !isNotAttending
             ? ProgressStepState.Completed
             : isNotAttending
             ? ProgressStepState.Failed
@@ -140,19 +140,23 @@ export const Status = () => {
               .
             </Text>
 
-            <FlexView height="1rem" shrink={false} />
+            {!isNotAttending && (
+              <>
+                <FlexView height="1rem" shrink={false} />
 
-            <FlexView hAlignContent="left">
-              <FlexView shrink>
-                <Button
-                  loading={isDecliningSpot}
-                  disable={isNotAttending}
-                  onClick={handleDeclineSpot}
-                >
-                  Decline my spot
-                </Button>
-              </FlexView>
-            </FlexView>
+                <FlexView hAlignContent="left">
+                  <FlexView shrink>
+                    <Button
+                      loading={isDecliningSpot}
+                      disable={isNotAttending}
+                      onClick={handleDeclineSpot}
+                    >
+                      Decline my spot
+                    </Button>
+                  </FlexView>
+                </FlexView>
+              </>
+            )}
           </>
         )}
       </ProgressStep>
@@ -161,7 +165,7 @@ export const Status = () => {
         index={5}
         title="The event"
         state={
-          user?.confirmed
+          user?.confirmed && !isNotAttending
             ? ProgressStepState.Completed
             : isNotAttending
             ? ProgressStepState.Failed
