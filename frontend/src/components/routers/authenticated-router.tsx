@@ -7,6 +7,7 @@ import { Routes } from "../../routes";
 import { ConfirmationForm } from "../pages/confirmation-form";
 import { LazyAdmission } from "../pages/lazy-admission";
 import { LazySettings } from "../pages/lazy-settings";
+import { LazyStatistics } from "../pages/lazy-statistics";
 import { PageNotFound } from "../pages/page-not-found";
 import { ProfileForm } from "../pages/profile-form";
 import { Status } from "../pages/status";
@@ -47,6 +48,7 @@ export const AuthenticatedRouter = () => {
           <Route path={Routes.Settings} component={LazySettings} />
           <Route path={Routes.ProfileForm} component={ProfileForm} />
           <Route path={Routes.ConfirmationForm} component={ConfirmationForm} />
+          <Route path={Routes.Statistics} component={LazyStatistics} />
           <Route path={Routes.Admission} component={LazyAdmission} />
           <Route component={PageNotFound} />
         </Switch>
