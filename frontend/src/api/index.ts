@@ -172,6 +172,21 @@ export class ApiClient {
   }
 
   /**
+   * Revievs dates in the given user object.
+   * @param user The user to revive
+   */
+  private reviveUser(user: UserDTO): UserDTO {
+    return {
+      ...user,
+      confirmationExpiresAt: this.reviveDate(user.confirmationExpiresAt),
+      createdAt: this.reviveDate(user.createdAt),
+      initialProfileFormSubmittedAt: this.reviveDate(
+        user.initialProfileFormSubmittedAt,
+      ),
+    };
+  }
+
+  /**
    * Sends a settings api request.
    */
   public async getSettings(): Promise<SettingsDTO> {
@@ -224,7 +239,7 @@ export class ApiClient {
     );
 
     setLoginToken(response.token);
-    return response.user;
+    return this.reviveUser(response.user);
   }
 
   /**
@@ -235,7 +250,7 @@ export class ApiClient {
       UsersControllerMethods["refreshLoginToken"]
     >("/user/refreshtoken");
     setLoginToken(response.token);
-    return response.user;
+    return this.reviveUser(response.user);
   }
 
   /**
@@ -313,16 +328,7 @@ export class ApiClient {
 
     return response.map((application) => ({
       ...application,
-      user: {
-        ...application.user,
-        confirmationExpiresAt: this.reviveDate(
-          application.user.confirmationExpiresAt,
-        ),
-        createdAt: this.reviveDate(application.user.createdAt)!,
-        initialProfileFormSubmittedAt: this.reviveDate(
-          application.user.initialProfileFormSubmittedAt,
-        ),
-      },
+      user: this.reviveUser(application.user),
     }));
   }
 
