@@ -93,7 +93,7 @@ export const SettingsContextProvider = ({
     [localSettings, updateSettings, updateError],
   );
 
-  if (isFetchingSettings) {
+  if (isFetchingSettings || localSettings == null) {
     return (
       <FlexView height="100vh" grow>
         <SuspenseFallback />
