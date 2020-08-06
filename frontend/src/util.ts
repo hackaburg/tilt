@@ -109,3 +109,39 @@ export const isConfirmationExpired = (user: UserDTO): boolean =>
  * @param date A date to check for validity
  */
 export const isValidDate = (date: Date) => !isNaN(date.getTime());
+
+/**
+ * Repeats the given array until it has the given length.
+ * @param array An array to repeat
+ * @param expectedLength The expected length of the final array
+ */
+export const repeatAndTake = <T>(
+  array: readonly T[],
+  expectedLength: number,
+): readonly T[] => {
+  if (array.length >= expectedLength) {
+    return array.slice(0, expectedLength);
+  }
+
+  let result = [] as readonly T[];
+
+  while (expectedLength > 0) {
+    result = result.concat(array.slice(0, expectedLength));
+  }
+
+  return result;
+};
+
+/**
+ * Converts a percentage to a human readable striing;
+ * @param percentage The percentage number value
+ */
+export const percentageToString = (percentage: number): string =>
+  `${Math.floor(percentage * 100)}%`;
+
+/**
+ * Floors the given date to the day's start.
+ * @param date The date to round
+ */
+export const roundDateToDay = (date: Date): Date =>
+  new Date(date.getFullYear(), date.getMonth(), date.getDay());
