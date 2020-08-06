@@ -103,3 +103,9 @@ export const filterSplit = <T>(
 export const isConfirmationExpired = (user: UserDTO): boolean =>
   user.confirmationExpiresAt != null &&
   user.confirmationExpiresAt.getTime() <= Date.now();
+
+/**
+ * Checks whether the given date is valid.
+ * @param date A date to check for validity
+ */
+export const isValidDate = (date: Date) => !isNaN(date.getTime());

@@ -4,6 +4,8 @@ import { useCallback } from "react";
 import FlexView from "react-flexview";
 import type { ApplicationSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
+import { useDerivedState } from "../../hooks/use-derived-state";
+import { isValidDate } from "../../util";
 import { Col, ColSpacer, Row } from "../base/grid";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
@@ -38,15 +40,48 @@ export const ApplicationSettings = () => {
     [updateApplicationSettings],
   );
 
+  const [allowProfileFormFrom, setAllowProfileFormFrom] = useDerivedState(
+    () => settings.application.allowProfileFormFrom.toISOString(),
+    [settings],
+  );
+
   const handleAllowProfileFormFromChange = useCallback(
-    (allowProfileFormFrom) =>
-      updateApplicationSettings({ allowProfileFormFrom }),
+    (value) => {
+      setAllowProfileFormFrom(value);
+      const date = new Date(value);
+
+      if (!isValidDate(date)) {
+        return;
+      }
+
+      updateApplicationSettings({
+        allowProfileFormFrom: date,
+      });
+    },
     [updateApplicationSettings],
   );
 
+  const [
+    allowProfileFormUntil,
+    setAllowProfileFormUntil,
+  ] = useDerivedState(
+    () => settings.application.allowProfileFormUntil.toISOString(),
+    [settings],
+  );
+
   const handleAllowProfileFormUntilChange = useCallback(
-    (allowProfileFormUntil) =>
-      updateApplicationSettings({ allowProfileFormUntil }),
+    (value) => {
+      setAllowProfileFormUntil(value);
+      const date = new Date(value);
+
+      if (!isValidDate(date)) {
+        return;
+      }
+
+      updateApplicationSettings({
+        allowProfileFormUntil: date,
+      });
+    },
     [updateApplicationSettings],
   );
 
@@ -92,7 +127,7 @@ export const ApplicationSettings = () => {
         <ColSpacer />
         <Col>
           <TextInput
-            value={settings.application.allowProfileFormFrom}
+            value={allowProfileFormFrom}
             onChange={handleAllowProfileFormFromChange}
             title="Open registration on"
             placeholder="1970-01-01 00:00:00"
@@ -101,7 +136,7 @@ export const ApplicationSettings = () => {
         <ColSpacer />
         <Col>
           <TextInput
-            value={settings.application.allowProfileFormUntil}
+            value={allowProfileFormUntil}
             onChange={handleAllowProfileFormUntilChange}
             title="Close registration on"
             placeholder="1970-01-01 00:00:00"

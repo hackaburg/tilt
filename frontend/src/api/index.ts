@@ -144,21 +144,42 @@ export class ApiClient {
    * Attempts to revive a stringified date to an actual `Date` object.
    * @param date The date to revive
    */
-  private reviveDate(date: Nullable<Date>): Nullable<Date> {
+  private reviveDate<T extends Date | Nullable<Date>>(date: T): T {
     if (date == null) {
-      return null;
+      return null as T;
     }
 
-    return new Date(date as any);
+    return new Date(date as any) as T;
+  }
+
+  /**
+   * Revives dates in the settings object.
+   * @param settings The settings to revive
+   */
+  private reviveSettings(settings: SettingsDTO): SettingsDTO {
+    return {
+      ...settings,
+      application: {
+        ...settings.application,
+        allowProfileFormFrom: this.reviveDate(
+          settings.application.allowProfileFormFrom,
+        ),
+        allowProfileFormUntil: this.reviveDate(
+          settings.application.allowProfileFormUntil,
+        ),
+      },
+    };
   }
 
   /**
    * Sends a settings api request.
    */
   public async getSettings(): Promise<SettingsDTO> {
-    return await this.get<SettingsControllerMethods["getSettings"]>(
+    const response = await this.get<SettingsControllerMethods["getSettings"]>(
       "/settings",
     );
+
+    return this.reviveSettings(response);
   }
 
   /**
@@ -222,10 +243,11 @@ export class ApiClient {
    * @param settings The settings to use for updating
    */
   public async updateSettings(settings: SettingsDTO): Promise<SettingsDTO> {
-    return await this.put<SettingsControllerMethods["updateSettings"]>(
-      "/settings",
-      settings,
-    );
+    const response = await this.put<
+      SettingsControllerMethods["updateSettings"]
+    >("/settings", settings);
+
+    return this.reviveSettings(response);
   }
 
   /**
