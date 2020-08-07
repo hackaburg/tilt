@@ -6,7 +6,7 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - tilt
     networks:
@@ -19,6 +19,7 @@ services:
       dockerfile: Dockerfile
     image: tilt
     environment:
+      - BASE_URL=http://localhost:8080/apply/
       - PORT=3000
       - LOG_LEVEL=debug
       - LOG_FILENAME=tilt.log
