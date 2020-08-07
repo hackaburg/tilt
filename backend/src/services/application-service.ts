@@ -398,10 +398,11 @@ export class ApplicationService implements IApplicationService {
   public async admit(users: readonly User[]): Promise<void> {
     const settings = await this._settings.getSettings();
     const now = Date.now();
+    const millisecondsInHour = 60 * 60 * 1000;
 
     for (const user of users) {
       user.confirmationExpiresAt = new Date(
-        now + settings.application.hoursToConfirm * 60 * 1000,
+        now + settings.application.hoursToConfirm * millisecondsInHour,
       );
 
       user.admitted = true;
