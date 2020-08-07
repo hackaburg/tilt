@@ -3,6 +3,7 @@ import * as React from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import FlexView from "react-flexview";
 import { useDebounce } from "use-debounce";
+import { ApplicationDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { debounceDuration } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
@@ -112,6 +113,8 @@ interface IFilter {
   field: string;
 }
 
+const emptyApplications = [] as readonly ApplicationDTO[];
+
 /**
  * One table to admit them all.
  */
@@ -129,7 +132,7 @@ export const Admission = () => {
     forcePerformRequest: reloadApplications,
   } = useApi(async (api) => api.getAllApplications(), []);
 
-  const safeApplications = allApplications ?? [];
+  const safeApplications = allApplications ?? emptyApplications;
 
   const applicationsSortedByDate = useMemo(() => {
     const sorted = [...safeApplications];
@@ -532,7 +535,16 @@ export const Admission = () => {
     <Page>
       <Heading>Admission</Heading>
 
-      {isFetching && <SuspenseFallback />}
+      <Text>
+        You can search for applications in the table below and admit multiple
+        users at once. The below search bar will search all answers that match
+        all space-separated filters provided, and also supports special filters
+        such as <Code>is:admitted</Code>, <Code>not:confirmed</Code>,
+        <Code>is:expired</Code> or <Code>not:declined</Code>. You can exchange{" "}
+        <Code>is</Code> and <Code>not</Code> freely, however these four fields
+        are the only available special filters.
+      </Text>
+
       {error && (
         <Message error>
           <b>Error:</b> {error.message}
@@ -551,19 +563,8 @@ export const Admission = () => {
         </Message>
       )}
 
-      <Text>
-        You can search for applications in the table below and admit multiple
-        users at once. The below search bar will search all answers that match
-        all space-separated filters provided, and also supports special filters
-        such as <Code>is:admitted</Code>, <Code>not:confirmed</Code>,
-        <Code>is:expired</Code> or <Code>not:declined</Code>. You can exchange{" "}
-        <Code>is</Code> and <Code>not</Code> freely, however these four fields
-        are the only available special filters.
-      </Text>
-
-      {allApplications == null ? (
-        <Muted>No applications found</Muted>
-      ) : (
+      {isFetching && <SuspenseFallback />}
+      {allApplications != null && (
         <FlexView column grow>
           <FormFieldButton
             field={
