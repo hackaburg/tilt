@@ -120,10 +120,12 @@ const emptyApplications = [] as readonly ApplicationDTO[];
  */
 export const Admission = () => {
   const { settings } = useSettingsContext();
-  const questions = [
-    ...settings.application.profileForm.questions,
-    ...settings.application.confirmationForm.questions,
-  ];
+  const questions = useMemo(() => {
+    return [
+      ...settings.application.profileForm.questions,
+      ...settings.application.confirmationForm.questions,
+    ];
+  }, [settings]);
 
   const {
     isFetching,
@@ -323,211 +325,224 @@ export const Admission = () => {
     headerCheckboxRef.current.indeterminate = someVisibleSelected;
   }
 
-  const tableRows = visibleApplications.map(({ user }) => {
-    const {
-      id,
-      email,
-      createdAt,
-      initialProfileFormSubmittedAt,
-      confirmationExpiresAt,
-      admitted,
-      confirmed,
-      declined,
-    } = user;
+  const tableRows = useMemo(() => {
+    return visibleApplications.map(({ user }) => {
+      const {
+        id,
+        email,
+        createdAt,
+        initialProfileFormSubmittedAt,
+        confirmationExpiresAt,
+        admitted,
+        confirmed,
+        declined,
+      } = user;
 
-    const name =
-      probableNameQuestion != null
-        ? applicationsByUserID[id].answersByQuestionID[probableNameQuestion.id!]
-        : null;
+      const name =
+        probableNameQuestion != null
+          ? applicationsByUserID[id].answersByQuestionID[
+              probableNameQuestion.id!
+            ]
+          : null;
 
-    const isRowSelected = selectedRowIDs.includes(id);
-    const handleSelectRow = () => {
-      setSelectedRowIDs((value) => {
-        if (isRowSelected) {
-          return value.filter((applicationID) => applicationID !== id);
-        }
+      const isRowSelected = selectedRowIDs.includes(id);
+      const handleSelectRow = () => {
+        setSelectedRowIDs((value) => {
+          if (isRowSelected) {
+            return value.filter((applicationID) => applicationID !== id);
+          }
 
-        return [...value, id];
-      });
-    };
+          return [...value, id];
+        });
+      };
 
-    const isRowExpanded = expandedRowIDs.includes(id);
-    const handleExpandRow = () => {
-      setExpandedRowIDs((value) => {
-        if (isRowExpanded) {
-          return value.filter((applicationID) => applicationID !== id);
-        }
+      const isRowExpanded = expandedRowIDs.includes(id);
+      const handleExpandRow = () => {
+        setExpandedRowIDs((value) => {
+          if (isRowExpanded) {
+            return value.filter((applicationID) => applicationID !== id);
+          }
 
-        return [...value, id];
-      });
-    };
+          return [...value, id];
+        });
+      };
 
-    const { answersByQuestionID } = applicationsByUserID[id];
-    const questionsAndAnswers = !isRowExpanded
-      ? null
-      : questions
-          .map((question) => {
-            const answerValue = answersByQuestionID[question.id!];
+      const { answersByQuestionID } = applicationsByUserID[id];
+      const questionsAndAnswers = !isRowExpanded
+        ? null
+        : questions
+            .map((question) => {
+              const answerValue = answersByQuestionID[question.id!];
 
-            if (answerValue == null) {
-              return;
-            }
-
-            let answer: FlexView.Props["children"] = <Text>{answerValue}</Text>;
-
-            if (question.configuration.type === QuestionType.Text) {
-              if (question.configuration.convertAnswerToUrl) {
-                const url = /^https?:\/\//.test(answerValue)
-                  ? answerValue
-                  : `http://${answerValue}`;
-                answer = (
-                  <Text>
-                    <ExternalLink to={url}>{url}</ExternalLink>
-                  </Text>
-                );
-              } else if (question.configuration.multiline) {
-                answer = answerValue
-                  .trim()
-                  .split("\n")
-                  .filter((line) => line.length > 0)
-                  .map((line, index) => (
-                    <Text key={`${line}-${index}`}>{line}</Text>
-                  ));
+              if (answerValue == null) {
+                return;
               }
-            } else if (question.configuration.type === QuestionType.Choices) {
-              const choices = answerValue
-                .split(",")
-                .map((choice, index) => (
-                  <li key={`${choice}-${index}`}>{choice}</li>
-                ));
 
-              answer = <ul>{choices}</ul>;
-            }
+              let answer: FlexView.Props["children"] = (
+                <Text>{answerValue}</Text>
+              );
 
-            return (
-              <FlexView key={String(question.id)} vAlignContent="top">
-                <FlexView shrink>
-                  <Text>
-                    <b>{question.title}</b>
-                  </Text>
-                </FlexView>
-                <FlexView width="1rem" shrink={false} />
-                <FlexView grow column>
-                  {answer}
-                </FlexView>
-              </FlexView>
-            );
-          })
-          .filter((answer) => answer != null);
+              if (question.configuration.type === QuestionType.Text) {
+                if (question.configuration.convertAnswerToUrl) {
+                  const url = /^https?:\/\//.test(answerValue)
+                    ? answerValue
+                    : `http://${answerValue}`;
+                  answer = (
+                    <Text>
+                      <ExternalLink to={url}>{url}</ExternalLink>
+                    </Text>
+                  );
+                } else if (question.configuration.multiline) {
+                  answer = answerValue
+                    .trim()
+                    .split("\n")
+                    .filter((line) => line.length > 0)
+                    .map((line, index) => (
+                      <Text key={`${line}-${index}`}>{line}</Text>
+                    ));
+                }
+              } else if (question.configuration.type === QuestionType.Choices) {
+                const choices = answerValue
+                  .split(",")
+                  .map((choice, index) => (
+                    <li key={`${choice}-${index}`}>{choice}</li>
+                  ));
 
-    const handleDeleteAccount = async () => {
-      if (!confirm(`Are you sure you want to delete ${name}'s account?`)) {
-        return;
-      }
+                answer = <ul>{choices}</ul>;
+              }
 
-      try {
-        await performApiRequest(async (api) => api.deleteUser(id));
-        reloadApplications();
-      } catch {
-        // delete errors can be ignored
-      }
-    };
-
-    const isNotAttending = isConfirmationExpired(user) || declined;
-    let RowComponent = TableRow;
-
-    if (isNotAttending) {
-      RowComponent = ExpiredConfirmationRow;
-    } else if (confirmed) {
-      RowComponent = ConfirmedRow;
-    } else if (admitted) {
-      RowComponent = AdmittedRow;
-    }
-
-    return (
-      <React.Fragment key={String(id)}>
-        <RowComponent>
-          <TableCell align="center">
-            <input
-              type="checkbox"
-              checked={isRowSelected}
-              onClick={handleSelectRow}
-              readOnly
-            />
-          </TableCell>
-
-          <TableCell>
-            <DetailsButton onClick={handleExpandRow}>
-              <FlexView vAlignContent="center">
-                {isRowExpanded ? "Collapse" : "Expand"}
-                <FlexView width="0.5rem" />
-                <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
-              </FlexView>
-            </DetailsButton>
-          </TableCell>
-
-          <TableCell>
-            <ExternalLink to={`mailto:${email}`}>{email}</ExternalLink>
-          </TableCell>
-
-          <TableCell>{name}</TableCell>
-        </RowComponent>
-
-        <tr>
-          {isRowExpanded && (
-            <ExpandedCell colSpan={4}>
-              <QuestionaireContainer column grow>
-                <Subheading>Application</Subheading>
-
-                {questionsAndAnswers != null &&
-                questionsAndAnswers.length > 0 ? (
-                  questionsAndAnswers
-                ) : (
-                  <Muted>This application appears to be empty.</Muted>
-                )}
-
-                <FlexView vAlignContent="center" grow>
-                  <FlexView grow>
-                    <Subheading>Meta</Subheading>
+              return (
+                <FlexView key={String(question.id)} vAlignContent="top">
+                  <FlexView shrink>
+                    <Text>
+                      <b>{question.title}</b>
+                    </Text>
                   </FlexView>
-
-                  <FlexView column shrink>
-                    <Button onClick={handleDeleteAccount}>
-                      Delete account
-                    </Button>
+                  <FlexView width="1rem" shrink={false} />
+                  <FlexView grow column>
+                    {answer}
                   </FlexView>
                 </FlexView>
+              );
+            })
+            .filter((answer) => answer != null);
 
-                <Text>
-                  <b>Account created on:</b> {dateToString(createdAt)}
-                </Text>
+      const handleDeleteAccount = async () => {
+        if (!confirm(`Are you sure you want to delete ${name}'s account?`)) {
+          return;
+        }
 
-                {initialProfileFormSubmittedAt != null && (
+        try {
+          await performApiRequest(async (api) => api.deleteUser(id));
+          reloadApplications();
+        } catch {
+          // delete errors can be ignored
+        }
+      };
+
+      const isNotAttending = isConfirmationExpired(user) || declined;
+      let RowComponent = TableRow;
+
+      if (isNotAttending) {
+        RowComponent = ExpiredConfirmationRow;
+      } else if (confirmed) {
+        RowComponent = ConfirmedRow;
+      } else if (admitted) {
+        RowComponent = AdmittedRow;
+      }
+
+      return (
+        <React.Fragment key={String(id)}>
+          <RowComponent>
+            <TableCell align="center">
+              <input
+                type="checkbox"
+                checked={isRowSelected}
+                onClick={handleSelectRow}
+                readOnly
+              />
+            </TableCell>
+
+            <TableCell>
+              <DetailsButton onClick={handleExpandRow}>
+                <FlexView vAlignContent="center">
+                  {isRowExpanded ? "Collapse" : "Expand"}
+                  <FlexView width="0.5rem" />
+                  <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
+                </FlexView>
+              </DetailsButton>
+            </TableCell>
+
+            <TableCell>
+              <ExternalLink to={`mailto:${email}`}>{email}</ExternalLink>
+            </TableCell>
+
+            <TableCell>{name}</TableCell>
+          </RowComponent>
+
+          <tr>
+            {isRowExpanded && (
+              <ExpandedCell colSpan={4}>
+                <QuestionaireContainer column grow>
+                  <Subheading>Application</Subheading>
+
+                  {questionsAndAnswers != null &&
+                  questionsAndAnswers.length > 0 ? (
+                    questionsAndAnswers
+                  ) : (
+                    <Muted>This application appears to be empty.</Muted>
+                  )}
+
+                  <FlexView vAlignContent="center" grow>
+                    <FlexView grow>
+                      <Subheading>Meta</Subheading>
+                    </FlexView>
+
+                    <FlexView column shrink>
+                      <Button onClick={handleDeleteAccount}>
+                        Delete account
+                      </Button>
+                    </FlexView>
+                  </FlexView>
+
                   <Text>
-                    <b>Profile form submitted on:</b>{" "}
-                    {dateToString(initialProfileFormSubmittedAt)}
+                    <b>Account created on:</b> {dateToString(createdAt)}
                   </Text>
-                )}
 
-                {confirmationExpiresAt != null && (
-                  <Text>
-                    <b>Confirmation deadline:</b>{" "}
-                    {dateToString(confirmationExpiresAt)}
-                  </Text>
-                )}
+                  {initialProfileFormSubmittedAt != null && (
+                    <Text>
+                      <b>Profile form submitted on:</b>{" "}
+                      {dateToString(initialProfileFormSubmittedAt)}
+                    </Text>
+                  )}
 
-                {declined && (
-                  <Text>
-                    This application was <b>declined</b>.
-                  </Text>
-                )}
-              </QuestionaireContainer>
-            </ExpandedCell>
-          )}
-        </tr>
-      </React.Fragment>
-    );
-  });
+                  {confirmationExpiresAt != null && (
+                    <Text>
+                      <b>Confirmation deadline:</b>{" "}
+                      {dateToString(confirmationExpiresAt)}
+                    </Text>
+                  )}
+
+                  {declined && (
+                    <Text>
+                      This application was <b>declined</b>.
+                    </Text>
+                  )}
+                </QuestionaireContainer>
+              </ExpandedCell>
+            )}
+          </tr>
+        </React.Fragment>
+      );
+    });
+  }, [
+    visibleApplications,
+    probableNameQuestion,
+    selectedRowIDs,
+    expandedRowIDs,
+    applicationsByUserID,
+    questions,
+  ]);
 
   const error = fetchError ?? admitError;
 
