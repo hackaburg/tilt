@@ -23,6 +23,7 @@ interface ISelectProps {
   placeholder?: string;
   title: string;
   mandatory?: boolean;
+  isDisabled?: boolean;
 }
 
 /**
@@ -35,6 +36,7 @@ export const Select = ({
   title,
   placeholder,
   mandatory,
+  isDisabled = false,
 }: ISelectProps) => {
   const options = values.map((optionValue) => (
     <option key={optionValue} value={optionValue}>
@@ -51,7 +53,7 @@ export const Select = ({
   return (
     <FormField title={title} mandatory={mandatory}>
       <SelectContainer level={1}>
-        <Field value={value} onChange={handleChange}>
+        <Field value={value} onChange={handleChange} disabled={isDisabled}>
           {placeholder && <option>{placeholder}</option>}
 
           {options}

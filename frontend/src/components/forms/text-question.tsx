@@ -9,6 +9,7 @@ interface ITextQuestionProps {
   question: QuestionDTO<TextQuestionConfigurationDTO>;
   value: string;
   onChange: (value: string) => any;
+  isDisabled?: boolean;
 }
 
 /**
@@ -18,6 +19,7 @@ export const TextQuestion = ({
   question,
   value,
   onChange,
+  isDisabled,
 }: ITextQuestionProps) => {
   return (
     <TextInput
@@ -26,6 +28,7 @@ export const TextQuestion = ({
       placeholder={question.configuration.placeholder}
       title={question.title}
       mandatory={question.mandatory}
+      isDisabled={isDisabled}
       type={
         question.configuration.multiline
           ? TextInputType.Area

@@ -20,6 +20,7 @@ interface ICheckboxesProps {
   onChange: (selected: string[]) => any;
   title: string;
   mandatory?: boolean;
+  isDisabled?: boolean;
 }
 
 /**
@@ -32,6 +33,7 @@ export const Checkboxes = ({
   onChange,
   title,
   mandatory,
+  isDisabled = false,
 }: ICheckboxesProps) => {
   const groupID = useUniqueID();
   const checkboxIDs = useUniqueIDs(values.length);
@@ -64,6 +66,7 @@ export const Checkboxes = ({
         checked={selected.includes(checkboxValue)}
         type={radio ? "radio" : "checkbox"}
         onChange={toggleChecked}
+        disabled={isDisabled}
       />
       <Label htmlFor={checkboxIDs[index]}>{checkboxValue}</Label>
     </ItemContainer>

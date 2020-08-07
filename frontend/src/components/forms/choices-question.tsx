@@ -10,6 +10,7 @@ interface IChoicesQuestionProps {
   question: QuestionDTO<ChoicesQuestionConfigurationDTO>;
   selected: string[];
   onSelectedChanged: (selected: string[]) => any;
+  isDisabled?: boolean;
 }
 
 /**
@@ -19,6 +20,7 @@ export const ChoicesQuestion = ({
   question,
   selected,
   onSelectedChanged,
+  isDisabled,
 }: IChoicesQuestionProps) => {
   if (question.configuration.displayAsDropdown) {
     return (
@@ -28,6 +30,7 @@ export const ChoicesQuestion = ({
         title={question.title}
         value={selected[0]}
         values={question.configuration.choices}
+        isDisabled={isDisabled}
       />
     );
   }
@@ -40,6 +43,7 @@ export const ChoicesQuestion = ({
       title={question.title}
       mandatory={question.mandatory}
       radio={!question.configuration.allowMultiple}
+      isDisabled={isDisabled}
     />
   );
 };

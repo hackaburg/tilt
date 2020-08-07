@@ -19,9 +19,15 @@ interface IQuestionProps {
   question: QuestionDTO;
   value: any;
   onChange: (value: any) => any;
+  isDisabled?: boolean;
 }
 
-const Question = ({ question, value, onChange }: IQuestionProps) => {
+const Question = ({
+  question,
+  value,
+  onChange,
+  isDisabled,
+}: IQuestionProps) => {
   const type = question.configuration.type;
 
   switch (type) {
@@ -31,6 +37,7 @@ const Question = ({ question, value, onChange }: IQuestionProps) => {
           question={question as QuestionDTO<TextQuestionConfigurationDTO>}
           onChange={onChange}
           value={value}
+          isDisabled={isDisabled}
         />
       );
 
@@ -40,6 +47,7 @@ const Question = ({ question, value, onChange }: IQuestionProps) => {
           question={question as QuestionDTO<NumberQuestionConfigurationDTO>}
           onChange={onChange}
           value={value}
+          isDisabled={isDisabled}
         />
       );
 
@@ -49,6 +57,7 @@ const Question = ({ question, value, onChange }: IQuestionProps) => {
           question={question as QuestionDTO<ChoicesQuestionConfigurationDTO>}
           onSelectedChanged={onChange}
           selected={value}
+          isDisabled={isDisabled}
         />
       );
 
@@ -58,6 +67,7 @@ const Question = ({ question, value, onChange }: IQuestionProps) => {
           question={question as QuestionDTO<CountryQuestionConfigurationDTO>}
           onChange={onChange}
           value={value}
+          isDisabled={isDisabled}
         />
       );
 
@@ -74,9 +84,15 @@ export const UnifiedQuestion = ({
   question,
   value,
   onChange,
+  isDisabled,
 }: IQuestionProps) => (
   <FlexView column grow>
     <Markdown text={question.description} />
-    <Question question={question} value={value} onChange={onChange} />
+    <Question
+      question={question}
+      value={value}
+      onChange={onChange}
+      isDisabled={isDisabled}
+    />
   </FlexView>
 );

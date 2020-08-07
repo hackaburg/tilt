@@ -42,6 +42,7 @@ interface ICommonTextInputProps {
   min?: number;
   max?: number;
   allowDecimals?: boolean;
+  isDisabled?: boolean;
 }
 
 interface ITextInputProps extends ICommonTextInputProps {
@@ -62,11 +63,13 @@ export const TextInput = ({
   min,
   max,
   allowDecimals,
+  isDisabled = false,
 }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus(autoFocus);
   const fieldType = type || TextInputType.Text;
   const fieldProps = {
     autoFocus,
+    disabled: isDisabled,
     onBlur,
     onFocus,
     placeholder,

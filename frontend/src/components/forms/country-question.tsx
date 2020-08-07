@@ -15,6 +15,7 @@ interface ICountryQuestionProps {
   question: QuestionDTO<CountryQuestionConfigurationDTO>;
   value: string;
   onChange: (value: string) => any;
+  isDisabled?: boolean;
 }
 
 /**
@@ -25,6 +26,7 @@ export const CountryQuestion = ({
   value,
   onChange,
   question,
+  isDisabled,
 }: ICountryQuestionProps) => (
   <Select
     mandatory={question.mandatory}
@@ -32,5 +34,6 @@ export const CountryQuestion = ({
     value={value}
     values={countryNames}
     onChange={onChange}
+    isDisabled={isDisabled}
   />
 );

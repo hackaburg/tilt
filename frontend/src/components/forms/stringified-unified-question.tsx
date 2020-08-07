@@ -28,6 +28,7 @@ interface IStringifiedUnifiedQuestionProps {
   question: QuestionDTO;
   value: string;
   onChange: (value: string) => any;
+  isDisabled?: boolean;
 }
 
 /**
@@ -39,6 +40,7 @@ export const StringifiedUnifiedQuestion = ({
   question,
   value,
   onChange,
+  isDisabled,
 }: IStringifiedUnifiedQuestionProps) => {
   const handleChange = useCallback(
     (v) => onChange(deriveResult(v, question.configuration.type)),
@@ -50,6 +52,7 @@ export const StringifiedUnifiedQuestion = ({
       question={question}
       value={deriveValue(value, question.configuration.type)}
       onChange={handleChange}
+      isDisabled={isDisabled}
     />
   );
 };

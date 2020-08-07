@@ -9,6 +9,7 @@ interface INumberQuestionProps {
   question: QuestionDTO<NumberQuestionConfigurationDTO>;
   value: number;
   onChange: (value: number) => any;
+  isDisabled?: boolean;
 }
 
 /**
@@ -18,6 +19,7 @@ export const NumberQuestion = ({
   question,
   value,
   onChange,
+  isDisabled,
 }: INumberQuestionProps) => (
   <TextInput
     mandatory={question.mandatory}
@@ -27,6 +29,7 @@ export const NumberQuestion = ({
     placeholder={question.configuration.placeholder}
     title={question.title}
     type={TextInputType.Number}
+    isDisabled={isDisabled}
     value={value}
   />
 );
