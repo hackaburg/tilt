@@ -9,6 +9,7 @@ RUN yarn install
 
 ADD --chown=node:node frontend/ /app/frontend/
 ADD --chown=node:node backend/ /app/backend/
+ADD --chown=node:node entrypoint.sh /app
 
 RUN yarn backend::build && \
     API_BASE_URL=/api yarn frontend::build && \
@@ -18,4 +19,4 @@ RUN yarn backend::build && \
 
 ENV HTTP_PUBLIC_DIRECTORY=/app/frontend
 
-CMD [ "node", "backend/tilt.js" ]
+CMD [ "/bin/bash", "/app/entrypoint.sh" ]
