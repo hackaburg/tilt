@@ -1,5 +1,6 @@
 import * as cors from "cors";
 import * as express from "express";
+import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { Action, useContainer, useExpressServer } from "routing-controllers";
 import { Container, Inject, Service, Token } from "typedi";
@@ -12,6 +13,11 @@ import {
 } from "./config-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { IUserService, UserServiceToken } from "./user-service";
+
+/**
+ * The text that's prepended to all API routes.
+ */
+export const apiRoutePrefix = "/api";
 
 /**
  * An interface describing the http service.
@@ -77,13 +83,28 @@ export class HttpService implements IHttpService {
       development: !this._config.isProductionEnabled,
       interceptors: [join(__dirname, "../interceptors/*")],
       middlewares: [join(__dirname, "../middlewares/*")],
-      routePrefix: "/api",
+      routePrefix: apiRoutePrefix,
     });
 
     this._logger.debug("initialized http controllers");
 
     const publicDirectory = this._config.config.http.publicDirectory;
     app.use(express.static(publicDirectory));
+
+    const indexFilePath = join(publicDirectory, "index.html");
+    const indexFileContents = existsSync(indexFilePath)
+      ? readFileSync(indexFilePath)
+      : "";
+
+    app.get("*", (request, response) => {
+      if (request.url.startsWith(apiRoutePrefix)) {
+        return;
+      }
+
+      response.write(indexFileContents);
+      response.end();
+    });
+
     this._logger.debug(`initialized static serving from ${publicDirectory}`);
 
     const port = this._config.config.http.port;

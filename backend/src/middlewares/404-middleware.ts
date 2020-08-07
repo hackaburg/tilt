@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ExpressMiddlewareInterface, Middleware } from "routing-controllers";
 import { IApiResponse } from "../controllers/api";
+import { apiRoutePrefix } from "../services/http-service";
 
 @Middleware({ type: "after", priority: 1000 })
 export class FinalMiddleware implements ExpressMiddlewareInterface {
@@ -11,7 +12,7 @@ export class FinalMiddleware implements ExpressMiddlewareInterface {
    * @param next The express next function
    */
   public use(req: Request, res: Response, next: NextFunction): void {
-    if (!res.headersSent && req.path.startsWith("/api")) {
+    if (!res.headersSent && req.path.startsWith(apiRoutePrefix)) {
       res.status(404);
       res.send({
         error: `route ${req.path} not found`,
