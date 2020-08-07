@@ -7,6 +7,7 @@ import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { useDerivedState } from "../../hooks/use-derived-state";
+import { isBetween, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import { Heading } from "../base/headings";
@@ -45,6 +46,30 @@ export const Form = ({ type }: IFormProps) => {
     type === FormType.ProfileForm
       ? settings.application.profileForm.title
       : settings.application.confirmationForm.title;
+
+  const { user } = useLoginContext();
+  const isExpired = user == null ? false : isConfirmationExpired(user);
+  const isNotAttending = user?.declined || isExpired;
+
+  const now = Date.now();
+  const isProfileFormAvailable =
+    !user?.admitted &&
+    isBetween(
+      settings.application.allowProfileFormFrom.getTime(),
+      now,
+      settings.application.allowProfileFormUntil.getTime(),
+    );
+
+  const isConfirmationFormAvailable =
+    user != null &&
+    user.confirmationExpiresAt != null &&
+    user.confirmationExpiresAt.getTime() >= now;
+
+  const isFormDisabled =
+    isNotAttending ||
+    (type === FormType.ProfileForm
+      ? !isProfileFormAvailable
+      : !isConfirmationFormAvailable);
 
   const { value: form, error: initialFetchError } = useApi(
     async (api) =>
@@ -99,21 +124,21 @@ export const Form = ({ type }: IFormProps) => {
 
       if (type === FormType.ProfileForm) {
         await api.storeProfileFormAnswers(synchronizedAnswers);
-        updateUser((user) =>
-          user == null
+        updateUser((value) =>
+          value == null
             ? null
             : {
-                ...user,
+                ...value,
                 initialProfileFormSubmittedAt: new Date(),
               },
         );
       } else {
         await api.storeConfirmationFormAnswers(synchronizedAnswers);
-        updateUser((user) =>
-          user == null
+        updateUser((value) =>
+          value == null
             ? null
             : {
-                ...user,
+                ...value,
                 confirmed: true,
               },
         );
@@ -170,6 +195,7 @@ export const Form = ({ type }: IFormProps) => {
           onChange={(value) => handleQuestionValueChange(question.id!, value)}
           value={state[question.id!] ?? ""}
           question={question}
+          isDisabled={isFormDisabled}
         />
       </FlexView>
     );
@@ -190,7 +216,7 @@ export const Form = ({ type }: IFormProps) => {
             )}
           </FlexView>
 
-          {!isDirty && (
+          {!isDirty && !isFormDisabled && (
             <FlexView shrink={false}>
               <Muted>All changes saved</Muted>
             </FlexView>
@@ -203,7 +229,7 @@ export const Form = ({ type }: IFormProps) => {
               primary
               onClick={handleSubmit}
               loading={isSubmitting}
-              disable={!isDirty}
+              disable={!isDirty || isFormDisabled}
             >
               Submit
             </Button>

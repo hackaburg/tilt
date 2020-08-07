@@ -145,3 +145,15 @@ export const percentageToString = (percentage: number): string =>
  */
 export const roundDateToDay = (date: Date): Date =>
   new Date(date.getFullYear(), date.getMonth(), date.getDay());
+
+/**
+ * Checks whether the given value is between the lower and upper bounds.
+ * @param lowerBound The lower bound
+ * @param x The value
+ * @param upperBound The upper bound
+ */
+export const isBetween = (
+  lowerBound: number,
+  x: number,
+  upperBound: number,
+): boolean => lowerBound <= x && x <= upperBound;
