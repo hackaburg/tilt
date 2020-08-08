@@ -101,6 +101,7 @@ export const filterSplit = <T>(
  * @param user The user to check for expiration
  */
 export const isConfirmationExpired = (user: UserDTO): boolean =>
+  !user.confirmed &&
   user.confirmationExpiresAt != null &&
   user.confirmationExpiresAt.getTime() <= Date.now();
 
