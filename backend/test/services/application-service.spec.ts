@@ -21,6 +21,7 @@ import {
   SettingsService,
 } from "../../src/services/settings-service";
 import { MockedService } from "./mock";
+import { MockConfigurationService } from "./mock/mock-config-service";
 import { TestDatabaseService } from "./mock/mock-database-service";
 import { MockEmailTemplateService } from "./mock/mock-email-template-service";
 import { MockLoggerService } from "./mock/mock-logger-service";
@@ -112,7 +113,15 @@ describe(ApplicationService.name, () => {
     await questionGraph.bootstrap();
 
     const logger = new MockLoggerService();
-    settings = new SettingsService(database, logger.instance);
+    const config = new MockConfigurationService({
+      config: {
+        http: {
+          baseURL: "",
+        },
+      },
+    } as any);
+
+    settings = new SettingsService(config.instance, database, logger.instance);
     await settings.bootstrap();
 
     const users = new MockUserService();

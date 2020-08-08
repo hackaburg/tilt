@@ -8,6 +8,7 @@ import {
   SettingsService,
 } from "../../src/services/settings-service";
 import { MockedService } from "./mock";
+import { MockConfigurationService } from "./mock/mock-config-service";
 import { TestDatabaseService } from "./mock/mock-database-service";
 import { MockLoggerService } from "./mock/mock-logger-service";
 
@@ -25,7 +26,20 @@ describe("SettingsService", () => {
 
   beforeEach(async () => {
     logger = new MockLoggerService();
-    settingsService = new SettingsService(database, logger.instance);
+
+    const config = new MockConfigurationService({
+      config: {
+        http: {
+          baseURL: "",
+        },
+      },
+    } as any);
+
+    settingsService = new SettingsService(
+      config.instance,
+      database,
+      logger.instance,
+    );
     await settingsService.bootstrap();
     await settingsRepo.clear();
   });

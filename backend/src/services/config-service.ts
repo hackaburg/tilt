@@ -20,6 +20,7 @@ interface IAppConfiguration {
 interface IHttpConfiguration {
   port: number;
   publicDirectory: string;
+  baseURL: string;
 }
 
 interface ILoggerConfiguration {
@@ -143,6 +144,11 @@ export class ConfigurationService implements IConfigurationService {
         },
       },
       http: {
+        baseURL: {
+          default: "",
+          env: "BASE_URL",
+          format: String,
+        },
         port: {
           default: 3000,
           env: "PORT",

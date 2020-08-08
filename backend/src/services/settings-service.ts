@@ -10,6 +10,10 @@ import {
   FrontendSettings,
   Settings,
 } from "../entities/settings";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 
@@ -40,6 +44,8 @@ export class SettingsService implements ISettingsService {
   private _questions!: Repository<Question>;
 
   public constructor(
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
   ) {}
@@ -124,6 +130,11 @@ export class SettingsService implements ISettingsService {
     emailSettings.verifyEmail = this.getDefaultEmailTemplate();
     emailSettings.admittedEmail = this.getDefaultEmailTemplate();
     emailSettings.sender = "tilt@hackaburg.de";
+
+    const verifyURL = `${this._config.config.http.baseURL}/verify#token={verifyToken}`;
+    emailSettings.verifyEmail.htmlTemplate = `<a href="${verifyURL}">${verifyURL}</a>`;
+    emailSettings.verifyEmail.textTemplate = verifyURL;
+
     return emailSettings;
   }
 
