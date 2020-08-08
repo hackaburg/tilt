@@ -11,6 +11,7 @@ import {
   ApplicationService,
   IApplicationService,
 } from "../../src/services/application-service";
+import { IEmailTemplateService } from "../../src/services/email-template-service";
 import {
   IQuestionGraphService,
   QuestionGraphService,
@@ -19,7 +20,9 @@ import {
   ISettingsService,
   SettingsService,
 } from "../../src/services/settings-service";
+import { MockedService } from "./mock";
 import { TestDatabaseService } from "./mock/mock-database-service";
+import { MockEmailTemplateService } from "./mock/mock-email-template-service";
 import { MockLoggerService } from "./mock/mock-logger-service";
 import { MockUserService } from "./mock/mock-user-service";
 
@@ -27,6 +30,7 @@ describe(ApplicationService.name, () => {
   let service: IApplicationService;
   let questionGraph: IQuestionGraphService;
   let database: TestDatabaseService;
+  let emails: MockedService<IEmailTemplateService>;
 
   /**
    * A non-mocked / actual settings service. We can't use a mocked service here,
@@ -113,11 +117,13 @@ describe(ApplicationService.name, () => {
 
     const users = new MockUserService();
 
+    emails = new MockEmailTemplateService();
     service = new ApplicationService(
       questionGraph,
       database,
       settings,
       users.instance,
+      emails.instance,
     );
     await service.bootstrap();
   });
@@ -639,5 +645,11 @@ describe(ApplicationService.name, () => {
     expect(answers).toHaveLength(2);
     expect(answers[0].value).toBe(value1);
     expect(answers[1].value).toBe(value2);
+  });
+
+  it("sends admission emails", async () => {
+    expect.assertions(1);
+    await service.admit([user]);
+    expect(emails.mocks.sendAdmittedEmail).toBeCalled();
   });
 });

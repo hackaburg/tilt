@@ -8,6 +8,10 @@ import { User } from "../entities/user";
 import { enforceExhaustiveSwitch } from "../utils/switch";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import {
+  EmailTemplateServiceToken,
+  IEmailTemplateService,
+} from "./email-template-service";
+import {
   IQuestionGraphService,
   QuestionGraph,
   QuestionGraphServiceToken,
@@ -116,6 +120,8 @@ export class ApplicationService implements IApplicationService {
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
     @Inject(UserServiceToken) private readonly _users: IUserService,
+    @Inject(EmailTemplateServiceToken)
+    private readonly _email: IEmailTemplateService,
   ) {}
 
   /**
@@ -409,6 +415,12 @@ export class ApplicationService implements IApplicationService {
     }
 
     await this._users.updateUsers(users);
+
+    const emailPromises = users.map((user) =>
+      this._email.sendAdmittedEmail(user),
+    );
+
+    await Promise.all(emailPromises);
   }
 
   /**

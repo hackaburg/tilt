@@ -6,11 +6,7 @@ import { User } from "../entities/user";
 import { EmailServiceToken, IEmailService } from "./email-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
 
-interface IDefaultEmailContext {
-  email: string;
-}
-
-interface IVerifyEmailContext extends IDefaultEmailContext {
+interface IVerifyEmailContext {
   verifyToken: string;
 }
 
@@ -23,6 +19,12 @@ export interface IEmailTemplateService extends IService {
    * @param user The user expecting the verification email
    */
   sendVerifyEmail(user: User): Promise<void>;
+
+  /**
+   * Sends a "you're in" email to the given user.
+   * @param user The user expecting the admissioin email
+   */
+  sendAdmittedEmail(user: User): Promise<void>;
 }
 
 /**
@@ -38,7 +40,7 @@ export class EmailTemplateService implements IEmailTemplateService {
   ) {}
 
   /**
-   * Bootstraps the email template service, i.e. noop, since no setup is required.
+   * @inheritdoc
    */
   public async bootstrap(): Promise<void> {
     return;
@@ -51,7 +53,7 @@ export class EmailTemplateService implements IEmailTemplateService {
    */
   private compileTemplate<TContext>(
     template: EmailTemplate,
-    context: TContext,
+    context?: TContext,
   ): EmailTemplate {
     return {
       htmlTemplate: Handlebars.compile(template.htmlTemplate)(context),
@@ -61,18 +63,32 @@ export class EmailTemplateService implements IEmailTemplateService {
   }
 
   /**
-   * Sends a "verify your email address" email to the given user.
-   * @param user The user expecting the verification email
+   * @inheritdoc
    */
   public async sendVerifyEmail(user: User): Promise<void> {
     const { email } = await this._settings.getSettings();
     const template = this.compileTemplate<IVerifyEmailContext>(
       email.verifyEmail,
       {
-        email: user.email,
         verifyToken: user.verifyToken,
       },
     );
+
+    await this._email.sendEmail(
+      email.sender,
+      user.email,
+      template.subject,
+      template.htmlTemplate,
+      template.textTemplate,
+    );
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async sendAdmittedEmail(user: User): Promise<void> {
+    const { email } = await this._settings.getSettings();
+    const template = this.compileTemplate(email.admittedEmail);
 
     await this._email.sendEmail(
       email.sender,
