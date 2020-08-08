@@ -9,7 +9,8 @@ const environmentBaseURL = process.env.API_BASE_URL ?? "";
  * The document's base url, as defined by `<base />`.
  */
 export const documentBaseURL =
-  document.querySelector("base")?.href?.replace(/\/+$/, "") ?? "";
+  document.querySelector("base")?.getAttribute("href")?.replace(/\/+$/, "") ??
+  "";
 
 /**
  * The base url to a tilt backend.
