@@ -372,6 +372,10 @@ export class ApplicationService implements IApplicationService {
     user: User,
     answers: readonly IRawAnswer[],
   ): Promise<void> {
+    if (user.admitted) {
+      throw new AlreadyAdmittedError();
+    }
+
     const settings = await this._settings.getSettings();
 
     const now = Date.now();
@@ -614,5 +618,11 @@ export class ConfirmationDeadlineFailedError extends Error {
 export class AlreadyDeclinedError extends Error {
   constructor() {
     super("You already declined your application");
+  }
+}
+
+export class AlreadyAdmittedError extends Error {
+  constructor() {
+    super("You're already admitted and can't change your previous answers");
   }
 }

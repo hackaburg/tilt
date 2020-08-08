@@ -661,4 +661,12 @@ describe(ApplicationService.name, () => {
     await service.admit([user]);
     expect(emails.mocks.sendAdmittedEmail).toBeCalled();
   });
+
+  it("prevents updating profile answers after admission", async () => {
+    expect.assertions(1);
+    await service.admit([user]);
+    await expect(
+      service.storeProfileFormAnswers(user, []),
+    ).rejects.toBeDefined();
+  });
 });

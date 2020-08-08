@@ -15,6 +15,7 @@ import { Inject } from "typedi";
 import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
 import {
+  AlreadyAdmittedError,
   AlreadyDeclinedError,
   ApplicationServiceToken,
   FormNotAvailableError,
@@ -87,6 +88,7 @@ export class ApplicationController {
     if (error instanceof QuestionNotFoundError) {
       return new NotFoundError(error.message);
     } else if (
+      error instanceof AlreadyAdmittedError ||
       error instanceof AlreadyDeclinedError ||
       error instanceof IncompleteProfileFormError ||
       error instanceof InvalidAnswerError ||
