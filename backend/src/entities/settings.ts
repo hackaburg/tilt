@@ -50,7 +50,7 @@ export class EmailSettings {
   public verifyEmail!: EmailTemplate;
   @Type(() => EmailTemplate)
   @Column(() => EmailTemplate)
-  public forgotPasswordEmail!: EmailTemplate;
+  public admittedEmail!: EmailTemplate;
 }
 
 export class EmailTemplate {

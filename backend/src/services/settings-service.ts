@@ -122,7 +122,7 @@ export class SettingsService implements ISettingsService {
   private getDefaultEmailSettings(): EmailSettings {
     const emailSettings = new EmailSettings();
     emailSettings.verifyEmail = this.getDefaultEmailTemplate();
-    emailSettings.forgotPasswordEmail = this.getDefaultEmailTemplate();
+    emailSettings.admittedEmail = this.getDefaultEmailTemplate();
     emailSettings.sender = "tilt@hackaburg.de";
     return emailSettings;
   }

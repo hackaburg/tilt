@@ -44,8 +44,8 @@ export const EmailSettings = () => {
     [updateEmailSettings, settings],
   );
 
-  const handleForgotPasswordEmailChange = useCallback(
-    (forgotPasswordEmail) => updateEmailSettings({ forgotPasswordEmail }),
+  const handleAdmittedEmailChange = useCallback(
+    (admittedEmail) => updateEmailSettings({ admittedEmail }),
     [updateEmailSettings, settings],
   );
 
@@ -104,9 +104,9 @@ export const EmailSettings = () => {
 
           <EmailTemplateEditorContainer column>
             <EmailTemplateEditor
-              title="Forgot password email"
-              template={settings.email.forgotPasswordEmail}
-              onTemplateChange={handleForgotPasswordEmailChange}
+              title="Admitted email"
+              template={settings.email.admittedEmail}
+              onTemplateChange={handleAdmittedEmailChange}
             />
           </EmailTemplateEditorContainer>
         </>

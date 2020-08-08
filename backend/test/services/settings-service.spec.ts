@@ -61,7 +61,7 @@ describe("SettingsService", () => {
         },
       } as any,
       email: {
-        forgotPasswordEmail: {
+        admittedEmail: {
           htmlTemplate: "foo",
           subject: "bar",
           textTemplate: "foobar",
@@ -86,8 +86,8 @@ describe("SettingsService", () => {
     await settingsService.updateSettings(updatedSettings);
     const settings = await settingsService.getSettings();
 
-    expect(settings.email.forgotPasswordEmail.htmlTemplate).toBe(
-      updatedSettings.email.forgotPasswordEmail.htmlTemplate,
+    expect(settings.email.admittedEmail.htmlTemplate).toBe(
+      updatedSettings.email.admittedEmail.htmlTemplate,
     );
   });
 
@@ -111,7 +111,7 @@ describe("SettingsService", () => {
         },
       } as any,
       email: {
-        forgotPasswordEmail: {
+        admittedEmail: {
           htmlTemplate: "foo",
           subject: "bar",
           textTemplate: "foobar",

@@ -259,7 +259,7 @@ export class EmailSettingsDTO implements DTO<EmailSettings> {
   @Type(() => EmailTemplateDTO)
   @ValidateNested()
   @Expose()
-  public forgotPasswordEmail!: EmailTemplateDTO;
+  public admittedEmail!: EmailTemplateDTO;
 }
 
 export class EmailTemplateDTO implements DTO<EmailTemplate> {
