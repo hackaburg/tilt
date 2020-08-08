@@ -1,3 +1,4 @@
+import { join } from "path";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -131,7 +132,11 @@ export class SettingsService implements ISettingsService {
     emailSettings.admittedEmail = this.getDefaultEmailTemplate();
     emailSettings.sender = "tilt@hackaburg.de";
 
-    const verifyURL = `${this._config.config.http.baseURL}/verify#token={{verifyToken}}`;
+    const verifyURL = join(
+      this._config.config.http.baseURL,
+      "/verify#{{verifyToken}}",
+    );
+
     emailSettings.verifyEmail.htmlTemplate = `<a href="${verifyURL}">${verifyURL}</a>`;
     emailSettings.verifyEmail.textTemplate = verifyURL;
 
