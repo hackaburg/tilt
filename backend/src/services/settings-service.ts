@@ -131,7 +131,7 @@ export class SettingsService implements ISettingsService {
     emailSettings.admittedEmail = this.getDefaultEmailTemplate();
     emailSettings.sender = "tilt@hackaburg.de";
 
-    const verifyURL = `${this._config.config.http.baseURL}/verify#token={verifyToken}`;
+    const verifyURL = `${this._config.config.http.baseURL}/verify#token={{verifyToken}}`;
     emailSettings.verifyEmail.htmlTemplate = `<a href="${verifyURL}">${verifyURL}</a>`;
     emailSettings.verifyEmail.textTemplate = verifyURL;
 
