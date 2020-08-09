@@ -116,3 +116,8 @@ export const chartColors = [
 export const transparentChartColors = chartColors.map((color) =>
   color.replace(")", ", 0.25)"),
 );
+
+/**
+ * The size of a horizontal or vertical spacer.
+ */
+export const spacerSize = "1rem";

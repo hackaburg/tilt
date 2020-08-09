@@ -4,7 +4,8 @@ import {
   NumberQuestionConfigurationDTO,
   QuestionDTO,
 } from "../../api/types/dto";
-import { Col, ColSpacer, Row } from "../base/grid";
+import { HorizontalSpacer } from "../base/flex";
+import { Col, Row } from "../base/grid";
 import { TextInput, TextInputType } from "../base/text-input";
 
 interface INumberQuestionEditorProps {
@@ -77,7 +78,7 @@ export const NumberQuestionEditor = ({
             placeholder="No minimum"
           />
         </Col>
-        <ColSpacer />
+        <HorizontalSpacer />
         <Col>
           <TextInput
             type={TextInputType.Number}

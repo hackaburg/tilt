@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import FlexView from "react-flexview";
+import { HorizontalSpacer } from "./flex";
 
 const ButtonContainer = styled(FlexView)`
   padding-bottom: 1.1rem;
@@ -20,7 +21,7 @@ export const FormFieldButton = ({ field, button }: IFormFieldButtonProps) => (
       {field}
     </FlexView>
 
-    <FlexView width="1rem" shrink={false} />
+    <HorizontalSpacer />
 
     <ButtonContainer column shrink>
       {button}

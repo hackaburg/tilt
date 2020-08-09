@@ -15,6 +15,7 @@ import { Button } from "../base/button";
 import { Chevron } from "../base/chevron";
 import { Code } from "../base/code";
 import { Elevated } from "../base/elevated";
+import { HorizontalSpacer, VerticalSpacer } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
 import { ExternalLink } from "../base/link";
@@ -418,7 +419,7 @@ export const Admission = () => {
                       <b>{question.title}</b>
                     </Text>
                   </FlexView>
-                  <FlexView width="1rem" shrink={false} />
+                  <HorizontalSpacer />
                   <FlexView grow column>
                     {answer}
                   </FlexView>
@@ -467,7 +468,7 @@ export const Admission = () => {
               <DetailsButton onClick={handleExpandRow}>
                 <FlexView vAlignContent="center">
                   {isRowExpanded ? "Collapse" : "Expand"}
-                  <FlexView width="0.5rem" />
+                  <HorizontalSpacer />
                   <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
                 </FlexView>
               </DetailsButton>
@@ -603,7 +604,7 @@ export const Admission = () => {
             }
           />
 
-          <FlexView height="1rem" shrink={false} />
+          <VerticalSpacer />
 
           <Elevated level={1}>
             <Table>
@@ -643,7 +644,7 @@ export const Admission = () => {
             </Table>
           </Elevated>
 
-          <FlexView height="1rem" shrink={false} />
+          <VerticalSpacer />
         </FlexView>
       )}
     </Page>

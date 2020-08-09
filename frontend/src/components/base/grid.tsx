@@ -1,6 +1,5 @@
 import * as React from "react";
 import FlexView from "react-flexview";
-import { gridSpacing } from "../../config";
 
 interface IProps {
   children: FlexView.Props["children"];
@@ -21,13 +20,3 @@ export const Col = ({ children }: IProps) => (
     {children}
   </FlexView>
 );
-
-/**
- * A vertical spacer between rows.
- */
-export const RowSpacer = () => <FlexView height={gridSpacing} shrink={false} />;
-
-/**
- * A horizontal spacer between columns.
- */
-export const ColSpacer = () => <FlexView width={gridSpacing} shrink={false} />;

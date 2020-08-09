@@ -5,7 +5,8 @@ import {
   QuestionDTO,
 } from "../../api/types/dto";
 import { Checkboxes } from "../base/checkbox";
-import { Col, ColSpacer, Row } from "../base/grid";
+import { HorizontalSpacer } from "../base/flex";
+import { Col, Row } from "../base/grid";
 import { TextInput, TextInputType } from "../base/text-input";
 
 const separator = "\n";
@@ -104,7 +105,7 @@ export const ChoicesQuestionEditor = ({
             onChange={handleChoicesUpdate}
           />
         </Col>
-        <ColSpacer />
+        <HorizontalSpacer />
         <Col>
           <Checkboxes
             values={appearanceOptions}

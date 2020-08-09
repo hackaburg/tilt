@@ -6,7 +6,8 @@ import type { ApplicationSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useDerivedState } from "../../hooks/use-derived-state";
 import { isValidDate } from "../../util";
-import { Col, ColSpacer, Row } from "../base/grid";
+import { HorizontalSpacer } from "../base/flex";
+import { Col, Row } from "../base/grid";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -124,7 +125,7 @@ export const ApplicationSettings = () => {
             placeholder="keep it fair, e.g. 240 for 10 days"
           />
         </Col>
-        <ColSpacer />
+        <HorizontalSpacer />
         <Col>
           <TextInput
             value={allowProfileFormFrom}
@@ -133,7 +134,7 @@ export const ApplicationSettings = () => {
             placeholder="1970-01-01 00:00:00"
           />
         </Col>
-        <ColSpacer />
+        <HorizontalSpacer />
         <Col>
           <TextInput
             value={allowProfileFormUntil}

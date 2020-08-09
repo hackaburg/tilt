@@ -10,6 +10,7 @@ import { useDerivedState } from "../../hooks/use-derived-state";
 import { isBetween, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
+import { HorizontalSpacer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { Muted } from "../base/muted";
@@ -222,7 +223,7 @@ export const Form = ({ type }: IFormProps) => {
             </FlexView>
           )}
 
-          <FlexView width="1rem" shrink={false} />
+          <HorizontalSpacer />
 
           <FlexView shrink>
             <Button

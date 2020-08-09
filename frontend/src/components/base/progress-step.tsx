@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import FlexView from "react-flexview";
+import { HorizontalSpacer, VerticalSpacer } from "./flex";
 import { Subheading } from "./headings";
 
 const StepContainer = styled(FlexView)`
@@ -40,7 +41,7 @@ export const ProgressStep = ({
   title,
 }: IProgressStepProps) => (
   <FlexView column>
-    <FlexView height="2rem" shrink={false} />
+    <VerticalSpacer />
 
     <FlexView vAlignContent="top">
       <StepContainer shrink={false} column>
@@ -62,7 +63,7 @@ export const ProgressStep = ({
         </StepIndex>
       </StepContainer>
 
-      <FlexView width="1rem" shrink={false} />
+      <HorizontalSpacer />
 
       <FlexView column grow>
         <Subheading>{title}</Subheading>

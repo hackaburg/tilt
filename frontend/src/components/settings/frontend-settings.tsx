@@ -2,7 +2,8 @@ import * as React from "react";
 import { useCallback } from "react";
 import type { FrontendSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
-import { Col, ColSpacer, Row } from "../base/grid";
+import { HorizontalSpacer } from "../base/flex";
+import { Col, Row } from "../base/grid";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -76,7 +77,7 @@ export const FrontendSettings = () => {
             onChange={handleColorGradientStartChange}
           />
         </Col>
-        <ColSpacer />
+        <HorizontalSpacer />
         <Col>
           <TextInput
             title="Gradient end color"
@@ -98,7 +99,7 @@ export const FrontendSettings = () => {
             onChange={handleColorLinkChange}
           />
         </Col>
-        <ColSpacer />
+        <HorizontalSpacer />
         <Col>
           <TextInput
             title="Link hover color"
@@ -120,7 +121,7 @@ export const FrontendSettings = () => {
             onChange={handleLoginSignupImageChange}
           />
         </Col>
-        <ColSpacer />
+        <HorizontalSpacer />
         <Col>
           <TextInput
             title="Sidebar image url"

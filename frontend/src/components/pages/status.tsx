@@ -7,6 +7,7 @@ import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { dateToString, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
+import { VerticalSpacer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
@@ -156,7 +157,7 @@ export const Status = () => {
 
             {!isNotAttending && (
               <>
-                <FlexView height="1rem" shrink={false} />
+                <VerticalSpacer />
 
                 <FlexView hAlignContent="left">
                   <FlexView shrink>
