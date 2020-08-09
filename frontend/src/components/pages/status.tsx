@@ -4,9 +4,11 @@ import FlexView from "react-flexview";
 import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
+import { Routes } from "../../routes";
 import { dateToString, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
 import { Heading } from "../base/headings";
+import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
 import { Page } from "./page";
@@ -81,7 +83,9 @@ export const Status = () => {
         }
       >
         <Text>
-          You answer a few questions so we get to know you, any time between{" "}
+          You answer a few questions in our{" "}
+          <InternalLink to={Routes.ProfileForm}>profile form</InternalLink> so
+          we get to know you, any time between{" "}
           <b>{dateToString(settings.application.allowProfileFormFrom)}</b> and{" "}
           <b>{dateToString(settings.application.allowProfileFormUntil)}</b>.
         </Text>
@@ -115,7 +119,17 @@ export const Status = () => {
       >
         <Text>
           If you received an acceptance e-mail, you still need to confirm your
-          spot and provide some final information like your dietary needs.
+          spot and provide some final information like your dietary needs
+          {user?.admitted && (
+            <>
+              {" "}
+              in our{" "}
+              <InternalLink to={Routes.ConfirmationForm}>
+                confirmation form
+              </InternalLink>
+            </>
+          )}
+          .
         </Text>
         <Text>
           You have{" "}
@@ -151,7 +165,7 @@ export const Status = () => {
                       disable={isNotAttending}
                       onClick={handleDeclineSpot}
                     >
-                      Decline my spot
+                      I can't make it
                     </Button>
                   </FlexView>
                 </FlexView>
