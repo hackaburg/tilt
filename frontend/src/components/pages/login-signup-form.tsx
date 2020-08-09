@@ -47,13 +47,14 @@ export const LoginSignupForm = () => {
         await api.signup(email, password);
         return true;
       }
+
+      return false;
     },
     [email, password],
   );
 
   const formInProgress = signupInProgress || loginInProgress;
-  const error = loginError ?? signupError;
-  const signupDone = !!didSignup && !signupInProgress && !error;
+  const signupDone = Boolean(didSignup) && !signupInProgress && !signupError;
 
   const handleSubmit = useCallback((event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -76,9 +77,15 @@ export const LoginSignupForm = () => {
     <FlexView column grow>
       <Heading>Register to apply</Heading>
 
-      {error && (
+      {loginError && (
         <Message error>
-          <b>Error:</b> {error?.message}
+          <b>Login error:</b> {loginError.message}
+        </Message>
+      )}
+
+      {signupError && (
+        <Message error>
+          <b>Signup error:</b> {signupError.message}
         </Message>
       )}
 
