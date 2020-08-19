@@ -5,7 +5,7 @@ import {
   QuestionDTO,
 } from "../../api/types/dto";
 import { HorizontalSpacer } from "../base/flex";
-import { Col, Row } from "../base/grid";
+import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { TextInput, TextInputType } from "../base/text-input";
 
 interface INumberQuestionEditorProps {
@@ -68,8 +68,8 @@ export const NumberQuestionEditor = ({
         title="Input placeholder"
       />
 
-      <Row>
-        <Col>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
           <TextInput
             type={TextInputType.Number}
             value={question.configuration.minValue}
@@ -77,9 +77,9 @@ export const NumberQuestionEditor = ({
             title="Minimum"
             placeholder="No minimum"
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <TextInput
             type={TextInputType.Number}
             value={question.configuration.maxValue}
@@ -87,8 +87,8 @@ export const NumberQuestionEditor = ({
             title="Maximum"
             placeholder="No maximum"
           />
-        </Col>
-      </Row>
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
     </>
   );
 };

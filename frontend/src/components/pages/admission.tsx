@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
-import FlexView from "react-flexview";
 import { useDebounce } from "use-debounce";
 import { ApplicationDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
@@ -15,7 +14,14 @@ import { Button } from "../base/button";
 import { Chevron } from "../base/chevron";
 import { Code } from "../base/code";
 import { Elevated } from "../base/elevated";
-import { HorizontalSpacer, VerticalSpacer } from "../base/flex";
+import {
+  FlexColumnContainer,
+  FlexRowContainer,
+  HorizontalSpacer,
+  StyleableFlexContainer,
+  VerticallyCenteredContainer,
+  VerticalSpacer,
+} from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
 import { ExternalLink } from "../base/link";
@@ -75,7 +81,7 @@ const ExpandedCell = styled.td`
   box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const QuestionaireContainer = styled(FlexView)`
+const QuestionaireContainer = styled(StyleableFlexContainer)`
   padding: 1rem;
 `;
 
@@ -379,9 +385,7 @@ export const Admission = () => {
                 return;
               }
 
-              let answer: FlexView.Props["children"] = (
-                <Text>{answerValue}</Text>
-              );
+              let answer: React.ReactNode = <Text>{answerValue}</Text>;
 
               if (question.configuration.type === QuestionType.Text) {
                 if (question.configuration.convertAnswerToUrl) {
@@ -413,17 +417,15 @@ export const Admission = () => {
               }
 
               return (
-                <FlexView key={String(question.id)} vAlignContent="top">
-                  <FlexView shrink>
+                <FlexRowContainer key={String(question.id)}>
+                  <FlexColumnContainer>
                     <Text>
                       <b>{question.title}</b>
                     </Text>
-                  </FlexView>
+                  </FlexColumnContainer>
                   <HorizontalSpacer />
-                  <FlexView grow column>
-                    {answer}
-                  </FlexView>
-                </FlexView>
+                  <FlexColumnContainer>{answer}</FlexColumnContainer>
+                </FlexRowContainer>
               );
             })
             .filter((answer) => answer != null);
@@ -466,11 +468,11 @@ export const Admission = () => {
 
             <TableCell>
               <DetailsButton onClick={handleExpandRow}>
-                <FlexView vAlignContent="center">
+                <VerticallyCenteredContainer>
                   {isRowExpanded ? "Collapse" : "Expand"}
                   <HorizontalSpacer />
                   <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
-                </FlexView>
+                </VerticallyCenteredContainer>
               </DetailsButton>
             </TableCell>
 
@@ -484,7 +486,7 @@ export const Admission = () => {
           <tr>
             {isRowExpanded && (
               <ExpandedCell colSpan={4}>
-                <QuestionaireContainer column grow>
+                <QuestionaireContainer>
                   <Subheading>Application</Subheading>
 
                   {questionsAndAnswers != null &&
@@ -494,17 +496,19 @@ export const Admission = () => {
                     <Muted>This application appears to be empty.</Muted>
                   )}
 
-                  <FlexView vAlignContent="center" grow>
-                    <FlexView grow>
+                  <VerticallyCenteredContainer>
+                    <FlexColumnContainer>
                       <Subheading>Meta</Subheading>
-                    </FlexView>
+                    </FlexColumnContainer>
 
-                    <FlexView column shrink>
-                      <Button onClick={handleDeleteAccount}>
-                        Delete account
-                      </Button>
-                    </FlexView>
-                  </FlexView>
+                    <FlexRowContainer>
+                      <StyleableFlexContainer>
+                        <Button onClick={handleDeleteAccount}>
+                          Delete account
+                        </Button>
+                      </StyleableFlexContainer>
+                    </FlexRowContainer>
+                  </VerticallyCenteredContainer>
 
                   <Text>
                     <b>Account created on:</b> {dateToString(createdAt)}
@@ -581,7 +585,7 @@ export const Admission = () => {
 
       {isFetching && <SuspenseFallback />}
       {allApplications != null && (
-        <FlexView column grow>
+        <StyleableFlexContainer>
           <FormFieldButton
             field={
               <TextInput
@@ -645,7 +649,7 @@ export const Admission = () => {
           </Elevated>
 
           <VerticalSpacer />
-        </FlexView>
+        </StyleableFlexContainer>
       )}
     </Page>
   );

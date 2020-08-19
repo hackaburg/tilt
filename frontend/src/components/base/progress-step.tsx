@@ -1,18 +1,26 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
-import { HorizontalSpacer, VerticalSpacer } from "./flex";
+import {
+  CenteredContainer,
+  FlexColumnContainer,
+  FlexRowColumnContainer,
+  FlexRowContainer,
+  HorizontalSpacer,
+  Spacer,
+  StyleableFlexContainer,
+} from "./flex";
 import { Subheading } from "./headings";
 
-const StepContainer = styled(FlexView)`
+const StepContainer = styled(StyleableFlexContainer)`
   padding-top: 0.5rem;
 `;
 
-const StepIndex = styled(FlexView)`
+const StepIndex = styled(StyleableFlexContainer)`
   font-weight: bold;
-  background-color: #333;
-  color: white;
   border-radius: 10rem;
+  border: 1px dashed #333;
+  width: 2rem;
+  height: 2rem;
 `;
 
 /**
@@ -24,8 +32,20 @@ export enum ProgressStepState {
   Failed,
 }
 
+const completedStyle: React.CSSProperties = {
+  backgroundColor: "#56d175",
+  border: "none",
+  color: "white",
+};
+
+const failedStyle: React.CSSProperties = {
+  backgroundColor: "#ff5086",
+  border: "none",
+  color: "white",
+};
+
 interface IProgressStepProps {
-  children: FlexView.Props["children"];
+  children: React.ReactNode;
   index: number;
   state: ProgressStepState;
   title: string;
@@ -40,36 +60,31 @@ export const ProgressStep = ({
   state,
   title,
 }: IProgressStepProps) => (
-  <FlexView column>
-    <VerticalSpacer />
+  <FlexColumnContainer>
+    <Spacer />
 
-    <FlexView vAlignContent="top">
-      <StepContainer shrink={false} column>
+    <FlexRowContainer>
+      <StepContainer>
         <StepIndex
-          vAlignContent="center"
-          hAlignContent="center"
-          width="2rem"
-          height="2rem"
-          style={{
-            backgroundColor:
-              state === ProgressStepState.Completed
-                ? "#56d175"
-                : state === ProgressStepState.Failed
-                ? "#ff5086"
-                : undefined,
-          }}
+          style={
+            state === ProgressStepState.Completed
+              ? completedStyle
+              : state === ProgressStepState.Failed
+              ? failedStyle
+              : undefined
+          }
         >
-          {index}
+          <CenteredContainer>{index}</CenteredContainer>
         </StepIndex>
       </StepContainer>
 
       <HorizontalSpacer />
 
-      <FlexView column grow>
+      <FlexRowColumnContainer>
         <Subheading>{title}</Subheading>
 
         {children}
-      </FlexView>
-    </FlexView>
-  </FlexView>
+      </FlexRowColumnContainer>
+    </FlexRowContainer>
+  </FlexColumnContainer>
 );

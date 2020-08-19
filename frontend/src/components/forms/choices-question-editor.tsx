@@ -6,7 +6,7 @@ import {
 } from "../../api/types/dto";
 import { Checkboxes } from "../base/checkbox";
 import { HorizontalSpacer } from "../base/flex";
-import { Col, Row } from "../base/grid";
+import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { TextInput, TextInputType } from "../base/text-input";
 
 const separator = "\n";
@@ -95,8 +95,8 @@ export const ChoicesQuestionEditor = ({
 
   return (
     <>
-      <Row>
-        <Col>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
           <TextInput
             type={TextInputType.Area}
             title="Options (one per line)"
@@ -104,9 +104,9 @@ export const ChoicesQuestionEditor = ({
             value={choicesText}
             onChange={handleChoicesUpdate}
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <Checkboxes
             values={appearanceOptions}
             selected={selectedAppearanceOptions}
@@ -114,8 +114,8 @@ export const ChoicesQuestionEditor = ({
             title="Appearance"
             radio
           />
-        </Col>
-      </Row>
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
     </>
   );
 };

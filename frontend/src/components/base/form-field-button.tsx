@@ -1,30 +1,35 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
-import { HorizontalSpacer } from "./flex";
+import { mediaBreakpoints } from "../../config";
+import {
+  FlexRowColumnContainer,
+  FlexRowContainer,
+  Spacer,
+  StyleableFlexContainer,
+} from "./flex";
 
-const ButtonContainer = styled(FlexView)`
-  padding-bottom: 1.1rem;
+const ButtonContainer = styled(StyleableFlexContainer)`
+  padding-top: 2.6rem;
+
+  @media screen and (max-width: ${mediaBreakpoints.tablet}) {
+    padding: 0;
+  }
 `;
 
 interface IFormFieldButtonProps {
-  field: FlexView.Props["children"];
-  button: FlexView.Props["children"];
+  field: React.ReactNode;
+  button: React.ReactNode;
 }
 
 /**
  * A wrapper around a form field with a button.
  */
 export const FormFieldButton = ({ field, button }: IFormFieldButtonProps) => (
-  <FlexView shrink={false} vAlignContent="bottom">
-    <FlexView column grow>
-      {field}
-    </FlexView>
+  <FlexRowContainer>
+    <FlexRowColumnContainer isBig>{field}</FlexRowColumnContainer>
 
-    <HorizontalSpacer />
+    <Spacer />
 
-    <ButtonContainer column shrink>
-      {button}
-    </ButtonContainer>
-  </FlexView>
+    <ButtonContainer>{button}</ButtonContainer>
+  </FlexRowContainer>
 );

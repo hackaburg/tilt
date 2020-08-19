@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import FlexView from "react-flexview";
 import { useToggle } from "../../hooks/use-toggle";
 import { Chevron } from "./chevron";
+import { FlexColumnContainer } from "./flex";
 import { Subheading } from "./headings";
 
 const ClickableSubheading = styled(Subheading)`
@@ -28,16 +28,12 @@ export const Collapsible = ({
   const handleOpen = useCallback(() => toggleIsOpen(), []);
 
   return (
-    <FlexView column shrink={false}>
+    <FlexColumnContainer>
       <ClickableSubheading onClick={handleOpen}>
         {title} <Chevron rotation={isOpen ? 0 : -90} />
       </ClickableSubheading>
 
-      {isOpen && (
-        <FlexView column grow>
-          {children as FlexView.Props["children"]}
-        </FlexView>
-      )}
-    </FlexView>
+      {isOpen && <FlexColumnContainer>{children}</FlexColumnContainer>}
+    </FlexColumnContainer>
   );
 };

@@ -1,16 +1,16 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
 import { UserRole } from "../../../api/types/enums";
-import { sidebarWidth } from "../../../config";
 import { useLoginContext } from "../../../contexts/login-context";
 import { useSettingsContext } from "../../../contexts/settings-context";
 import { Routes } from "../../../routes";
 import { variables } from "../../../theme";
+import { StyleableFlexContainer } from "../../base/flex";
 import { Image } from "../../base/image";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 
-const BackgroundContainer = styled(FlexView)`
+const BackgroundContainer = styled(StyleableFlexContainer)`
+  height: 100%;
   overflow-y: auto;
   background: linear-gradient(
     to top right,
@@ -19,9 +19,8 @@ const BackgroundContainer = styled(FlexView)`
   );
 `;
 
-const ImageContainer = styled(FlexView)`
+const ImageContainer = styled(StyleableFlexContainer)`
   padding: 2rem;
-  width: ${sidebarWidth};
 `;
 
 /**
@@ -41,8 +40,8 @@ export const Sidebar = () => {
   const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
 
   return (
-    <BackgroundContainer column grow>
-      <ImageContainer vAlignContent="top" shrink={false}>
+    <BackgroundContainer>
+      <ImageContainer>
         <Image src={settings?.frontend.sidebarImage} label="Hackathon logo" />
       </ImageContainer>
 

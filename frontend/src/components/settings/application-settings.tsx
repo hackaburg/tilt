@@ -1,20 +1,19 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import FlexView from "react-flexview";
 import type { ApplicationSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useDerivedState } from "../../hooks/use-derived-state";
 import { isValidDate } from "../../util";
-import { HorizontalSpacer } from "../base/flex";
-import { Col, Row } from "../base/grid";
+import { HorizontalSpacer, StyleableFlexContainer } from "../base/flex";
+import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
 import { FormEditor } from "./form-editor";
 import { SettingsSection } from "./settings-section";
 
-const FormEditorContainer = styled(FlexView)`
+const FormEditorContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;
 `;
 
@@ -114,8 +113,8 @@ export const ApplicationSettings = () => {
         these added questions are mandatory.
       </Text>
 
-      <Row>
-        <Col>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
           <TextInput
             value={settings.application.hoursToConfirm}
             onChange={handleHoursToConfirmChange}
@@ -124,26 +123,26 @@ export const ApplicationSettings = () => {
             title="Hours to confirm"
             placeholder="keep it fair, e.g. 240 for 10 days"
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormFrom}
             onChange={handleAllowProfileFormFromChange}
             title="Open registration on"
             placeholder="1970-01-01 00:00:00"
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormUntil}
             onChange={handleAllowProfileFormUntilChange}
             title="Close registration on"
             placeholder="1970-01-01 00:00:00"
           />
-        </Col>
-      </Row>
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
 
       <Text>
         Use the add button to add new questions and the edit button in the top
@@ -161,7 +160,7 @@ export const ApplicationSettings = () => {
         form.
       </Text>
 
-      <FormEditorContainer column>
+      <FormEditorContainer>
         <FormEditor
           heading="Profile form"
           form={settings.application.profileForm}
@@ -169,7 +168,7 @@ export const ApplicationSettings = () => {
         />
       </FormEditorContainer>
 
-      <FormEditorContainer column>
+      <FormEditorContainer>
         <FormEditor
           heading="Confirmation form"
           form={settings.application.confirmationForm}

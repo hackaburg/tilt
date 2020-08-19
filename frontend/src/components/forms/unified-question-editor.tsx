@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useMemo } from "react";
-import FlexView from "react-flexview";
 import { IQuestionConfiguration } from "../../../../backend/src/entities/question";
 import { enforceExhaustiveSwitch } from "../../../../backend/src/utils/switch";
 import {
@@ -12,8 +11,8 @@ import {
 } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { Checkboxes } from "../base/checkbox";
-import { HorizontalSpacer } from "../base/flex";
-import { Col, Row } from "../base/grid";
+import { HorizontalSpacer, StyleableFlexContainer } from "../base/flex";
+import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Select } from "../base/select";
 import { TextInput, TextInputType } from "../base/text-input";
 import { ChoicesQuestionEditor } from "./choices-question-editor";
@@ -21,7 +20,7 @@ import { CountryQuestionEditor } from "./country-question-editor";
 import { NumberQuestionEditor } from "./number-question-editor";
 import { TextQuestionEditor } from "./text-question-editor";
 
-const Meta = styled(FlexView)`
+const Meta = styled(StyleableFlexContainer)`
   padding-bottom: 3rem;
 `;
 
@@ -228,29 +227,29 @@ export const UnifiedQuestionEditor = ({
 
   return (
     <>
-      <Meta column>
-        <Row>
-          <Col>
+      <Meta>
+        <FlexRowContainer>
+          <FlexRowColumnContainer>
             <Select
               onChange={handleQuestionTypeChange}
               value={question.configuration.type}
               values={availableQuestionTypes}
               title="Question type"
             />
-          </Col>
+          </FlexRowColumnContainer>
           <HorizontalSpacer />
-          <Col>
+          <FlexRowColumnContainer>
             <TextInput
               value={question.title}
               onChange={handleQuestionTitleChange}
               placeholder="Title"
               title="Title"
             />
-          </Col>
-        </Row>
+          </FlexRowColumnContainer>
+        </FlexRowContainer>
 
-        <Row>
-          <Col>
+        <FlexRowContainer>
+          <FlexRowColumnContainer>
             <TextInput
               value={question.description}
               onChange={handleQuestionDescriptionChange}
@@ -258,9 +257,9 @@ export const UnifiedQuestionEditor = ({
               title="Description"
               type={TextInputType.Area}
             />
-          </Col>
+          </FlexRowColumnContainer>
           <HorizontalSpacer />
-          <Col>
+          <FlexRowColumnContainer>
             <Checkboxes
               values={mandatoryAllCheckboxOptions}
               selected={
@@ -271,28 +270,28 @@ export const UnifiedQuestionEditor = ({
               onChange={handleQuestionMandatoryChange}
               title="Behaviour"
             />
-          </Col>
-        </Row>
+          </FlexRowColumnContainer>
+        </FlexRowContainer>
 
-        <Row>
-          <Col>
+        <FlexRowContainer>
+          <FlexRowColumnContainer>
             <Select
               values={parentChoices}
               value={currentParentChoice}
               onChange={handleQuestionParentIDChange}
               title="Parent question"
             />
-          </Col>
+          </FlexRowColumnContainer>
           <HorizontalSpacer />
-          <Col>
+          <FlexRowColumnContainer>
             <TextInput
               value={question.showIfParentHasValue ?? ""}
               onChange={handleQuestionParentValueChange}
               title="Only show this question if the parent question has this value"
               placeholder="no value"
             />
-          </Col>
-        </Row>
+          </FlexRowColumnContainer>
+        </FlexRowContainer>
       </Meta>
 
       <QuestionEditor question={question} onQuestionChange={onQuestionChange} />

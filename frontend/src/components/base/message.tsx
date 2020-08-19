@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
 import { Elevated } from "./elevated";
+import { FlexRowContainer } from "./flex";
 
 const MessageContainer = styled(Elevated)`
   background-color: #f7f7f7;
@@ -23,7 +23,7 @@ const WarnMessageContainer = styled(MessageContainer)`
 interface IMessageProps {
   error?: boolean;
   warn?: boolean;
-  children: FlexView.Props["children"];
+  children: React.ReactNode;
 }
 
 /**
@@ -39,7 +39,7 @@ export const Message = ({ error, warn, children }: IMessageProps) => {
 
   return (
     <Component level={level}>
-      <FlexView>{children}</FlexView>
+      <FlexRowContainer>{children}</FlexRowContainer>
     </Component>
   );
 };

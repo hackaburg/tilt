@@ -1,14 +1,22 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import FlexView from "react-flexview";
 import type { QuestionDTO } from "../../api/types/dto";
 import { transitionDuration } from "../../config";
 import { useFortune } from "../../hooks/use-fortune";
 import { useToggle } from "../../hooks/use-toggle";
 import { variables } from "../../theme";
+import {
+  FlexColumnContainer,
+  FlexRowContainer,
+  StyleableFlexContainer,
+} from "../base/flex";
 import { UnifiedQuestion } from "../forms/unified-question";
 import { UnifiedQuestionEditor } from "../forms/unified-question-editor";
+
+const ButtonContainer = styled(StyleableFlexContainer)`
+  align-self: flex-end;
+`;
 
 const MetaButton = styled.button`
   border: none;
@@ -60,17 +68,23 @@ export const QuestionEditor = ({
   }, [onDeleteQuestion, question]);
 
   return (
-    <FlexView column grow>
-      <FlexView hAlignContent="right">
-        {isEditing ? (
-          <FlexView>
-            <RemoveButton onClick={handleDelete}>Delete question</RemoveButton>
-            <FinishButton onClick={toggleEditing}>Finish editing</FinishButton>
-          </FlexView>
-        ) : (
-          <MetaButton onClick={toggleEditing}>Edit</MetaButton>
-        )}
-      </FlexView>
+    <FlexColumnContainer>
+      <ButtonContainer>
+        <FlexRowContainer>
+          {isEditing ? (
+            <>
+              <RemoveButton onClick={handleDelete}>
+                Delete question
+              </RemoveButton>
+              <FinishButton onClick={toggleEditing}>
+                Finish editing
+              </FinishButton>
+            </>
+          ) : (
+            <MetaButton onClick={toggleEditing}>Edit</MetaButton>
+          )}
+        </FlexRowContainer>
+      </ButtonContainer>
 
       {isEditing ? (
         <UnifiedQuestionEditor
@@ -85,6 +99,6 @@ export const QuestionEditor = ({
           onChange={ignoreChange}
         />
       )}
-    </FlexView>
+    </FlexColumnContainer>
   );
 };

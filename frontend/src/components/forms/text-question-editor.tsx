@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { QuestionDTO, TextQuestionConfigurationDTO } from "../../api/types/dto";
 import { Checkboxes } from "../base/checkbox";
 import { HorizontalSpacer } from "../base/flex";
-import { Col, Row } from "../base/grid";
+import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { TextInput } from "../base/text-input";
 
 const multilineOptionValue = "Multiline";
@@ -64,24 +64,24 @@ export const TextQuestionEditor = ({
   ];
 
   return (
-    <Row>
-      <Col>
+    <FlexRowContainer>
+      <FlexRowColumnContainer>
         <TextInput
           value={question.configuration.placeholder}
           onChange={handlePlaceholderChange}
           placeholder="no placeholder"
           title="Input placeholder"
         />
-      </Col>
+      </FlexRowColumnContainer>
       <HorizontalSpacer />
-      <Col>
+      <FlexRowColumnContainer>
         <Checkboxes
           onChange={handleAppearanceChange}
           selected={selectedAppearanceOptions}
           values={appearanceOptions}
           title="Appearance"
         />
-      </Col>
-    </Row>
+      </FlexRowColumnContainer>
+    </FlexRowContainer>
   );
 };

@@ -1,16 +1,17 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
 import { borderRadius } from "../../../config";
 import { variables } from "../../../theme";
+import { Elevated } from "../../base/elevated";
+import { StyleableFlexContainer } from "../../base/flex";
 
-const Bar = styled(FlexView)`
+const Bar = styled(StyleableFlexContainer)`
   height: 3px;
   border-radius: ${borderRadius};
   background-color: ${variables.colorGradientEnd};
 `;
 
-const Spacer = styled(FlexView)`
+const Spacer = styled(StyleableFlexContainer)`
   height: 0.25rem;
 `;
 
@@ -19,13 +20,9 @@ const Button = styled.button`
   width: 3rem;
   padding: 0.5rem;
 
-  background-color: white;
+  background-color: transparent;
   border: none;
   cursor: pointer;
-`;
-
-const ButtonContainer = styled(FlexView)`
-  padding: 0.75rem;
 `;
 
 interface ISidebarBurgerProps {
@@ -36,7 +33,7 @@ interface ISidebarBurgerProps {
  * A button that kinda looks like a burger, because it consists of 3 bars.
  */
 export const SidebarToggle = ({ onClick }: ISidebarBurgerProps) => (
-  <ButtonContainer>
+  <Elevated level={1}>
     <Button onClick={onClick}>
       <Bar />
       <Spacer />
@@ -44,5 +41,5 @@ export const SidebarToggle = ({ onClick }: ISidebarBurgerProps) => (
       <Spacer />
       <Bar />
     </Button>
-  </ButtonContainer>
+  </Elevated>
 );

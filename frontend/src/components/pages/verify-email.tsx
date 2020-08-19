@@ -1,8 +1,8 @@
 import * as React from "react";
-import FlexView from "react-flexview";
 import { RouteComponentProps, withRouter } from "react-router";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
+import { FlexColumnContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { Message } from "../base/message";
@@ -21,7 +21,7 @@ export const VerifyEmail = ({ location: { hash } }: IVerifyEmailProps) => {
   );
 
   return (
-    <FlexView column>
+    <FlexColumnContainer>
       <Heading>Verifying your email</Heading>
 
       {error ? (
@@ -36,7 +36,7 @@ export const VerifyEmail = ({ location: { hash } }: IVerifyEmailProps) => {
           <InternalLink to={Routes.Login}>Back to login...</InternalLink>
         </>
       )}
-    </FlexView>
+    </FlexColumnContainer>
   );
 };
 

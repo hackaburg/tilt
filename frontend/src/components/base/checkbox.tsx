@@ -1,12 +1,16 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import FlexView from "react-flexview";
 import { useUniqueID, useUniqueIDs } from "../../hooks/use-uniqe-id";
+import {
+  FlexColumnContainer,
+  StyleableFlexContainer,
+  VerticallyCenteredContainer,
+} from "./flex";
 import { FormField } from "./form-field";
 
-const ItemContainer = styled(FlexView)`
-  padding: 0.5rem 0rem;
+const ItemContainer = styled(StyleableFlexContainer)`
+  padding: 0.5rem 0;
 `;
 
 const Label = styled.label`
@@ -59,24 +63,24 @@ export const Checkboxes = ({
   );
 
   const checkboxes = values.map((checkboxValue, index) => (
-    <ItemContainer key={checkboxIDs[index]} shrink={false}>
-      <input
-        id={checkboxIDs[index]}
-        name={radio ? groupID : undefined}
-        checked={selected.includes(checkboxValue)}
-        type={radio ? "radio" : "checkbox"}
-        onChange={toggleChecked}
-        disabled={isDisabled}
-      />
-      <Label htmlFor={checkboxIDs[index]}>{checkboxValue}</Label>
+    <ItemContainer key={checkboxIDs[index]}>
+      <VerticallyCenteredContainer>
+        <input
+          id={checkboxIDs[index]}
+          name={radio ? groupID : undefined}
+          checked={selected.includes(checkboxValue)}
+          type={radio ? "radio" : "checkbox"}
+          onChange={toggleChecked}
+          disabled={isDisabled}
+        />
+        <Label htmlFor={checkboxIDs[index]}>{checkboxValue}</Label>
+      </VerticallyCenteredContainer>
     </ItemContainer>
   ));
 
   return (
     <FormField title={title} mandatory={mandatory}>
-      <FlexView column grow>
-        {checkboxes}
-      </FlexView>
+      <FlexColumnContainer>{checkboxes}</FlexColumnContainer>
     </FormField>
   );
 };

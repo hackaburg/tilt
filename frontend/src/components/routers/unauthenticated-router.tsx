@@ -1,20 +1,27 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
 import { Route, Switch } from "react-router";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { Routes } from "../../routes";
 import { Elevated } from "../base/elevated";
+import {
+  CenteredContainer,
+  PageSizedContainer,
+  StyleableFlexContainer,
+} from "../base/flex";
 import { LoginSignupForm } from "../pages/login-signup-form";
 import { RoutedVerifyEmail } from "../pages/verify-email";
 
-const BackgroundContainer = styled(FlexView)`
+const BackgroundContainer = styled(StyleableFlexContainer)`
   overflow-y: auto;
   background-repeat: repeat-x repeat-y;
+  width: 100%;
+  height: 100%;
 `;
 
 const RouterContainer = styled(Elevated)`
   padding: 1rem;
+  width: min(320px, 100vw);
 `;
 
 /**
@@ -26,22 +33,21 @@ export const UnauthenticatedRouter = () => {
   const backgroundImage = !imageURL ? undefined : `url(${imageURL})`;
 
   return (
-    <BackgroundContainer
-      height="100vh"
-      hAlignContent="center"
-      vAlignContent="center"
-      style={{
-        backgroundImage,
-      }}
-    >
-      <FlexView width="min(300px, 100vh)" column>
-        <RouterContainer level={1}>
-          <Switch>
-            <Route path={Routes.Login} component={LoginSignupForm} />
-            <Route path={Routes.VerifyEmail} component={RoutedVerifyEmail} />
-          </Switch>
-        </RouterContainer>
-      </FlexView>
-    </BackgroundContainer>
+    <PageSizedContainer>
+      <BackgroundContainer
+        style={{
+          backgroundImage,
+        }}
+      >
+        <CenteredContainer>
+          <RouterContainer level={1}>
+            <Switch>
+              <Route path={Routes.Login} component={LoginSignupForm} />
+              <Route path={Routes.VerifyEmail} component={RoutedVerifyEmail} />
+            </Switch>
+          </RouterContainer>
+        </CenteredContainer>
+      </BackgroundContainer>
+    </PageSizedContainer>
   );
 };

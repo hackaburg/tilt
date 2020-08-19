@@ -1,17 +1,21 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
+import {
+  CenteredContainer,
+  FlexColumnContainer,
+  StyleableFlexContainer,
+} from "./flex";
 
-const TitledNumberContainer = styled(FlexView)`
+const TitledNumberContainer = styled(StyleableFlexContainer)`
   padding: 1rem 0;
 `;
 
-const Big = styled(FlexView)`
+const Big = styled(StyleableFlexContainer)`
   font-size: 2rem;
   padding: 0.5rem 0;
 `;
 
-const Title = styled(FlexView)`
+const Title = styled(StyleableFlexContainer)`
   font-size: 1rem;
 `;
 
@@ -24,8 +28,12 @@ interface ITitledNumberProps {
  * A number with a title.
  */
 export const TitledNumber = ({ title, value }: ITitledNumberProps) => (
-  <TitledNumberContainer column hAlignContent="center" shrink={false}>
-    <Big shrink={false}>{value}</Big>
-    <Title shrink={false}>{title}</Title>
+  <TitledNumberContainer>
+    <FlexColumnContainer>
+      <CenteredContainer>
+        <Big>{value}</Big>
+        <Title>{title}</Title>
+      </CenteredContainer>
+    </FlexColumnContainer>
   </TitledNumberContainer>
 );

@@ -1,21 +1,18 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
+import { StyleableFlexContainer } from "../base/flex";
 
-const PageContainer = styled(FlexView)`
-  overflow-y: auto;
-  padding: 0 1rem;
+const PaddedContainer = styled(StyleableFlexContainer)`
+  padding: 2rem;
 `;
 
 interface IPageContainerProps {
-  children: FlexView.Props["children"];
+  children: React.ReactNode;
 }
 
 /**
  * A container to wrap pages.
  */
 export const Page = ({ children }: IPageContainerProps) => (
-  <PageContainer column grow>
-    {children}
-  </PageContainer>
+  <PaddedContainer>{children}</PaddedContainer>
 );

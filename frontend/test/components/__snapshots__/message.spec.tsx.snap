@@ -4,9 +4,9 @@ exports[`Message renders error messages 1`] = `
 <Styled(Component)
   level={1}
 >
-  <ForwardRef>
+  <Component>
     text
-  </ForwardRef>
+  </Component>
 </Styled(Component)>
 `;
 
@@ -14,8 +14,8 @@ exports[`Message renders warning messages 1`] = `
 <Styled(Component)
   level={1}
 >
-  <ForwardRef>
+  <Component>
     text
-  </ForwardRef>
+  </Component>
 </Styled(Component)>
 `;

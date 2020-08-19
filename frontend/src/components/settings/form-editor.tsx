@@ -1,13 +1,12 @@
 import styled from "@emotion/styled";
 import { useCallback } from "react";
 import * as React from "react";
-import FlexView from "react-flexview";
 import type { FormSettingsDTO, QuestionDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import { Elevated } from "../base/elevated";
-import { VerticalSpacer } from "../base/flex";
+import { FlexColumnContainer, VerticalSpacer } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Subsubheading } from "../base/headings";
 import { Muted } from "../base/muted";
@@ -95,7 +94,7 @@ export const FormEditor = ({
   const allQuestionsHaveIDs = form.questions.every(({ id }) => id != null);
 
   const editableQuestions = form.questions.map((question) => (
-    <FlexView key={question.id ?? question.title} column shrink={false}>
+    <FlexColumnContainer key={question.id ?? question.title}>
       <Divider />
 
       <QuestionEditor
@@ -104,7 +103,7 @@ export const FormEditor = ({
         onDeleteQuestion={handleDeleteQuestion}
         allQuestions={form.questions}
       />
-    </FlexView>
+    </FlexColumnContainer>
   ));
 
   return (

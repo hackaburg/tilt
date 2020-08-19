@@ -1,16 +1,20 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useState } from "react";
-import FlexView from "react-flexview";
 import { useLoginContext } from "../../contexts/login-context";
 import { useApi } from "../../hooks/use-api";
 import { Button } from "../base/button";
+import {
+  CenteredContainer,
+  FlexColumnContainer,
+  StyleableFlexContainer,
+} from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
 
-const ButtonContainer = styled(FlexView)`
+const ButtonContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;
 `;
 
@@ -62,19 +66,19 @@ export const LoginSignupForm = () => {
 
   if (signupDone) {
     return (
-      <FlexView column grow>
+      <FlexColumnContainer>
         <Heading>Done.</Heading>
         <Text>We've sent you an email with a button to verify yourself.</Text>
         <Text>
           It might take a minute or two to arrive, and to be safe, please also
           check your junk mail.
         </Text>
-      </FlexView>
+      </FlexColumnContainer>
     );
   }
 
   return (
-    <FlexView column grow>
+    <FlexColumnContainer>
       <Heading>Register to apply</Heading>
 
       {loginError && (
@@ -106,7 +110,7 @@ export const LoginSignupForm = () => {
           type={TextInputType.Password}
         />
 
-        <ButtonContainer column grow hAlignContent="center">
+        <ButtonContainer>
           <Button
             onClick={sendLoginRequest}
             loading={loginInProgress}
@@ -116,7 +120,9 @@ export const LoginSignupForm = () => {
             Let me in
           </Button>
 
-          <Text>Don't have an account?</Text>
+          <CenteredContainer>
+            <Text>Don't have an account?</Text>
+          </CenteredContainer>
 
           <Button
             onClick={sendSignupRequest}
@@ -127,6 +133,6 @@ export const LoginSignupForm = () => {
           </Button>
         </ButtonContainer>
       </form>
-    </FlexView>
+    </FlexColumnContainer>
   );
 };

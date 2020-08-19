@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import type { EmailTemplateDTO } from "../../api/types/dto";
 import { Elevated } from "../base/elevated";
 import { HorizontalSpacer } from "../base/flex";
-import { Col, Row } from "../base/grid";
+import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Subsubheading } from "../base/headings";
 import { TextInput, TextInputType } from "../base/text-input";
 
@@ -62,8 +62,8 @@ export const EmailTemplateEditor = ({
         placeholder="e.g. 'win free money'"
       />
 
-      <Row>
-        <Col>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
           <TextInput
             title="text/html"
             type={TextInputType.Area}
@@ -71,9 +71,9 @@ export const EmailTemplateEditor = ({
             onChange={handleHtmlTemplateChange}
             placeholder="<html>"
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <TextInput
             title="text/plain"
             type={TextInputType.Area}
@@ -81,8 +81,8 @@ export const EmailTemplateEditor = ({
             onChange={handleTextTemplateChange}
             placeholder="Hi there!"
           />
-        </Col>
-      </Row>
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
     </EmailTemplateEditorContainer>
   );
 };

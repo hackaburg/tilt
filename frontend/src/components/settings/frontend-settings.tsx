@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import type { FrontendSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { HorizontalSpacer } from "../base/flex";
-import { Col, Row } from "../base/grid";
+import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -67,8 +67,8 @@ export const FrontendSettings = () => {
         and absolute image urls.
       </Text>
 
-      <Row>
-        <Col>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
           <TextInput
             title="Gradient start color"
             placeholder="#abcdef"
@@ -76,9 +76,9 @@ export const FrontendSettings = () => {
             value={settings.frontend.colorGradientStart}
             onChange={handleColorGradientStartChange}
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <TextInput
             title="Gradient end color"
             placeholder="#abcdef"
@@ -86,11 +86,11 @@ export const FrontendSettings = () => {
             value={settings.frontend.colorGradientEnd}
             onChange={handleColorGradientEndChange}
           />
-        </Col>
-      </Row>
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
 
-      <Row>
-        <Col>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
           <TextInput
             title="Link color"
             placeholder="#abcdef"
@@ -98,9 +98,9 @@ export const FrontendSettings = () => {
             value={settings.frontend.colorLink}
             onChange={handleColorLinkChange}
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <TextInput
             title="Link hover color"
             placeholder="#abcdef"
@@ -108,11 +108,11 @@ export const FrontendSettings = () => {
             value={settings.frontend.colorLinkHover}
             onChange={handleColorLinkHoverChange}
           />
-        </Col>
-      </Row>
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
 
-      <Row>
-        <Col>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
           <TextInput
             title="Login and signup image url"
             placeholder="absolute image url with https"
@@ -120,9 +120,9 @@ export const FrontendSettings = () => {
             value={settings.frontend.loginSignupImage}
             onChange={handleLoginSignupImageChange}
           />
-        </Col>
+        </FlexRowColumnContainer>
         <HorizontalSpacer />
-        <Col>
+        <FlexRowColumnContainer>
           <TextInput
             title="Sidebar image url"
             placeholder="absolute image url with https"
@@ -130,8 +130,8 @@ export const FrontendSettings = () => {
             value={settings.frontend.sidebarImage}
             onChange={handleSidebarImageChange}
           />
-        </Col>
-      </Row>
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
     </SettingsSection>
   );
 };

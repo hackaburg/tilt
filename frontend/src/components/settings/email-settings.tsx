@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import FlexView from "react-flexview";
 import { EmailSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { Code } from "../base/code";
+import { StyleableFlexContainer } from "../base/flex";
 import { Message } from "../base/message";
 import { Placeholder } from "../base/placeholder";
 import { Text } from "../base/text";
@@ -12,7 +12,7 @@ import { TextInput } from "../base/text-input";
 import { EmailTemplateEditor } from "./email-template-editor";
 import { SettingsSection } from "./settings-section";
 
-const EmailTemplateEditorContainer = styled(FlexView)`
+const EmailTemplateEditorContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;
 `;
 
@@ -58,7 +58,7 @@ export const EmailSettings = () => {
       )}
 
       <p>Emails sent out will contain the following sender address:</p>
-      {!settings && <Placeholder width="100%" height="3rem" />}
+      {!settings && <Placeholder height="3rem" />}
       {settings && (
         <TextInput
           value={settings.email.sender}
@@ -86,15 +86,15 @@ export const EmailSettings = () => {
 
       {!settings && (
         <>
-          <Placeholder width="100%" height="10rem" />
+          <Placeholder height="10rem" />
           <br />
-          <Placeholder width="100%" height="10rem" />
+          <Placeholder height="10rem" />
         </>
       )}
 
       {settings && (
         <>
-          <EmailTemplateEditorContainer column>
+          <EmailTemplateEditorContainer>
             <EmailTemplateEditor
               title="Verification email"
               template={settings.email.verifyEmail}
@@ -102,7 +102,7 @@ export const EmailSettings = () => {
             />
           </EmailTemplateEditorContainer>
 
-          <EmailTemplateEditorContainer column>
+          <EmailTemplateEditorContainer>
             <EmailTemplateEditor
               title="Admitted email"
               template={settings.email.admittedEmail}

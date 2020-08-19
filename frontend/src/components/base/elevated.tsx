@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
 import { borderRadius, transitionDuration } from "../../config";
+import { StyleableFlexContainer } from "./flex";
 
-const ElevatedContainer = styled(FlexView)`
+const ElevatedContainer = styled(StyleableFlexContainer)`
   border-radius: ${borderRadius};
   border: 1px solid #eee;
   transition-property: box-shadow;
@@ -13,7 +13,7 @@ const ElevatedContainer = styled(FlexView)`
 `;
 
 interface IElevatedProps {
-  children: FlexView.Props["children"];
+  children: React.ReactNode;
   level: number;
   className?: string;
 }
@@ -29,8 +29,6 @@ export const Elevated = ({ children, level, className }: IElevatedProps) => (
         Math.pow(4, level - 1) * 0.05
       })`,
     }}
-    column
-    shrink={false}
   >
     {children}
   </ElevatedContainer>

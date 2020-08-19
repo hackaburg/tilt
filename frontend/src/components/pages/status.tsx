@@ -1,13 +1,16 @@
 import * as React from "react";
 import { useCallback } from "react";
-import FlexView from "react-flexview";
 import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { dateToString, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
-import { VerticalSpacer } from "../base/flex";
+import {
+  FlexRowContainer,
+  StyleableFlexContainer,
+  VerticalSpacer,
+} from "../base/flex";
 import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
@@ -159,8 +162,8 @@ export const Status = () => {
               <>
                 <VerticalSpacer />
 
-                <FlexView hAlignContent="left">
-                  <FlexView shrink>
+                <FlexRowContainer>
+                  <StyleableFlexContainer>
                     <Button
                       loading={isDecliningSpot}
                       disable={isNotAttending}
@@ -168,8 +171,8 @@ export const Status = () => {
                     >
                       I can't make it
                     </Button>
-                  </FlexView>
-                </FlexView>
+                  </StyleableFlexContainer>
+                </FlexRowContainer>
               </>
             )}
           </>

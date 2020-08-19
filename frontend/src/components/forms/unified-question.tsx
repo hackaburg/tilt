@@ -1,5 +1,4 @@
 import * as React from "react";
-import FlexView from "react-flexview";
 import { enforceExhaustiveSwitch } from "../../../../backend/src/utils/switch";
 import type {
   ChoicesQuestionConfigurationDTO,
@@ -9,6 +8,7 @@ import type {
   TextQuestionConfigurationDTO,
 } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
+import { FlexColumnContainer } from "../base/flex";
 import { Markdown } from "../base/markdown";
 import { ChoicesQuestion } from "./choices-question";
 import { CountryQuestion } from "./country-question";
@@ -86,7 +86,7 @@ export const UnifiedQuestion = ({
   onChange,
   isDisabled,
 }: IQuestionProps) => (
-  <FlexView column grow>
+  <FlexColumnContainer>
     <Markdown text={question.description} />
     <Question
       question={question}
@@ -94,5 +94,5 @@ export const UnifiedQuestion = ({
       onChange={onChange}
       isDisabled={isDisabled}
     />
-  </FlexView>
+  </FlexColumnContainer>
 );

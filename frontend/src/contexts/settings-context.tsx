@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useCallback, useMemo, useState } from "react";
-import FlexView from "react-flexview";
 import { useDebounce } from "use-debounce";
 import type { SettingsDTO } from "../api/types/dto";
+import { PageSizedContainer } from "../components/base/flex";
 import { SuspenseFallback } from "../components/base/suspense-fallback";
 import { debounceDuration } from "../config";
 import { useApi } from "../hooks/use-api";
@@ -95,9 +95,9 @@ export const SettingsContextProvider = ({
 
   if (isFetchingSettings || localSettings == null) {
     return (
-      <FlexView height="100vh" grow>
+      <PageSizedContainer>
         <SuspenseFallback />
-      </FlexView>
+      </PageSizedContainer>
     );
   }
 

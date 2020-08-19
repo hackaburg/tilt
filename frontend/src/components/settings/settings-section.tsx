@@ -1,22 +1,22 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
+import { StyleableFlexContainer } from "../base/flex";
 import { Subheading } from "../base/headings";
 
-const Section = styled(FlexView)`
+const Section = styled(StyleableFlexContainer)`
   padding: 1rem 0;
 `;
 
 interface ISettingsSection {
   title: string;
-  children: FlexView.Props["children"];
+  children: React.ReactNode;
 }
 
 /**
  * A section on the settings page.
  */
 export const SettingsSection = ({ title, children }: ISettingsSection) => (
-  <Section column shrink={false}>
+  <Section>
     <Subheading>{title}</Subheading>
     {children}
   </Section>

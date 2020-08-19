@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
+import { StyleableFlexContainer } from "./flex";
 
-const FormFieldContainer = styled(FlexView)`
+const FormFieldContainer = styled(StyleableFlexContainer)`
   padding: 1rem 0;
 `;
 
@@ -27,7 +27,7 @@ interface IFormFieldProps {
  * A form field.
  */
 export const FormField = ({ title, children, mandatory }: IFormFieldProps) => (
-  <FormFieldContainer column shrink={false}>
+  <FormFieldContainer>
     <Title>
       {title}
       {mandatory && <MandatoryIndicator>*</MandatoryIndicator>}

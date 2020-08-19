@@ -1,6 +1,6 @@
+import styled from "@emotion/styled";
 import * as React from "react";
 import { useMemo } from "react";
-import FlexView from "react-flexview";
 import { ApplicationDTO, QuestionDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { useSettingsContext } from "../../contexts/settings-context";
@@ -14,7 +14,11 @@ import {
 import { CircleChart } from "../base/circle-chart";
 import { Collapsible } from "../base/collapsible";
 import { Divider } from "../base/divider";
-import { Col, Row } from "../base/grid";
+import {
+  FlexRowColumnContainer,
+  FlexRowContainer,
+  StyleableFlexContainer,
+} from "../base/flex";
 import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { Text } from "../base/text";
@@ -23,15 +27,9 @@ import { TitledNumber } from "../base/titled-number";
 import { WorldMap } from "../base/worldmap";
 import { Page } from "./page";
 
-interface IChartContainerProps {
-  children: React.ReactNode;
-}
-
-const ChartContainer = ({ children }: IChartContainerProps) => (
-  <FlexView hAlignContent="left" grow>
-    <FlexView column>{children as FlexView.Props["children"]}</FlexView>
-  </FlexView>
-);
+const ChartContainer = styled(StyleableFlexContainer)`
+  width: min(300px, 100vw);
+`;
 
 interface IAnswerCount {
   [answer: string]: number;
@@ -240,52 +238,48 @@ export const Statistics = () => {
     <Page>
       <Heading>Statistics</Heading>
 
-      <FlexView shrink={false}>
-        <Row>
-          <Col>
-            <TitledNumber title="Users" value={safeApplications.length} />
-          </Col>
-          <Col>
-            <TitledNumber title="Applied" value={percentages.submitted} />
-          </Col>
-          <Col>
-            <TitledNumber title="Admitted" value={percentages.admitted} />
-          </Col>
-          <Col>
-            <TitledNumber title="Confirmed" value={percentages.confirmed} />
-          </Col>
-          <Col>
-            <TitledNumber title="Declined" value={percentages.declined} />
-          </Col>
-          <Col>
-            <TitledNumber title="Expired" value={percentages.expired} />
-          </Col>
-        </Row>
-      </FlexView>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
+          <TitledNumber title="Users" value={safeApplications.length} />
+        </FlexRowColumnContainer>
+        <FlexRowColumnContainer>
+          <TitledNumber title="Applied" value={percentages.submitted} />
+        </FlexRowColumnContainer>
+        <FlexRowColumnContainer>
+          <TitledNumber title="Admitted" value={percentages.admitted} />
+        </FlexRowColumnContainer>
+        <FlexRowColumnContainer>
+          <TitledNumber title="Confirmed" value={percentages.confirmed} />
+        </FlexRowColumnContainer>
+        <FlexRowColumnContainer>
+          <TitledNumber title="Declined" value={percentages.declined} />
+        </FlexRowColumnContainer>
+        <FlexRowColumnContainer>
+          <TitledNumber title="Expired" value={percentages.expired} />
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
 
       <Divider />
 
       <Collapsible title="Applications over time">
-        <FlexView shrink={false}>
-          <Row>
-            <Col>
-              <ChartContainer>
-                <TimeChart
-                  values={applicationsOverTime}
-                  title="Applications over time"
-                />
-              </ChartContainer>
-            </Col>
-            <Col>
-              <ChartContainer>
-                <TimeChart
-                  values={cummulativeApplicationsOverTime}
-                  title="Cummulative applications over time"
-                />
-              </ChartContainer>
-            </Col>
-          </Row>
-        </FlexView>
+        <FlexRowContainer>
+          <FlexRowColumnContainer>
+            <ChartContainer>
+              <TimeChart
+                values={applicationsOverTime}
+                title="Applications over time"
+              />
+            </ChartContainer>
+          </FlexRowColumnContainer>
+          <FlexRowColumnContainer>
+            <ChartContainer>
+              <TimeChart
+                values={cummulativeApplicationsOverTime}
+                title="Cummulative applications over time"
+              />
+            </ChartContainer>
+          </FlexRowColumnContainer>
+        </FlexRowContainer>
       </Collapsible>
 
       <Divider />

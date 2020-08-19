@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useState } from "react";
-import FlexView from "react-flexview";
 import type { AnswerDTO } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
@@ -10,7 +9,13 @@ import { useDerivedState } from "../../hooks/use-derived-state";
 import { isBetween, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
-import { HorizontalSpacer } from "../base/flex";
+import {
+  FlexColumnContainer,
+  FlexRowColumnContainer,
+  Spacer,
+  StyleableFlexContainer,
+  VerticallyCenteredContainer,
+} from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { Muted } from "../base/muted";
@@ -26,7 +31,7 @@ export enum FormType {
   ConfirmationForm = "confirmation_form",
 }
 
-const SubmitContainer = styled(FlexView)`
+const SubmitContainer = styled(StyleableFlexContainer)`
   padding: 3rem 0;
 `;
 
@@ -170,11 +175,11 @@ export const Form = ({ type }: IFormProps) => {
     return (
       <Page>
         <Heading>{title}</Heading>
-        <Placeholder width="100%" height="7rem" />
+        <Placeholder height="7rem" />
         <br />
-        <Placeholder width="100%" height="7rem" />
+        <Placeholder height="7rem" />
         <br />
-        <Placeholder width="100%" height="7rem" />
+        <Placeholder height="7rem" />
       </Page>
     );
   }
@@ -189,7 +194,7 @@ export const Form = ({ type }: IFormProps) => {
     }
 
     return (
-      <FlexView key={String(question.id)} column shrink={false}>
+      <FlexColumnContainer key={String(question.id)}>
         <Divider />
 
         <StringifiedUnifiedQuestion
@@ -198,7 +203,7 @@ export const Form = ({ type }: IFormProps) => {
           question={question}
           isDisabled={isFormDisabled}
         />
-      </FlexView>
+      </FlexColumnContainer>
     );
   });
 
@@ -207,35 +212,39 @@ export const Form = ({ type }: IFormProps) => {
       <Heading>{title}</Heading>
       {questions}
 
-      <SubmitContainer hAlignContent="right" shrink={false}>
-        <FlexView vAlignContent="center" grow>
-          <FlexView column grow>
+      <SubmitContainer>
+        <VerticallyCenteredContainer>
+          <FlexRowColumnContainer isBig>
             {submitError && (
               <Message error>
                 <b>Error: </b> {submitError.message}
               </Message>
             )}
-          </FlexView>
+          </FlexRowColumnContainer>
 
-          {!isDirty && !isFormDisabled && (
-            <FlexView shrink={false}>
-              <Muted>All changes saved</Muted>
-            </FlexView>
-          )}
+          <Spacer />
 
-          <HorizontalSpacer />
+          <StyleableFlexContainer>
+            <VerticallyCenteredContainer>
+              {!isDirty && !isFormDisabled && (
+                <StyleableFlexContainer>
+                  <Muted>All changes saved</Muted>
+                </StyleableFlexContainer>
+              )}
 
-          <FlexView shrink>
-            <Button
-              primary
-              onClick={handleSubmit}
-              loading={isSubmitting}
-              disable={!isDirty || isFormDisabled}
-            >
-              Submit
-            </Button>
-          </FlexView>
-        </FlexView>
+              <Spacer />
+
+              <Button
+                primary
+                onClick={handleSubmit}
+                loading={isSubmitting}
+                disable={!isDirty || isFormDisabled}
+              >
+                Submit
+              </Button>
+            </VerticallyCenteredContainer>
+          </StyleableFlexContainer>
+        </VerticallyCenteredContainer>
       </SubmitContainer>
     </Page>
   );

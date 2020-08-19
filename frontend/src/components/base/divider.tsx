@@ -1,9 +1,8 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import FlexView from "react-flexview";
-import { VerticalSpacer } from "./flex";
+import { FlexColumnContainer, Spacer, StyleableFlexContainer } from "./flex";
 
-const Border = styled(FlexView)`
+const Border = styled(StyleableFlexContainer)`
   border-top: 1px dashed #ccc;
 `;
 
@@ -11,9 +10,9 @@ const Border = styled(FlexView)`
  * A vertical divider.
  */
 export const Divider = () => (
-  <FlexView column shrink={false}>
-    <VerticalSpacer />
+  <FlexColumnContainer>
+    <Spacer />
     <Border />
-    <VerticalSpacer />
-  </FlexView>
+    <Spacer />
+  </FlexColumnContainer>
 );
