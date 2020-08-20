@@ -42,8 +42,15 @@ export const LoginContextProvider = ({
   useApi(
     async (api) => {
       if (isAlreadyLoggedIn) {
-        const apiRole = await api.refreshLoginToken();
-        setUser(apiRole);
+        try {
+          const apiUser = await api.refreshLoginToken();
+          setUser(apiUser);
+        } catch {
+          // if we can't refresh our login token it either expired or its contents
+          // changed and we need to request a new one by logging in again
+          clearLoginToken();
+          setUser(null);
+        }
       }
     },
     [
