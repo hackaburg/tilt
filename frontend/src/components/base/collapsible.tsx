@@ -6,6 +6,7 @@ import { Chevron } from "./chevron";
 import {
   FlexColumnContainer,
   NonGrowingFlexContainer,
+  Spacer,
   VerticallyCenteredContainer,
 } from "./flex";
 import { Subsubheading } from "./headings";
@@ -46,7 +47,12 @@ export const Collapsible = ({
         </NonGrowingFlexContainer>
       </VerticallyCenteredContainer>
 
-      {isOpen && <FlexColumnContainer>{children}</FlexColumnContainer>}
+      {isOpen && (
+        <FlexColumnContainer>
+          {children}
+          <Spacer />
+        </FlexColumnContainer>
+      )}
     </FlexColumnContainer>
   );
 };
