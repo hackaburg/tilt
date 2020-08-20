@@ -3,17 +3,25 @@ import * as React from "react";
 import { NavLink } from "react-router-dom";
 import { transitionDuration } from "../../../config";
 
-/**
- * The sidebar menu.
- */
-export const SidebarMenu = styled.ul`
+const UL = styled.ul`
   display: block;
   margin: 0;
   padding: 0;
   list-style: none;
 `;
 
-const Item = styled.li`
+interface ISidebarMenuProps {
+  children: React.ReactNode;
+}
+
+/**
+ * The sidebar menu.
+ */
+export const SidebarMenu = ({ children }: ISidebarMenuProps) => (
+  <UL>{children}</UL>
+);
+
+const LI = styled.li`
   display: block;
 `;
 
@@ -50,9 +58,9 @@ export const SidebarMenuItem = ({
   onClick,
   children,
 }: ISidebarMenuItemProps) => (
-  <Item>
+  <LI>
     <Link to={to} exact onClick={onClick}>
       {children}
     </Link>
-  </Item>
+  </LI>
 );
