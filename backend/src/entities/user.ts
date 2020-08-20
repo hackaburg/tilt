@@ -20,6 +20,8 @@ export class User {
   @Column({ select: false })
   public password!: string;
   @Column()
+  public tokenSecret!: string;
+  @Column()
   public verifyToken!: string;
   @Column()
   public role!: UserRole;

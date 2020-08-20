@@ -94,7 +94,7 @@ export interface IUserService extends IService {
 export const UserServiceToken = new Token<IUserService>();
 
 interface ITokenContent {
-  id: User["id"];
+  secret: string;
 }
 
 /**
@@ -160,11 +160,19 @@ export class UserService implements IUserService {
     user.verifyToken = await genSalt(10);
     user.role = UserRole.User;
 
+    // it's safe to use an emtpy secret here and set a real secret 10 lines below,
+    // since the user isn't verified and, by default, this user isn't elevated yet
+    user.tokenSecret = "";
+
     try {
       await this._users!.save(user);
     } catch (error) {
       throw error;
     }
+
+    // `genSalt` could technically collide, so we'll prepend the user's id
+    user.tokenSecret = `${user.id}//${await genSalt(10)}`;
+    await this._users!.save(user);
 
     this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
 
@@ -196,7 +204,7 @@ export class UserService implements IUserService {
    */
   public generateLoginToken(user: User): string {
     return this._tokens.sign({
-      id: user.id,
+      secret: user.tokenSecret,
     });
   }
 
@@ -206,10 +214,15 @@ export class UserService implements IUserService {
    */
   public async findUserByLoginToken(token: string): Promise<User | undefined> {
     try {
-      const { id } = this._tokens.decode(token);
-      return await this._users!.findOne(id, {
-        cache: 20 * 1000,
-      });
+      const { secret } = this._tokens.decode(token);
+      return await this._users!.findOne(
+        {
+          tokenSecret: secret,
+        },
+        {
+          cache: 20 * 1000,
+        },
+      );
     } catch (error) {
       return;
     }

@@ -153,12 +153,19 @@ describe("UserService", () => {
     expect(tokens.mocks.sign).toBeCalled();
   });
 
+  it("generates random login secrets", async () => {
+    expect.assertions(1);
+
+    const user = await userService.signup("test@foo.bar", "password");
+    expect(user.tokenSecret.length).toBeGreaterThan(3);
+  });
+
   it("decodes login tokens", async () => {
     expect.assertions(3);
 
     const user = await userService.signup("test@foo.bar", "password");
     tokens.mocks.decode.mockReturnValue({
-      id: user.id,
+      secret: user.tokenSecret,
     });
     const token = "token";
     const foundUser = await userService.findUserByLoginToken(token);
