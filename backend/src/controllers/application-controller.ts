@@ -35,6 +35,7 @@ import {
   ApplicationDTO,
   convertBetweenEntityAndDTO,
   FormDTO,
+  IDRequestDTO,
   IDsRequestDTO,
   QuestionDTO,
   StoreAnswersRequestDTO,
@@ -215,5 +216,20 @@ export class ApplicationController {
     return applications.map((application) =>
       convertBetweenEntityAndDTO(application, ApplicationDTO),
     );
+  }
+
+  /**
+   * Checks in the given user.
+   */
+  @Put("/checkin")
+  @Authorized(UserRole.Moderator)
+  public async checkIn(@Body() { data: userID }: IDRequestDTO): Promise<void> {
+    const [user] = await this._users.findUsersByIDs([userID]);
+
+    if (user == null) {
+      throw new NotFoundError(`no user with id ${userID}`);
+    }
+
+    await this._application.checkIn(user);
   }
 }

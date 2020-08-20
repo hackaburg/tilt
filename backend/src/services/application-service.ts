@@ -103,6 +103,12 @@ export interface IApplicationService extends IService {
    * @param user The user declining their spot
    */
   declineSpot(user: User): Promise<void>;
+
+  /**
+   * Checks in the given user.
+   * @param user The user we're checking in
+   */
+  checkIn(user: User): Promise<void>;
 }
 
 /**
@@ -551,6 +557,14 @@ export class ApplicationService implements IApplicationService {
    */
   public async declineSpot(user: User): Promise<void> {
     user.declined = true;
+    await this._users.updateUser(user);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async checkIn(user: User): Promise<void> {
+    user.checkedIn = true;
     await this._users.updateUser(user);
   }
 }

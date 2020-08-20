@@ -158,3 +158,14 @@ export const isBetween = (
   x: number,
   upperBound: number,
 ): boolean => lowerBound <= x && x <= upperBound;
+
+/**
+ * Prevent division by zero using this method.
+ */
+export const safeDivide = (a: number, b: number): number => {
+  if (b === 0) {
+    return 0;
+  }
+
+  return a / b;
+};

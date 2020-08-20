@@ -372,6 +372,8 @@ export class UserDTO {
   public confirmed!: boolean;
   @Expose()
   public declined!: boolean;
+  @Expose()
+  public checkedIn!: boolean;
 }
 
 export class ApplicationDTO {
@@ -386,4 +388,9 @@ export class ApplicationDTO {
 export class IDsRequestDTO implements IApiRequest<readonly number[]> {
   @IsInt({ each: true })
   public data!: readonly number[];
+}
+
+export class IDRequestDTO implements IApiRequest<number> {
+  @IsInt()
+  public data!: number;
 }

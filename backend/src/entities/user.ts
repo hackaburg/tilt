@@ -33,6 +33,8 @@ export class User {
   public confirmed!: boolean;
   @Column({ default: false })
   public declined!: boolean;
+  @Column({ default: false })
+  public checkedIn!: boolean;
 }
 
 /**

@@ -348,4 +348,15 @@ export class ApiClient {
       "/application/confirm",
     );
   }
+
+  /**
+   * Checks in the given user.
+   * @param userID The id of the user to check in
+   */
+  public async checkIn(userID: number): Promise<void> {
+    await this.put<ApplicationControllerMethods["checkIn"]>(
+      "/application/checkin",
+      userID,
+    );
+  }
 }

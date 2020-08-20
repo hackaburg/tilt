@@ -10,6 +10,7 @@ import {
   isConfirmationExpired,
   percentageToString,
   roundDateToDay,
+  safeDivide,
 } from "../../util";
 import { CircleChart } from "../base/circle-chart";
 import { Collapsible } from "../base/collapsible";
@@ -122,6 +123,10 @@ export const Statistics = () => {
           accumulatedPercentages.admitted++;
         }
 
+        if (application.user.checkedIn) {
+          accumulatedPercentages.checkedIn++;
+        }
+
         if (application.user.confirmed) {
           accumulatedPercentages.confirmed++;
         }
@@ -140,6 +145,7 @@ export const Statistics = () => {
       },
       {
         admitted: 0,
+        checkedIn: 0,
         confirmed: 0,
         declined: 0,
         expired: 0,
@@ -147,14 +153,23 @@ export const Statistics = () => {
       },
     );
 
-    const total = safeApplications.length || 1;
-
     return {
-      admitted: percentageToString(counts.admitted / total),
-      confirmed: percentageToString(counts.confirmed / total),
-      declined: percentageToString(counts.declined / total),
-      expired: percentageToString(counts.expired / total),
-      submitted: percentageToString(counts.submitted / total),
+      admitted: percentageToString(
+        safeDivide(counts.admitted, counts.submitted),
+      ),
+      checkedIn: percentageToString(
+        safeDivide(counts.checkedIn, counts.confirmed),
+      ),
+      confirmed: percentageToString(
+        safeDivide(counts.confirmed, counts.admitted),
+      ),
+      declined: percentageToString(
+        safeDivide(counts.declined, counts.confirmed),
+      ),
+      expired: percentageToString(safeDivide(counts.expired, counts.admitted)),
+      submitted: percentageToString(
+        safeDivide(counts.submitted, safeApplications.length),
+      ),
     };
   }, [safeApplications]);
 
@@ -223,9 +238,7 @@ export const Statistics = () => {
       case QuestionType.Country:
         return (
           <Collapsible key={key} title={title}>
-            <ChartContainer>
-              <WorldMap counts={counts} />
-            </ChartContainer>
+            <WorldMap counts={counts} />
           </Collapsible>
         );
 
@@ -256,6 +269,9 @@ export const Statistics = () => {
         </FlexRowColumnContainer>
         <FlexRowColumnContainer>
           <TitledNumber title="Expired" value={percentages.expired} />
+        </FlexRowColumnContainer>
+        <FlexRowColumnContainer>
+          <TitledNumber title="Checked in" value={percentages.checkedIn} />
         </FlexRowColumnContainer>
       </FlexRowContainer>
 

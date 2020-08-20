@@ -70,6 +70,20 @@ const ExpiredConfirmationRow = styled.tr`
   background-color: #ff9090;
 `;
 
+const CheckedInRow = styled.tr`
+  background-size: 20px 34.64px;
+  background-image: linear-gradient(
+    120deg,
+    #d1f8bf 25%,
+    #b7f59d 25%,
+    #b7f59d 50%,
+    #d1f8bf 50%,
+    #d1f8bf 75%,
+    #b7f59d 75%,
+    #b7f59d 100%
+  );
+`;
+
 const TableCell = styled.td`
   border-right: 1px solid #e0e0e0;
   padding: 0.75rem 1rem;
@@ -346,6 +360,7 @@ export const Admission = () => {
         admitted,
         confirmed,
         declined,
+        checkedIn,
       } = user;
 
       const name =
@@ -443,11 +458,22 @@ export const Admission = () => {
         }
       };
 
+      const handleCheckInAccount = async () => {
+        if (!confirm(`Are you sure you want to check in ${name}?`)) {
+          return;
+        }
+
+        await performApiRequest(async (api) => api.checkIn(id));
+        reloadApplications();
+      };
+
       const isNotAttending = isConfirmationExpired(user) || declined;
       let RowComponent = TableRow;
 
       if (isNotAttending) {
         RowComponent = ExpiredConfirmationRow;
+      } else if (checkedIn) {
+        RowComponent = CheckedInRow;
       } else if (confirmed) {
         RowComponent = ConfirmedRow;
       } else if (admitted) {
@@ -508,6 +534,18 @@ export const Admission = () => {
                         Delete account
                       </Button>
                     </NonGrowingFlexContainer>
+
+                    {!checkedIn && (
+                      <>
+                        <Spacer />
+
+                        <NonGrowingFlexContainer>
+                          <Button onClick={handleCheckInAccount} primary>
+                            Check in
+                          </Button>
+                        </NonGrowingFlexContainer>
+                      </>
+                    )}
                   </FlexRowContainer>
 
                   <Text>
