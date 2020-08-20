@@ -5,7 +5,7 @@ import type { ApplicationSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useDerivedState } from "../../hooks/use-derived-state";
 import { isValidDate } from "../../util";
-import { HorizontalSpacer, StyleableFlexContainer } from "../base/flex";
+import { Spacer, StyleableFlexContainer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
@@ -124,7 +124,7 @@ export const ApplicationSettings = () => {
             placeholder="keep it fair, e.g. 240 for 10 days"
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormFrom}
@@ -133,7 +133,7 @@ export const ApplicationSettings = () => {
             placeholder="1970-01-01 00:00:00"
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormUntil}

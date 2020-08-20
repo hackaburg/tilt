@@ -5,7 +5,6 @@ import {
   FlexColumnContainer,
   FlexRowColumnContainer,
   FlexRowContainer,
-  HorizontalSpacer,
   Spacer,
   StyleableFlexContainer,
 } from "./flex";
@@ -78,7 +77,7 @@ export const ProgressStep = ({
         </StepIndex>
       </StepContainer>
 
-      <HorizontalSpacer />
+      <Spacer />
 
       <FlexRowColumnContainer>
         <Subheading text={title} />

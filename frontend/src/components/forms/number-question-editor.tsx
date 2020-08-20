@@ -4,7 +4,7 @@ import {
   NumberQuestionConfigurationDTO,
   QuestionDTO,
 } from "../../api/types/dto";
-import { HorizontalSpacer } from "../base/flex";
+import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { TextInput, TextInputType } from "../base/text-input";
 
@@ -78,7 +78,7 @@ export const NumberQuestionEditor = ({
             placeholder="No minimum"
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <TextInput
             type={TextInputType.Number}

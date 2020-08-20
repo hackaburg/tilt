@@ -6,7 +6,7 @@ import { QuestionType } from "../../api/types/enums";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import { Elevated } from "../base/elevated";
-import { FlexColumnContainer, VerticalSpacer } from "../base/flex";
+import { FlexColumnContainer, Spacer } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Subsubheading } from "../base/headings";
 import { Muted } from "../base/muted";
@@ -124,7 +124,7 @@ export const FormEditor = ({
         }
       />
 
-      <VerticalSpacer />
+      <Spacer />
 
       {form.questions.length === 0 && (
         <Muted>No questions yet. Go ahead and add some.</Muted>

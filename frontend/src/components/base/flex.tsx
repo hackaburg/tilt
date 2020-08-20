@@ -18,18 +18,6 @@ const SpacerDiv = styled.div`
  */
 export const Spacer = () => <SpacerDiv />;
 
-/**
- * A flex container with `spacerSize` width.
- * @deprecated use `Spacer` instead
- */
-export const HorizontalSpacer = () => <SpacerDiv />;
-
-/**
- * A flex container with `spacerSize` height.
- * @deprecated use `Spacer` instead
- */
-export const VerticalSpacer = () => <SpacerDiv />;
-
 const FlexColumnContainerDiv = styled.div`
   display: flex;
   flex-direction: column;

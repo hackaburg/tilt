@@ -19,10 +19,9 @@ import {
   FlexColumnContainer,
   FlexRowColumnContainer,
   FlexRowContainer,
-  HorizontalSpacer,
+  Spacer,
   StyleableFlexContainer,
   VerticallyCenteredContainer,
-  VerticalSpacer,
 } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
@@ -471,7 +470,7 @@ export const Admission = () => {
                 <DetailsButton onClick={handleExpandRow}>
                   <VerticallyCenteredContainer>
                     {isRowExpanded ? "Collapse" : "Expand"}
-                    <HorizontalSpacer />
+                    <Spacer />
                     <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
                   </VerticallyCenteredContainer>
                 </DetailsButton>
@@ -614,7 +613,7 @@ export const Admission = () => {
             }
           />
 
-          <VerticalSpacer />
+          <Spacer />
 
           <Elevated level={1}>
             <Table>
@@ -655,7 +654,7 @@ export const Admission = () => {
             </Table>
           </Elevated>
 
-          <VerticalSpacer />
+          <Spacer />
         </StyleableFlexContainer>
       )}
     </Page>

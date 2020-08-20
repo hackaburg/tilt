@@ -11,7 +11,7 @@ import {
 } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { Checkboxes } from "../base/checkbox";
-import { HorizontalSpacer, StyleableFlexContainer } from "../base/flex";
+import { Spacer, StyleableFlexContainer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Select } from "../base/select";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -237,7 +237,7 @@ export const UnifiedQuestionEditor = ({
               title="Question type"
             />
           </FlexRowColumnContainer>
-          <HorizontalSpacer />
+          <Spacer />
           <FlexRowColumnContainer>
             <TextInput
               value={question.title}
@@ -258,7 +258,7 @@ export const UnifiedQuestionEditor = ({
               type={TextInputType.Area}
             />
           </FlexRowColumnContainer>
-          <HorizontalSpacer />
+          <Spacer />
           <FlexRowColumnContainer>
             <Checkboxes
               values={mandatoryAllCheckboxOptions}
@@ -282,7 +282,7 @@ export const UnifiedQuestionEditor = ({
               title="Parent question"
             />
           </FlexRowColumnContainer>
-          <HorizontalSpacer />
+          <Spacer />
           <FlexRowColumnContainer>
             <TextInput
               value={question.showIfParentHasValue ?? ""}

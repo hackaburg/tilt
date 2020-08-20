@@ -2,7 +2,7 @@ import * as React from "react";
 import { useCallback } from "react";
 import type { FrontendSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
-import { HorizontalSpacer } from "../base/flex";
+import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
@@ -77,7 +77,7 @@ export const FrontendSettings = () => {
             onChange={handleColorGradientStartChange}
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <TextInput
             title="Gradient end color"
@@ -99,7 +99,7 @@ export const FrontendSettings = () => {
             onChange={handleColorLinkChange}
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <TextInput
             title="Link hover color"
@@ -121,7 +121,7 @@ export const FrontendSettings = () => {
             onChange={handleLoginSignupImageChange}
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <TextInput
             title="Sidebar image url"

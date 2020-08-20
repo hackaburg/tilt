@@ -2,7 +2,7 @@ import * as React from "react";
 import { useCallback } from "react";
 import { QuestionDTO, TextQuestionConfigurationDTO } from "../../api/types/dto";
 import { Checkboxes } from "../base/checkbox";
-import { HorizontalSpacer } from "../base/flex";
+import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { TextInput } from "../base/text-input";
 
@@ -73,7 +73,7 @@ export const TextQuestionEditor = ({
           title="Input placeholder"
         />
       </FlexRowColumnContainer>
-      <HorizontalSpacer />
+      <Spacer />
       <FlexRowColumnContainer>
         <Checkboxes
           onChange={handleAppearanceChange}

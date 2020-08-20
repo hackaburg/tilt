@@ -3,7 +3,7 @@ import * as React from "react";
 import { useCallback } from "react";
 import type { EmailTemplateDTO } from "../../api/types/dto";
 import { Elevated } from "../base/elevated";
-import { HorizontalSpacer } from "../base/flex";
+import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Subsubheading } from "../base/headings";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -72,7 +72,7 @@ export const EmailTemplateEditor = ({
             placeholder="<html>"
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <TextInput
             title="text/plain"

@@ -5,7 +5,7 @@ import {
   QuestionDTO,
 } from "../../api/types/dto";
 import { Checkboxes } from "../base/checkbox";
-import { HorizontalSpacer } from "../base/flex";
+import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { TextInput, TextInputType } from "../base/text-input";
 
@@ -105,7 +105,7 @@ export const ChoicesQuestionEditor = ({
             onChange={handleChoicesUpdate}
           />
         </FlexRowColumnContainer>
-        <HorizontalSpacer />
+        <Spacer />
         <FlexRowColumnContainer>
           <Checkboxes
             values={appearanceOptions}
