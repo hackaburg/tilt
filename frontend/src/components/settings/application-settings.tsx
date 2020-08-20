@@ -1,21 +1,17 @@
-import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
 import type { ApplicationSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useDerivedState } from "../../hooks/use-derived-state";
 import { isValidDate } from "../../util";
-import { Spacer, StyleableFlexContainer } from "../base/flex";
+import { Collapsible } from "../base/collapsible";
+import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
 import { FormEditor } from "./form-editor";
 import { SettingsSection } from "./settings-section";
-
-const FormEditorContainer = styled(StyleableFlexContainer)`
-  padding-top: 1rem;
-`;
 
 /**
  * Settings to configure the application users have to fill out.
@@ -160,21 +156,21 @@ export const ApplicationSettings = () => {
         form.
       </Text>
 
-      <FormEditorContainer>
+      <Spacer />
+
+      <Collapsible title="Profile form">
         <FormEditor
-          heading="Profile form"
           form={settings.application.profileForm}
           onFormChange={handleProfileFormChange}
         />
-      </FormEditorContainer>
+      </Collapsible>
 
-      <FormEditorContainer>
+      <Collapsible title="Confirmation form">
         <FormEditor
-          heading="Confirmation form"
           form={settings.application.confirmationForm}
           onFormChange={handleConfirmationFormChange}
         />
-      </FormEditorContainer>
+      </Collapsible>
     </SettingsSection>
   );
 };

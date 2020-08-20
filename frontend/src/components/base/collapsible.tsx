@@ -8,7 +8,7 @@ import {
   NonGrowingFlexContainer,
   VerticallyCenteredContainer,
 } from "./flex";
-import { Subheading } from "./headings";
+import { Subsubheading } from "./headings";
 
 const ExpandButton = styled.button`
   cursor: pointer;
@@ -37,7 +37,7 @@ export const Collapsible = ({
     <FlexColumnContainer>
       <VerticallyCenteredContainer>
         <NonGrowingFlexContainer>
-          <Subheading text={title} />
+          <Subsubheading text={title} />
         </NonGrowingFlexContainer>
         <NonGrowingFlexContainer>
           <ExpandButton onClick={handleOpen}>

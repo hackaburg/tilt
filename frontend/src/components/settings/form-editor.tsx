@@ -8,7 +8,6 @@ import { Divider } from "../base/divider";
 import { Elevated } from "../base/elevated";
 import { FlexColumnContainer, Spacer } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
-import { Subsubheading } from "../base/headings";
 import { Muted } from "../base/muted";
 import { TextInput } from "../base/text-input";
 import { QuestionEditor } from "./question-editor";
@@ -18,7 +17,6 @@ const FormEditorContainer = styled(Elevated)`
 `;
 
 interface IFormEditorProps {
-  heading: string;
   form: FormSettingsDTO;
   onFormChange: (form: FormSettingsDTO) => any;
 }
@@ -26,11 +24,7 @@ interface IFormEditorProps {
 /**
  * An editor to edit an editable collection of questions, only for editing.
  */
-export const FormEditor = ({
-  heading,
-  form,
-  onFormChange,
-}: IFormEditorProps) => {
+export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
   const handleFormFieldChange = useCallback(
     (changes: Partial<FormSettingsDTO>) => {
       onFormChange({
@@ -108,7 +102,6 @@ export const FormEditor = ({
 
   return (
     <FormEditorContainer level={1}>
-      <Subsubheading text={heading} />
       <FormFieldButton
         field={
           <TextInput

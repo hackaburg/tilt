@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Divider } from "../base/divider";
 import { Heading } from "../base/headings";
 import { ApplicationSettings } from "../settings/application-settings";
 import { EmailSettings } from "../settings/email-settings";
@@ -11,8 +12,11 @@ import { Page } from "./page";
 export const Settings = () => (
   <Page>
     <Heading text="Settings" />
+    <Divider />
     <FrontendSettings />
+    <Divider />
     <ApplicationSettings />
+    <Divider />
     <EmailSettings />
   </Page>
 );
