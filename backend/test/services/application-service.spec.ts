@@ -105,6 +105,7 @@ describe(ApplicationService.name, () => {
     user.password = "";
     user.role = UserRole.User;
     user.verifyToken = "";
+    user.tokenSecret = "";
 
     const userRepo = database.getRepository(User);
     await userRepo.save(user);
