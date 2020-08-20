@@ -6,7 +6,7 @@ import { ApplicationDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { debounceDuration } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
-import { isNameQuestion } from "../../heuristics";
+import { isNameQuestion, isTeamQuestion } from "../../heuristics";
 import { performApiRequest, useApi } from "../../hooks/use-api";
 import { useIsResponsive } from "../../hooks/use-is-responsive";
 import { Nullable } from "../../state";
@@ -283,6 +283,7 @@ export const Admission = () => {
   }, [debouncedQuery, applicationsSortedByDate, applicationsByUserID]);
 
   const probableNameQuestion = questions.find(isNameQuestion);
+  const probableTeamQuestion = questions.find(isTeamQuestion);
 
   const [selectedRowIDs, setSelectedRowIDs] = useState<readonly number[]>([]);
   const headerCheckboxRef = useRef<Nullable<HTMLInputElement>>(null);
@@ -323,15 +324,78 @@ export const Admission = () => {
   } = useApi(
     async (api, wasForced) => {
       if (wasForced) {
+        if (probableTeamQuestion != null) {
+          const teams = new Set<string>();
+
+          for (const id of selectedRowIDs) {
+            const { answersByQuestionID } = applicationsByUserID[id];
+            const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
+
+            if (teamAnswer == null) {
+              continue;
+            }
+
+            teams.add(teamAnswer);
+          }
+
+          let firstSeenPartialTeam: Nullable<string> = null;
+          let missingPartialTeamMemberEmails = "";
+
+          for (const { user } of applicationsSortedByDate) {
+            const { answersByQuestionID } = applicationsByUserID[user.id];
+            const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
+
+            if (teamAnswer == null) {
+              continue;
+            }
+
+            const isSelectedTeam = teams.has(teamAnswer);
+            const isNotSelected = !selectedRowIDs.includes(user.id);
+            const isNotYetAdmitted = !user.admitted;
+            const isMemberOfFirstPartialTeam =
+              firstSeenPartialTeam == null ||
+              firstSeenPartialTeam === teamAnswer;
+
+            if (
+              isSelectedTeam &&
+              isNotSelected &&
+              isNotYetAdmitted &&
+              isMemberOfFirstPartialTeam
+            ) {
+              firstSeenPartialTeam = teamAnswer;
+              missingPartialTeamMemberEmails += `- ${user.email}\n`;
+            }
+          }
+
+          if (firstSeenPartialTeam != null) {
+            const choice = prompt(
+              `You're about to admit the team '${firstSeenPartialTeam}', but you missed some team members:\n\n` +
+                `${missingPartialTeamMemberEmails}\n` +
+                `Type 'show' (without quotes) to view the missing team members, or type 'ignore' (without quotes) to continue partially admitting this team.`,
+            );
+
+            if (choice == null) {
+              return;
+            }
+
+            if (choice !== "ignore") {
+              setQuery(firstSeenPartialTeam);
+              return;
+            }
+          }
+        }
+
         const applicationList = selectedRowIDs
           .map((id) => `- ${applicationsByUserID[id].email}`)
           .join("\n");
 
-        const confirmed = confirm(
-          `Are you sure you want to admit the following ${selectedRowIDs.length} application(s):\n\n${applicationList}\n\nThis will send out admission emails, which you can't undo.`,
-        );
-
-        if (!confirmed) {
+        if (
+          !confirm(
+            `Are you sure you want to admit the following ${selectedRowIDs.length} application(s):\n\n` +
+              `${applicationList}\n\n` +
+              `This will send out admission emails, which you can't undo.`,
+          )
+        ) {
           return;
         }
 
@@ -340,7 +404,13 @@ export const Admission = () => {
         reloadApplications();
       }
     },
-    [selectedRowIDs, reloadApplications],
+    [
+      selectedRowIDs,
+      reloadApplications,
+      probableTeamQuestion,
+      applicationsByUserID,
+      applicationsSortedByDate,
+    ],
   );
 
   if (headerCheckboxRef.current) {

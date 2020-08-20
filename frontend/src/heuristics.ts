@@ -13,3 +13,15 @@ export const isNameQuestion = (question: QuestionDTO): boolean => {
     question.parentID == null
   );
 };
+
+/**
+ * A heuristic to determine whether a question is used to query for the team a
+ * user wants to be on.
+ * @param question The question to check
+ */
+export const isTeamQuestion = (question: QuestionDTO): boolean => {
+  return (
+    question.title.toLowerCase().includes("team") &&
+    question.configuration.type === QuestionType.Text
+  );
+};
