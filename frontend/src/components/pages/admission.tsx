@@ -8,6 +8,7 @@ import { debounceDuration } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { isNameQuestion } from "../../heuristics";
 import { performApiRequest, useApi } from "../../hooks/use-api";
+import { useIsResponsive } from "../../hooks/use-is-responsive";
 import { Nullable } from "../../state";
 import { dateToString, filterSplit, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
@@ -16,6 +17,7 @@ import { Code } from "../base/code";
 import { Elevated } from "../base/elevated";
 import {
   FlexColumnContainer,
+  FlexRowColumnContainer,
   FlexRowContainer,
   HorizontalSpacer,
   StyleableFlexContainer,
@@ -332,6 +334,7 @@ export const Admission = () => {
     headerCheckboxRef.current.indeterminate = someVisibleSelected;
   }
 
+  const isResponsive = useIsResponsive();
   const tableRows = useMemo(() => {
     return visibleApplications.map(({ user }) => {
       const {
@@ -417,15 +420,12 @@ export const Admission = () => {
               }
 
               return (
-                <FlexRowContainer key={String(question.id)}>
-                  <FlexColumnContainer>
-                    <Text>
-                      <b>{question.title}</b>
-                    </Text>
-                  </FlexColumnContainer>
-                  <HorizontalSpacer />
-                  <FlexColumnContainer>{answer}</FlexColumnContainer>
-                </FlexRowContainer>
+                <FlexColumnContainer key={String(question.id)}>
+                  <Text>
+                    <b>{question.title}</b>
+                  </Text>
+                  {answer}
+                </FlexColumnContainer>
               );
             })
             .filter((answer) => answer != null);
@@ -466,15 +466,17 @@ export const Admission = () => {
               />
             </TableCell>
 
-            <TableCell>
-              <DetailsButton onClick={handleExpandRow}>
-                <VerticallyCenteredContainer>
-                  {isRowExpanded ? "Collapse" : "Expand"}
-                  <HorizontalSpacer />
-                  <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
-                </VerticallyCenteredContainer>
-              </DetailsButton>
-            </TableCell>
+            {!isResponsive && (
+              <TableCell>
+                <DetailsButton onClick={handleExpandRow}>
+                  <VerticallyCenteredContainer>
+                    {isRowExpanded ? "Collapse" : "Expand"}
+                    <HorizontalSpacer />
+                    <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
+                  </VerticallyCenteredContainer>
+                </DetailsButton>
+              </TableCell>
+            )}
 
             <TableCell>
               <ExternalLink to={`mailto:${email}`}>{email}</ExternalLink>
@@ -496,36 +498,39 @@ export const Admission = () => {
                     <Muted>This application appears to be empty.</Muted>
                   )}
 
-                  <VerticallyCenteredContainer>
-                    <FlexColumnContainer>
+                  <FlexRowContainer>
+                    <FlexRowColumnContainer>
                       <Subheading>Meta</Subheading>
-                    </FlexColumnContainer>
+                    </FlexRowColumnContainer>
 
-                    <FlexRowContainer>
-                      <StyleableFlexContainer>
-                        <Button onClick={handleDeleteAccount}>
-                          Delete account
-                        </Button>
-                      </StyleableFlexContainer>
-                    </FlexRowContainer>
-                  </VerticallyCenteredContainer>
+                    <StyleableFlexContainer>
+                      <Button onClick={handleDeleteAccount}>
+                        Delete account
+                      </Button>
+                    </StyleableFlexContainer>
+                  </FlexRowContainer>
 
                   <Text>
-                    <b>Account created on:</b> {dateToString(createdAt)}
+                    <b>Account created on:</b>
                   </Text>
+                  <Text>{dateToString(createdAt)}</Text>
 
                   {initialProfileFormSubmittedAt != null && (
-                    <Text>
-                      <b>Profile form submitted on:</b>{" "}
-                      {dateToString(initialProfileFormSubmittedAt)}
-                    </Text>
+                    <>
+                      <Text>
+                        <b>Profile form submitted on:</b>
+                      </Text>
+                      <Text>{dateToString(initialProfileFormSubmittedAt)}</Text>
+                    </>
                   )}
 
                   {confirmationExpiresAt != null && (
-                    <Text>
-                      <b>Confirmation deadline:</b>{" "}
-                      {dateToString(confirmationExpiresAt)}
-                    </Text>
+                    <>
+                      <Text>
+                        <b>Confirmation deadline:</b>
+                      </Text>
+                      <Text>{dateToString(confirmationExpiresAt)}</Text>
+                    </>
                   )}
 
                   {declined && (
@@ -541,6 +546,7 @@ export const Admission = () => {
       );
     });
   }, [
+    isResponsive,
     visibleApplications,
     probableNameQuestion,
     selectedRowIDs,
@@ -614,7 +620,7 @@ export const Admission = () => {
             <Table>
               <colgroup>
                 <col style={{ width: "5%" }} />
-                <col style={{ width: "10%" }} />
+                {!isResponsive && <col style={{ width: "10%" }} />}
                 <col style={{ width: "40%" }} />
                 <col style={{ width: "45%" }} />
               </colgroup>
@@ -628,7 +634,8 @@ export const Admission = () => {
                       onClick={handleSelectHeaderCheckbox}
                     />
                   </TableHeaderCell>
-                  <TableHeaderCell />
+
+                  {!isResponsive && <TableHeaderCell />}
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Name</TableHeaderCell>
                 </tr>
