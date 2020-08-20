@@ -53,7 +53,7 @@ export class SlackNotificationService implements ISlackNotificationService {
       return;
     }
 
-    await this._hook!.send({
+    await this._hook.send({
       text,
     });
   }

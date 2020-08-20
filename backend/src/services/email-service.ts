@@ -76,7 +76,7 @@ export class EmailService implements IEmailService {
     htmlBody: string,
     textBody: string,
   ): Promise<void> {
-    const info = await this._transporter!.sendMail({
+    const info = await this._transporter.sendMail({
       from,
       html: htmlBody,
       subject,

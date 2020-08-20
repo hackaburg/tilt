@@ -36,7 +36,7 @@ export const DatabaseServiceToken = new Token<IDatabaseService>();
  */
 @Service(DatabaseServiceToken)
 export class DatabaseService implements IDatabaseService {
-  private _connection?: Connection;
+  private _connection!: Connection;
 
   public constructor(
     @Inject(ConfigurationServiceToken)
@@ -76,11 +76,6 @@ export class DatabaseService implements IDatabaseService {
    * @param entity The entity to get a repository for
    */
   public getRepository<T>(entity: Entity<T>): Repository<T> {
-    if (!this._connection) {
-      this._logger.error("no database connection, unable to access repository");
-      process.exit(1);
-    }
-
-    return this._connection!.manager.getRepository<T>(entity);
+    return this._connection.manager.getRepository<T>(entity);
   }
 }

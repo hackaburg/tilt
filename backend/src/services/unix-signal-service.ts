@@ -65,6 +65,6 @@ export class UnixSignalService implements IUnixSignalService {
       process.on(signal, () => this.handleSignal(signal));
     }
 
-    this._handlers.get(signal)!.unshift(handler);
+    this._handlers.get(signal)?.unshift(handler);
   }
 }

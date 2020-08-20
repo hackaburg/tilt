@@ -445,7 +445,8 @@ export class ApplicationService implements IApplicationService {
 
     const skippedProfileQuestions = settings.application.profileForm.questions.filter(
       ({ createdAt }) =>
-        createdAt.getTime() > user.initialProfileFormSubmittedAt!.getTime(),
+        user.initialProfileFormSubmittedAt != null &&
+        createdAt.getTime() > user.initialProfileFormSubmittedAt.getTime(),
     );
 
     try {

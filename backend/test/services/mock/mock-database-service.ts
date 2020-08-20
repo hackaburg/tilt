@@ -15,20 +15,20 @@ export const MockDatabaseService = jest.fn(
 );
 
 export class TestDatabaseService implements IDatabaseService {
-  private _connection?: Connection;
+  private _connection!: Connection;
 
   /**
    * Completely drops the database and recreates the schema.
    */
   public async nuke(): Promise<void> {
-    await this._connection!.synchronize(true);
+    await this._connection.synchronize(true);
   }
 
   /**
    * @inheritdoc
    */
   public getRepository<T>(entity: new () => T): Repository<T> {
-    return this._connection!.getRepository<T>(entity);
+    return this._connection.getRepository<T>(entity);
   }
 
   /**

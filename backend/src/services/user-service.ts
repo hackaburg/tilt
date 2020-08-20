@@ -102,7 +102,7 @@ interface ITokenContent {
  */
 @Service(UserServiceToken)
 export class UserService implements IUserService {
-  private _users?: Repository<User>;
+  private _users!: Repository<User>;
 
   public constructor(
     @Inject(HaveibeenpwnedServiceToken)
@@ -136,7 +136,7 @@ export class UserService implements IUserService {
       throw new PasswordReuseError(passwordReuseCount);
     }
 
-    const existingUser = await this._users!.findOne({
+    const existingUser = await this._users.findOne({
       where: {
         email,
       },
@@ -165,14 +165,14 @@ export class UserService implements IUserService {
     user.tokenSecret = "";
 
     try {
-      await this._users!.save(user);
+      await this._users.save(user);
     } catch (error) {
       throw error;
     }
 
     // `genSalt` could technically collide, so we'll prepend the user's id
     user.tokenSecret = `${user.id}//${await genSalt(10)}`;
-    await this._users!.save(user);
+    await this._users.save(user);
 
     this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
 
@@ -185,7 +185,7 @@ export class UserService implements IUserService {
    * @param verifyToken The token sent to the user
    */
   public async verifyUserByVerifyToken(verifyToken: string): Promise<User> {
-    const user = await this._users!.findOneOrFail({
+    const user = await this._users.findOneOrFail({
       where: {
         verifyToken,
       },
@@ -193,7 +193,7 @@ export class UserService implements IUserService {
 
     user.verifyToken = "";
 
-    await this._users!.save(user);
+    await this._users.save(user);
     this._logger.debug(`${user.email} verified their email`);
     return user;
   }
@@ -215,7 +215,7 @@ export class UserService implements IUserService {
   public async findUserByLoginToken(token: string): Promise<User | undefined> {
     try {
       const { secret } = this._tokens.decode(token);
-      return await this._users!.findOne(
+      return await this._users.findOne(
         {
           tokenSecret: secret,
         },
@@ -237,7 +237,7 @@ export class UserService implements IUserService {
     email: string,
     password: string,
   ): Promise<User | undefined> {
-    const user = await this._users!.findOne({
+    const user = await this._users.findOne({
       select: ["id", "password", "role", "verifyToken"],
       where: {
         email,
@@ -255,7 +255,7 @@ export class UserService implements IUserService {
     const passwordsMatch = await compare(password, user.password);
 
     if (passwordsMatch) {
-      return await this._users!.findOneOrFail(user.id);
+      return await this._users.findOneOrFail(user.id);
     }
   }
 
@@ -265,7 +265,7 @@ export class UserService implements IUserService {
   public async findUsersByIDs(
     userIDs: readonly number[],
   ): Promise<ReadonlyArray<User | null>> {
-    const users = await this._users!.findByIds(userIDs as number[]);
+    const users = await this._users.findByIds(userIDs as number[]);
     return users.map((user) => user ?? null);
   }
 
@@ -273,28 +273,28 @@ export class UserService implements IUserService {
    * @inheritdoc
    */
   public async updateUser(user: User): Promise<void> {
-    await this._users!.save(user);
+    await this._users.save(user);
   }
 
   /**
    * @inheritdoc
    */
   public async updateUsers(users: readonly User[]): Promise<void> {
-    await this._users!.save(users as User[]);
+    await this._users.save(users as User[]);
   }
 
   /**
    * @inheritdoc
    */
   public async findAll(): Promise<readonly User[]> {
-    return await this._users!.find();
+    return await this._users.find();
   }
 
   /**
    * @inheritdoc
    */
   public async deleteUser(user: User): Promise<void> {
-    await this._users!.delete({
+    await this._users.delete({
       id: user.id,
       role: UserRole.User,
     });
