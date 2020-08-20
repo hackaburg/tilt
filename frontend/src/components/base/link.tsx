@@ -16,26 +16,30 @@ const linkStyle = css`
   }
 `;
 
+interface ILinkProps {
+  to: string;
+  children: string;
+}
+
+const InternalRouterLink = styled(RouterLink)`
+  ${linkStyle}
+`;
+
 /**
  * An internal styled link.
  */
-export const InternalLink = styled(RouterLink)`
-  ${linkStyle}
-`;
+export const InternalLink = ({ to, children }: ILinkProps) => (
+  <InternalRouterLink to={to}>{children}</InternalRouterLink>
+);
 
 const A = styled.a`
   ${linkStyle}
 `;
 
-interface IExternalLinkProps {
-  to: string;
-  children: string;
-}
-
 /**
  * An external styled link.
  */
-export const ExternalLink = ({ to, children }: IExternalLinkProps) => (
+export const ExternalLink = ({ to, children }: ILinkProps) => (
   <A href={to} target="_blank">
     {children}
   </A>
