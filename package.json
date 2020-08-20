@@ -79,7 +79,7 @@
   },
   "dependencies": {
     "@slack/webhook": "^5.0.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "convict": "^4.4.1",
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
