@@ -72,16 +72,16 @@ export const EmailSettings = () => {
         Use the editors to configure the email templates sent to applicants. The
         HTML and plain text templates will be sent in the same mail.
         <br />
-        You may use Handlebars syntax to access variables injected into the
-        template like <Code>email</Code>, but try to keep the emails short.
+        You may use <Code>{"{{variable}}"}</Code> syntax to access variables
+        injected into the template like <Code>{"{{verifyToken}}"}</Code>.
       </Text>
       <Text>
         tilt will inject the <Code>verifyToken</Code> into the verification
         email template. To actually verify users, supply the url to your hosted
         instance, e.g.{" "}
         <Code>{"https://hackathon.com/apply/verify#{{verifyToken}}"}</Code> -
-        the frontend will expect the token to be at{" "}
-        <Code>{"/verify#token"}</Code>.
+        the frontend will expect the URL to look like this:
+        <Code>{"/verify#Th3aCtUaL93n3r4t3dT0KeN"}</Code>
       </Text>
 
       {!settings && (

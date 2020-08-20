@@ -1,4 +1,3 @@
-import * as Handlebars from "handlebars";
 import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
 import { EmailTemplate } from "../entities/settings";
@@ -47,18 +46,31 @@ export class EmailTemplateService implements IEmailTemplateService {
   }
 
   /**
+   * Replaces all variables from the given context in the given text.
+   * @param text The text to compile
+   * @param context The context to inject into the template
+   */
+  private compile<TContext>(text: string, context: TContext): string {
+    return [...Object.entries(context)].reduce(
+      (replacedText, [variable, value]) =>
+        replacedText.replace(new RegExp(`{{${variable}}}`, "g"), value),
+      text,
+    );
+  }
+
+  /**
    * Compiles a template with the given context.
    * @param template The template to use for compilation
    * @param context The context to inject into the template
    */
   private compileTemplate<TContext>(
     template: EmailTemplate,
-    context?: TContext,
+    context: TContext,
   ): EmailTemplate {
     return {
-      htmlTemplate: Handlebars.compile(template.htmlTemplate)(context),
-      subject: Handlebars.compile(template.subject)(context),
-      textTemplate: Handlebars.compile(template.textTemplate)(context),
+      htmlTemplate: this.compile(template.htmlTemplate, context),
+      subject: this.compile(template.subject, context),
+      textTemplate: this.compile(template.textTemplate, context),
     };
   }
 
@@ -88,7 +100,7 @@ export class EmailTemplateService implements IEmailTemplateService {
    */
   public async sendAdmittedEmail(user: User): Promise<void> {
     const { email } = await this._settings.getSettings();
-    const template = this.compileTemplate(email.admittedEmail);
+    const template = this.compileTemplate(email.admittedEmail, {});
 
     await this._email.sendEmail(
       email.sender,
