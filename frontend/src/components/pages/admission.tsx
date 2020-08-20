@@ -19,6 +19,7 @@ import {
   FlexColumnContainer,
   FlexRowColumnContainer,
   FlexRowContainer,
+  NonGrowingFlexContainer,
   Spacer,
   StyleableFlexContainer,
   VerticallyCenteredContainer,
@@ -502,11 +503,11 @@ export const Admission = () => {
                       <Subheading text="Meta" />
                     </FlexRowColumnContainer>
 
-                    <StyleableFlexContainer>
+                    <NonGrowingFlexContainer>
                       <Button onClick={handleDeleteAccount}>
                         Delete account
                       </Button>
-                    </StyleableFlexContainer>
+                    </NonGrowingFlexContainer>
                   </FlexRowContainer>
 
                   <Text>
@@ -590,7 +591,7 @@ export const Admission = () => {
 
       {isFetching && <SuspenseFallback />}
       {allApplications != null && (
-        <StyleableFlexContainer>
+        <NonGrowingFlexContainer>
           <FormFieldButton
             field={
               <TextInput
@@ -655,7 +656,7 @@ export const Admission = () => {
           </Elevated>
 
           <Spacer />
-        </StyleableFlexContainer>
+        </NonGrowingFlexContainer>
       )}
     </Page>
   );

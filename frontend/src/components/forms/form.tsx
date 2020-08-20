@@ -12,6 +12,7 @@ import { Divider } from "../base/divider";
 import {
   FlexColumnContainer,
   FlexRowColumnContainer,
+  NonGrowingFlexContainer,
   Spacer,
   StyleableFlexContainer,
   VerticallyCenteredContainer,
@@ -227,12 +228,12 @@ export const Form = ({ type }: IFormProps) => {
 
             <Spacer />
 
-            <StyleableFlexContainer>
+            <NonGrowingFlexContainer>
               <VerticallyCenteredContainer>
                 {!isDirty && !isUnanswered && (
-                  <StyleableFlexContainer>
+                  <NonGrowingFlexContainer>
                     <Muted>All changes saved</Muted>
-                  </StyleableFlexContainer>
+                  </NonGrowingFlexContainer>
                 )}
 
                 <Spacer />
@@ -246,7 +247,7 @@ export const Form = ({ type }: IFormProps) => {
                   Submit
                 </Button>
               </VerticallyCenteredContainer>
-            </StyleableFlexContainer>
+            </NonGrowingFlexContainer>
           </VerticallyCenteredContainer>
         </SubmitContainer>
       )}

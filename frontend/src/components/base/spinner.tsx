@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CenteredContainer, StyleableFlexContainer } from "./flex";
+import { CenteredContainer, NonGrowingFlexContainer } from "./flex";
 
 interface ISpinnerProps {
   color?: string;
@@ -24,7 +24,7 @@ export const Spinner = ({
 
   return (
     <CenteredContainer>
-      <StyleableFlexContainer>
+      <NonGrowingFlexContainer>
         <svg width={size} height={size} viewBox={`0 0 ${boxSize} ${boxSize}`}>
           <defs>
             <linearGradient id="gradient" x1="10%" y1="50%" x2="100%" y2="0%">
@@ -60,7 +60,7 @@ export const Spinner = ({
         </svg>
 
         {text}
-      </StyleableFlexContainer>
+      </NonGrowingFlexContainer>
     </CenteredContainer>
   );
 };

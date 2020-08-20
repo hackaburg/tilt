@@ -85,11 +85,18 @@ export const FlexRowColumnContainer = ({
   </FlexRowColumnContainerDiv>
 );
 
-const StyleableFlexContainerDiv = styled.div`
+const NonGrowingFlexContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
 `;
+
+/**
+ * A flex container that doesn't grow to its parent's size.
+ */
+export const NonGrowingFlexContainer = ({ children }: IFlexContainerProps) => (
+  <NonGrowingFlexContainerDiv>{children}</NonGrowingFlexContainerDiv>
+);
 
 interface IStyleableFlexContainerProps extends IFlexContainerProps {
   className?: string;
@@ -104,9 +111,9 @@ export const StyleableFlexContainer = ({
   className,
   style,
 }: IStyleableFlexContainerProps) => (
-  <StyleableFlexContainerDiv className={className} style={style}>
+  <NonGrowingFlexContainerDiv className={className} style={style}>
     {children}
-  </StyleableFlexContainerDiv>
+  </NonGrowingFlexContainerDiv>
 );
 
 const VerticalScrollFlexContainerDiv = styled.div`

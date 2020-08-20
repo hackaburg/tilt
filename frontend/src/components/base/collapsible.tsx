@@ -5,7 +5,7 @@ import { useToggle } from "../../hooks/use-toggle";
 import { Chevron } from "./chevron";
 import {
   FlexColumnContainer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
   VerticallyCenteredContainer,
 } from "./flex";
 import { Subheading } from "./headings";
@@ -36,14 +36,14 @@ export const Collapsible = ({
   return (
     <FlexColumnContainer>
       <VerticallyCenteredContainer>
-        <StyleableFlexContainer>
+        <NonGrowingFlexContainer>
           <Subheading text={title} />
-        </StyleableFlexContainer>
-        <StyleableFlexContainer>
+        </NonGrowingFlexContainer>
+        <NonGrowingFlexContainer>
           <ExpandButton onClick={handleOpen}>
             <Chevron rotation={isOpen ? 0 : -90} />
           </ExpandButton>
-        </StyleableFlexContainer>
+        </NonGrowingFlexContainer>
       </VerticallyCenteredContainer>
 
       {isOpen && <FlexColumnContainer>{children}</FlexColumnContainer>}
