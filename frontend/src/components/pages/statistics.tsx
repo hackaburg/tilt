@@ -236,7 +236,7 @@ export const Statistics = () => {
 
   return (
     <Page>
-      <Heading>Statistics</Heading>
+      <Heading text="Statistics" />
 
       <FlexRowContainer>
         <FlexRowColumnContainer>

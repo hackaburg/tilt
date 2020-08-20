@@ -58,7 +58,7 @@ const RenderError = ({ exception, info }: IRenderError) => {
     <PageSizedContainer>
       <CenteredContainer>
         <ErrorContainer>
-          <Heading>Uh-oh, everything is on fire 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥</Heading>
+          <Heading text="Uh-oh, everything is on fire 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥" />
 
           <Text>
             While this shouldn't have happened in the first place, we'd be happy

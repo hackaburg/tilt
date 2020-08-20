@@ -108,7 +108,7 @@ export const FormEditor = ({
 
   return (
     <FormEditorContainer level={1}>
-      <Subsubheading>{heading}</Subsubheading>
+      <Subsubheading text={heading} />
       <FormFieldButton
         field={
           <TextInput

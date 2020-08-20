@@ -10,7 +10,7 @@ import { Page } from "./page";
  */
 export const Settings = () => (
   <Page>
-    <Heading>Settings</Heading>
+    <Heading text="Settings" />
     <FrontendSettings />
     <ApplicationSettings />
     <EmailSettings />

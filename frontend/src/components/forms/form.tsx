@@ -174,7 +174,7 @@ export const Form = ({ type }: IFormProps) => {
   if (!form) {
     return (
       <Page>
-        <Heading>{title}</Heading>
+        <Heading text={title} />
         <Placeholder height="7rem" />
         <br />
         <Placeholder height="7rem" />
@@ -209,7 +209,7 @@ export const Form = ({ type }: IFormProps) => {
 
   return (
     <Page>
-      <Heading>{title}</Heading>
+      <Heading text={title} />
       {questions}
 
       <SubmitContainer>

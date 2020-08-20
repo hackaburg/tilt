@@ -81,7 +81,7 @@ export const ProgressStep = ({
       <HorizontalSpacer />
 
       <FlexRowColumnContainer>
-        <Subheading>{title}</Subheading>
+        <Subheading text={title} />
 
         {children}
       </FlexRowColumnContainer>

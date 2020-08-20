@@ -17,7 +17,7 @@ interface ISettingsSection {
  */
 export const SettingsSection = ({ title, children }: ISettingsSection) => (
   <Section>
-    <Subheading>{title}</Subheading>
+    <Subheading text={title} />
     {children}
   </Section>
 );

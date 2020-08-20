@@ -53,7 +53,7 @@ export const EmailTemplateEditor = ({
 
   return (
     <EmailTemplateEditorContainer level={1}>
-      <Subsubheading>{title}</Subsubheading>
+      <Subsubheading text={title} />
 
       <TextInput
         value={template.subject}

@@ -64,7 +64,7 @@ export const Status = () => {
 
   return (
     <Page>
-      <Heading>Application status</Heading>
+      <Heading text="Application status" />
 
       <ProgressStep
         index={1}

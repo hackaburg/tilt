@@ -489,7 +489,7 @@ export const Admission = () => {
             {isRowExpanded && (
               <ExpandedCell colSpan={4}>
                 <QuestionaireContainer>
-                  <Subheading>Application</Subheading>
+                  <Subheading text="Application" />
 
                   {questionsAndAnswers != null &&
                   questionsAndAnswers.length > 0 ? (
@@ -500,7 +500,7 @@ export const Admission = () => {
 
                   <FlexRowContainer>
                     <FlexRowColumnContainer>
-                      <Subheading>Meta</Subheading>
+                      <Subheading text="Meta" />
                     </FlexRowColumnContainer>
 
                     <StyleableFlexContainer>
@@ -559,7 +559,7 @@ export const Admission = () => {
 
   return (
     <Page>
-      <Heading>Admission</Heading>
+      <Heading text="Admission" />
 
       <Text>
         You can search for applications in the table below and admit multiple

@@ -16,7 +16,7 @@ export const PageNotFound = () => (
   <Page>
     <CenteredContainer>
       <Container>
-        <Heading>Oops, that link didn't work.</Heading>
+        <Heading text="Oops, that link didn't work." />
         <CenteredContainer>
           <Text>Try selecting a page from the sidebar</Text>
         </CenteredContainer>

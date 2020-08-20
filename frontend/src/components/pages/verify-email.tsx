@@ -22,7 +22,7 @@ export const VerifyEmail = ({ location: { hash } }: IVerifyEmailProps) => {
 
   return (
     <FlexColumnContainer>
-      <Heading>Verifying your email</Heading>
+      <Heading text="Verifying your email" />
 
       {error ? (
         <Message error>

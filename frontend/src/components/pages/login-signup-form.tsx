@@ -67,7 +67,7 @@ export const LoginSignupForm = () => {
   if (signupDone) {
     return (
       <FlexColumnContainer>
-        <Heading>Done.</Heading>
+        <Heading text="Done." />
         <Text>We've sent you an email with a button to verify yourself.</Text>
         <Text>
           It might take a minute or two to arrive, and to be safe, please also
@@ -79,7 +79,7 @@ export const LoginSignupForm = () => {
 
   return (
     <FlexColumnContainer>
-      <Heading>Register to apply</Heading>
+      <Heading text="Register to apply" />
 
       {loginError && (
         <Message error>

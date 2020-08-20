@@ -3,11 +3,17 @@ import * as React from "react";
 import { useCallback } from "react";
 import { useToggle } from "../../hooks/use-toggle";
 import { Chevron } from "./chevron";
-import { FlexColumnContainer } from "./flex";
+import {
+  FlexColumnContainer,
+  StyleableFlexContainer,
+  VerticallyCenteredContainer,
+} from "./flex";
 import { Subheading } from "./headings";
 
-const ClickableSubheading = styled(Subheading)`
+const ExpandButton = styled.button`
   cursor: pointer;
+  background-color: transparent;
+  border: none;
 `;
 
 interface ICollapsibleProps {
@@ -29,9 +35,16 @@ export const Collapsible = ({
 
   return (
     <FlexColumnContainer>
-      <ClickableSubheading onClick={handleOpen}>
-        {title} <Chevron rotation={isOpen ? 0 : -90} />
-      </ClickableSubheading>
+      <VerticallyCenteredContainer>
+        <StyleableFlexContainer>
+          <Subheading text={title} />
+        </StyleableFlexContainer>
+        <StyleableFlexContainer>
+          <ExpandButton onClick={handleOpen}>
+            <Chevron rotation={isOpen ? 0 : -90} />
+          </ExpandButton>
+        </StyleableFlexContainer>
+      </VerticallyCenteredContainer>
 
       {isOpen && <FlexColumnContainer>{children}</FlexColumnContainer>}
     </FlexColumnContainer>

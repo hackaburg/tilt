@@ -10,13 +10,13 @@ const renderers: ReactMarkdown.Renderers = {
   heading: ({ children, level }) => {
     switch (level) {
       case 1:
-        return <Heading>{children}</Heading>;
+        return <Heading text={children} />;
 
       case 2:
-        return <Subheading>{children}</Subheading>;
+        return <Subheading text={children} />;
     }
 
-    return <Subsubheading>{children}</Subsubheading>;
+    return <Subsubheading text={children} />;
   },
   image: ({ src, alt }) => <Image src={src} label={alt} />,
   paragraph: ({ children }) => <Text>{children}</Text>,
