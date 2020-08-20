@@ -74,7 +74,7 @@ const closedSidebarContentStyle: React.CSSProperties = {
  */
 export const AuthenticatedRouter = () => {
   const isResponsive = useIsResponsive();
-  const [isSidebarVisible, toggleIsSidebarVisible] = useToggle(true);
+  const [isSidebarVisible, toggleIsSidebarVisible] = useToggle(false);
   const isSidebarHidden = !isSidebarVisible && isResponsive;
 
   return (
