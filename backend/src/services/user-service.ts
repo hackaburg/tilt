@@ -296,6 +296,7 @@ export class UserService implements IUserService {
   public async deleteUser(user: User): Promise<void> {
     await this._users!.delete({
       id: user.id,
+      role: UserRole.User,
     });
   }
 }
