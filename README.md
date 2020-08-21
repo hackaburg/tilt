@@ -52,11 +52,11 @@ At Hackaburg, we run our server setup through a central NGINX proxy facing the i
 
 tilt uses environment variables for configuration. There are three sections you need to configure:
 
-1) General settings: things like tilt's port, the URL tilt is made available on, as well as the [JWT](https://jwt.io) secret. The latter should be a randomly generated string, as this is used to authenticate users against tilt's API and an easily guessed secret might allow impersonating `root` and `moderator` accounts
+1. General settings: things like tilt's port, the URL tilt is made available on, as well as the [JWT](https://jwt.io) secret. The latter should be a randomly generated string, as this is used to authenticate users against tilt's API and an easily guessed secret might allow impersonating `root` and `moderator` accounts
 
-2) Mail settings: internally, tilt uses [nodemailer](https://nodemailer.com/) to send out emails. Therefore, configure an SMTP server and supply its TLS/SSL port, e.g., 465
+2. Mail settings: internally, tilt uses [nodemailer](https://nodemailer.com/) to send out emails. Therefore, configure an SMTP server and supply its TLS/SSL port, e.g., 465
 
-3) Database settings: tilt needs to store data somewhere. Internally, we use TypeORM, which is database-agnostic, but we chose to use the [MySQL](https://www.mysql.com) / [MariaDB](https://mariadb.org) driver. While you could use some other database, these two are supported by default. Furthermore, you could use tools like [phpMyAdmin](https://www.phpmyadmin.net) to manage your database, but we don't recommend this in production. Please refer to the official documentation for whichever database you deploy
+3. Database settings: tilt needs to store data somewhere. Internally, we use TypeORM, which is database-agnostic, but we chose to use the [MySQL](https://www.mysql.com) / [MariaDB](https://mariadb.org) driver. While you could use some other database, these two are supported by default. Furthermore, you could use tools like [phpMyAdmin](https://www.phpmyadmin.net) to manage your database, but we don't recommend this in production. Please refer to the official documentation for whichever database you deploy
 
 ```yaml
 version: "3"
@@ -128,7 +128,7 @@ services:
   # to keep your containers up-to-date, we recommend using
   # a service like watchtower, which continuously pulls for
   # updates. see https://github.com/containrrr/watchtower for
-  # moree information
+  # more information
   watchtower:
     image: containrrr/watchtower
     restart: always

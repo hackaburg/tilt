@@ -4,4 +4,12 @@ module.exports = {
   parser: "typescript",
   trailingComma: "all",
   arrowParens: "always",
+  overrides: [
+    {
+      files: "README.md",
+      options: {
+        parser: "markdown",
+      },
+    },
+  ],
 };
