@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/hackaburg/tilt.svg?style=shield)](https://circleci.com/gh/hackaburg/tilt)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/hackaburg/tilt)](https://hub.docker.com/r/hackaburg/tilt)
+[![Docker Image Size (latest)](https://img.shields.io/docker/image-size/hackaburg/tilt/latest)](https://hub.docker.com/r/hackaburg/tilt)
 [![codecov](https://codecov.io/gh/hackaburg/tilt/branch/main/graph/badge.svg)](https://codecov.io/gh/hackaburg/tilt)
 [![David](https://img.shields.io/david/hackaburg/tilt)](https://github.com/hackaburg/tilt)
 [![GitHub license](https://img.shields.io/github/license/hackaburg/tilt.svg)](https://github.com/hackaburg/tilt/LICENSE)
