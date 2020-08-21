@@ -11,6 +11,7 @@ interface ITiltConfiguration {
   log: ILoggerConfiguration;
   mail: IMailConfiguration;
   secrets: ISecretsConfiguration;
+  services: IServicesConfiguration;
 }
 
 interface IAppConfiguration {
@@ -46,6 +47,10 @@ interface IDatabaseConfiguration {
 
 interface ISecretsConfiguration {
   jwtSecret: string;
+}
+
+interface IServicesConfiguration {
+  enableHaveibeenpwnedService: boolean;
 }
 
 /**
@@ -204,6 +209,13 @@ export class ConfigurationService implements IConfigurationService {
           default: await genSalt(3),
           env: "SECRET_JWT",
           format: String,
+        },
+      },
+      services: {
+        enableHaveibeenpwnedService: {
+          default: true,
+          env: "ENABLE_HAVEIBEENPWNED_SERVICE",
+          format: Boolean,
         },
       },
     });

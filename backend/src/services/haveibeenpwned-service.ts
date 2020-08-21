@@ -1,6 +1,10 @@
 import { pwnedPassword } from "hibp";
-import { Service, Token } from "typedi";
+import { Inject, Service, Token } from "typedi";
 import { IService } from ".";
+import {
+  ConfigurationServiceToken,
+  IConfigurationService,
+} from "./config-service";
 
 /**
  * A service to integrate haveibeenpwned.
@@ -20,6 +24,11 @@ export const HaveibeenpwnedServiceToken = new Token<IHaveibeenpwnedService>();
 
 @Service(HaveibeenpwnedServiceToken)
 export class HaveibeenpwnedService implements IHaveibeenpwnedService {
+  public constructor(
+    @Inject(ConfigurationServiceToken)
+    private readonly _config: IConfigurationService,
+  ) {}
+
   /**
    * Sets up the haveibeenpwned integration.
    */
@@ -32,6 +41,10 @@ export class HaveibeenpwnedService implements IHaveibeenpwnedService {
    * @param password The password to query against haveibeenpwned
    */
   public async getPasswordUsedCount(password: string): Promise<number> {
+    if (!this._config.config.services.enableHaveibeenpwnedService) {
+      return 0;
+    }
+
     return await pwnedPassword(password);
   }
 }
