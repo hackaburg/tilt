@@ -196,6 +196,73 @@ The logs will indicate success or failure and this process works similarly for `
 
 tilt's UI fetches the user role during the initial load. To see the settings, admission and statistics pages, you'll need to reload the page.
 
+### Environment variables
+
+tilt's backend can be configured through a set of environment variables. We try to keep this list up-to-date, but for the most recent set of variables check the [config-service.ts](backend/src/services/config-service.ts). All defaults and shown values are strings, but tilt parses them internally to, e.g., integers or booleans.
+
+#### App variables
+
+- `NODE_ENV` - in production mode, tilt reports all uncaught errors as "Internal error"
+  - value: `production` or `development`
+  - optional, default: `development`
+
+#### Database variables
+
+- `DATABASE_NAME` - the name of the database tilt should connect to
+  - value: string
+- `DATABASE_HOST` - the host serving tilt's database
+  - value: hostname or IP address
+- `DATABASE_PASSWORD` - the password for the database user
+  - value: string
+- `DATABASE_PORT` - the port number of the database
+  - value: integer
+  - optional, default: `3306`
+- `DATABASE_USERNAME` - the user for the database
+  - value: string
+
+#### HTTP variables
+
+- `BASE_URL` - the url under which tilt will be deployed, something in the sorts of `https://your-hackathon.com/apply`
+  - value: string
+- `PORT` - the http port to listen on
+  - value: integer
+  - optional, default: `3000`
+
+#### Logging variables
+
+- `LOG_FILENAME` - tilt supports writing its log messages to files; supply a filename to persist log messages
+  - value: filename
+  - optional, default: `tilt.log`
+- `LOG_LEVEL` - the level of logs tilt should output
+  - value: `debug`, `info` or `error`
+  - optional, default: `info`
+- `LOG_SLACK_WEBHOOK_URL` - tilt supports sending errors to a Slack channel; supply an URL to message the configured channel
+  - value: Slack webhook URL
+  - optional
+
+#### Mail variables
+
+- `MAIL_HOST` - an SMTP server to use for mailing
+  - value: hostname
+- `MAIL_PASSWORD` - the password for the SMTP account
+  - value: string
+- `MAIL_PORT` - the port for the SMTP server; tilt requires SSL/TLS
+  - value: integer
+  - optional, default: `467`
+- `MAIL_USERNAME` - the username for the SMTP account
+  - value: string
+
+#### Secrets variables
+
+- `SECRET_JWT` - a secret used to sign login tokens
+  - value: string
+
+#### Service variables
+
+- `ENABLE_HAVEIBEENPWNED_SERVICE` - enable or disable checking password reuse with [haveibeenpwned.com](https://haveibeenpwned.com)
+  - value: `true` or `false`
+  - optional, default: `true`
+
 ## Contributing
 
 If you found a bug or have an idea for a feature, simply [submit an issue](https://github.com/hackaburg/tilt/issues/new) or a pull request. We use [TSLint](https://palantir.github.io/tslint/) and [Prettier](https://prettier.io) to ensure consistent code styles and we have a set of unit tests for the backend in place to prevent things from breaking too easily. Also, we currently use a [GitHub project](https://github.com/hackaburg/tilt/projects/1) for our roadmap.
