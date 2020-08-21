@@ -25,4 +25,4 @@ WORKDIR /app
 USER node:node
 COPY --from=build --chown=node:node /app /app
 ENV HTTP_PUBLIC_DIRECTORY=/app/frontend
-CMD [ "/bin/bash", "/app/entrypoint.sh" ]
+CMD [ "/bin/sh", "/app/entrypoint.sh" ]
