@@ -194,7 +194,7 @@ export class ConfigurationService implements IConfigurationService {
           format: String,
         },
         port: {
-          default: 467,
+          default: 465,
           env: "MAIL_PORT",
           format: "port",
         },

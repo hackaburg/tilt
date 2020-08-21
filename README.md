@@ -248,7 +248,7 @@ tilt's backend can be configured through a set of environment variables. We try 
   - value: string
 - `MAIL_PORT` - the port for the SMTP server; tilt requires SSL/TLS
   - value: integer
-  - optional, default: `467`
+  - optional, default: `465`
 - `MAIL_USERNAME` - the username for the SMTP account
   - value: string
 
