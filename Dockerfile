@@ -2,6 +2,9 @@ FROM node:alpine AS build
 
 WORKDIR /app
 
+# bcrypt depends on node-pre-gyp
+RUN apk add --no-cache --virtual .gyp python make g++
+
 COPY --chown=node:node package.json yarn.lock ./
 RUN yarn install
 
