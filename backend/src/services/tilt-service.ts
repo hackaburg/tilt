@@ -24,6 +24,7 @@ import {
 } from "./haveibeenpwned-service";
 import { HttpServiceToken, IHttpService } from "./http-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
+import { IPruneService, PruneServiceToken } from "./prune-service";
 import {
   IQuestionGraphService,
   QuestionGraphServiceToken,
@@ -63,6 +64,7 @@ export class Tilt implements IService {
     @Inject(SettingsServiceToken) settings: ISettingsService,
     @Inject(QuestionGraphServiceToken) questions: IQuestionGraphService,
     @Inject(ApplicationServiceToken) application: IApplicationService,
+    @Inject(PruneServiceToken) prune: IPruneService,
     @Inject(HttpServiceToken) http: IHttpService,
   ) {
     this._services = [
@@ -80,6 +82,7 @@ export class Tilt implements IService {
       settings,
       questions,
       application,
+      prune,
       http,
     ];
   }

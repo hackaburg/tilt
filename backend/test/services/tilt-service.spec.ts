@@ -9,6 +9,7 @@ import { MockEmailTemplateService } from "./mock/mock-email-template-service";
 import { MockHaveibeenpwnedService } from "./mock/mock-haveibeenpwned-service";
 import { MockHttpService } from "./mock/mock-http-service";
 import { MockLoggerService } from "./mock/mock-logger-service";
+import { MockPruneService } from "./mock/mock-prune-service";
 import { MockQuestionGraphService } from "./mock/mock-question-graph-service";
 import { MockSettingsService } from "./mock/mock-settings-service";
 import { MockSlackNotificationService } from "./mock/mock-slack-service";
@@ -18,7 +19,7 @@ import { MockUserService } from "./mock/mock-user-service";
 
 describe("TiltService", () => {
   it("bootstraps all services", async () => {
-    const services: Array<MockedService<any>> = [];
+    const services: MockedService<any>[] = [];
     const addService = <T extends MockedService<any>>(service: T) => {
       services.push(service);
       return service;
@@ -39,6 +40,7 @@ describe("TiltService", () => {
     const emailTemplates = addService(new MockEmailTemplateService());
     const slack = addService(new MockSlackNotificationService());
     const bootShutdownNotifier = addService(new MockBootShutdownNotifier());
+    const prune = addService(new MockPruneService());
 
     const instances: ConstructorParameters<typeof Tilt> = [
       signals.instance,
@@ -55,6 +57,7 @@ describe("TiltService", () => {
       settings.instance,
       questions.instance,
       application.instance,
+      prune.instance,
       http.instance,
     ];
 
