@@ -17,9 +17,9 @@ import {
 } from "../base/flex";
 import { ConfirmationForm } from "../pages/confirmation-form";
 import { LazyAdmission } from "../pages/lazy-admission";
-import { LazySystem } from "../pages/lazy-system";
 import { LazySettings } from "../pages/lazy-settings";
 import { LazyStatistics } from "../pages/lazy-statistics";
+import { LazySystem } from "../pages/lazy-system";
 import { PageNotFound } from "../pages/page-not-found";
 import { ProfileForm } from "../pages/profile-form";
 import { Status } from "../pages/status";
