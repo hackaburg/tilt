@@ -57,9 +57,6 @@ const FlexRowColumnContainerDiv = styled.div`
   flex-grow: 1;
   flex-shrink: 0;
   flex-basis: 0;
-  overflow-x: hidden;
-  white-space: normal;
-  text-overflow: ellipsis;
 
   @media screen and (max-width: ${mediaBreakpoints.tablet}) {
     flex: 0 1 auto !important;
