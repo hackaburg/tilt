@@ -55,10 +55,9 @@ describe("ErrorHandlerMiddleware", () => {
     middleware.error(error, req.instance, res.instance, next);
 
     expect(res.mocks.json).toBeCalledWith({
-      error:
-        errors[0].children[0].constraints[
-          Object.keys(errors[0].children[0].constraints)[0]
-        ],
+      error: errors[0].children[0].constraints![
+        Object.keys(errors[0].children[0].constraints!)[0]
+      ],
       status: "error",
     } as IApiResponse<any>);
   });
