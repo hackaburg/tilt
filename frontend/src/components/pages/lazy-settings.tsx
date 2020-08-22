@@ -2,9 +2,9 @@ import * as React from "react";
 import { SuspenseFallback } from "../base/suspense-fallback";
 
 const LazyLoadedSettings = React.lazy(async () => {
-  const settings = await import("../pages/settings");
+  const { Settings } = await import("../pages/settings");
   return {
-    default: settings.Settings,
+    default: Settings,
   };
 });
 
