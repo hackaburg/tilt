@@ -17,6 +17,7 @@ import {
 } from "../base/flex";
 import { ConfirmationForm } from "../pages/confirmation-form";
 import { LazyAdmission } from "../pages/lazy-admission";
+import { LazySystem } from "../pages/lazy-system";
 import { LazySettings } from "../pages/lazy-settings";
 import { LazyStatistics } from "../pages/lazy-statistics";
 import { PageNotFound } from "../pages/page-not-found";
@@ -98,14 +99,15 @@ export const AuthenticatedRouter = () => {
           <FlexRowColumnContainer>
             <Switch>
               <Route path={Routes.Status} component={Status} />
-              <Route path={Routes.Settings} component={LazySettings} />
               <Route path={Routes.ProfileForm} component={ProfileForm} />
               <Route
                 path={Routes.ConfirmationForm}
                 component={ConfirmationForm}
               />
-              <Route path={Routes.Statistics} component={LazyStatistics} />
               <Route path={Routes.Admission} component={LazyAdmission} />
+              <Route path={Routes.Statistics} component={LazyStatistics} />
+              <Route path={Routes.Settings} component={LazySettings} />
+              <Route path={Routes.System} component={LazySystem} />
               <Route component={PageNotFound} />
             </Switch>
           </FlexRowColumnContainer>

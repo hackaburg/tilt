@@ -65,6 +65,7 @@ export const Sidebar = () => {
         {role === UserRole.Root && (
           <>
             <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
+            <SidebarMenuItem to={Routes.System}>System</SidebarMenuItem>
           </>
         )}
 

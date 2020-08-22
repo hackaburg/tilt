@@ -2,13 +2,14 @@
  * The routes in the frontend.
  */
 export enum Routes {
-  Status = "/status",
+  Admission = "/admission",
+  ConfirmationForm = "/confirm",
   Login = "/login",
   Logout = "/logout",
   ProfileForm = "/profile",
-  ConfirmationForm = "/confirm",
   Settings = "/settings",
   Statistics = "/statistics",
-  Admission = "/admission",
+  Status = "/status",
+  System = "/system",
   VerifyEmail = "/verify",
 }
