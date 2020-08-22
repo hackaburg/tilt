@@ -60,32 +60,12 @@ export const shimmerBackgroundColor = "#f7f7f7";
 export const shimmerColor = "#fefefe";
 
 /**
- * The size of the grid's spacers.
- */
-export const gridSpacing = "1rem";
-
-/**
  * The CSS breakpoints to determine whether a device is a tablet or a phone.
  */
 export const mediaBreakpoints = {
   phone: "767px",
   tablet: "1024px",
 };
-
-/**
- * The height of the top navigation bar.
- */
-export const headerBarHeight = "50px";
-
-/**
- * The delay between attempts to reconnect the WebSocket.
- */
-export const websocketReconnectDelayMilliseconds = 5 * 1000;
-
-/**
- * The maximum number of attempts to reconnect the WebSocket.
- */
-export const websocketReconnectMaxAttempts = 10;
 
 const chartColorMap = {
   blue: "rgb(54, 162, 235)",

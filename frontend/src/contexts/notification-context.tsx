@@ -3,8 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Notification } from "../components/base/notification";
 import { notificationDuration } from "../config";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
-import { Nullable } from "../state";
-import { sleep } from "../util";
+import { Nullable, sleep } from "../util";
 
 interface INotificationContextValue {
   showNotification: (message: string) => void;

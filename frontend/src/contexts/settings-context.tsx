@@ -7,7 +7,7 @@ import { SuspenseFallback } from "../components/base/suspense-fallback";
 import { debounceDuration } from "../config";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
-import { Nullable } from "../state";
+import { Nullable } from "../util";
 import { useNotificationContext } from "./notification-context";
 
 interface ISettingsContextValue {

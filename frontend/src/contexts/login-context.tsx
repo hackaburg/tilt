@@ -4,7 +4,7 @@ import type { UserDTO } from "../api/types/dto";
 import { clearLoginToken, isLoginTokenSet } from "../authentication";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
-import { Nullable } from "../state";
+import { Nullable } from "../util";
 
 interface ILoginBaseContextValue {
   updateUser: (reducer: (user: Nullable<UserDTO>) => Nullable<UserDTO>) => void;

@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useRef } from "react";
 import { useNotificationContext } from "../../contexts/notification-context";
-import { Nullable } from "../../state";
+import { Nullable } from "../../util";
 import { Button } from "./button";
 import { Elevated } from "./elevated";
 import { FlexColumnContainer } from "./flex";

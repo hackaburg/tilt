@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Nullable } from "../state";
+import { Nullable } from "../util";
 
 /**
  * Safely accesses a potentially empty context, throwing an error if there's no value.

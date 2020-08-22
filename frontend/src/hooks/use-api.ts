@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ApiClient } from "../api";
 import { apiBaseUrl } from "../config";
-import { Nullable } from "../state";
+import { Nullable } from "../util";
 
 const api = new ApiClient(apiBaseUrl);
 

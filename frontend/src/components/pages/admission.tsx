@@ -9,8 +9,12 @@ import { useSettingsContext } from "../../contexts/settings-context";
 import { isNameQuestion, isTeamQuestion } from "../../heuristics";
 import { performApiRequest, useApi } from "../../hooks/use-api";
 import { useIsResponsive } from "../../hooks/use-is-responsive";
-import { Nullable } from "../../state";
-import { dateToString, filterSplit, isConfirmationExpired } from "../../util";
+import {
+  dateToString,
+  filterSplit,
+  isConfirmationExpired,
+  Nullable,
+} from "../../util";
 import { Button } from "../base/button";
 import { Chevron } from "../base/chevron";
 import { Code } from "../base/code";

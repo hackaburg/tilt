@@ -38,14 +38,3 @@ export class User {
   @Column({ default: false })
   public checkedIn!: boolean;
 }
-
-/**
- * Removes all private fields from a given user.
- * @param user The user to clean
- */
-export const deletePrivateUserFields = (user: User): User => {
-  delete user.password;
-  delete user.verifyToken;
-
-  return user;
-};

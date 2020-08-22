@@ -3,7 +3,7 @@ import {
   isLoginTokenSet,
   setLoginToken,
 } from "../authentication";
-import { Nullable } from "../state";
+import { Nullable } from "../util";
 import type {
   ApplicationController,
   ExtractControllerMethods,

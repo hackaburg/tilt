@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { Nullable } from "../../state";
+import { Nullable } from "../../util";
 import { CopyableText } from "./copyable-text";
 import {
   CenteredContainer,
