@@ -10,6 +10,7 @@ import {
   TextQuestionConfigurationDTO,
 } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
+import { Nullable } from "../../util";
 import { Checkboxes } from "../base/checkbox";
 import { Spacer, StyleableFlexContainer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
@@ -121,7 +122,7 @@ const mandatorySelectedCheckboxOptions = mandatoryAllCheckboxOptions;
 const mandatoryNotSelectedCheckboxOptions = [] as string[];
 
 interface IChoiceWithID {
-  id: number | null;
+  id: Nullable<number>;
   title: string;
 }
 

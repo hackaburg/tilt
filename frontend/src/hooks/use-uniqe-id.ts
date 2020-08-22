@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Nullable } from "../util";
 
 let counter = 0;
 
@@ -11,7 +12,7 @@ const generateUniqueID = () => `unique-id-${incrementAndGetCounter()}`;
  * Generates a unique id.
  */
 export const useUniqueID = (): string => {
-  const ref = useRef<string | null>(null);
+  const ref = useRef<Nullable<string>>(null);
 
   if (ref.current == null) {
     ref.current = generateUniqueID();
@@ -25,7 +26,7 @@ export const useUniqueID = (): string => {
  * @param count The amount of ids to generate
  */
 export const useUniqueIDs = (count: number): readonly string[] => {
-  const ref = useRef<readonly string[] | null>(null);
+  const ref = useRef<Nullable<readonly string[]>>(null);
 
   if (ref.current == null) {
     ref.current = new Array(count).fill(0).map(() => generateUniqueID());

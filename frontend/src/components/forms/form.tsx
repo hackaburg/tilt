@@ -6,7 +6,7 @@ import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { useDerivedState } from "../../hooks/use-derived-state";
-import { isBetween, isConfirmationExpired } from "../../util";
+import { isBetween, isConfirmationExpired, Nullable } from "../../util";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import {
@@ -109,7 +109,7 @@ export const Form = ({ type }: IFormProps) => {
   }, [form]);
 
   const [synchronizedAnswers, setSynchronizedAnswers] = useState<
-    readonly AnswerDTO[] | null
+    Nullable<readonly AnswerDTO[]>
   >(null);
 
   const handleSubmit = useCallback(() => {
