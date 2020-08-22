@@ -1,4 +1,3 @@
-import { join } from "path";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -132,10 +131,13 @@ export class SettingsService implements ISettingsService {
     emailSettings.admittedEmail = this.getDefaultEmailTemplate();
     emailSettings.sender = "tilt@hackaburg.de";
 
-    const verifyURL = join(
-      this._config.config.http.baseURL,
-      "/verify#{{verifyToken}}",
+    // path.join() will replace https:// with https:/, which breaks urls
+    const baseURLWithoutTrailingSlash = this._config.config.http.baseURL.replace(
+      /\/+$/,
+      "",
     );
+
+    const verifyURL = `${baseURLWithoutTrailingSlash}/verify#{{verifyToken}}`;
 
     emailSettings.verifyEmail.htmlTemplate = `<a href="${verifyURL}">${verifyURL}</a>`;
     emailSettings.verifyEmail.textTemplate = verifyURL;
