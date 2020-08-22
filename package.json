@@ -71,7 +71,6 @@
     "tslint": "^5.15.0",
     "tslint-react-hooks": "^2.2.2",
     "typescript": "^3.9.7",
-    "typescript-plugin-styled-components": "^1.4.2",
     "use-debounce": "^1.1.2",
     "webpack": "^4.40.2",
     "webpack-bundle-analyzer": "^3.8.0",
