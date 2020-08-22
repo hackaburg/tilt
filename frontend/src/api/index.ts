@@ -11,6 +11,7 @@ import type {
   IApiRequest,
   IApiResponse,
   SettingsController,
+  SystemController,
   UsersController,
 } from "./types/controllers";
 import type {
@@ -26,6 +27,7 @@ type UsersControllerMethods = ExtractControllerMethods<UsersController>;
 type ApplicationControllerMethods = ExtractControllerMethods<
   ApplicationController
 >;
+type SystemControllerMethods = ExtractControllerMethods<SystemController>;
 type ExtractData<T> = T extends { data: infer K } ? K : never;
 
 /**
@@ -358,5 +360,12 @@ export class ApiClient {
       "/application/checkin",
       userID,
     );
+  }
+
+  /**
+   * Prunes all system data.
+   */
+  public async pruneSystem(): Promise<void> {
+    await this.delete<SystemControllerMethods["prune"]>("/system/prune");
   }
 }

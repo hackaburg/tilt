@@ -18,6 +18,7 @@ export const api: IMockedApi = {
   getProfileForm: jest.fn(),
   getSettings: jest.fn(),
   login: jest.fn(),
+  pruneSystem: jest.fn(),
   refreshLoginToken: jest.fn(),
   signup: jest.fn(),
   storeConfirmationFormAnswers: jest.fn(),
