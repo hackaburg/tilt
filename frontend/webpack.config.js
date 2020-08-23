@@ -1,3 +1,4 @@
+const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { EnvironmentPlugin } = require("webpack");
@@ -44,6 +45,12 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: [
+          !isProduction && {
+            loader: "babel-loader",
+            options: {
+              plugins: ["react-refresh/babel"],
+            },
+          },
           {
             loader: "ts-loader",
             options: {
@@ -51,7 +58,7 @@ module.exports = {
               transpileOnly: true,
             },
           },
-        ],
+        ].filter(Boolean),
       },
       {
         test: /\.(png|jpg|svg)$/,
@@ -64,6 +71,7 @@ module.exports = {
   },
 
   plugins: [
+    !isProduction && new ReactRefreshPlugin(),
     new EnvironmentPlugin({
       API_BASE_URL: "/api",
       NODE_ENV: "development",
@@ -76,7 +84,7 @@ module.exports = {
       openAnalyzer: false,
       reportFilename: "../bundle/report.html",
     }),
-  ],
+  ].filter(Boolean),
 
   devServer: {
     historyApiFallback: true,
