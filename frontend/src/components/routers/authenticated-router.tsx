@@ -12,8 +12,8 @@ import { Routes } from "../../routes";
 import {
   FlexRowColumnContainer,
   FlexRowContainer,
+  PageSizedContainer,
   StyleableFlexContainer,
-  VerticalScrollFlexContainer,
 } from "../base/flex";
 import { ConfirmationForm } from "../pages/confirmation-form";
 import { LazyAdmission } from "../pages/lazy-admission";
@@ -55,6 +55,7 @@ const ContentContainer = styled(StyleableFlexContainer)`
   transform: translateX(0%);
   transition-property: transform;
   transition-duration: ${transitionDuration};
+  height: 100%;
 
   @media screen and (max-width: ${mediaBreakpoints.tablet}) {
     padding: 0;
@@ -79,7 +80,7 @@ export const AuthenticatedRouter = () => {
   const isSidebarHidden = !isSidebarVisible && isResponsive;
 
   return (
-    <VerticalScrollFlexContainer>
+    <PageSizedContainer>
       <SidebarSliderContainer
         style={isSidebarHidden ? closedSidebarSliderStyle : undefined}
       >
@@ -113,6 +114,6 @@ export const AuthenticatedRouter = () => {
           </FlexRowColumnContainer>
         </FlexRowContainer>
       </ContentContainer>
-    </VerticalScrollFlexContainer>
+    </PageSizedContainer>
   );
 };

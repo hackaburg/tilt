@@ -212,45 +212,47 @@ export const Form = ({ type }: IFormProps) => {
 
   return (
     <Page>
-      <Heading text={title} />
-      {questions}
+      <NonGrowingFlexContainer>
+        <Heading text={title} />
+        {questions}
 
-      {!isFormDisabled && (
-        <SubmitContainer>
-          <VerticallyCenteredContainer>
-            <FlexRowColumnContainer isBig>
-              {submitError && (
-                <Message error>
-                  <b>Error: </b> {submitError.message}
-                </Message>
-              )}
-            </FlexRowColumnContainer>
-
-            <Spacer />
-
-            <NonGrowingFlexContainer>
-              <VerticallyCenteredContainer>
-                {!isDirty && !isUnanswered && (
-                  <NonGrowingFlexContainer>
-                    <Muted>All changes saved</Muted>
-                  </NonGrowingFlexContainer>
+        {!isFormDisabled && (
+          <SubmitContainer>
+            <VerticallyCenteredContainer>
+              <FlexRowColumnContainer isBig>
+                {submitError && (
+                  <Message error>
+                    <b>Error: </b> {submitError.message}
+                  </Message>
                 )}
+              </FlexRowColumnContainer>
 
-                <Spacer />
+              <Spacer />
 
-                <Button
-                  primary
-                  onClick={handleSubmit}
-                  loading={isSubmitting}
-                  disable={!isDirty || isFormDisabled}
-                >
-                  Submit
-                </Button>
-              </VerticallyCenteredContainer>
-            </NonGrowingFlexContainer>
-          </VerticallyCenteredContainer>
-        </SubmitContainer>
-      )}
+              <NonGrowingFlexContainer>
+                <VerticallyCenteredContainer>
+                  {!isDirty && !isUnanswered && (
+                    <NonGrowingFlexContainer>
+                      <Muted>All changes saved</Muted>
+                    </NonGrowingFlexContainer>
+                  )}
+
+                  <Spacer />
+
+                  <Button
+                    primary
+                    onClick={handleSubmit}
+                    loading={isSubmitting}
+                    disable={!isDirty || isFormDisabled}
+                  >
+                    Submit
+                  </Button>
+                </VerticallyCenteredContainer>
+              </NonGrowingFlexContainer>
+            </VerticallyCenteredContainer>
+          </SubmitContainer>
+        )}
+      </NonGrowingFlexContainer>
     </Page>
   );
 };

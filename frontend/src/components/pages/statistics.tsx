@@ -18,6 +18,7 @@ import { Divider } from "../base/divider";
 import {
   FlexRowColumnContainer,
   FlexRowContainer,
+  NonGrowingFlexContainer,
   StyleableFlexContainer,
 } from "../base/flex";
 import { Heading } from "../base/headings";
@@ -249,64 +250,66 @@ export const Statistics = () => {
 
   return (
     <Page>
-      <Heading text="Statistics" />
+      <NonGrowingFlexContainer>
+        <Heading text="Statistics" />
 
-      <FlexRowContainer>
-        <FlexRowColumnContainer>
-          <TitledNumber title="Users" value={safeApplications.length} />
-        </FlexRowColumnContainer>
-        <FlexRowColumnContainer>
-          <TitledNumber title="Applied" value={percentages.submitted} />
-        </FlexRowColumnContainer>
-        <FlexRowColumnContainer>
-          <TitledNumber title="Admitted" value={percentages.admitted} />
-        </FlexRowColumnContainer>
-        <FlexRowColumnContainer>
-          <TitledNumber title="Confirmed" value={percentages.confirmed} />
-        </FlexRowColumnContainer>
-        <FlexRowColumnContainer>
-          <TitledNumber title="Declined" value={percentages.declined} />
-        </FlexRowColumnContainer>
-        <FlexRowColumnContainer>
-          <TitledNumber title="Expired" value={percentages.expired} />
-        </FlexRowColumnContainer>
-        <FlexRowColumnContainer>
-          <TitledNumber title="Checked in" value={percentages.checkedIn} />
-        </FlexRowColumnContainer>
-      </FlexRowContainer>
-
-      <Divider />
-
-      <Collapsible title="Applications over time">
         <FlexRowContainer>
           <FlexRowColumnContainer>
-            <ChartContainer>
-              <TimeChart
-                values={applicationsOverTime}
-                title="Applications over time"
-              />
-            </ChartContainer>
+            <TitledNumber title="Users" value={safeApplications.length} />
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <ChartContainer>
-              <TimeChart
-                values={cummulativeApplicationsOverTime}
-                title="Cummulative applications over time"
-              />
-            </ChartContainer>
+            <TitledNumber title="Applied" value={percentages.submitted} />
+          </FlexRowColumnContainer>
+          <FlexRowColumnContainer>
+            <TitledNumber title="Admitted" value={percentages.admitted} />
+          </FlexRowColumnContainer>
+          <FlexRowColumnContainer>
+            <TitledNumber title="Confirmed" value={percentages.confirmed} />
+          </FlexRowColumnContainer>
+          <FlexRowColumnContainer>
+            <TitledNumber title="Declined" value={percentages.declined} />
+          </FlexRowColumnContainer>
+          <FlexRowColumnContainer>
+            <TitledNumber title="Expired" value={percentages.expired} />
+          </FlexRowColumnContainer>
+          <FlexRowColumnContainer>
+            <TitledNumber title="Checked in" value={percentages.checkedIn} />
           </FlexRowColumnContainer>
         </FlexRowContainer>
-      </Collapsible>
 
-      <Divider />
+        <Divider />
 
-      <Text>
-        These statistics are automatically generated from all answers by all
-        users. If you need detailed answers per user, go to the{" "}
-        <InternalLink to={Routes.Admission}>admission</InternalLink> page.
-      </Text>
+        <Collapsible title="Applications over time">
+          <FlexRowContainer>
+            <FlexRowColumnContainer>
+              <ChartContainer>
+                <TimeChart
+                  values={applicationsOverTime}
+                  title="Applications over time"
+                />
+              </ChartContainer>
+            </FlexRowColumnContainer>
+            <FlexRowColumnContainer>
+              <ChartContainer>
+                <TimeChart
+                  values={cummulativeApplicationsOverTime}
+                  title="Cummulative applications over time"
+                />
+              </ChartContainer>
+            </FlexRowColumnContainer>
+          </FlexRowContainer>
+        </Collapsible>
 
-      {statistics}
+        <Divider />
+
+        <Text>
+          These statistics are automatically generated from all answers by all
+          users. If you need detailed answers per user, go to the{" "}
+          <InternalLink to={Routes.Admission}>admission</InternalLink> page.
+        </Text>
+
+        {statistics}
+      </NonGrowingFlexContainer>
     </Page>
   );
 };
