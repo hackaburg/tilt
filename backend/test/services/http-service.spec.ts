@@ -214,6 +214,7 @@ describe("HttpService", () => {
     await httpService.bootstrap();
     expect(expressStatic).toBeCalledWith(
       config.instance.config.http.publicDirectory,
+      expect.anything(),
     );
     expect(expressGet).toBeCalled();
   });
