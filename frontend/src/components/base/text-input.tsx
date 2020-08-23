@@ -30,23 +30,23 @@ export enum TextInputType {
   Password = "password",
   Area = "area",
   Number = "number",
+  Email = "email",
 }
 
-interface ICommonTextInputProps {
+interface ITextInputProps<TValue = any> {
   placeholder?: string;
   autoFocus?: boolean;
   title: string;
   mandatory?: boolean;
   type?: TextInputType;
-  onChange: (value: any) => any;
+  value: TValue;
+  onChange: (value: TValue) => unknown;
   min?: number;
   max?: number;
   allowDecimals?: boolean;
   isDisabled?: boolean;
-}
-
-interface ITextInputProps extends ICommonTextInputProps {
-  value: any;
+  name?: string;
+  autoCompleteField?: string;
 }
 
 /**
@@ -64,10 +64,13 @@ export const TextInput = ({
   max,
   allowDecimals,
   isDisabled = false,
+  name,
+  autoCompleteField,
 }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus(autoFocus);
   const fieldType = type || TextInputType.Text;
   const fieldProps = {
+    name,
     autoFocus,
     disabled: isDisabled,
     onBlur,
@@ -101,6 +104,7 @@ export const TextInput = ({
         max={max}
         step={allowDecimals ? "any" : 1}
         spellCheck={false}
+        autoComplete={autoCompleteField}
         {...fieldProps}
       />
     );

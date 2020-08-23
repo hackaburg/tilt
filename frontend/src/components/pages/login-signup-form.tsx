@@ -99,7 +99,10 @@ export const LoginSignupForm = () => {
           placeholder="me@foo.bar"
           value={email}
           onChange={(value) => setEmail(value)}
+          type={TextInputType.Email}
+          name="username"
           autoFocus
+          autoCompleteField="username"
         />
 
         <TextInput
@@ -108,6 +111,8 @@ export const LoginSignupForm = () => {
           value={password}
           onChange={(value) => setPassword(value)}
           type={TextInputType.Password}
+          name="password"
+          autoCompleteField="current-password"
         />
 
         <ButtonContainer>
