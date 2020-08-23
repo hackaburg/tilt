@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useState } from "react";
+import { Redirect } from "react-router";
 import { useLoginContext } from "../../contexts/login-context";
 import { useApi } from "../../hooks/use-api";
+import { Routes } from "../../routes";
 import { Button } from "../base/button";
 import {
   CenteredContainer,
@@ -65,16 +67,7 @@ export const LoginSignupForm = () => {
   }, []);
 
   if (signupDone) {
-    return (
-      <FlexColumnContainer>
-        <Heading text="Done." />
-        <Text>We've sent you an email with a button to verify yourself.</Text>
-        <Text>
-          It might take a minute or two to arrive, and to be safe, please also
-          check your junk mail.
-        </Text>
-      </FlexColumnContainer>
-    );
+    return <Redirect to={Routes.SignupDone} />;
   }
 
   return (

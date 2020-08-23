@@ -4,7 +4,11 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { defaultThemeColor } from "../config";
 import { useLoginContext } from "../contexts/login-context";
 import { useSettingsContext } from "../contexts/settings-context";
-import { Routes } from "../routes";
+import {
+  authenticatedRoutes,
+  defaultAuthenticatedRoute,
+  Routes,
+} from "../routes";
 import { ThemeProvider } from "../theme";
 import { ErrorBoundary } from "./base/error-boundary";
 import { LazyAuthenticatedRouter } from "./routers/lazy-authenticated-router";
@@ -21,11 +25,13 @@ export const App = ({ history, location }: IAppProps) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      if (pathname === Routes.Login) {
-        history.push(Routes.Status);
+      const isUnknownRoute = !authenticatedRoutes.includes(pathname as Routes);
+
+      if (pathname === Routes.Login || isUnknownRoute) {
+        history.push(defaultAuthenticatedRoute);
       }
     } else {
-      if (pathname !== Routes.VerifyEmail) {
+      if (pathname !== Routes.VerifyEmail && pathname !== Routes.SignupDone) {
         history.push(Routes.Login);
       }
     }

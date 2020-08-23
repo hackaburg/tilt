@@ -10,6 +10,7 @@ import {
   StyleableFlexContainer,
 } from "../base/flex";
 import { LoginSignupForm } from "../pages/login-signup-form";
+import { SignupDone } from "../pages/signup-done";
 import { RoutedVerifyEmail } from "../pages/verify-email";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
@@ -43,6 +44,7 @@ export const UnauthenticatedRouter = () => {
           <RouterContainer level={1}>
             <Switch>
               <Route path={Routes.Login} component={LoginSignupForm} />
+              <Route path={Routes.SignupDone} component={SignupDone} />
               <Route path={Routes.VerifyEmail} component={RoutedVerifyEmail} />
             </Switch>
           </RouterContainer>
