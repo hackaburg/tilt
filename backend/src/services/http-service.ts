@@ -89,7 +89,18 @@ export class HttpService implements IHttpService {
     this._logger.debug("initialized http controllers");
 
     const publicDirectory = this._config.config.http.publicDirectory;
-    app.use(express.static(publicDirectory));
+    app.use(
+      express.static(publicDirectory, {
+        immutable: true,
+        maxAge: "1y",
+        setHeaders: (res, path) => {
+          if (path.endsWith("index.html")) {
+            // disable caching of index.html
+            res.setHeader("Cache-Control", "public, max-age=0");
+          }
+        },
+      }),
+    );
 
     const indexFilePath = join(publicDirectory, "index.html");
     const indexFileContents = existsSync(indexFilePath)
