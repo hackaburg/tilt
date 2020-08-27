@@ -186,11 +186,11 @@ tilt should then be able to connect to the database and start up. If the databas
 
 With everything up and running, you usually want to configure tilt. For this, you need to register and change your user group.
 
-Since you have access to the server running tilt, you can spawn a shell in the tilt container and invoke the [usermod script](backend/src/usermod.ts). This script takes two arguments, the email of the user you want to change, as well as the group you want to assign to this user. To assign the `root` group to `you@example.com`, run:
+Since you have access to the server running tilt, you can spawn a shell in the tilt container and invoke the [usermod script](backend/src/usermod.ts). Please note that we're using `node:alpine` as a base image and therefore don't ship Bash. This script takes two arguments, the email of the user you want to change, as well as the group you want to assign to this user. To assign the `root` group to `you@example.com`, run:
 
 ```bash
-$ docker-compose exec tilt bash
-node@container:/app$ node backend/usermod.js your@example.com root
+$ docker-compose exec tilt sh
+node@container:/app$ node backend/usermod.js you@example.com root
 ```
 
 The logs will indicate success or failure and this process works similarly for `moderator`, or for demoting an account back to `user`.
