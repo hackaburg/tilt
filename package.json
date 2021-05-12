@@ -43,7 +43,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/winston": "^2.4.4",
     "babel-loader": "^8.1.0",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "codecov": "^3.7.1",
     "country-json": "^1.0.9",
     "css-loader": "^4.2.1",
