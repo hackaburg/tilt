@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import * as React from "react";
 
 interface IHeadingProps {
-  text: React.ReactNode[];
+  text: React.ReactNode;
 }
 
 const H1 = styled.h1`
