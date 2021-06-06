@@ -110,7 +110,8 @@ export abstract class QuestionConfigurationDTOBase {
 }
 
 export class TextQuestionConfigurationDTO
-  implements ITextQuestionConfiguration {
+  implements ITextQuestionConfiguration
+{
   @Expose()
   public type!: QuestionType.Text;
   @IsString()
@@ -125,7 +126,8 @@ export class TextQuestionConfigurationDTO
 }
 
 export class NumberQuestionConfigurationDTO
-  implements INumberQuestionConfiguration {
+  implements INumberQuestionConfiguration
+{
   @Expose()
   public type!: QuestionType.Number;
   @IsString()
@@ -145,7 +147,8 @@ export class NumberQuestionConfigurationDTO
 }
 
 export class ChoicesQuestionConfigurationDTO
-  implements IChoicesQuestionConfiguration {
+  implements IChoicesQuestionConfiguration
+{
   @Expose()
   public type!: QuestionType.Choices;
   @IsArray()
@@ -160,13 +163,15 @@ export class ChoicesQuestionConfigurationDTO
 }
 
 export class CountryQuestionConfigurationDTO
-  implements ICountryQuestionConfiguration {
+  implements ICountryQuestionConfiguration
+{
   @Expose()
   public type!: QuestionType.Country;
 }
 
 export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
-  implements DTO<Omit<Question, "form" | "parent" | "createdAt">> {
+  implements DTO<Omit<Question, "form" | "parent" | "createdAt">>
+{
   @IsOptional()
   @IsInt()
   @Expose()
@@ -339,7 +344,8 @@ export class AnswerDTO {
 }
 
 export class StoreAnswersRequestDTO
-  implements IApiRequest<readonly AnswerDTO[]> {
+  implements IApiRequest<readonly AnswerDTO[]>
+{
   @ValidateNested({ each: true })
   @Type(() => AnswerDTO)
   public data!: readonly AnswerDTO[];

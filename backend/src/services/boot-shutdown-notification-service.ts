@@ -19,13 +19,13 @@ export interface IBootShutdownNotificationService extends IService {}
 /**
  * A token used to inject a concrete boot shutdown notifier.
  */
-export const BootShutdownNotificationServiceToken = new Token<
-  IBootShutdownNotificationService
->();
+export const BootShutdownNotificationServiceToken =
+  new Token<IBootShutdownNotificationService>();
 
 @Service(BootShutdownNotificationServiceToken)
 export class BootShutdownNotificationService
-  implements IBootShutdownNotificationService {
+  implements IBootShutdownNotificationService
+{
   constructor(
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(SlackNotificationServiceToken)

@@ -179,15 +179,14 @@ export const Admission = () => {
   const applicationsByUserID = useMemo(() => {
     return applicationsSortedByDate.reduce<IApplicationsByUserID>(
       (accumulatedApplicationsByUserID, application) => {
-        const answersByQuestionID = application.answers.reduce<
-          IAnswersByQuestionID
-        >(
-          (accumulatedAnswersByQuestionID, answer) => ({
-            ...accumulatedAnswersByQuestionID,
-            [answer.questionID]: answer.value,
-          }),
-          {},
-        );
+        const answersByQuestionID =
+          application.answers.reduce<IAnswersByQuestionID>(
+            (accumulatedAnswersByQuestionID, answer) => ({
+              ...accumulatedAnswersByQuestionID,
+              [answer.questionID]: answer.value,
+            }),
+            {},
+          );
 
         const email = application.user.email;
 

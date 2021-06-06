@@ -67,25 +67,24 @@ describe(ApplicationService.name, () => {
    * flaky anyways, and patch the `settings.getSettings` method manually.
    * @warning This relies on resetting `settings` for each test
    */
-  const patchSettingsServiceToReturnProfileFormQuestionsFromTheFuture = async (): Promise<
-    void
-  > => {
-    const currentSettings = await settings.getSettings();
-    currentSettings.application.profileForm.questions.push(
-      createTextQuestion(),
-    );
-    await settings.updateSettings(currentSettings);
+  const patchSettingsServiceToReturnProfileFormQuestionsFromTheFuture =
+    async (): Promise<void> => {
+      const currentSettings = await settings.getSettings();
+      currentSettings.application.profileForm.questions.push(
+        createTextQuestion(),
+      );
+      await settings.updateSettings(currentSettings);
 
-    const updatedSettings = await settings.getSettings();
-    const questions = updatedSettings.application.profileForm.questions;
-    const lastQuestion = questions[questions.length - 1];
-    const oneDay = 24 * 60 * 60 * 1000;
-    (lastQuestion as any).createdAt = new Date(
-      lastQuestion.createdAt.getTime() + oneDay,
-    );
+      const updatedSettings = await settings.getSettings();
+      const questions = updatedSettings.application.profileForm.questions;
+      const lastQuestion = questions[questions.length - 1];
+      const oneDay = 24 * 60 * 60 * 1000;
+      (lastQuestion as any).createdAt = new Date(
+        lastQuestion.createdAt.getTime() + oneDay,
+      );
 
-    settings.getSettings = async () => updatedSettings;
-  };
+      settings.getSettings = async () => updatedSettings;
+    };
 
   const oneWeekMS = 7 * 24 * 60 * 60 * 1000;
   const todayNextWeek = new Date(Date.now() + oneWeekMS);
@@ -444,17 +443,19 @@ describe(ApplicationService.name, () => {
     ];
     const storedSettings = await settings.updateSettings(temporarySettings);
 
-    const multipleAnswersQuestionID = storedSettings.application.profileForm.questions.find(
-      ({ configuration }) =>
-        configuration.type === QuestionType.Choices &&
-        configuration.allowMultiple,
-    )!.id;
+    const multipleAnswersQuestionID =
+      storedSettings.application.profileForm.questions.find(
+        ({ configuration }) =>
+          configuration.type === QuestionType.Choices &&
+          configuration.allowMultiple,
+      )!.id;
 
-    const singleAnswerQuestionID = storedSettings.application.profileForm.questions.find(
-      ({ configuration }) =>
-        configuration.type === QuestionType.Choices &&
-        !configuration.allowMultiple,
-    )!.id;
+    const singleAnswerQuestionID =
+      storedSettings.application.profileForm.questions.find(
+        ({ configuration }) =>
+          configuration.type === QuestionType.Choices &&
+          !configuration.allowMultiple,
+      )!.id;
 
     await expect(
       service.storeProfileFormAnswers(user, [

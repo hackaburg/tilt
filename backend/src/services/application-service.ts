@@ -443,11 +443,12 @@ export class ApplicationService implements IApplicationService {
       throw new NotAdmittedError();
     }
 
-    const skippedProfileQuestions = settings.application.profileForm.questions.filter(
-      ({ createdAt }) =>
-        user.initialProfileFormSubmittedAt != null &&
-        createdAt.getTime() > user.initialProfileFormSubmittedAt.getTime(),
-    );
+    const skippedProfileQuestions =
+      settings.application.profileForm.questions.filter(
+        ({ createdAt }) =>
+          user.initialProfileFormSubmittedAt != null &&
+          createdAt.getTime() > user.initialProfileFormSubmittedAt.getTime(),
+      );
 
     try {
       // if the graph built correctly, then the skipped questions are a locally

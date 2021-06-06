@@ -11,8 +11,8 @@ export const MockRequest = jest.fn(() => new MockedService<Request>({} as any));
  */
 export const MockResponse = jest.fn(
   () =>
-    new MockedService<Response>(({
+    new MockedService<Response>({
       json: jest.fn(),
       status: jest.fn(),
-    } as Partial<Response>) as Response),
+    } as Partial<Response> as Response),
 );

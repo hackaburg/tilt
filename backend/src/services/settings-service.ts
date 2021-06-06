@@ -132,10 +132,8 @@ export class SettingsService implements ISettingsService {
     emailSettings.sender = "tilt@hackaburg.de";
 
     // path.join() will replace https:// with https:/, which breaks urls
-    const baseURLWithoutTrailingSlash = this._config.config.http.baseURL.replace(
-      /\/+$/,
-      "",
-    );
+    const baseURLWithoutTrailingSlash =
+      this._config.config.http.baseURL.replace(/\/+$/, "");
 
     const verifyURL = `${baseURLWithoutTrailingSlash}/verify#{{verifyToken}}`;
 
