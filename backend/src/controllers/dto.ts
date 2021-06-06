@@ -177,7 +177,8 @@ export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
   @Expose()
   public id!: number | null;
   @Transform(
-    (value: IQuestionConfiguration) => {
+    ({ value: rawValue }) => {
+      const value = rawValue as IQuestionConfiguration;
       const type = value.type as QuestionType;
 
       switch (type) {
@@ -328,7 +329,9 @@ export class AnswerDTO {
   @IsInt()
   @Expose()
   @Transform(
-    (_: any, obj: IRawAnswer | Answer) => {
+    ({ obj: rawObj }) => {
+      const obj = rawObj as IRawAnswer | Answer;
+
       if (obj instanceof Answer) {
         return obj.question.id;
       }
@@ -359,7 +362,8 @@ export class UserDTO {
   @Expose()
   public createdAt!: Date;
   @Transform(
-    (_: any, obj: User) => {
+    ({ obj: rawObj }) => {
+      const obj = rawObj as User;
       return !obj.verifyToken;
     },
     { toClassOnly: true },
