@@ -328,7 +328,7 @@ export class AnswerDTO {
   @IsInt()
   @Expose()
   @Transform(
-    (_, obj: IRawAnswer | Answer) => {
+    (_: any, obj: IRawAnswer | Answer) => {
       if (obj instanceof Answer) {
         return obj.question.id;
       }
@@ -359,7 +359,7 @@ export class UserDTO {
   @Expose()
   public createdAt!: Date;
   @Transform(
-    (_, obj: User) => {
+    (_: any, obj: User) => {
       return !obj.verifyToken;
     },
     { toClassOnly: true },
