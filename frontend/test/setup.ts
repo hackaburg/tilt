@@ -1,5 +1,5 @@
 import * as Enzyme from "enzyme";
-import * as Adapter from "enzyme-adapter-react-16";
+import * as Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 import "jest-date-mock";
 import "jest-enzyme";
 
