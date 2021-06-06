@@ -108,9 +108,8 @@ export const Form = ({ type }: IFormProps) => {
     return answerDerivedState;
   }, [form]);
 
-  const [synchronizedAnswers, setSynchronizedAnswers] = useState<
-    Nullable<readonly AnswerDTO[]>
-  >(null);
+  const [synchronizedAnswers, setSynchronizedAnswers] =
+    useState<Nullable<readonly AnswerDTO[]>>(null);
 
   const handleSubmit = useCallback(() => {
     setSynchronizedAnswers(

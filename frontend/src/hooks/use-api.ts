@@ -44,9 +44,10 @@ export const useApi = <T>(
     performRequest(false);
   }, deps);
 
-  const forcePerformRequest = useCallback(() => performRequest(true), [
-    performRequest,
-  ]);
+  const forcePerformRequest = useCallback(
+    () => performRequest(true),
+    [performRequest],
+  );
 
   return {
     error,

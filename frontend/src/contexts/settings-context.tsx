@@ -33,9 +33,8 @@ export const SettingsContextProvider = ({
   const { showNotification } = useNotificationContext();
 
   const [isSynchronized, setIsSynchronized] = useState(false);
-  const [localSettings, setLocalSettings] = useState<Nullable<SettingsDTO>>(
-    null,
-  );
+  const [localSettings, setLocalSettings] =
+    useState<Nullable<SettingsDTO>>(null);
 
   const { isFetching: isFetchingSettings, error: fetchError } = useApi(
     async (api) => {

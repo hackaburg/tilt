@@ -20,9 +20,8 @@ export interface ISlackNotificationService extends IService {
 /**
  * A token used to inject a concrete Slack notification service.
  */
-export const SlackNotificationServiceToken = new Token<
-  ISlackNotificationService
->();
+export const SlackNotificationServiceToken =
+  new Token<ISlackNotificationService>();
 
 @Service(SlackNotificationServiceToken)
 export class SlackNotificationService implements ISlackNotificationService {

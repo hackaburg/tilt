@@ -174,49 +174,47 @@ export const Statistics = () => {
     };
   }, [safeApplications]);
 
-  const [
-    applicationsOverTime,
-    cummulativeApplicationsOverTime,
-  ] = useMemo(() => {
-    const counts = safeApplications.reduce<ICountByDate>(
-      (countByDate, application) => {
-        const date = application.user.initialProfileFormSubmittedAt;
+  const [applicationsOverTime, cummulativeApplicationsOverTime] =
+    useMemo(() => {
+      const counts = safeApplications.reduce<ICountByDate>(
+        (countByDate, application) => {
+          const date = application.user.initialProfileFormSubmittedAt;
 
-        if (date == null) {
+          if (date == null) {
+            return countByDate;
+          }
+
+          const dateString = roundDateToDay(date).toISOString();
+          const count = countByDate[dateString] ?? 0;
+          countByDate[dateString] = count + 1;
+
           return countByDate;
-        }
+        },
+        {},
+      );
 
-        const dateString = roundDateToDay(date).toISOString();
-        const count = countByDate[dateString] ?? 0;
-        countByDate[dateString] = count + 1;
+      const overTime = [...Object.entries(counts)]
+        .map(([dateString, y]) => ({
+          x: new Date(dateString),
+          y,
+        }))
+        .sort((a, b) => a.x.getTime() - b.x.getTime());
 
-        return countByDate;
-      },
-      {},
-    );
+      const cummulativeOverTime = overTime.reduce(
+        (cummulative, day) => {
+          cummulative.sum += day.y;
+          cummulative.values.push({
+            x: day.x,
+            y: cummulative.sum,
+          });
 
-    const overTime = [...Object.entries(counts)]
-      .map(([dateString, y]) => ({
-        x: new Date(dateString),
-        y,
-      }))
-      .sort((a, b) => a.x.getTime() - b.x.getTime());
+          return cummulative;
+        },
+        { values: [] as typeof overTime, sum: 0 },
+      ).values;
 
-    const cummulativeOverTime = overTime.reduce(
-      (cummulative, day) => {
-        cummulative.sum += day.y;
-        cummulative.values.push({
-          x: day.x,
-          y: cummulative.sum,
-        });
-
-        return cummulative;
-      },
-      { values: [] as typeof overTime, sum: 0 },
-    ).values;
-
-    return [overTime, cummulativeOverTime];
-  }, [safeApplications]);
+      return [overTime, cummulativeOverTime];
+    }, [safeApplications]);
 
   const statistics = allQuestions.map(({ id, configuration, title }) => {
     const key = `${title}-${id}`;

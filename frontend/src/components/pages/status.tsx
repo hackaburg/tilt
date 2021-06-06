@@ -29,26 +29,24 @@ export const Status = () => {
   const isNotAttending = isExpired || user?.declined;
   const deadline = user?.confirmationExpiresAt;
 
-  const {
-    isFetching: isDecliningSpot,
-    forcePerformRequest: declineSpot,
-  } = useApi(
-    async (api, wasForced) => {
-      if (wasForced) {
-        await api.declineSpot();
+  const { isFetching: isDecliningSpot, forcePerformRequest: declineSpot } =
+    useApi(
+      async (api, wasForced) => {
+        if (wasForced) {
+          await api.declineSpot();
 
-        updateUser((value) =>
-          value == null
-            ? null
-            : {
-                ...value,
-                declined: true,
-              },
-        );
-      }
-    },
-    [updateUser],
-  );
+          updateUser((value) =>
+            value == null
+              ? null
+              : {
+                  ...value,
+                  declined: true,
+                },
+          );
+        }
+      },
+      [updateUser],
+    );
 
   const handleDeclineSpot = useCallback(() => {
     const isSure = confirm(

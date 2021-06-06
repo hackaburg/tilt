@@ -57,10 +57,7 @@ export const ApplicationSettings = () => {
     [updateApplicationSettings],
   );
 
-  const [
-    allowProfileFormUntil,
-    setAllowProfileFormUntil,
-  ] = useDerivedState(
+  const [allowProfileFormUntil, setAllowProfileFormUntil] = useDerivedState(
     () => settings.application.allowProfileFormUntil.toISOString(),
     [settings],
   );

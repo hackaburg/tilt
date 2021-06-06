@@ -24,9 +24,8 @@ import type {
 
 type SettingsControllerMethods = ExtractControllerMethods<SettingsController>;
 type UsersControllerMethods = ExtractControllerMethods<UsersController>;
-type ApplicationControllerMethods = ExtractControllerMethods<
-  ApplicationController
->;
+type ApplicationControllerMethods =
+  ExtractControllerMethods<ApplicationController>;
 type SystemControllerMethods = ExtractControllerMethods<SystemController>;
 type ExtractData<T> = T extends { data: infer K } ? K : never;
 
