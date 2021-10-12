@@ -103,7 +103,7 @@ workflows:
       - style
       - backend
       - frontend
-      - build
+      - build:
           requires:
             - style
             - backend
