@@ -65,6 +65,7 @@ jobs:
             yarn frontend::codecov
 
   build:
+    type: approval
     requires:
       - style
       - backend
