@@ -65,11 +65,6 @@ jobs:
             yarn frontend::codecov
 
   build:
-    type: approval
-    requires:
-      - style
-      - backend
-      - frontend
     docker:
       - image: docker:latest
     steps:
@@ -109,3 +104,7 @@ workflows:
       - backend
       - frontend
       - build
+          requires:
+            - style
+            - backend
+            - frontend
