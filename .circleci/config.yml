@@ -65,6 +65,10 @@ jobs:
             yarn frontend::codecov
 
   build:
+    requires:
+      - style
+      - backend
+      - frontend
     docker:
       - image: docker:latest
     steps:
