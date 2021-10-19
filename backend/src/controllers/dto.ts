@@ -10,6 +10,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  MaxLength,
   MinLength,
   ValidateNested,
 } from "class-validator";
@@ -28,6 +29,7 @@ import { QuestionType } from "../entities/question-type";
 import {
   EmailSettings,
   EmailTemplate,
+  EmailTemplateSize,
   FrontendSettings,
   Settings,
 } from "../entities/settings";
@@ -274,9 +276,11 @@ export class EmailTemplateDTO implements DTO<EmailTemplate> {
   public subject!: string;
   @IsString()
   @Expose()
+  @MaxLength(EmailTemplateSize)
   public htmlTemplate!: string;
   @IsString()
   @Expose()
+  @MaxLength(EmailTemplateSize)
   public textTemplate!: string;
 }
 

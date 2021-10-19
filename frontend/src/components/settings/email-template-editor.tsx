@@ -8,6 +8,8 @@ import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { Subsubheading } from "../base/headings";
 import { TextInput, TextInputType } from "../base/text-input";
 
+const EmailTemplateLength = 65_536;
+
 const EmailTemplateEditorContainer = styled(Elevated)`
   padding: 1rem;
 `;
@@ -67,6 +69,7 @@ export const EmailTemplateEditor = ({
           <TextInput
             title="text/html"
             type={TextInputType.Area}
+            maxLength={EmailTemplateLength}
             value={template.htmlTemplate}
             onChange={handleHtmlTemplateChange}
             placeholder="<html>"
@@ -77,6 +80,7 @@ export const EmailTemplateEditor = ({
           <TextInput
             title="text/plain"
             type={TextInputType.Area}
+            maxLength={EmailTemplateLength}
             value={template.textTemplate}
             onChange={handleTextTemplateChange}
             placeholder="Hi there!"

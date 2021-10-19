@@ -43,6 +43,7 @@ interface ITextInputProps<TValue = any> {
   onChange: (value: TValue) => unknown;
   min?: number;
   max?: number;
+  maxLength?: number;
   allowDecimals?: boolean;
   isDisabled?: boolean;
   name?: string;
@@ -62,6 +63,7 @@ export const TextInput = ({
   mandatory,
   min,
   max,
+  maxLength = 1024,
   allowDecimals,
   isDisabled = false,
   name,
@@ -80,7 +82,7 @@ export const TextInput = ({
 
     onChange: useCallback(
       (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const changedValue = event.target.value.substr(0, 1024);
+        const changedValue = event.target.value.substr(0, maxLength);
 
         if (type === TextInputType.Number) {
           const parsedValue = Number(changedValue);

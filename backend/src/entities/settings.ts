@@ -56,8 +56,14 @@ export class EmailSettings {
 export class EmailTemplate {
   @Column()
   public subject!: string;
-  @Column()
+  @Column("text")
   public htmlTemplate!: string;
-  @Column()
+  @Column("text")
   public textTemplate!: string;
 }
+
+/**
+ * Value number of characters that can be stored
+ * in the database for the email template
+ */
+export const EmailTemplateSize = 65_536;
