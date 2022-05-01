@@ -7,7 +7,6 @@ import { isValidDate } from "../../util";
 import { Collapsible } from "../base/collapsible";
 import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
-import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
 import { FormEditor } from "./form-editor";
@@ -17,7 +16,7 @@ import { SettingsSection } from "./settings-section";
  * Settings to configure the application users have to fill out.
  */
 export const ApplicationSettings = () => {
-  const { settings, updateSettings, updateError } = useSettingsContext();
+  const { settings, updateSettings } = useSettingsContext();
   const updateApplicationSettings = useCallback(
     (changes: Partial<ApplicationSettingsDTO>) => {
       updateSettings({
@@ -90,12 +89,6 @@ export const ApplicationSettings = () => {
 
   return (
     <SettingsSection title="Application">
-      {updateError && (
-        <Message error>
-          <b>Error:</b> {updateError.message}
-        </Message>
-      )}
-
       <Text>
         An application is divided into two parts: the profile form and the
         confirmation phase. Once you accept applications, the users will be

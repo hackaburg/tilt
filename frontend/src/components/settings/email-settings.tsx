@@ -5,7 +5,6 @@ import { EmailSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { Code } from "../base/code";
 import { StyleableFlexContainer } from "../base/flex";
-import { Message } from "../base/message";
 import { Placeholder } from "../base/placeholder";
 import { Text } from "../base/text";
 import { TextInput } from "../base/text-input";
@@ -20,7 +19,7 @@ const EmailTemplateEditorContainer = styled(StyleableFlexContainer)`
  * Settings to configure mail templates.
  */
 export const EmailSettings = () => {
-  const { settings, updateSettings, updateError } = useSettingsContext();
+  const { settings, updateSettings } = useSettingsContext();
   const updateEmailSettings = useCallback(
     (changes: Partial<EmailSettingsDTO>) => {
       updateSettings({
@@ -51,12 +50,6 @@ export const EmailSettings = () => {
 
   return (
     <SettingsSection title="Mail settings">
-      {updateError && (
-        <Message error>
-          <b>Error:</b> {updateError.message}
-        </Message>
-      )}
-
       <p>Emails sent out will contain the following sender address:</p>
       {!settings && <Placeholder height="3rem" />}
       {settings && (
