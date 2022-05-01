@@ -55,7 +55,11 @@ export type IQuestionConfiguration =
   | IChoicesQuestionConfiguration
   | ICountryQuestionConfiguration;
 
-@Entity()
+@Entity({
+  orderBy: {
+    order: "ASC",
+  },
+})
 export class Question<TQuestionConfiguration = IQuestionConfiguration> {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
@@ -75,4 +79,6 @@ export class Question<TQuestionConfiguration = IQuestionConfiguration> {
   public showIfParentHasValue!: string | null;
   @ManyToOne(() => FormSettings)
   public readonly form!: FormSettings;
+  @Column({ default: 0 })
+  public order!: number;
 }

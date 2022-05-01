@@ -161,4 +161,71 @@ describe("SettingsService", () => {
       settiingsWithoutQuestion.application.confirmationForm.questions,
     ).toHaveLength(0);
   });
+
+  it("adds question ordering", async () => {
+    expect.assertions(2);
+
+    const initialSettings = {
+      application: {
+        confirmationForm: {
+          questions: [],
+        },
+        profileForm: {
+          questions: [
+            {
+              configuration: {},
+              description: "",
+              mandatory: false,
+              title: "Question 1",
+            } as Question,
+            {
+              configuration: {},
+              description: "",
+              mandatory: false,
+              title: "Question 2",
+            } as Question,
+          ],
+        },
+      } as any,
+      email: {
+        admittedEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+        sender: "test@foo.bar",
+        verifyEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+      },
+      frontend: {
+        colorGradientEnd: "gradient-end",
+        colorGradientStart: "gradient-start",
+        colorLink: "link",
+        colorLinkHover: "link-hover",
+        loginSignupImage: "signup",
+        sidebarImage: "sidebar",
+      },
+    } as Settings;
+
+    // save initial settings
+    const initialSavedSettings = await settingsService.updateSettings(
+      initialSettings,
+    );
+
+    // move questions around
+    const questions = initialSavedSettings.application.profileForm.questions;
+    const firstQuestion = questions[0];
+    questions[0] = questions[1];
+    questions[1] = firstQuestion;
+
+    // this is where we're asserting on
+    const settings = await settingsService.updateSettings(initialSavedSettings);
+    const savedQuestions = settings.application.profileForm.questions;
+
+    expect(savedQuestions[0].title).toEqual(questions[0].title);
+    expect(savedQuestions[1].title).toEqual(questions[1].title);
+  });
 });

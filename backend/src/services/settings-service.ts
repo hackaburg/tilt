@@ -59,11 +59,32 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
+   * Sorts questions by order id ascendent.
+   * @param formSettings The from of which the questions should be ordered
+   */
+  private sortFormSettingsByQuestionOrder(formSettings: FormSettings): void {
+    formSettings.questions.sort((a, b) => a.order - b.order);
+  }
+
+  /**
+   * Makes sure that both, profile from and confirmation form questions are being sorted.
+   * @param settings The settings of which the questions should be ordered
+   */
+  private sortQuestionsByOrder(settings: Settings): void {
+    this.sortFormSettingsByQuestionOrder(settings.application.profileForm);
+    this.sortFormSettingsByQuestionOrder(settings.application.confirmationForm);
+  }
+
+  /**
    * Gets the application settings.
    */
   public async getSettings(): Promise<Settings> {
     try {
-      return await this._settings.findOneOrFail();
+      const settings = await this._settings.findOneOrFail();
+
+      this.sortQuestionsByOrder(settings);
+
+      return settings;
     } catch (error) {
       this._logger.debug(`error loading settings: ${error.message}`);
       this._logger.info("no settings found. creating defaults");
@@ -187,10 +208,37 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
+   * Automatically adds order numbers from the sequence of questions.
+   * @param formSettings The form to add the order to
+   */
+  private addOrderToQuestionsInFormSettings(formSettings: FormSettings): void {
+    for (
+      let questionIndex = 0;
+      questionIndex < formSettings.questions.length;
+      questionIndex++
+    ) {
+      const question = formSettings.questions[questionIndex];
+      question.order = questionIndex;
+    }
+  }
+
+  /**
+   * Makes sure that for both, profile from and confirmation form questions order numbers are generated.
+   */
+  private addOrderToQuestionsInSettings(settings: Settings): void {
+    this.addOrderToQuestionsInFormSettings(settings.application.profileForm);
+    this.addOrderToQuestionsInFormSettings(
+      settings.application.confirmationForm,
+    );
+  }
+
+  /**
    * Updates all settings.
    * @param changes The updated settings
    */
   public async updateSettings(settings: Settings): Promise<Settings> {
+    this.addOrderToQuestionsInSettings(settings);
+
     const existingSettings = await this.getSettings();
     await this.removeOrphanQuestions(existingSettings, settings);
 
@@ -200,7 +248,9 @@ export class SettingsService implements ISettingsService {
       settings,
     );
 
-    return this._settings.save(merged);
+    const saved = await this._settings.save(merged);
+    this.sortQuestionsByOrder(saved);
+    return saved;
   }
 }
 

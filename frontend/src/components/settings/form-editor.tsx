@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import * as React from "react";
 import type { FormSettingsDTO, QuestionDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
+import { moveArrayItemDown, moveArrayItemUp } from "../../util";
 import { Button } from "../base/button";
 import { Divider } from "../base/divider";
 import { Elevated } from "../base/elevated";
@@ -87,7 +88,7 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
 
   const allQuestionsHaveIDs = form.questions.every(({ id }) => id != null);
 
-  const editableQuestions = form.questions.map((question) => (
+  const editableQuestions = form.questions.map((question, questionIndex) => (
     <FlexColumnContainer key={question.id ?? question.title}>
       <Divider />
 
@@ -96,6 +97,16 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
         question={question}
         onDeleteQuestion={handleDeleteQuestion}
         allQuestions={form.questions}
+        onMoveDown={() => {
+          handleFormFieldChange({
+            questions: moveArrayItemDown(form.questions, questionIndex),
+          });
+        }}
+        onMoveUp={() => {
+          handleFormFieldChange({
+            questions: moveArrayItemUp(form.questions, questionIndex),
+          });
+        }}
       />
     </FlexColumnContainer>
   ));

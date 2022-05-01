@@ -172,7 +172,7 @@ export class CountryQuestionConfigurationDTO
 }
 
 export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
-  implements DTO<Omit<Question, "form" | "parent" | "createdAt">>
+  implements DTO<Omit<Question, "form" | "parent" | "createdAt" | "order">>
 {
   @IsOptional()
   @IsInt()

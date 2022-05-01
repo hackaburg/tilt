@@ -134,3 +134,46 @@ export const safeDivide = (a: number, b: number): number => {
 
   return a / b;
 };
+
+const isOutOfBounds = <T>(array: readonly T[], index: number): boolean => {
+  return index < 0 || index >= array.length;
+};
+
+const swapArrayItems = <T>(
+  array: readonly T[],
+  fromIndex: number,
+  toIndex: number,
+): T[] => {
+  if (isOutOfBounds(array, fromIndex) || isOutOfBounds(array, toIndex)) {
+    return array.slice();
+  }
+
+  return array.map((item, index) => {
+    if (index === fromIndex) {
+      return array[toIndex];
+    }
+
+    if (index === toIndex) {
+      return array[fromIndex];
+    }
+
+    return item;
+  });
+};
+
+/**
+ * Moves the questions above the previous question.
+ */
+export const moveArrayItemUp = <T>(array: readonly T[], index: number): T[] => {
+  return swapArrayItems(array, index, index - 1);
+};
+
+/**
+ * Moves the questions below the flowing question.
+ */
+export const moveArrayItemDown = <T>(
+  array: readonly T[],
+  index: number,
+): T[] => {
+  return swapArrayItems(array, index, index + 1);
+};

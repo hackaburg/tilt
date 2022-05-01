@@ -9,8 +9,10 @@ import { variables } from "../../theme";
 import {
   FlexColumnContainer,
   FlexRowContainer,
+  Spacer,
   StyleableFlexContainer,
 } from "../base/flex";
+import { SortingButtons } from "../forms/sorting-buttons";
 import { UnifiedQuestion } from "../forms/unified-question";
 import { UnifiedQuestionEditor } from "../forms/unified-question-editor";
 
@@ -49,6 +51,8 @@ interface IQuestionEditorProps {
   onQuestionChange: (question: QuestionDTO) => any;
   onDeleteQuestion: (question: QuestionDTO) => any;
   allQuestions: readonly QuestionDTO[];
+  onMoveUp: () => void;
+  onMoveDown: () => void;
 }
 
 /**
@@ -59,6 +63,8 @@ export const QuestionEditor = ({
   onQuestionChange,
   onDeleteQuestion,
   allQuestions,
+  onMoveDown,
+  onMoveUp,
 }: IQuestionEditorProps) => {
   const [isEditing, toggleEditing] = useToggle(false);
   const fortune = useFortune();
@@ -71,6 +77,13 @@ export const QuestionEditor = ({
     <FlexColumnContainer>
       <ButtonContainer>
         <FlexRowContainer>
+          <SortingButtons
+            onClickMoveDown={onMoveDown}
+            onClickMoveUp={onMoveUp}
+          />
+
+          <Spacer />
+
           {isEditing ? (
             <>
               <RemoveButton onClick={handleDelete}>
