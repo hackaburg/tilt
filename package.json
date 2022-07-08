@@ -44,7 +44,7 @@
     "@types/winston": "^2.4.4",
     "babel-loader": "^8.1.0",
     "chart.js": "^2.9.4",
-    "codecov": "^3.7.1",
+    "codecov": "^3.8.3",
     "country-json": "^1.0.9",
     "css-loader": "^5.2.6",
     "enzyme": "^3.9.0",
