@@ -12,6 +12,8 @@ COPY --chown=node:node entrypoint.sh /app
 COPY --chown=node:node backend/ /app/backend/
 COPY --chown=node:node frontend/ /app/frontend/
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 RUN yarn backend::build && \
     API_BASE_URL=/api yarn frontend::build && \
     mv backend/dist/ tmp && rm -rf backend/ && mv tmp backend && \
