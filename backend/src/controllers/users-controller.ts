@@ -53,7 +53,7 @@ export class UsersController {
       const response = new SignupResponseDTO();
       response.email = user.email;
       return response;
-    } catch (error) {
+    } catch (error: any) {
       throw new BadRequestError(error.message);
     }
   }

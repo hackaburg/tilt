@@ -64,7 +64,7 @@ export class SettingsService implements ISettingsService {
   public async getSettings(): Promise<Settings> {
     try {
       return await this._settings.findOneOrFail();
-    } catch (error) {
+    } catch (error: any) {
       this._logger.debug(`error loading settings: ${error.message}`);
       this._logger.info("no settings found. creating defaults");
       const settings = this.getDefaultSettings();

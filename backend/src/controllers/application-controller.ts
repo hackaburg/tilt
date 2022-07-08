@@ -131,7 +131,7 @@ export class ApplicationController {
 
     try {
       await this._application.storeProfileFormAnswers(user, answers);
-    } catch (error) {
+    } catch (error: any) {
       throw this.convertErrorToHTTP(error);
     }
   }
@@ -153,7 +153,7 @@ export class ApplicationController {
 
     try {
       await this._application.admit(users as readonly User[]);
-    } catch (error) {
+    } catch (error: any) {
       throw this.convertErrorToHTTP(error);
     }
   }
@@ -171,7 +171,7 @@ export class ApplicationController {
     try {
       const form = await this._application.getConfirmationForm(user);
       return this.convertFormToDTO(form);
-    } catch (error) {
+    } catch (error: any) {
       throw this.convertErrorToHTTP(error);
     }
   }
@@ -190,7 +190,7 @@ export class ApplicationController {
 
     try {
       await this._application.storeConfirmationFormAnswers(user, answers);
-    } catch (error) {
+    } catch (error: any) {
       throw this.convertErrorToHTTP(error);
     }
   }
