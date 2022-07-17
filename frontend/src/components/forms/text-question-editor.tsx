@@ -50,7 +50,7 @@ export const TextQuestionEditor = ({
   );
 
   const handlePlaceholderChange = useCallback(
-    (placeholder) => handleConfigurationFieldChange({ placeholder }),
+    (placeholder: string) => handleConfigurationFieldChange({ placeholder }),
     [handleConfigurationFieldChange],
   );
 

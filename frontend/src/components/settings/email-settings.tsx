@@ -34,17 +34,19 @@ export const EmailSettings = () => {
   );
 
   const handleSenderChange = useCallback(
-    (sender) => updateEmailSettings({ sender }),
+    (sender: string) => updateEmailSettings({ sender }),
     [updateEmailSettings, settings],
   );
 
   const handleVerifyEmailChange = useCallback(
-    (verifyEmail) => updateEmailSettings({ verifyEmail }),
+    (verifyEmail: EmailSettingsDTO["verifyEmail"]) =>
+      updateEmailSettings({ verifyEmail }),
     [updateEmailSettings, settings],
   );
 
   const handleAdmittedEmailChange = useCallback(
-    (admittedEmail) => updateEmailSettings({ admittedEmail }),
+    (admittedEmail: EmailSettingsDTO["admittedEmail"]) =>
+      updateEmailSettings({ admittedEmail }),
     [updateEmailSettings, settings],
   );
 

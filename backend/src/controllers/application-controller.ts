@@ -85,7 +85,7 @@ export class ApplicationController {
    * Wraps a service error to an HTTP error.
    * @param error The error received from the service
    */
-  private convertErrorToHTTP(error: Error): Error {
+  private convertErrorToHTTP(error: unknown): Error {
     if (error instanceof QuestionNotFoundError) {
       return new NotFoundError(error.message);
     } else if (
@@ -103,7 +103,7 @@ export class ApplicationController {
       return new NotAcceptableError(error.message);
     }
 
-    return error;
+    return new Error(String(error));
   }
 
   /**

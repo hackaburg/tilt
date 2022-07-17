@@ -54,7 +54,10 @@ export class UsersController {
       response.email = user.email;
       return response;
     } catch (error) {
-      throw new BadRequestError(error.message);
+      if (error instanceof Error) {
+        throw new BadRequestError(error.message);
+      }
+      throw new BadRequestError(String(error));
     }
   }
 

@@ -31,7 +31,7 @@ export const ApplicationSettings = () => {
   );
 
   const handleHoursToConfirmChange = useCallback(
-    (hoursToConfirm) => updateApplicationSettings({ hoursToConfirm }),
+    (hoursToConfirm: number) => updateApplicationSettings({ hoursToConfirm }),
     [updateApplicationSettings],
   );
 
@@ -41,7 +41,7 @@ export const ApplicationSettings = () => {
   );
 
   const handleAllowProfileFormFromChange = useCallback(
-    (value) => {
+    (value: string) => {
       setAllowProfileFormFrom(value);
       const date = new Date(value);
 
@@ -62,7 +62,7 @@ export const ApplicationSettings = () => {
   );
 
   const handleAllowProfileFormUntilChange = useCallback(
-    (value) => {
+    (value: string) => {
       setAllowProfileFormUntil(value);
       const date = new Date(value);
 
@@ -78,12 +78,14 @@ export const ApplicationSettings = () => {
   );
 
   const handleProfileFormChange = useCallback(
-    (profileForm) => updateApplicationSettings({ profileForm }),
+    (profileForm: ApplicationSettingsDTO["profileForm"]) =>
+      updateApplicationSettings({ profileForm }),
     [updateApplicationSettings],
   );
 
   const handleConfirmationFormChange = useCallback(
-    (confirmationForm) => updateApplicationSettings({ confirmationForm }),
+    (confirmationForm: ApplicationSettingsDTO["confirmationForm"]) =>
+      updateApplicationSettings({ confirmationForm }),
     [updateApplicationSettings],
   );
 

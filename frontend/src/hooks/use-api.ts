@@ -34,7 +34,11 @@ export const useApi = <T>(
       const result = await callback(api, wasForced);
       setValue(result);
     } catch (error) {
-      setError(error);
+      if (error instanceof Error) {
+        setError(error);
+      } else {
+        setError(new Error(String(error)));
+      }
     }
 
     setIsFetching(false);

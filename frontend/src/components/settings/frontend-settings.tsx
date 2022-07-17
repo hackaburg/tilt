@@ -28,32 +28,33 @@ export const FrontendSettings = () => {
   );
 
   const handleColorGradientStartChange = useCallback(
-    (colorGradientStart) => updateFrontendSettings({ colorGradientStart }),
+    (colorGradientStart: string) =>
+      updateFrontendSettings({ colorGradientStart }),
     [updateFrontendSettings],
   );
 
   const handleColorGradientEndChange = useCallback(
-    (colorGradientEnd) => updateFrontendSettings({ colorGradientEnd }),
+    (colorGradientEnd: string) => updateFrontendSettings({ colorGradientEnd }),
     [updateFrontendSettings],
   );
 
   const handleColorLinkChange = useCallback(
-    (colorLink) => updateFrontendSettings({ colorLink }),
+    (colorLink: string) => updateFrontendSettings({ colorLink }),
     [updateFrontendSettings],
   );
 
   const handleColorLinkHoverChange = useCallback(
-    (colorLinkHover) => updateFrontendSettings({ colorLinkHover }),
+    (colorLinkHover: string) => updateFrontendSettings({ colorLinkHover }),
     [updateFrontendSettings],
   );
 
   const handleLoginSignupImageChange = useCallback(
-    (loginSignupImage) => updateFrontendSettings({ loginSignupImage }),
+    (loginSignupImage: string) => updateFrontendSettings({ loginSignupImage }),
     [updateFrontendSettings],
   );
 
   const handleSidebarImageChange = useCallback(
-    (sidebarImage) => updateFrontendSettings({ sidebarImage }),
+    (sidebarImage: string) => updateFrontendSettings({ sidebarImage }),
     [updateFrontendSettings],
   );
 

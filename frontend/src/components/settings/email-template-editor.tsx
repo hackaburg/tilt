@@ -39,17 +39,17 @@ export const EmailTemplateEditor = ({
   );
 
   const handleSubjectChange = useCallback(
-    (value) => handleEmailTemplateChange({ subject: value }),
+    (value: string) => handleEmailTemplateChange({ subject: value }),
     [handleEmailTemplateChange],
   );
 
   const handleHtmlTemplateChange = useCallback(
-    (value) => handleEmailTemplateChange({ htmlTemplate: value }),
+    (value: string) => handleEmailTemplateChange({ htmlTemplate: value }),
     [handleEmailTemplateChange],
   );
 
   const handleTextTemplateChange = useCallback(
-    (value) => handleEmailTemplateChange({ textTemplate: value }),
+    (value: string) => handleEmailTemplateChange({ textTemplate: value }),
     [handleEmailTemplateChange],
   );
 

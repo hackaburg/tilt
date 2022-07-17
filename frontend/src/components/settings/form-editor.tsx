@@ -51,7 +51,7 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
   );
 
   const handleTitleChange = useCallback(
-    (title) => handleFormFieldChange({ title }),
+    (title: string) => handleFormFieldChange({ title }),
     [handleFormFieldChange],
   );
 

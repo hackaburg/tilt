@@ -95,8 +95,11 @@ export class Tilt implements IService {
       try {
         await service.bootstrap();
       } catch (error) {
+        const message =
+          error instanceof Error ? `${error}\n${error.stack}` : String(error);
+
         // tslint:disable-next-line: no-console
-        console.error(`unable to load service: ${error}\n${error.stack}`);
+        console.error(`unable to load service: ${message}`);
         process.exit(1);
       }
     }

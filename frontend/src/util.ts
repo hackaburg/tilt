@@ -134,3 +134,11 @@ export const safeDivide = (a: number, b: number): number => {
 
   return a / b;
 };
+
+export const errorToString = (error: unknown): string => {
+  if (error instanceof Error) {
+    return `${error.message}\n${error.stack}`;
+  }
+
+  return String(error);
+};
