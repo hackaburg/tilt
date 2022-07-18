@@ -135,6 +135,9 @@ export const safeDivide = (a: number, b: number): number => {
   return a / b;
 };
 
+/**
+ * Convert errors into strings.
+ */
 export const errorToString = (error: unknown): string => {
   if (error instanceof Error) {
     return `${error.message}\n${error.stack}`;
