@@ -135,7 +135,6 @@ export const safeDivide = (a: number, b: number): number => {
   return a / b;
 };
 
-<<<<<<< HEAD
 const isOutOfBounds = <T>(array: readonly T[], index: number): boolean => {
   return index < 0 || index >= array.length;
 };
@@ -177,7 +176,6 @@ export const moveArrayItemDown = <T>(
   index: number,
 ): T[] => {
   return swapArrayItems(array, index, index + 1);
-=======
 /**
  * Convert errors into strings.
  */
@@ -187,5 +185,4 @@ export const errorToString = (error: unknown): string => {
   }
 
   return String(error);
->>>>>>> main
 };
