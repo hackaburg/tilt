@@ -176,7 +176,7 @@ export const moveArrayItemDown = <T>(
   index: number,
 ): T[] => {
   return swapArrayItems(array, index, index + 1);
-}
+};
 
 /**
  * Convert errors into strings.
