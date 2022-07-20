@@ -39,12 +39,12 @@ export const NumberQuestionEditor = ({
   );
 
   const handlePlaceholderChange = useCallback(
-    (value) => handleConfigurationFieldChange({ placeholder: value }),
+    (value: string) => handleConfigurationFieldChange({ placeholder: value }),
     [handleConfigurationFieldChange],
   );
 
   const handleMinValueChange = useCallback(
-    (value) =>
+    (value: number) =>
       handleConfigurationFieldChange({
         minValue: isNaN(value) ? undefined : value,
       }),
@@ -52,7 +52,7 @@ export const NumberQuestionEditor = ({
   );
 
   const handleMaxValueChange = useCallback(
-    (value) =>
+    (value: number) =>
       handleConfigurationFieldChange({
         maxValue: isNaN(value) ? undefined : value,
       }),

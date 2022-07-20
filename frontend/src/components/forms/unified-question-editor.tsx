@@ -163,12 +163,12 @@ export const UnifiedQuestionEditor = ({
   );
 
   const handleQuestionTitleChange = useCallback(
-    (title) => handleQuestionFieldChange({ title }),
+    (title: string) => handleQuestionFieldChange({ title }),
     [handleQuestionFieldChange],
   );
 
   const handleQuestionDescriptionChange = useCallback(
-    (description) => handleQuestionFieldChange({ description }),
+    (description: string) => handleQuestionFieldChange({ description }),
     [handleQuestionFieldChange],
   );
 
@@ -205,7 +205,7 @@ export const UnifiedQuestionEditor = ({
     parentChoices[0];
 
   const handleQuestionParentIDChange = useCallback(
-    (value) => {
+    (value: string) => {
       const parentID =
         parentChoicesWithIDs.find(({ title }) => title === value)?.id ?? null;
 
@@ -217,7 +217,7 @@ export const UnifiedQuestionEditor = ({
   );
 
   const handleQuestionParentValueChange = useCallback(
-    (value) => {
+    (value: string) => {
       const trimmed = value.trim();
       handleQuestionFieldChange({
         showIfParentHasValue: trimmed === "" ? null : trimmed,

@@ -1,10 +1,8 @@
 import * as React from "react";
-import { useCallback, useMemo, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SettingsDTO } from "../api/types/dto";
 import { PageSizedContainer } from "../components/base/flex";
 import { SuspenseFallback } from "../components/base/suspense-fallback";
-import { debounceDuration } from "../config";
 import { useApi } from "../hooks/use-api";
 import { useContextOrThrow } from "../hooks/use-context-or-throw";
 import { Nullable } from "../util";
@@ -13,7 +11,7 @@ import { useNotificationContext } from "./notification-context";
 interface ISettingsContextValue {
   settings: SettingsDTO;
   updateSettings: (settings: SettingsDTO) => void;
-  updateError: Nullable<Error>;
+  save: () => void;
 }
 
 const Context = React.createContext<Nullable<ISettingsContextValue>>(null);
@@ -31,16 +29,38 @@ export const SettingsContextProvider = ({
   children,
 }: ISettingsContextProviderProps) => {
   const { showNotification } = useNotificationContext();
-
-  const [isSynchronized, setIsSynchronized] = useState(false);
   const [localSettings, setLocalSettings] =
     useState<Nullable<SettingsDTO>>(null);
+
+  const [isLocallyUpdated, setIsLocallyUpdated] = useState(false);
+
+  useEffect(() => {
+    if (!isLocallyUpdated) {
+      return;
+    }
+
+    const handleUnload = (event: Event) => {
+      const wantsToLeave = window.confirm(
+        "Unsaved changes, are you sure you want to leave?",
+      );
+
+      if (wantsToLeave) {
+        return;
+      }
+
+      event.preventDefault();
+      return false;
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, [isLocallyUpdated]);
 
   const { isFetching: isFetchingSettings, error: fetchError } = useApi(
     async (api) => {
       const settings = await api.getSettings();
       setLocalSettings(settings);
-      setIsSynchronized(true);
+      setIsLocallyUpdated(false);
     },
     [],
   );
@@ -56,40 +76,31 @@ export const SettingsContextProvider = ({
   const updateSettings = useCallback((settings: SettingsDTO) => {
     if (settings != null) {
       setLocalSettings(settings);
-      setIsSynchronized(false);
+      setIsLocallyUpdated(true);
     }
   }, []);
 
-  // we only want to save our settings if we know we're out of sync with the db
-  // this only happens when we locally modify the `localSettings` state. if we
-  // omit the `isSynchronized` check, we end up with an infinite loop. if we
-  // don't debounce the synchronization, we might look synced, even though we're
-  // out of date. we need to check both "from the same time"
-  const [[debouncedSettings, debouncedIsSynchronized]] = useDebounce<
-    [typeof localSettings, typeof isSynchronized]
-  >([localSettings, isSynchronized], debounceDuration);
-
-  const { error: updateError } = useApi(
-    async (api) => {
-      if (debouncedSettings != null && !debouncedIsSynchronized) {
-        const updatedSettings = await api.updateSettings(debouncedSettings);
-
-        setLocalSettings(updatedSettings);
-        setIsSynchronized(true);
-
-        showNotification("Changes saved");
+  const { forcePerformRequest: save } = useApi(
+    async (api, wasForced) => {
+      if (!wasForced || localSettings == null) {
+        return;
       }
+
+      const updatedSettings = await api.updateSettings(localSettings);
+
+      setLocalSettings(updatedSettings);
+      showNotification("Changes saved");
     },
-    [debouncedSettings, debouncedIsSynchronized],
+    [localSettings],
   );
 
   const value = useMemo<ISettingsContextValue>(
     () => ({
       settings: localSettings as SettingsDTO,
-      updateError,
       updateSettings,
+      save,
     }),
-    [localSettings, updateSettings, updateError],
+    [localSettings, updateSettings, save],
   );
 
   if (isFetchingSettings || localSettings == null) {

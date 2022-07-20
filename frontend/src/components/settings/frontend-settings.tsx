@@ -4,7 +4,6 @@ import type { FrontendSettingsDTO } from "../../api/types/dto";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { Spacer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
-import { Message } from "../base/message";
 import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
 import { SettingsSection } from "./settings-section";
@@ -13,7 +12,7 @@ import { SettingsSection } from "./settings-section";
  * A component to modify the frontend/appearance settings.
  */
 export const FrontendSettings = () => {
-  const { settings, updateSettings, updateError } = useSettingsContext();
+  const { settings, updateSettings } = useSettingsContext();
 
   const updateFrontendSettings = useCallback(
     (changes: Partial<FrontendSettingsDTO>) => {
@@ -29,39 +28,38 @@ export const FrontendSettings = () => {
   );
 
   const handleColorGradientStartChange = useCallback(
-    (colorGradientStart) => updateFrontendSettings({ colorGradientStart }),
+    (colorGradientStart: string) =>
+      updateFrontendSettings({ colorGradientStart }),
     [updateFrontendSettings],
   );
 
   const handleColorGradientEndChange = useCallback(
-    (colorGradientEnd) => updateFrontendSettings({ colorGradientEnd }),
+    (colorGradientEnd: string) => updateFrontendSettings({ colorGradientEnd }),
     [updateFrontendSettings],
   );
 
   const handleColorLinkChange = useCallback(
-    (colorLink) => updateFrontendSettings({ colorLink }),
+    (colorLink: string) => updateFrontendSettings({ colorLink }),
     [updateFrontendSettings],
   );
 
   const handleColorLinkHoverChange = useCallback(
-    (colorLinkHover) => updateFrontendSettings({ colorLinkHover }),
+    (colorLinkHover: string) => updateFrontendSettings({ colorLinkHover }),
     [updateFrontendSettings],
   );
 
   const handleLoginSignupImageChange = useCallback(
-    (loginSignupImage) => updateFrontendSettings({ loginSignupImage }),
+    (loginSignupImage: string) => updateFrontendSettings({ loginSignupImage }),
     [updateFrontendSettings],
   );
 
   const handleSidebarImageChange = useCallback(
-    (sidebarImage) => updateFrontendSettings({ sidebarImage }),
+    (sidebarImage: string) => updateFrontendSettings({ sidebarImage }),
     [updateFrontendSettings],
   );
 
   return (
     <SettingsSection title="Appearance">
-      {updateError && <Message error>{updateError.message}</Message>}
-
       <Text>
         Adjust these settings to modify the appearance of tilt, using hex colors
         and absolute image urls.

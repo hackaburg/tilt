@@ -86,7 +86,8 @@ export class SettingsService implements ISettingsService {
 
       return settings;
     } catch (error) {
-      this._logger.debug(`error loading settings: ${error.message}`);
+      const message = error instanceof Error ? error.message : String(error);
+      this._logger.debug(`error loading settings: ${message}`);
       this._logger.info("no settings found. creating defaults");
       const settings = this.getDefaultSettings();
       await this._settings.save(settings);

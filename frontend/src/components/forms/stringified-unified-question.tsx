@@ -43,7 +43,7 @@ export const StringifiedUnifiedQuestion = ({
   isDisabled,
 }: IStringifiedUnifiedQuestionProps) => {
   const handleChange = useCallback(
-    (v) => onChange(deriveResult(v, question.configuration.type)),
+    (v: any) => onChange(deriveResult(v, question.configuration.type)),
     [onChange, question],
   );
 
