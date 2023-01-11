@@ -83,7 +83,7 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
-    "class-validator": "^0.12.2",
+    "class-validator": "^0.14.0",
     "convict": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
