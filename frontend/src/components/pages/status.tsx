@@ -17,6 +17,7 @@ import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
 import { Page } from "./page";
+import { Link } from "react-router-dom";
 
 interface IAppProps extends RouteComponentProps<any> {}
 /**
@@ -62,10 +63,6 @@ export const Status = ({ history }: IAppProps) => {
     declineSpot();
   }, [declineSpot]);
 
-  const routeChange = (path: Routes) => {
-    history.push(path);
-  };
-
   return (
     <Page>
       <Heading text="Application status" />
@@ -100,9 +97,9 @@ export const Status = ({ history }: IAppProps) => {
         <Spacer />
         <FlexRowContainer>
           <NonGrowingFlexContainer>
-            <Button primary={true} onClick={routeChange(Routes.ProfileForm)!}>
-              Fill profile form
-            </Button>
+            <Link to={Routes.ProfileForm}>
+              <Button primary={true}>Fill profile form</Button>
+            </Link>
           </NonGrowingFlexContainer>
         </FlexRowContainer>
       </ProgressStep>
@@ -147,15 +144,20 @@ export const Status = ({ history }: IAppProps) => {
           )}
           .
         </Text>
-        <Spacer />
-        <NonGrowingFlexContainer>
-          <Button
-            primary={true}
-            onClick={routeChange(Routes.ConfirmationForm)!}
-          >
-            Fill confirmation form
-          </Button>
-        </NonGrowingFlexContainer>
+        {user?.admitted && (
+          <>
+            <Spacer />
+            <FlexRowContainer>
+              <NonGrowingFlexContainer>
+                <Link to={Routes.ConfirmationForm}>
+                  <Button primary={true}>Fill confirmation form</Button>
+                </Link>
+              </NonGrowingFlexContainer>
+            </FlexRowContainer>
+
+            <Spacer />
+          </>
+        )}
         <Text>
           You have{" "}
           <b>
@@ -176,7 +178,8 @@ export const Status = ({ history }: IAppProps) => {
                   , but you <b>declined</b> your spot
                 </>
               )}
-              .
+              . Please let us know if you can not make it. And hand over your
+              spot to someone else.
             </Text>
 
             {!isNotAttending && (
