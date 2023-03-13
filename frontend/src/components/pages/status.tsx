@@ -4,7 +4,7 @@ import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
-import { dateToString, isBetween, isConfirmationExpired } from "../../util";
+import { dateToString, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
 import {
   FlexRowContainer,
