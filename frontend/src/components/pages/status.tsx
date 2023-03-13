@@ -60,15 +60,6 @@ export const Status = () => {
     declineSpot();
   }, [declineSpot]);
 
-  const now = Date.now();
-  const isProfileFormAvailable =
-    !user?.admitted &&
-    isBetween(
-      settings.application.allowProfileFormFrom.getTime(),
-      now,
-      settings.application.allowProfileFormUntil.getTime(),
-    );
-
   return (
     <Page>
       <Heading text="Application status" />
@@ -93,7 +84,7 @@ export const Status = () => {
             : ProgressStepState.Pending
         }
       >
-        {!isProfileFormAvailable && (
+        {!user?.admitted && (
           <>
             <Text>
               You answer a few questions in our{" "}
@@ -105,7 +96,7 @@ export const Status = () => {
             </Text>
           </>
         )}
-        {!isProfileFormAvailable && (
+        {!user?.admitted && (
           <>
             <Spacer />
             <FlexRowContainer>
@@ -117,7 +108,7 @@ export const Status = () => {
             </FlexRowContainer>
           </>
         )}
-        {isProfileFormAvailable && (
+        {user?.admitted && (
           <>
             <Text>
               Thanks for answering our questions. You successfully applied.
