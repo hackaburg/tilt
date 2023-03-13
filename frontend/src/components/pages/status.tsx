@@ -1,5 +1,4 @@
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
 import { useCallback } from "react";
 import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
@@ -19,11 +18,10 @@ import { Text } from "../base/text";
 import { Page } from "./page";
 import { Link } from "react-router-dom";
 
-interface IAppProps extends RouteComponentProps<any> {}
 /**
  * The start page every user sees after logging in.
  */
-export const Status = ({ history }: IAppProps) => {
+export const Status = () => {
   const { settings } = useSettingsContext();
   const { user, updateUser } = useLoginContext();
 
