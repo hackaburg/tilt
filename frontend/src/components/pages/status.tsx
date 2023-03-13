@@ -16,11 +16,13 @@ import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
 import { Page } from "./page";
+import { RouteComponentProps } from "react-router";
 
+interface IAppProps extends RouteComponentProps<any> {}
 /**
  * The start page every user sees after logging in.
  */
-export const Status = () => {
+export const Status = ({ history }: IAppProps) => {
   const { settings } = useSettingsContext();
   const { user, updateUser } = useLoginContext();
 
@@ -60,6 +62,10 @@ export const Status = () => {
     declineSpot();
   }, [declineSpot]);
 
+  const routeChange = (path: Routes) => {
+    history.push(path);
+  };
+
   return (
     <Page>
       <Heading text="Application status" />
@@ -91,6 +97,14 @@ export const Status = () => {
           <b>{dateToString(settings.application.allowProfileFormFrom)}</b> and{" "}
           <b>{dateToString(settings.application.allowProfileFormUntil)}</b>.
         </Text>
+        <Spacer />
+        <FlexRowContainer>
+          <NonGrowingFlexContainer>
+            <Button primary={true} onClick={routeChange(Routes.ProfileForm)!}>
+              Fill profile form
+            </Button>
+          </NonGrowingFlexContainer>
+        </FlexRowContainer>
       </ProgressStep>
 
       <ProgressStep
@@ -133,6 +147,15 @@ export const Status = () => {
           )}
           .
         </Text>
+        <Spacer />
+        <NonGrowingFlexContainer>
+          <Button
+            primary={true}
+            onClick={routeChange(Routes.ConfirmationForm)!}
+          >
+            Fill confirmation form
+          </Button>
+        </NonGrowingFlexContainer>
         <Text>
           You have{" "}
           <b>
