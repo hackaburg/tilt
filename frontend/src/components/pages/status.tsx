@@ -4,7 +4,7 @@ import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
-import { dateToString, isConfirmationExpired } from "../../util";
+import { dateToString, isBetween, isConfirmationExpired } from "../../util";
 import { Button } from "../base/button";
 import {
   FlexRowContainer,
@@ -60,6 +60,15 @@ export const Status = () => {
     declineSpot();
   }, [declineSpot]);
 
+  const now = Date.now();
+  const isProfileFormAvailable =
+    !user?.admitted &&
+    isBetween(
+      settings.application.allowProfileFormFrom.getTime(),
+      now,
+      settings.application.allowProfileFormUntil.getTime(),
+    );
+
   return (
     <Page>
       <Heading text="Application status" />
@@ -84,7 +93,7 @@ export const Status = () => {
             : ProgressStepState.Pending
         }
       >
-        {!user?.admitted && (
+        {!isProfileFormAvailable && (
           <>
             <Text>
               You answer a few questions in our{" "}
@@ -96,19 +105,19 @@ export const Status = () => {
             </Text>
           </>
         )}
-        {!user?.admitted && (
+        {!isProfileFormAvailable && (
           <>
             <Spacer />
             <FlexRowContainer>
               <NonGrowingFlexContainer>
-                <a href={Routes.ProfileForm}>
+                <a href={Routes.ProfileFormApply}>
                   <Button primary={true}>Fill profile form</Button>
                 </a>
               </NonGrowingFlexContainer>
             </FlexRowContainer>
           </>
         )}
-        {user?.admitted && (
+        {isProfileFormAvailable && (
           <>
             <Text>
               Thanks for answering our questions. You successfully applied.
@@ -185,7 +194,7 @@ export const Status = () => {
             <Spacer />
             <FlexRowContainer>
               <NonGrowingFlexContainer>
-                <a href={Routes.ConfirmationForm}>
+                <a href={Routes.ConfirmationFormApply}>
                   <Button primary={true}>Fill confirmation form</Button>
                 </a>
               </NonGrowingFlexContainer>
