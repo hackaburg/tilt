@@ -10,7 +10,7 @@
     "noUnusedParameters": true,
     "target": "es2017",
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
   },
   "include": [
     "src/**/*.ts",
