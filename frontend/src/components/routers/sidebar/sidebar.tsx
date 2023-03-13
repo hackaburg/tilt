@@ -48,20 +48,17 @@ export const Sidebar = () => {
       <SidebarMenu>
         <SidebarMenuItem to={Routes.Status}>Status</SidebarMenuItem>
         <SidebarMenuItem to={Routes.ProfileForm}>Profile</SidebarMenuItem>
-
         {isAdmitted && (
           <SidebarMenuItem to={Routes.ConfirmationForm}>
             Confirmation
           </SidebarMenuItem>
         )}
-
         {isElevatedUser && (
           <>
             <SidebarMenuItem to={Routes.Admission}>Admission</SidebarMenuItem>
             <SidebarMenuItem to={Routes.Statistics}>Statistics</SidebarMenuItem>
           </>
         )}
-
         {role === UserRole.Root && (
           <>
             <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>

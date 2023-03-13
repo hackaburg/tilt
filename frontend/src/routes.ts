@@ -4,9 +4,11 @@
 export enum Routes {
   Admission = "/admission",
   ConfirmationForm = "/confirm",
+  ConfirmationFormApply = "/apply/confirm",
   Login = "/login",
   Logout = "/logout",
   ProfileForm = "/profile",
+  ProfileFormApply = "/apply/profile",
   Settings = "/settings",
   SignupDone = "/signup-done",
   Statistics = "/statistics",
