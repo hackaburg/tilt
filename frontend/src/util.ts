@@ -22,9 +22,7 @@ const prependZero = (value: number): string =>
 export const dateToString = (date: Date) =>
   `${date.getFullYear()}-${prependZero(date.getMonth() + 1)}-${prependZero(
     date.getDate(),
-  )} at ${prependZero(date.getHours())}:${prependZero(
-    date.getMinutes(),
-  )}:${prependZero(date.getSeconds())}`;
+  )}`;
 
 /**
  * Extracts all public fields from a type to a new type. This is mainly used to
