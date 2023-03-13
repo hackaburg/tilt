@@ -84,19 +84,37 @@ export const Status = () => {
             : ProgressStepState.Pending
         }
       >
-        <Text>
-          You answer a few questions in our{" "}
-          <InternalLink to={Routes.ProfileForm}>profile form</InternalLink> so
-          we get to know you, any time between{" "}
-          <b>{dateToString(settings.application.allowProfileFormFrom)}</b> and{" "}
-          <b>{dateToString(settings.application.allowProfileFormUntil)}</b>.
-        </Text>
-        <Spacer />
-        <FlexRowContainer>
-          <NonGrowingFlexContainer>
-            <Button primary={true}>Fill profile form</Button>
-          </NonGrowingFlexContainer>
-        </FlexRowContainer>
+        {!user?.admitted && (
+          <>
+            <Text>
+              You answer a few questions in our{" "}
+              <InternalLink to={Routes.ProfileForm}>profile form</InternalLink>{" "}
+              so we get to know you, any time between{" "}
+              <b>{dateToString(settings.application.allowProfileFormFrom)}</b>{" "}
+              and{" "}
+              <b>{dateToString(settings.application.allowProfileFormUntil)}</b>.
+            </Text>
+          </>
+        )}
+        {!user?.admitted && (
+          <>
+            <Spacer />
+            <FlexRowContainer>
+              <NonGrowingFlexContainer>
+                <a href={Routes.ProfileForm}>
+                  <Button primary={true}>Fill profile form</Button>
+                </a>
+              </NonGrowingFlexContainer>
+            </FlexRowContainer>
+          </>
+        )}
+        {user?.admitted && (
+          <>
+            <Text>
+              Thanks for answering our questions. You successfully applied.
+            </Text>
+          </>
+        )}
       </ProgressStep>
 
       <ProgressStep
@@ -108,10 +126,23 @@ export const Status = () => {
             : ProgressStepState.Pending
         }
       >
-        <Text>
-          We'll go through applications in batches. Hang tight, we'll let you
-          know once we selected your application, but it might take some time.
-        </Text>
+        {!user?.confirmed && (
+          <>
+            <Text>
+              We'll go through applications in batches. Hang tight, we'll let
+              you know once we selected your application, but it might take some
+              time.
+            </Text>
+          </>
+        )}
+        {user?.confirmed && (
+          <>
+            <Text>
+              Congratulations! We selected you to be part of our Hackathon this
+              year. Please continue with step 4.
+            </Text>
+          </>
+        )}
       </ProgressStep>
 
       <ProgressStep
@@ -125,43 +156,55 @@ export const Status = () => {
             : ProgressStepState.Pending
         }
       >
-        <Text>
-          If you received an acceptance e-mail, you still need to confirm your
-          spot and provide some final information like your dietary needs
-          {user?.admitted && (
-            <>
-              {" "}
-              in our{" "}
-              <InternalLink to={Routes.ConfirmationForm}>
-                confirmation form
-              </InternalLink>
-            </>
-          )}
-          .
-        </Text>
-        {user?.admitted && (
+        {!user?.confirmed && (
+          <>
+            <Text>
+              If you received an acceptance e-mail, you still need to confirm
+              your spot and provide some final information like your dietary
+              needs
+              {user?.admitted && (
+                <>
+                  {" "}
+                  in our{" "}
+                  <InternalLink to={Routes.ConfirmationForm}>
+                    confirmation form
+                  </InternalLink>
+                </>
+              )}
+              .
+            </Text>
+          </>
+        )}
+        {user?.confirmed && (
+          <>
+            <Text>Thanks for confirming your spot!</Text>
+          </>
+        )}
+        {user?.admitted && !user?.confirmed && (
           <>
             <Spacer />
             <FlexRowContainer>
               <NonGrowingFlexContainer>
-                <Button primary={true}>Fill confirmation form</Button>
+                <a href={Routes.ConfirmationForm}>
+                  <Button primary={true}>Fill confirmation form</Button>
+                </a>
               </NonGrowingFlexContainer>
             </FlexRowContainer>
 
             <Spacer />
+
+            <Text>
+              You have{" "}
+              <b>
+                {settings.application.hoursToConfirm} hours{" "}
+                {confirmationDays !== 0 && <> / {confirmationDays} day(s)</>}
+              </b>{" "}
+              to do this. If you don't confirm your spot, it'll be given to
+              someone else after the window has passed.
+            </Text>
           </>
         )}
-        <Text>
-          You have{" "}
-          <b>
-            {settings.application.hoursToConfirm} hours{" "}
-            {confirmationDays !== 0 && <> / {confirmationDays} day(s)</>}
-          </b>{" "}
-          to do this. If you don't confirm your spot, it'll be given to someone
-          else after the window has passed.
-        </Text>
-
-        {deadline != null && (
+        {deadline != null && user?.admitted && !user?.confirmed && (
           <>
             <Text>
               Your confirmation {isExpired ? <b>was</b> : "is"} due on{" "}
@@ -175,7 +218,7 @@ export const Status = () => {
               spot to someone else.
             </Text>
 
-            {!isNotAttending && (
+            {!isNotAttending && user?.admitted && !user?.confirmed && (
               <>
                 <Spacer />
 
@@ -207,7 +250,38 @@ export const Status = () => {
             : ProgressStepState.Pending
         }
       >
-        <Text>If all goes well, we'll meet you at the event.</Text>
+        {!isNotAttending && !user?.confirmed && (
+          <>
+            <Text>If all goes well, we'll meet you at the event.</Text>
+          </>
+        )}
+        {!isNotAttending && user?.confirmed && (
+          <>
+            <Text>Everything went well! Hope to see you at the event.</Text>
+          </>
+        )}
+        <Spacer />
+        <Text>
+          If you never the less can not make it to the event. Please tell us and
+          hand over your seat to someone else.
+        </Text>
+        {!isNotAttending && user?.confirmed && (
+          <>
+            <Spacer />
+
+            <FlexRowContainer>
+              <NonGrowingFlexContainer>
+                <Button
+                  loading={isDecliningSpot}
+                  disable={isNotAttending}
+                  onClick={handleDeclineSpot}
+                >
+                  I can't make it
+                </Button>
+              </NonGrowingFlexContainer>
+            </FlexRowContainer>
+          </>
+        )}
       </ProgressStep>
     </Page>
   );
