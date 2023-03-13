@@ -1,4 +1,5 @@
 import * as React from "react";
+import { RouteComponentProps } from "react-router";
 import { useCallback } from "react";
 import { useLoginContext } from "../../contexts/login-context";
 import { useSettingsContext } from "../../contexts/settings-context";
@@ -16,7 +17,6 @@ import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
 import { Page } from "./page";
-import { RouteComponentProps } from "react-router";
 
 interface IAppProps extends RouteComponentProps<any> {}
 /**
