@@ -62,8 +62,11 @@ export const Status = () => {
 
   return (
     <Page>
-      <Heading text="Application status" />
-
+      {user.email && (
+        <>
+          <Heading text={`Application status -  ${user!.email}`} />
+        </>
+      )}
       <ProgressStep
         index={1}
         title="Register"
@@ -106,6 +109,11 @@ export const Status = () => {
                 </a>
               </NonGrowingFlexContainer>
             </FlexRowContainer>
+            <Text>
+              Don't get confused, once you have filled out your profile and
+              pressed save, you can change your profile until we have you
+              confirmed in Step 3.
+            </Text>
           </>
         )}
         {user?.admitted && (
