@@ -62,7 +62,7 @@ export const Status = () => {
 
   return (
     <Page>
-      {user.email && (
+      {user && (
         <>
           <Heading text={`Application status -  ${user!.email}`} />
         </>
