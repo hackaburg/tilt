@@ -11,7 +11,7 @@ import {
   NonGrowingFlexContainer,
   Spacer,
 } from "../base/flex";
-import { Heading } from "../base/headings";
+import { Heading, Subheading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
@@ -64,7 +64,8 @@ export const Status = () => {
     <Page>
       {user && (
         <>
-          <Heading text={`Application status -  ${user!.email}`} />
+          <Heading text="Application status" />
+          <Subheading text={user!.email} />
         </>
       )}
       <ProgressStep
