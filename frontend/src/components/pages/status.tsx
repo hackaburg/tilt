@@ -62,7 +62,7 @@ export const Status = () => {
 
   return (
     <Page>
-      {user && (
+      {user! && (
         <>
           <Heading text="Application status" />
           <Subheading text={user!.email} />
@@ -223,8 +223,8 @@ export const Status = () => {
                   , but you <b>declined</b> your spot
                 </>
               )}
-              . Please let us know if you can not make it. And hand over your
-              spot to someone else.
+              . Please let us know if you can not make it so that we can hand
+              over your spot to someone else.
             </Text>
 
             {!isNotAttending && user?.admitted && !user?.confirmed && (
