@@ -583,30 +583,6 @@ export const Admission = () => {
             </TableCell>
 
             <TableCell>{name}</TableCell>
-            {!checkedIn && (
-              <>
-                <TableCell>
-                  {" "}
-                  <NonGrowingFlexContainer>
-                    <Button onClick={handleCheckInAccount} primary>
-                      Check in
-                    </Button>
-                  </NonGrowingFlexContainer>
-                </TableCell>
-              </>
-            )}
-            {!checkedIn && (
-              <>
-                <TableCell>
-                  {" "}
-                  <NonGrowingFlexContainer>
-                    <Button onClick={admit} primary>
-                      Admit User
-                    </Button>
-                  </NonGrowingFlexContainer>
-                </TableCell>
-              </>
-            )}
           </RowComponent>
 
           <tr>
@@ -719,14 +695,10 @@ export const Admission = () => {
         application.user.confirmationExpiresAt,
         application.user.initialProfileFormSubmittedAt,
         application.answers,
-      ];
+      ].join(",");
     });
 
-    const csv = [
-      "sep=,",
-      header.join(","), // header row first
-      rows.join(","),
-    ].join("\r\n");
+    const csv = ["sep=,", header.join(","), rows.join("\r\n")].join("\r\n");
 
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
 
@@ -822,8 +794,6 @@ export const Admission = () => {
                   {!isResponsive && <TableHeaderCell />}
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Name</TableHeaderCell>
-                  <TableHeaderCell>Check In</TableHeaderCell>
-                  <TableHeaderCell>Admit User</TableHeaderCell>
                 </tr>
               </TableHead>
 
