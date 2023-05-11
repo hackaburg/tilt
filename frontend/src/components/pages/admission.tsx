@@ -37,6 +37,7 @@ import { SuspenseFallback } from "../base/suspense-fallback";
 import { Text } from "../base/text";
 import { TextInput } from "../base/text-input";
 import { Page } from "./page";
+import { saveAs } from "file-saver";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -582,6 +583,30 @@ export const Admission = () => {
             </TableCell>
 
             <TableCell>{name}</TableCell>
+            {!checkedIn && (
+              <>
+                <TableCell>
+                  {" "}
+                  <NonGrowingFlexContainer>
+                    <Button onClick={handleCheckInAccount} primary>
+                      Check in
+                    </Button>
+                  </NonGrowingFlexContainer>
+                </TableCell>
+              </>
+            )}
+            {!checkedIn && (
+              <>
+                <TableCell>
+                  {" "}
+                  <NonGrowingFlexContainer>
+                    <Button onClick={admit} primary>
+                      Admit User
+                    </Button>
+                  </NonGrowingFlexContainer>
+                </TableCell>
+              </>
+            )}
           </RowComponent>
 
           <tr>
@@ -668,6 +693,50 @@ export const Admission = () => {
 
   const error = fetchError ?? admitError;
 
+  const exportToCsv = () => {
+    console.log("exporting to csv");
+    const header = [
+      "Name",
+      "Email",
+      "Admitted",
+      "Confirmed",
+      "Checked In",
+      "Declined",
+      "Application Date",
+      "Confirmation Deadline",
+      "Profile Form Submitted",
+      "Questions",
+    ];
+    console.log(applicationsSortedByDate);
+
+    const rows = applicationsSortedByDate.map((application) => {
+      return [
+        application.user.id,
+        application.user.email,
+        application.user.admitted,
+        application.user.confirmed,
+        application.user.checkedIn,
+        application.user.declined,
+        application.user.createdAt,
+        application.user.confirmationExpiresAt,
+        application.user.initialProfileFormSubmittedAt,
+        application.answers,
+      ];
+    });
+
+    const csv = [
+      "sep=,",
+      header.join(","), // header row first
+      rows.join(","),
+    ].join("\r\n");
+
+    console.log(csv);
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+
+    saveAs(blob, `tilt-export.csv`);
+  };
+
   return (
     <Page>
       <Heading text="Admission" />
@@ -699,6 +768,14 @@ export const Admission = () => {
           </ul>
         </Message>
       )}
+
+      <NonGrowingFlexContainer>
+        <a style={{ width: "20rem", marginTop: "1rem" }}>
+          <Button primary={true} onClick={exportToCsv}>
+            Export Users to CSV
+          </Button>
+        </a>
+      </NonGrowingFlexContainer>
 
       {isFetching && <SuspenseFallback />}
       {allApplications != null && (
@@ -749,6 +826,8 @@ export const Admission = () => {
                   {!isResponsive && <TableHeaderCell />}
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Name</TableHeaderCell>
+                  <TableHeaderCell>Check In</TableHeaderCell>
+                  <TableHeaderCell>Admit User</TableHeaderCell>
                 </tr>
               </TableHead>
 
