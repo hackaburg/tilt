@@ -694,7 +694,6 @@ export const Admission = () => {
   const error = fetchError ?? admitError;
 
   const exportToCsv = () => {
-    console.log("exporting to csv");
     const header = [
       "Name",
       "Email",
@@ -707,7 +706,6 @@ export const Admission = () => {
       "Profile Form Submitted",
       "Questions",
     ];
-    console.log(applicationsSortedByDate);
 
     const rows = applicationsSortedByDate.map((application) => {
       return [
@@ -729,8 +727,6 @@ export const Admission = () => {
       header.join(","), // header row first
       rows.join(","),
     ].join("\r\n");
-
-    console.log(csv);
 
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
 
