@@ -713,7 +713,7 @@ export const Admission = () => {
         formatDate(application.user.confirmationExpiresAt),
         formatDate(application.user.initialProfileFormSubmittedAt),
         extendededApplications[index].map((extendedApplication) =>
-          JSON.stringify(extendedApplication).replace(",", ";"),
+          JSON.stringify(extendedApplication).replace(/,/g, ";"),
         ),
       ].join(",");
     });
