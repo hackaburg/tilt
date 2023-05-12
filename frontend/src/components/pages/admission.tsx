@@ -38,7 +38,6 @@ import { Text } from "../base/text";
 import { TextInput } from "../base/text-input";
 import { Page } from "./page";
 import { saveAs } from "file-saver";
-import { application } from "express";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -701,8 +700,6 @@ export const Admission = () => {
       });
       extendededApplications.push(extendedQuestions);
     });
-
-    console.log(extendededApplications);
 
     const rows = applicationsSortedByDate.map((application, index) => {
       return [
