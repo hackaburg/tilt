@@ -686,7 +686,7 @@ export const Admission = () => {
     const extendededApplications: (string | AnswerDTO)[][] = [];
 
     applicationsSortedByDate.map((application) => {
-      let extendedQuestions: (string | AnswerDTO)[] = [];
+      const extendedQuestions: (string | AnswerDTO)[] = [];
 
       questions.map((question) => {
         const questionExists = application.answers.find(
