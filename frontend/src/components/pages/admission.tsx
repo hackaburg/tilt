@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { ApplicationDTO } from "../../api/types/dto";
+import { AnswerDTO, ApplicationDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { debounceDuration } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
@@ -38,6 +38,7 @@ import { Text } from "../base/text";
 import { TextInput } from "../base/text-input";
 import { Page } from "./page";
 import { saveAs } from "file-saver";
+import { application } from "express";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -680,10 +681,30 @@ export const Admission = () => {
       "Application Date",
       "Confirmation Deadline",
       "Profile Form Submitted",
-      ...questions.map((question) => question.title),
+      questions.map((question) => question.title),
     ];
 
-    const rows = applicationsSortedByDate.map((application) => {
+    const extendededApplications: (string | AnswerDTO)[][] = [];
+
+    applicationsSortedByDate.map((application) => {
+      let extendedQuestions: (string | AnswerDTO)[] = [];
+
+      questions.map((question) => {
+        const questionExists = application.answers.find(
+          (answer) => answer.questionID === question.id,
+        );
+        if (questionExists) {
+          extendedQuestions.push(questionExists.value);
+        } else {
+          extendedQuestions.push("");
+        }
+      });
+      extendededApplications.push(extendedQuestions);
+    });
+
+    console.log(extendededApplications);
+
+    const rows = applicationsSortedByDate.map((application, index) => {
       return [
         application.user.id,
         application.user.email,
@@ -694,7 +715,9 @@ export const Admission = () => {
         formatDate(application.user.createdAt),
         formatDate(application.user.confirmationExpiresAt),
         formatDate(application.user.initialProfileFormSubmittedAt),
-        ...application.answers.map((answer) => answer.value.replace(",", ";")),
+        extendededApplications[index].map((extendedApplication) =>
+          extendedApplication.toString().replace(",", ";"),
+        ),
       ].join(",");
     });
 
