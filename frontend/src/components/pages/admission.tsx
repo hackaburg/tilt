@@ -680,7 +680,7 @@ export const Admission = () => {
       "Application Date",
       "Confirmation Deadline",
       "Profile Form Submitted",
-      "Questions",
+      ...questions.map((question) => question.title),
     ];
 
     const rows = applicationsSortedByDate.map((application) => {
@@ -694,7 +694,6 @@ export const Admission = () => {
         application.user.createdAt,
         application.user.confirmationExpiresAt,
         application.user.initialProfileFormSubmittedAt,
-        application.answers,
       ].join(",");
     });
 
