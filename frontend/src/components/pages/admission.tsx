@@ -683,10 +683,7 @@ export const Admission = () => {
       ...questions.map((question) => question.title),
     ];
 
-    console.log(questions);
-
     const rows = applicationsSortedByDate.map((application) => {
-      console.log(application);
       return [
         application.user.id,
         application.user.email,
