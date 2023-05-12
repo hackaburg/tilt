@@ -708,7 +708,6 @@ export const Admission = () => {
     if (date === null) {
       return date;
     } else {
-      console.log(date.toLocaleString());
       return date.toLocaleString().replace(",", "");
     }
   };
