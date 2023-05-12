@@ -691,9 +691,9 @@ export const Admission = () => {
         application.user.confirmed,
         application.user.checkedIn,
         application.user.declined,
-        application.user.createdAt,
-        application.user.confirmationExpiresAt,
-        application.user.initialProfileFormSubmittedAt,
+        formatDate(application.user.createdAt),
+        formatDate(application.user.confirmationExpiresAt),
+        formatDate(application.user.initialProfileFormSubmittedAt),
       ].join(",");
     });
 
@@ -702,6 +702,15 @@ export const Admission = () => {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
 
     saveAs(blob, `tilt-export.csv`);
+  };
+
+  const formatDate = (date: Date | null) => {
+    if (date === null) {
+      return date;
+    } else {
+      console.log(date.toLocaleString());
+      return date.toLocaleString().replace(",", "");
+    }
   };
 
   return (
