@@ -135,7 +135,7 @@ export const Statistics = () => {
         }
 
         if (application.user.confirmed && application.user.declined) {
-          accumulatedPercentages.confirmedNetto++;
+          accumulatedPercentages.confirmedNetto--;
         }
 
         if (application.user.initialProfileFormSubmittedAt != null) {
