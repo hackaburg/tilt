@@ -6,12 +6,7 @@ import { QuestionType } from "../../api/types/enums";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
-import {
-  isConfirmationExpired,
-  percentageToString,
-  roundDateToDay,
-  safeDivide,
-} from "../../util";
+import { isConfirmationExpired, roundDateToDay } from "../../util";
 import { CircleChart } from "../base/circle-chart";
 import { Collapsible } from "../base/collapsible";
 import { Divider } from "../base/divider";
@@ -130,12 +125,17 @@ export const Statistics = () => {
 
         if (application.user.confirmed) {
           accumulatedPercentages.confirmed++;
+          accumulatedPercentages.confirmedNetto++;
         }
 
         if (application.user.declined) {
           accumulatedPercentages.declined++;
         } else if (isConfirmationExpired(application.user)) {
           accumulatedPercentages.expired++;
+        }
+
+        if (application.user.confirmed && application.user.declined) {
+          accumulatedPercentages.confirmedNetto++;
         }
 
         if (application.user.initialProfileFormSubmittedAt != null) {
@@ -148,6 +148,7 @@ export const Statistics = () => {
         admitted: 0,
         checkedIn: 0,
         confirmed: 0,
+        confirmedNetto: 0,
         declined: 0,
         expired: 0,
         submitted: 0,
@@ -155,22 +156,13 @@ export const Statistics = () => {
     );
 
     return {
-      admitted: percentageToString(
-        safeDivide(counts.admitted, counts.submitted),
-      ),
-      checkedIn: percentageToString(
-        safeDivide(counts.checkedIn, counts.confirmed),
-      ),
-      confirmed: percentageToString(
-        safeDivide(counts.confirmed, counts.admitted),
-      ),
-      declined: percentageToString(
-        safeDivide(counts.declined, counts.confirmed),
-      ),
-      expired: percentageToString(safeDivide(counts.expired, counts.admitted)),
-      submitted: percentageToString(
-        safeDivide(counts.submitted, safeApplications.length),
-      ),
+      admitted: counts.admitted,
+      checkedIn: counts.checkedIn,
+      confirmed: counts.confirmed,
+      declined: counts.declined,
+      expired: counts.expired,
+      submitted: counts.submitted,
+      confirmedNetto: counts.confirmedNetto,
     };
   }, [safeApplications]);
 
@@ -266,6 +258,12 @@ export const Statistics = () => {
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
             <TitledNumber title="Declined" value={percentages.declined} />
+          </FlexRowColumnContainer>
+          <FlexRowColumnContainer>
+            <TitledNumber
+              title="Confirmed Netto"
+              value={percentages.confirmedNetto}
+            />
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
             <TitledNumber title="Expired" value={percentages.expired} />
