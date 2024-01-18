@@ -7,10 +7,7 @@ import { Routes } from "../../../routes";
 import { variables } from "../../../theme";
 import { StyleableFlexContainer } from "../../base/flex";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
-
 import { LuLayoutDashboard } from "react-icons/lu";
-import { GrMapLocation } from "react-icons/gr";
-import { TbSubtask } from "react-icons/tb";
 import { LuUser } from "react-icons/lu";
 import { BiLogOutCircle } from "react-icons/bi";
 import { FaRegCircleCheck } from "react-icons/fa6";
@@ -59,7 +56,7 @@ export const Sidebar = () => {
     <BackgroundContainer>
 
       <div style={{ padding: '2rem' }}>
-        <H1 style={{ color: 'white' }}>HACKABURG<br></br>PLATFORM</H1>
+        <H1 style={{ color: 'white' }}>HACKABURG<br></br>CONTROL CENTER</H1>
         <p style={{ color: 'white' }}>All important information about <br></br>the <b>Hackaburg 2024</b> event</p>
       </div>
 
