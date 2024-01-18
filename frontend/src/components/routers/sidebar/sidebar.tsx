@@ -60,7 +60,7 @@ export const Sidebar = () => {
 
       <div style={{ padding: '2rem' }}>
         <H1 style={{ color: 'white' }}>HACKABURG<br></br>PLATFORM</H1>
-        <p style={{ color: 'white' }}>All important info about <br></br>the Hackaburg 2024 event</p>
+        <p style={{ color: 'white' }}>All important information about <br></br>the <b>Hackaburg 2024</b> event</p>
       </div>
 
       <SidebarMenu>
@@ -68,14 +68,14 @@ export const Sidebar = () => {
           <LuLayoutDashboard />
           <span style={{ marginLeft: "1rem" }}> Dashboard</span>
         </SidebarMenuItem>
-        <SidebarMenuItem to={Routes.Map}>
+      {/*   <SidebarMenuItem to={Routes.Map}>
           <GrMapLocation />
           <span style={{ marginLeft: "1rem" }}> Map</span>
         </SidebarMenuItem>
         <SidebarMenuItem to={Routes.Challenges}>
           <TbSubtask />
           <span style={{ marginLeft: "1rem" }}> Challenges</span>
-        </SidebarMenuItem>
+        </SidebarMenuItem> */}
         <SidebarMenuItem to={Routes.ProfileForm}>
           <LuUser />
           <span style={{ marginLeft: "1rem" }}> Profile</span>
@@ -87,17 +87,17 @@ export const Sidebar = () => {
           </SidebarMenuItem>
         )}
 
-        <div style={{padding: "1rem"}}>
-        <div style={{ width: "100%", height: "10px", borderBottom: "1px solid white", textAlign: "center"}}>
-          <span style={{ fontSize: "0.9rem", backgroundColor: "#000", padding: "0 10px", color: "white", float: "left", marginLeft: "1rem"}}>
-            Admin
-          </span>
-          </div>
-        </div>
 
 
         {isElevatedUser && (
           <>
+             <div style={{ padding: "1rem" }}>
+              <div style={{ width: "100%", height: "10px", borderBottom: "1px solid white", textAlign: "center"}}>
+                <span style={{ fontSize: "0.9rem", backgroundColor: "#000", padding: "0 10px", color: "white", float: "left", marginLeft: "1rem"}}>
+                  Admin
+                </span>
+                </div>
+              </div>
             <SidebarMenuItem to={Routes.Admission}>
               <FaRegCircleCheck />
               <span style={{ marginLeft: "1rem" }}>Admission</span>
