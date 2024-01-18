@@ -242,6 +242,7 @@ export const Statistics = () => {
     <Page>
       <NonGrowingFlexContainer>
         <Heading text="Statistics" />
+        <Divider />
 
         <FlexRowContainer>
           <FlexRowColumnContainer>

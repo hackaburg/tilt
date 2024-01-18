@@ -10,9 +10,5 @@ const Border = styled(StyleableFlexContainer)`
  * A vertical divider.
  */
 export const Divider = () => (
-  <FlexColumnContainer>
-    <Spacer />
-    <Border />
-    <Spacer />
-  </FlexColumnContainer>
+    <hr style={{width: "3rem", marginLeft: "0", height: "5px", color: "black", backgroundColor: "black"}}></hr>
 );

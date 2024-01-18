@@ -38,6 +38,7 @@ import { Text } from "../base/text";
 import { TextInput } from "../base/text-input";
 import { Page } from "./page";
 import { saveAs } from "file-saver";
+import { Divider } from "../base/divider";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -736,6 +737,7 @@ export const Admission = () => {
   return (
     <Page>
       <Heading text="Admission" />
+      <Divider />
 
       <Text>
         You can search for applications in the table below and admit multiple
