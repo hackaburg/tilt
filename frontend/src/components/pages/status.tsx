@@ -16,6 +16,7 @@ import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
 import { Page } from "./page";
+import { Divider } from "../base/divider";
 
 /**
  * The start page every user sees after logging in.
@@ -65,6 +66,7 @@ export const Status = () => {
       {user! && (
         <>
           <Heading text="Dashboard" />
+          <Divider />
           <Subheading text={user!.email} />
         </>
       )}
