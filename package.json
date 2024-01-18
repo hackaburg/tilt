@@ -96,6 +96,7 @@
     "nodemailer": "^6.4.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.9.0-alpha.6",
     "tslib": "^2.0.1",

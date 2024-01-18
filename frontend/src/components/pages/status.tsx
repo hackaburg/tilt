@@ -64,7 +64,7 @@ export const Status = () => {
     <Page>
       {user! && (
         <>
-          <Heading text="Application status" />
+          <Heading text="Dashboard" />
           <Subheading text={user!.email} />
         </>
       )}
