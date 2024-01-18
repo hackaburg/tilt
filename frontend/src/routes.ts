@@ -12,9 +12,11 @@ export enum Routes {
   Settings = "/settings",
   SignupDone = "/signup-done",
   Statistics = "/statistics",
-  Status = "/status",
+  Status = "/dashboard",
   System = "/system",
   VerifyEmail = "/verify",
+  Map = "/map",
+  Challenges = "/challenges",
 }
 
 /**
@@ -33,4 +35,6 @@ export const authenticatedRoutes = [
   Routes.Settings,
   Routes.Statistics,
   Routes.System,
+  Routes.Map,
+  Routes.Challenges
 ];

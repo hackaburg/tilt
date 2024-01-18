@@ -8,6 +8,7 @@ const UL = styled.ul`
   margin: 0;
   padding: 0;
   list-style: none;
+  padding-left: 0.5rem;
 `;
 
 interface ISidebarMenuProps {
@@ -28,26 +29,27 @@ const LI = styled.li`
 const Link = styled(NavLink)`
   display: block;
   padding: 1rem 1.5rem;
+  font-size: 1.2rem;
 
   transition-property: background-color;
   transition-duration: ${transitionDuration};
 
-  color: white;
+  color: #929292;
   text-decoration: none;
 
   &.active {
-    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.4);
+    color:white;
   }
 `;
 
 interface ISidebarMenuItemProps {
   to: string;
   onClick?: () => any;
-  children: string;
+  children: any;
 }
 
 /**

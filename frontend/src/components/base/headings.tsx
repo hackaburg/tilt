@@ -6,7 +6,7 @@ interface IHeadingProps {
 }
 
 const H1 = styled.h1`
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin: 0;
   padding: 0.25rem 0;
 `;

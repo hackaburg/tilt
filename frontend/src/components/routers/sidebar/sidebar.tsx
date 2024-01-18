@@ -6,8 +6,18 @@ import { useSettingsContext } from "../../../contexts/settings-context";
 import { Routes } from "../../../routes";
 import { variables } from "../../../theme";
 import { StyleableFlexContainer } from "../../base/flex";
-import { Image } from "../../base/image";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
+
+import { LuLayoutDashboard } from "react-icons/lu";
+import { GrMapLocation } from "react-icons/gr";
+import { TbSubtask } from "react-icons/tb";
+import { LuUser } from "react-icons/lu";
+import { BiLogOutCircle } from "react-icons/bi";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { IoStatsChartOutline } from "react-icons/io5";
+import { VscSettings } from "react-icons/vsc";
+import { FaHeartBroken } from "react-icons/fa";
+import { GrUserExpert } from "react-icons/gr";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -39,37 +49,85 @@ export const Sidebar = () => {
   const isAdmitted = user?.admitted ?? false;
   const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
 
+  const H1 = styled.h1`
+    font-size: 2rem;
+    margin: 0;
+    padding: 0.25rem 0;
+  `;
+
   return (
     <BackgroundContainer>
-      <ImageContainer>
-        <Image src={settings?.frontend.sidebarImage} label="Hackathon logo" />
-      </ImageContainer>
+
+      <div style={{ padding: '2rem' }}>
+        <H1 style={{ color: 'white' }}>HACKABURG<br></br>PLATFORM</H1>
+        <p style={{ color: 'white' }}>All important info about <br></br>the Hackaburg 2024 event</p>
+      </div>
 
       <SidebarMenu>
-        <SidebarMenuItem to={Routes.Status}>Status</SidebarMenuItem>
-        <SidebarMenuItem to={Routes.ProfileForm}>Profile</SidebarMenuItem>
-        {isAdmitted && (
-          <SidebarMenuItem to={Routes.ConfirmationForm}>
-            Confirmation
+        <SidebarMenuItem to={Routes.Status}>
+          <LuLayoutDashboard />
+          <span style={{ marginLeft: "1rem" }}> Dashboard</span>
+        </SidebarMenuItem>
+        <SidebarMenuItem to={Routes.Map}>
+          <GrMapLocation />
+          <span style={{ marginLeft: "1rem" }}> Map</span>
+        </SidebarMenuItem>
+        <SidebarMenuItem to={Routes.Challenges}>
+          <TbSubtask />
+          <span style={{ marginLeft: "1rem" }}> Challenges</span>
+        </SidebarMenuItem>
+        <SidebarMenuItem to={Routes.ProfileForm}>
+          <LuUser />
+          <span style={{ marginLeft: "1rem" }}> Profile</span>
+        </SidebarMenuItem>
+          {isAdmitted && (
+        <SidebarMenuItem to={Routes.ConfirmationForm}>
+            <GrUserExpert />
+            <span style={{ marginLeft: "1rem" }}>Confirmation</span>
           </SidebarMenuItem>
         )}
+
+        <div style={{padding: "1rem"}}>
+        <div style={{ width: "100%", height: "10px", borderBottom: "1px solid white", textAlign: "center"}}>
+          <span style={{ fontSize: "0.9rem", backgroundColor: "#000", padding: "0 10px", color: "white", float: "left", marginLeft: "1rem"}}>
+            Admin
+          </span>
+          </div>
+        </div>
+
+
         {isElevatedUser && (
           <>
-            <SidebarMenuItem to={Routes.Admission}>Admission</SidebarMenuItem>
-            <SidebarMenuItem to={Routes.Statistics}>Statistics</SidebarMenuItem>
+            <SidebarMenuItem to={Routes.Admission}>
+              <FaRegCircleCheck />
+              <span style={{ marginLeft: "1rem" }}>Admission</span>
+            </SidebarMenuItem>
+            <SidebarMenuItem to={Routes.Statistics}>
+              <IoStatsChartOutline />
+              <span style={{ marginLeft: "1rem" }}>Statistics</span>
+            </SidebarMenuItem>
           </>
         )}
         {role === UserRole.Root && (
           <>
-            <SidebarMenuItem to={Routes.Settings}>Settings</SidebarMenuItem>
-            <SidebarMenuItem to={Routes.System}>System</SidebarMenuItem>
+            <SidebarMenuItem to={Routes.Settings}>
+              <VscSettings />
+              <span style={{ marginLeft: "1rem" }}>Settings</span>
+            </SidebarMenuItem>
+            <SidebarMenuItem to={Routes.System}>
+              <FaHeartBroken />
+              <span style={{ marginLeft: "1rem" }}>System</span>
+            </SidebarMenuItem>
           </>
         )}
 
-        <SidebarMenuItem to={Routes.Logout} onClick={logout}>
-          Logout
-        </SidebarMenuItem>
       </SidebarMenu>
+      <div style={{ bottom: "1rem", position: "absolute"}}>
+        <SidebarMenuItem to={Routes.Logout} onClick={logout}>
+          <BiLogOutCircle />
+          <span style={{ marginLeft: "1rem" }}> Logout</span>
+        </SidebarMenuItem>
+      </div>
     </BackgroundContainer>
   );
 };
