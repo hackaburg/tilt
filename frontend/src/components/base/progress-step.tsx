@@ -10,8 +10,26 @@ import {
 } from "./flex";
 import { Subheading } from "./headings";
 
+const StepConnector = styled(StyleableFlexContainer)`
+  position: relative;
+
+  :after {
+    position: absolute;
+    left: 0.6rem;
+    top: 3rem;
+    content: "";
+    border-left: 2px dashed grey;
+    margin-left: 5px;
+    height: 100%;
+  }
+
+  :last-child:after {
+    display: none;
+  }
+`;
+
 const StepContainer = styled(StyleableFlexContainer)`
-  padding-top: 0.5rem;
+  position: relative;
 `;
 
 const StepIndex = styled(StyleableFlexContainer)`
@@ -20,6 +38,7 @@ const StepIndex = styled(StyleableFlexContainer)`
   border: 1px dashed #333;
   width: 2rem;
   height: 2rem;
+  background-color: white;
 `;
 
 /**
@@ -59,31 +78,47 @@ export const ProgressStep = ({
   state,
   title,
 }: IProgressStepProps) => (
-  <FlexColumnContainer>
-    <Spacer />
+  <StepConnector
+    className={
+      state == ProgressStepState.Completed
+        ? "completedStepConnector"
+        : "pendingStepConnector"
+    }
+  >
+    <style>{`
+      .pendingStepConnector:after {
+        border-left: 2px dashed grey;
+      }
 
-    <FlexRowContainer>
-      <StepContainer>
-        <StepIndex
-          style={
-            state === ProgressStepState.Completed
-              ? completedStyle
-              : state === ProgressStepState.Failed
-              ? failedStyle
-              : undefined
-          }
-        >
-          <CenteredContainer>{index}</CenteredContainer>
-        </StepIndex>
-      </StepContainer>
-
+      .completedStepConnector:after {
+        border-left: 2px solid #56d175;
+      }
+    `}</style>
+    <FlexColumnContainer>
       <Spacer />
 
-      <FlexRowColumnContainer>
-        <Subheading text={title} />
+      <FlexRowContainer>
+        <StepContainer>
+          <StepIndex
+            style={
+              state === ProgressStepState.Completed
+                ? completedStyle
+                : state === ProgressStepState.Failed
+                ? failedStyle
+                : undefined
+            }
+          >
+            <CenteredContainer>{index}</CenteredContainer>
+          </StepIndex>
+        </StepContainer>
+        <Spacer />
+        <FlexRowColumnContainer>
+          <Subheading text={title} />
 
-        {children}
-      </FlexRowColumnContainer>
-    </FlexRowContainer>
-  </FlexColumnContainer>
+          {children}
+        </FlexRowColumnContainer>
+        <Spacer /> <Spacer />
+      </FlexRowContainer>
+    </FlexColumnContainer>
+  </StepConnector>
 );

@@ -20,7 +20,7 @@ const H2 = styled.h2`
   font-size: 1.25rem;
   font-weight: normal;
   margin: 0;
-  padding: 0.75rem 0;
+  padding: 0.25rem 0;
 `;
 
 /**

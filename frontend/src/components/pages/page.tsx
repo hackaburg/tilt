@@ -4,7 +4,6 @@ import { StyleableFlexContainer } from "../base/flex";
 
 const PaddedContainer = styled(StyleableFlexContainer)`
   padding: 2rem;
-  height: 100%;
 `;
 
 interface IPageContainerProps {

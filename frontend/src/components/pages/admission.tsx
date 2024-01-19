@@ -58,7 +58,7 @@ const TableHeaderCell = styled.th`
 
   border-right: 1px solid #555;
 
-  :last-of-type {
+  :last-of-type:after {
     border: none;
   }
 `;
