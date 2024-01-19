@@ -526,9 +526,15 @@ export class ApplicationService implements IApplicationService {
     const answersByUserID = new Map<User["id"], Answer[]>();
 
     for (const answer of allAnswers) {
-      const answers = answersByUserID.get(answer.user.id) ?? [];
-      answers.push(answer);
-      answersByUserID.set(answer.user.id, answers);
+      try {
+      if (answer.user!==null) {
+          const answers = answersByUserID.get(answer.user.id) ?? [];
+          answers.push(answer);
+          answersByUserID.set(answer.user.id, answers);
+        }
+      }catch (error) {
+          console.log(answer);
+        }
     }
 
     const applications = allUsers.map<IApplication>((user) => ({
