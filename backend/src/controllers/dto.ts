@@ -339,8 +339,7 @@ export class AnswerDTO {
       if (obj instanceof Answer) {
         if (obj.question !== null) {
           return obj.question.id;
-        }
-        else {
+        } else {
           return null;
         }
       }
