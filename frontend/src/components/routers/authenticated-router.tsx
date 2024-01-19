@@ -23,7 +23,6 @@ import { LazySystem } from "../pages/lazy-system";
 import { PageNotFound } from "../pages/page-not-found";
 import { ProfileForm } from "../pages/profile-form";
 import { Status } from "../pages/status";
-import { Dashboard } from "../pages/dashboard";
 import { Sidebar } from "./sidebar/sidebar";
 import { SidebarToggle } from "./sidebar/sidebar-toggle";
 import { Map } from "../pages/map";
@@ -103,7 +102,6 @@ export const AuthenticatedRouter = () => {
           <FlexRowColumnContainer>
             <Switch>
               <Route path={Routes.Status} component={Status} />
-              <Route path={Routes.Dashboard} component={Dashboard} />
               <Route path={Routes.ProfileForm} component={ProfileForm} />
               <Route path={Routes.Map} component={Map} />
               <Route path={Routes.Challenges} component={Challenges} />
