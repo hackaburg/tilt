@@ -337,7 +337,12 @@ export class AnswerDTO {
       const obj = rawObj as IRawAnswer | Answer;
 
       if (obj instanceof Answer) {
-        return obj.question.id;
+        if (obj.question !== null) {
+          return obj.question.id;
+        }
+        else {
+          return null;
+        }
       }
 
       return obj.questionID;
