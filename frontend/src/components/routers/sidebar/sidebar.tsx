@@ -47,16 +47,23 @@ export const Sidebar = () => {
   const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
 
   const H1 = styled.h1`
-    font-size: 2rem;
+    font-size: 2.3rem;
     margin: 0;
     padding: 0.25rem 0;
+  `;
+
+  const H2 = styled.h2`
+    font-size: 1.6rem;
+    margin: 0;
+    margin-top: -0.5rem;
   `;
 
   return (
     <BackgroundContainer>
 
       <div style={{ padding: '2rem' }}>
-        <H1 style={{ color: 'white' }}>HACKABURG<br></br>CONTROL CENTER</H1>
+        <H1 style={{ color: 'white' }}>HACKABURG</H1>
+        <H2 style={{ color: 'white' }}>CONTROL CENTER</H2>
         <p style={{ color: 'white' }}>All important information about <br></br>the <b>Hackaburg 2024</b> event</p>
       </div>
 
