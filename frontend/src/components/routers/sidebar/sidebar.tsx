@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import { UserRole } from "../../../api/types/enums";
 import { useLoginContext } from "../../../contexts/login-context";
-import { useSettingsContext } from "../../../contexts/settings-context";
 import { Routes } from "../../../routes";
 import { variables } from "../../../theme";
 import { StyleableFlexContainer } from "../../base/flex";
@@ -26,15 +25,10 @@ const BackgroundContainer = styled(StyleableFlexContainer)`
   );
 `;
 
-const ImageContainer = styled(StyleableFlexContainer)`
-  padding: 2rem;
-`;
-
 /**
  * The sidebar containing the menu and a logo
  */
 export const Sidebar = () => {
-  const { settings } = useSettingsContext();
   const loginState = useLoginContext();
 
   if (!loginState.isLoggedIn) {
@@ -60,11 +54,13 @@ export const Sidebar = () => {
 
   return (
     <BackgroundContainer>
-
-      <div style={{ padding: '2rem' }}>
-        <H1 style={{ color: 'white' }}>HACKABURG</H1>
-        <H2 style={{ color: 'white' }}>CONTROL CENTER</H2>
-        <p style={{ color: 'white' }}>All important information about <br></br>the <b>Hackaburg 2024</b> event</p>
+      <div style={{ padding: "2rem" }}>
+        <H1 style={{ color: "white" }}>HACKABURG</H1>
+        <H2 style={{ color: "white" }}>CONTROL CENTER</H2>
+        <p style={{ color: "white" }}>
+          All important information about <br></br>the <b>Hackaburg 2024</b>{" "}
+          event
+        </p>
       </div>
 
       <SidebarMenu>
@@ -72,7 +68,7 @@ export const Sidebar = () => {
           <LuLayoutDashboard />
           <span style={{ marginLeft: "1rem" }}> Dashboard</span>
         </SidebarMenuItem>
-      {/*   <SidebarMenuItem to={Routes.Map}>
+        {/*   <SidebarMenuItem to={Routes.Map}>
           <GrMapLocation />
           <span style={{ marginLeft: "1rem" }}> Map</span>
         </SidebarMenuItem>
@@ -84,24 +80,38 @@ export const Sidebar = () => {
           <LuUser />
           <span style={{ marginLeft: "1rem" }}> Profile</span>
         </SidebarMenuItem>
-          {isAdmitted && (
-        <SidebarMenuItem to={Routes.ConfirmationForm}>
+        {isAdmitted && (
+          <SidebarMenuItem to={Routes.ConfirmationForm}>
             <GrUserExpert />
             <span style={{ marginLeft: "1rem" }}>Confirmation</span>
           </SidebarMenuItem>
         )}
 
-
-
         {isElevatedUser && (
           <>
-             <div style={{ padding: "1rem" }}>
-              <div style={{ width: "100%", height: "10px", borderBottom: "1px solid white", textAlign: "center"}}>
-                <span style={{ fontSize: "0.9rem", backgroundColor: "#000", padding: "0 10px", color: "white", float: "left", marginLeft: "1rem"}}>
+            <div style={{ padding: "1rem" }}>
+              <div
+                style={{
+                  width: "100%",
+                  height: "10px",
+                  borderBottom: "1px solid white",
+                  textAlign: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "0.9rem",
+                    backgroundColor: "#000",
+                    padding: "0 10px",
+                    color: "white",
+                    float: "left",
+                    marginLeft: "1rem",
+                  }}
+                >
                   Admin
                 </span>
-                </div>
               </div>
+            </div>
             <SidebarMenuItem to={Routes.Admission}>
               <FaRegCircleCheck />
               <span style={{ marginLeft: "1rem" }}>Admission</span>
@@ -124,9 +134,8 @@ export const Sidebar = () => {
             </SidebarMenuItem>
           </>
         )}
-
       </SidebarMenu>
-      <div style={{ bottom: "1rem", position: "absolute"}}>
+      <div style={{ bottom: "1rem", position: "absolute" }}>
         <SidebarMenuItem to={Routes.Logout} onClick={logout}>
           <BiLogOutCircle />
           <span style={{ marginLeft: "1rem" }}> Logout</span>
