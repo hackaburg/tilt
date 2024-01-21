@@ -36,5 +36,5 @@ export const authenticatedRoutes = [
   Routes.Statistics,
   Routes.System,
   Routes.Map,
-  Routes.Challenges
+  Routes.Challenges,
 ];
