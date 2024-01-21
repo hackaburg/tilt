@@ -80,7 +80,7 @@ export const ProgressStep = ({
 }: IProgressStepProps) => (
   <StepConnector
     className={
-      state == ProgressStepState.Completed
+      state === ProgressStepState.Completed
         ? "completedStepConnector"
         : "pendingStepConnector"
     }
