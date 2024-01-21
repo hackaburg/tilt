@@ -533,7 +533,7 @@ export class ApplicationService implements IApplicationService {
           answersByUserID.set(answer.user.id, answers);
         }
       } catch (error) {
-        console.log(answer);
+        throw new IncompleteProfileFormError();
       }
     }
 
