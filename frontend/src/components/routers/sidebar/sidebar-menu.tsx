@@ -42,7 +42,7 @@ const Link = styled(NavLink)`
   }
 
   &:hover {
-    color:white;
+    color: white;
   }
 `;
 
