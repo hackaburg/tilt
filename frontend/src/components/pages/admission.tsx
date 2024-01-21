@@ -736,114 +736,114 @@ export const Admission = () => {
 
   return (
     <Page>
-      <Heading text="Admission" />
-      <Divider />
+      <div style={{position: "relative"}}>
+        <div style={{position: "sticky", top: "20px", backgroundColor: "white", zIndex: 50}}>
+          <Heading text="Admission" />
+          <Divider />
 
-      <Text>
-        You can search for applications in the table below and admit multiple
-        users at once. The below search bar will search all answers that match
-        all space-separated filters provided, and also supports special filters
-        such as <Code>is:admitted</Code>, <Code>not:confirmed</Code>,
-        <Code>is:expired</Code> or <Code>not:declined</Code>. You can exchange{" "}
-        <Code>is</Code> and <Code>not</Code> freely, however these four fields
-        are the only available special filters.
-      </Text>
+          <Text>
+            You can search for applications in the table below and admit multiple
+            users at once. The below search bar will search all answers that match
+            all space-separated filters provided, and also supports special filters
+            such as <Code>is:admitted</Code>, <Code>not:confirmed</Code>,
+            <Code>is:expired</Code> or <Code>not:declined</Code>. You can exchange{" "}
+            <Code>is</Code> and <Code>not</Code> freely, however these four fields
+            are the only available special filters.
+          </Text>
 
-      {error && (
-        <Message error>
-          <b>Error:</b> {error.message}
-        </Message>
-      )}
+          {error && (
+            <Message error>
+              <b>Error:</b> {error.message}
+            </Message>
+          )}
 
-      {probableNameQuestion == null && (
-        <Message warn>
-          <b>Warnings:</b>
-          <ul>
-            <li>
-              We couldn't find a "name" question. Are you asking for this
-              information?
-            </li>
-          </ul>
-        </Message>
-      )}
+          {probableNameQuestion == null && (
+            <Message warn>
+              <b>Warnings:</b>
+              <ul>
+                <li>
+                  We couldn't find a "name" question. Are you asking for this
+                  information?
+                </li>
+              </ul>
+            </Message>
+          )}
 
-      <NonGrowingFlexContainer>
-        <a style={{ width: "20rem", marginTop: "1rem" }}>
-          <Button primary={true} onClick={exportToCsv}>
-            Export Users to CSV
-          </Button>
-        </a>
-      </NonGrowingFlexContainer>
-
-      {isFetching && <SuspenseFallback />}
-      {allApplications != null && (
-        <NonGrowingFlexContainer>
-          <FormFieldButton
-            field={
-              <TextInput
-                autoFocus
-                placeholder="search for anything somebody might've answered"
-                value={query}
-                onChange={setQuery}
-                title="Search applications"
-              />
-            }
-            button={
-              <Button
-                disable={selectedRowIDs.length === 0}
-                loading={isAdmitting}
-                onClick={admit}
-                primary
-              >
-                Admit
+          <NonGrowingFlexContainer>
+            <a style={{ width: "20rem", marginTop: "1rem" }}>
+              <Button primary={true} onClick={exportToCsv}>
+                Export Users to CSV
               </Button>
-            }
-          />
+            </a>
 
-          <Spacer />
+            <FormFieldButton
+              field={
+                <TextInput
+                  autoFocus
+                  placeholder="search for anything somebody might've answered"
+                  value={query}
+                  onChange={setQuery}
+                  title="Search applications"
+                />
+              }
+              button={
+                <Button
+                  disable={selectedRowIDs.length === 0}
+                  loading={isAdmitting}
+                  onClick={admit}
+                  primary
+                >
+                  Admit
+                </Button>
+              }
+            />
+          </NonGrowingFlexContainer>
+        </div>
 
-          <Elevated level={1}>
-            <Table>
-              <colgroup>
-                <col style={{ width: "5%" }} />
-                {!isResponsive && <col style={{ width: "10%" }} />}
-                <col style={{ width: "40%" }} />
-                <col style={{ width: "45%" }} />
-              </colgroup>
+        {isFetching && <SuspenseFallback />}
+        {allApplications != null && (
+          <NonGrowingFlexContainer>
+            <Elevated level={1}>
+              <Table>
+                <colgroup>
+                  <col style={{ width: "5%" }} />
+                  {!isResponsive && <col style={{ width: "10%" }} />}
+                  <col style={{ width: "40%" }} />
+                  <col style={{ width: "45%" }} />
+                </colgroup>
 
-              <TableHead>
-                <tr>
-                  <TableHeaderCell align="center">
-                    <input
-                      type="checkbox"
-                      ref={headerCheckboxRef}
-                      onClick={handleSelectHeaderCheckbox}
-                    />
-                  </TableHeaderCell>
+                <TableHead>
+                  <tr>
+                    <TableHeaderCell align="center">
+                      <input
+                        type="checkbox"
+                        ref={headerCheckboxRef}
+                        onClick={handleSelectHeaderCheckbox}
+                      />
+                    </TableHeaderCell>
 
-                  {!isResponsive && <TableHeaderCell />}
-                  <TableHeaderCell>E-mail</TableHeaderCell>
-                  <TableHeaderCell>Name</TableHeaderCell>
-                </tr>
-              </TableHead>
+                    {!isResponsive && <TableHeaderCell />}
+                    <TableHeaderCell>E-mail</TableHeaderCell>
+                    <TableHeaderCell>Name</TableHeaderCell>
+                  </tr>
+                </TableHead>
 
-              <tbody>
-                {tableRows.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={4}>
-                      <Muted>No applications found</Muted>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  tableRows
-                )}
-              </tbody>
-            </Table>
-          </Elevated>
-
-          <Spacer />
-        </NonGrowingFlexContainer>
-      )}
+                <tbody>
+                  {tableRows.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4}>
+                        <Muted>No applications found</Muted>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    tableRows
+                  )}
+                </tbody>
+              </Table>
+            </Elevated>
+          </NonGrowingFlexContainer>
+        )}
+      </div>
     </Page>
   );
 };
