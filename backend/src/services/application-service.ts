@@ -527,14 +527,14 @@ export class ApplicationService implements IApplicationService {
 
     for (const answer of allAnswers) {
       try {
-      if (answer.user!==null) {
+        if (answer.user !== null) {
           const answers = answersByUserID.get(answer.user.id) ?? [];
           answers.push(answer);
           answersByUserID.set(answer.user.id, answers);
         }
-      }catch (error) {
-          console.log(answer);
-        }
+      } catch (error) {
+        throw new IncompleteProfileFormError();
+      }
     }
 
     const applications = allUsers.map<IApplication>((user) => ({

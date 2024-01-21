@@ -19,6 +19,6 @@ export const Map = () => (
       <Heading text="Map" />
     </HeaderContainer>
     <Divider />
-    <div style={{marginTop: "5rem"}}> Will come soon ...</div>
+    <div style={{ marginTop: "5rem" }}> Will come soon ...</div>
   </Page>
 );

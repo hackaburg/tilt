@@ -17,7 +17,6 @@ import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
 import { Page } from "./page";
 import { Divider } from "../base/divider";
-import { borderRadius } from "../../config";
 
 /**
  * The start page every user sees after logging in.
