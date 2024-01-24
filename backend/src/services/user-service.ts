@@ -12,6 +12,7 @@ import {
 
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { ITokenService, TokenServiceToken } from "./token-service";
+import { BadRequestError } from "routing-controllers";
 
 /**
  * An interface describing user handling.
@@ -66,7 +67,6 @@ export interface IUserService extends IService {
    * @param token The reset token
    */
   verifyUserResetPassword(
-    email: string,
     password: string,
     token: string,
   ): Promise<User | undefined>;
@@ -308,25 +308,25 @@ export class UserService implements IUserService {
    * @param password The user's password
    */
   public async verifyUserResetPassword(
-    email: string,
     password: string,
     token: string,
   ): Promise<User | undefined> {
     const user = await this._users.findOne({
       where: {
-        email,
         forgotPasswordToken: token,
       },
     });
 
     if (!user) {
-      return;
+      throw new BadRequestError("invalid token");
     }
 
     if (user.forgotPasswordToken === token) {
       user.password = await hash(password, 10);
+      user.forgotPasswordToken = "";
       await this._users.save(user);
     }
+    return;
   }
 
   /**

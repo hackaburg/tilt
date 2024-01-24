@@ -49,6 +49,7 @@ interface ITextInputProps<TValue = any> {
   isDisabled?: boolean;
   name?: string;
   autoCompleteField?: string;
+  rows?: number;
 }
 
 /**
@@ -69,6 +70,7 @@ export const TextInput = ({
   isDisabled = false,
   name,
   autoCompleteField,
+  rows,
 }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus(autoFocus);
   const fieldType = type || TextInputType.Text;
@@ -99,7 +101,7 @@ export const TextInput = ({
 
   const field =
     fieldType === TextInputType.Area ? (
-      <Area {...fieldProps} />
+      <Area {...fieldProps} rows={rows} />
     ) : (
       <Input
         type={fieldType}

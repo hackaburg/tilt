@@ -318,8 +318,6 @@ export class CredentialsDTO {
 }
 
 export class PasswordResetDTO {
-  @IsEmail()
-  public email!: string;
   @IsString()
   @MinLength(6)
   public password!: string;
