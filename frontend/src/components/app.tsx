@@ -31,7 +31,12 @@ export const App = ({ history, location }: IAppProps) => {
         history.push(defaultAuthenticatedRoute);
       }
     } else {
-      if (pathname !== Routes.VerifyEmail && pathname !== Routes.SignupDone) {
+      if (
+        pathname !== Routes.VerifyEmail &&
+        pathname !== Routes.SignupDone &&
+        pathname !== Routes.RegisterForm &&
+        pathname !== Routes.ForgotPassword
+      ) {
         history.push(Routes.Login);
       }
     }

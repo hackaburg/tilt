@@ -6,6 +6,8 @@ export enum Routes {
   ConfirmationForm = "/confirm",
   ConfirmationFormApply = "/apply/confirm",
   Login = "/login",
+  ForgotPassword = "/forgot-password",
+  RegisterForm = "/register-form",
   Logout = "/logout",
   ProfileForm = "/profile",
   ProfileFormApply = "/apply/profile",

@@ -9,11 +9,7 @@ import {
   EmailTemplateServiceToken,
   IEmailTemplateService,
 } from "./email-template-service";
-import {
-  HaveibeenpwnedServiceToken,
-  IHaveibeenpwnedService,
-  PasswordReuseError,
-} from "./haveibeenpwned-service";
+
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { ITokenService, TokenServiceToken } from "./token-service";
 
@@ -26,7 +22,14 @@ export interface IUserService extends IService {
    * @param email The user's email
    * @param password The user's plaintext password
    */
-  signup(email: string, password: string): Promise<User>;
+  signup(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<User>;
+
+  forgotPassword(email: string): void;
 
   /**
    * Sets the verified flag on a user with the given token.
@@ -105,8 +108,6 @@ export class UserService implements IUserService {
   private _users!: Repository<User>;
 
   public constructor(
-    @Inject(HaveibeenpwnedServiceToken)
-    private readonly _haveibeenpwned: IHaveibeenpwnedService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(TokenServiceToken)
@@ -124,10 +125,18 @@ export class UserService implements IUserService {
 
   /**
    * Adds a new user.
+   * @param firstName The user's first name
+   * @param lastName The user's last name
    * @param email The user's email
    * @param password The user's password
    */
-  public async signup(email: string, password: string): Promise<User> {
+  public async signup(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<User> {
+    /*
     const passwordReuseCount = await this._haveibeenpwned.getPasswordUsedCount(
       password,
     );
@@ -135,6 +144,7 @@ export class UserService implements IUserService {
     if (passwordReuseCount > 0) {
       throw new PasswordReuseError(passwordReuseCount);
     }
+    */
 
     const existingUser = await this._users.findOne({
       where: {
@@ -155,6 +165,8 @@ export class UserService implements IUserService {
     }
 
     const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
     user.email = email;
     user.password = await hash(password, 10);
     user.verifyToken = await genSalt(10);
@@ -178,6 +190,14 @@ export class UserService implements IUserService {
 
     await this._email.sendVerifyEmail(user);
     return user;
+  }
+
+  /**
+   * Generate a login token for the given user.
+   * @param user The user to generate a token for
+   */
+  public forgotPassword(email: string): void {
+    console.log(email);
   }
 
   /**
