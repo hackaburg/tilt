@@ -267,6 +267,10 @@ export class EmailSettingsDTO implements DTO<EmailSettings> {
   @Type(() => EmailTemplateDTO)
   @ValidateNested()
   @Expose()
+  public forgotPasswordEmail!: EmailTemplateDTO;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
   public admittedEmail!: EmailTemplateDTO;
 }
 
@@ -313,6 +317,16 @@ export class CredentialsDTO {
   public password!: string;
 }
 
+export class PasswordResetDTO {
+  @IsEmail()
+  public email!: string;
+  @IsString()
+  @MinLength(6)
+  public password!: string;
+  @IsString()
+  public token!: string;
+}
+
 export class CredentialsRequestDTO implements IApiRequest<CredentialsDTO> {
   @Type(() => CredentialsDTO)
   @ValidateNested()
@@ -325,6 +339,12 @@ export class LoginCredentialsRequestDTO
   @Type(() => LoginCredentialsDTO)
   @ValidateNested()
   public data!: LoginCredentialsDTO;
+}
+
+export class PasswordResetRequestDTO implements IApiRequest<PasswordResetDTO> {
+  @Type(() => PasswordResetDTO)
+  @ValidateNested()
+  public data!: PasswordResetDTO;
 }
 
 export class ForgotPasswordRequestDTO

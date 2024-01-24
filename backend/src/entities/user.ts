@@ -28,6 +28,8 @@ export class User {
   @Column()
   public verifyToken!: string;
   @Column()
+  public forgotPasswordToken!: string;
+  @Column()
   public role!: UserRole;
   @Column({ default: null, type: "datetime" })
   public initialProfileFormSubmittedAt!: Date | null;
