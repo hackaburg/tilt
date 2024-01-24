@@ -25,6 +25,7 @@ import {
   ForgotPasswordRequestDTO,
   ForgotPasswordResponseDTO,
   LoginCredentialsRequestDTO,
+  PasswordResetRequestDTO,
   SignupResponseDTO,
   SuccessResponseDTO,
   UserDTO,
@@ -101,6 +102,25 @@ export class UsersController {
   ): Promise<SuccessResponseDTO> {
     try {
       await this._users.verifyUserByVerifyToken(token);
+      const response = new SuccessResponseDTO();
+      response.success = true;
+      return response;
+    } catch (error) {
+      throw new BadRequestError("invalid token");
+    }
+  }
+
+  /**
+   * Verifies a user using their token.
+   * @param token The token to verify.
+   */
+  @Get("/reset-password")
+  public async resetPassword(
+    @Body()
+    { data: { email, password, token } }: PasswordResetRequestDTO,
+  ): Promise<SuccessResponseDTO> {
+    try {
+      await this._users.verifyUserResetPassword(email, password, token);
       const response = new SuccessResponseDTO();
       response.success = true;
       return response;

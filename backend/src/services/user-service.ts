@@ -60,6 +60,18 @@ export interface IUserService extends IService {
   ): Promise<User | undefined>;
 
   /**
+   * Checks the user's password reset.
+   * @param email The user's email
+   * @param password The user's password
+   * @param token The reset token
+   */
+  verifyUserResetPassword(
+    email: string,
+    password: string,
+    token: string,
+  ): Promise<User | undefined>;
+
+  /**
    * Finds users by their ids.
    * @param userIDs The users' id
    */
@@ -196,8 +208,19 @@ export class UserService implements IUserService {
    * Generate a login token for the given user.
    * @param user The user to generate a token for
    */
-  public forgotPassword(email: string): void {
-    console.log(email);
+  public async forgotPassword(email: string): Promise<void> {
+    const user = await this._users.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (user) {
+      user.forgotPasswordToken = await genSalt(10);
+      await this._users.save(user);
+      this._logger.debug(`${user.email} forgot password`);
+      await this._email.sendForgotPasswordEmail(user);
+    }
   }
 
   /**
@@ -276,6 +299,33 @@ export class UserService implements IUserService {
 
     if (passwordsMatch) {
       return await this._users.findOneOrFail(user.id);
+    }
+  }
+
+  /**
+   * Checks the user's password reset.
+   * @param email The user's email
+   * @param password The user's password
+   */
+  public async verifyUserResetPassword(
+    email: string,
+    password: string,
+    token: string,
+  ): Promise<User | undefined> {
+    const user = await this._users.findOne({
+      where: {
+        email,
+        forgotPasswordToken: token,
+      },
+    });
+
+    if (!user) {
+      return;
+    }
+
+    if (user.forgotPasswordToken === token) {
+      user.password = await hash(password, 10);
+      await this._users.save(user);
     }
   }
 
