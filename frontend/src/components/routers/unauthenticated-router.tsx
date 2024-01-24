@@ -12,6 +12,7 @@ import {
 import { LoginForm } from "../pages/login-form";
 import { RegisterForm } from "../pages/register-form";
 import { ForgotPassword } from "../pages/forgot-password";
+import { ResetPassword } from "../pages/reset-password";
 import { SignupDone } from "../pages/signup-done";
 import { RoutedVerifyEmail } from "../pages/verify-email";
 
@@ -49,6 +50,7 @@ export const UnauthenticatedRouter = () => {
             <Switch>
               <Route path={Routes.Login} component={LoginForm} />
               <Route path={Routes.ForgotPassword} component={ForgotPassword} />
+              <Route path={Routes.ResetPassword} component={ResetPassword} />
               <Route path={Routes.RegisterForm} component={RegisterForm} />
               <Route path={Routes.SignupDone} component={SignupDone} />
               <Route path={Routes.VerifyEmail} component={RoutedVerifyEmail} />

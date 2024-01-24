@@ -114,13 +114,13 @@ export class UsersController {
    * Verifies a user using their token.
    * @param token The token to verify.
    */
-  @Get("/reset-password")
+  @Post("/reset-password")
   public async resetPassword(
     @Body()
-    { data: { email, password, token } }: PasswordResetRequestDTO,
+    { data: { password, token } }: PasswordResetRequestDTO,
   ): Promise<SuccessResponseDTO> {
     try {
-      await this._users.verifyUserResetPassword(email, password, token);
+      await this._users.verifyUserResetPassword(password, token);
       const response = new SuccessResponseDTO();
       response.success = true;
       return response;

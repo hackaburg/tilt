@@ -35,7 +35,8 @@ export const App = ({ history, location }: IAppProps) => {
         pathname !== Routes.VerifyEmail &&
         pathname !== Routes.SignupDone &&
         pathname !== Routes.RegisterForm &&
-        pathname !== Routes.ForgotPassword
+        pathname !== Routes.ForgotPassword &&
+        pathname !== Routes.ResetPassword
       ) {
         history.push(Routes.Login);
       }

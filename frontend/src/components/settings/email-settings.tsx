@@ -104,6 +104,14 @@ export const EmailSettings = () => {
               onTemplateChange={handleAdmittedEmailChange}
             />
           </EmailTemplateEditorContainer>
+
+          <EmailTemplateEditorContainer>
+            <EmailTemplateEditor
+              title="Forgot Password email"
+              template={settings.email.verifyEmail}
+              onTemplateChange={handleVerifyEmailChange}
+            />
+          </EmailTemplateEditorContainer>
         </>
       )}
     </SettingsSection>

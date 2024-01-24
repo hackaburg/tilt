@@ -223,7 +223,7 @@ export class ApiClient {
   }
 
   /**
-   * Reset password
+   * Forgot password
    * @param email The user's email
    */
   public async forgotPassword(email: string): Promise<string> {
@@ -235,6 +235,26 @@ export class ApiClient {
     );
 
     return response.message;
+  }
+
+  /**
+   * Reset password
+   * @param password The new user's password
+   * @param token The reset token
+   */
+  public async resetPassword(
+    password: string,
+    token: string,
+  ): Promise<boolean> {
+    const response = await this.post<UsersControllerMethods["resetPassword"]>(
+      "/user/reset-password",
+      {
+        password,
+        token,
+      },
+    );
+
+    return response.success;
   }
 
   /**
