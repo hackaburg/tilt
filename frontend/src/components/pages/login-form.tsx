@@ -1,10 +1,8 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback, useState } from "react";
-import { Redirect } from "react-router";
 import { useLoginContext } from "../../contexts/login-context";
 import { useApi } from "../../hooks/use-api";
-import { Routes } from "../../routes";
 import { Button } from "../base/button";
 import {
   CenteredContainer,
@@ -23,7 +21,7 @@ const ButtonContainer = styled(StyleableFlexContainer)`
 /**
  * A form to create an account.
  */
-export const LoginSignupForm = () => {
+export const LoginForm = () => {
   const { updateUser } = useLoginContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,47 +40,19 @@ export const LoginSignupForm = () => {
     [email, password, updateUser],
   );
 
-  const {
-    value: didSignup,
-    isFetching: signupInProgress,
-    error: signupError,
-    forcePerformRequest: sendSignupRequest,
-  } = useApi(
-    async (api, wasTriggeredManually) => {
-      if (wasTriggeredManually) {
-        await api.signup(email, password);
-        return true;
-      }
-
-      return false;
-    },
-    [email, password],
-  );
-
-  const formInProgress = signupInProgress || loginInProgress;
-  const signupDone = Boolean(didSignup) && !signupInProgress && !signupError;
+  const formInProgress = loginInProgress;
 
   const handleSubmit = useCallback((event: React.SyntheticEvent) => {
     event.preventDefault();
   }, []);
 
-  if (signupDone) {
-    return <Redirect to={Routes.SignupDone} />;
-  }
-
   return (
     <FlexColumnContainer>
-      <Heading text="Register to apply" />
+      <Heading text="Sign in to your account" />
 
       {loginError && (
         <Message error>
-          <b>Login error:</b> {loginError.message}
-        </Message>
-      )}
-
-      {signupError && (
-        <Message error>
-          <b>Signup error:</b> {signupError.message}
+          <b>Login error: </b> {loginError.message}
         </Message>
       )}
 
@@ -97,7 +67,6 @@ export const LoginSignupForm = () => {
           autoFocus
           autoCompleteField="username"
         />
-
         <TextInput
           title="Password"
           placeholder="please don't use 'password'"
@@ -108,27 +77,45 @@ export const LoginSignupForm = () => {
           autoCompleteField="current-password"
         />
 
-        <ButtonContainer>
+        <div>
+          <a
+            href="/forgot-password"
+            style={{
+              color: "#9ac017",
+              textDecoration: "none",
+              float: "right",
+            }}
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        <ButtonContainer style={{ marginTop: "1rem", width: "100%" }}>
           <Button
             onClick={sendLoginRequest}
             loading={loginInProgress}
             disable={formInProgress}
             primary
           >
-            Let me in
+            Login
           </Button>
-
-          <CenteredContainer>
-            <Text>Don't have an account?</Text>
-          </CenteredContainer>
-
-          <Button
-            onClick={sendSignupRequest}
-            loading={signupInProgress}
-            disable={formInProgress}
+          <div
+            style={{
+              textAlign: "center",
+              padding: "1rem",
+            }}
           >
-            Create my account
-          </Button>
+            New user?{" "}
+            <a
+              href="/register-form"
+              style={{
+                color: "#9ac017",
+                textDecoration: "none",
+              }}
+            >
+              Register
+            </a>
+          </div>
         </ButtonContainer>
       </form>
     </FlexColumnContainer>

@@ -203,16 +203,38 @@ export class ApiClient {
    * @param email The user's email
    * @param password The user's password
    */
-  public async signup(email: string, password: string): Promise<string> {
+  public async signup(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<string> {
     const response = await this.post<UsersControllerMethods["signup"]>(
       "/user/signup",
       {
+        firstName,
+        lastName,
         email,
         password,
       },
     );
 
     return response.email;
+  }
+
+  /**
+   * Reset password
+   * @param email The user's email
+   */
+  public async forgotPassword(email: string): Promise<string> {
+    const response = await this.post<UsersControllerMethods["forgotPassword"]>(
+      "/user/forgot-password",
+      {
+        email,
+      },
+    );
+
+    return response.message;
   }
 
   /**

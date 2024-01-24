@@ -291,7 +291,21 @@ export class UpdateSettingsRequestDTO implements IApiRequest<SettingsDTO> {
   public data!: SettingsDTO;
 }
 
+export class LoginCredentialsDTO {
+  @IsEmail()
+  public email!: string;
+  @IsString()
+  @MinLength(6)
+  public password!: string;
+}
+
 export class CredentialsDTO {
+  @IsString()
+  @MinLength(3)
+  public firstName!: string;
+  @IsString()
+  @MinLength(3)
+  public lastName!: string;
   @IsEmail()
   public email!: string;
   @IsString()
@@ -305,9 +319,35 @@ export class CredentialsRequestDTO implements IApiRequest<CredentialsDTO> {
   public data!: CredentialsDTO;
 }
 
+export class LoginCredentialsRequestDTO
+  implements IApiRequest<LoginCredentialsDTO>
+{
+  @Type(() => LoginCredentialsDTO)
+  @ValidateNested()
+  public data!: LoginCredentialsDTO;
+}
+
+export class ForgotPasswordRequestDTO
+  implements IApiRequest<ForgotPasswordDTO>
+{
+  @Type(() => ForgotPasswordDTO)
+  @ValidateNested()
+  public data!: ForgotPasswordDTO;
+}
+
+export class ForgotPasswordDTO {
+  @Expose()
+  public email!: string;
+}
+
 export class SignupResponseDTO {
   @Expose()
   public email!: string;
+}
+
+export class ForgotPasswordResponseDTO {
+  @Expose()
+  public message!: string;
 }
 
 export class SuccessResponseDTO {

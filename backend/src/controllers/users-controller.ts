@@ -22,6 +22,9 @@ import { IUserService, UserServiceToken } from "../services/user-service";
 import {
   convertBetweenEntityAndDTO,
   CredentialsRequestDTO,
+  ForgotPasswordRequestDTO,
+  ForgotPasswordResponseDTO,
+  LoginCredentialsRequestDTO,
   SignupResponseDTO,
   SuccessResponseDTO,
   UserDTO,
@@ -46,12 +49,39 @@ export class UsersController {
   @Post("/signup")
   public async signup(
     @Body()
-    { data: { email, password } }: CredentialsRequestDTO,
+    { data: { firstName, lastName, email, password } }: CredentialsRequestDTO,
   ): Promise<SignupResponseDTO> {
     try {
-      const user = await this._users.signup(email, password);
+      const user = await this._users.signup(
+        firstName,
+        lastName,
+        email,
+        password,
+      );
       const response = new SignupResponseDTO();
       response.email = user.email;
+      return response;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestError(error.message);
+      }
+      throw new BadRequestError(String(error));
+    }
+  }
+
+  /**
+   * Forgot password.
+   */
+  @HttpCode(201)
+  @Post("/forgot-password")
+  public async forgotPassword(
+    @Body()
+    { data: { email } }: ForgotPasswordRequestDTO,
+  ): Promise<ForgotPasswordResponseDTO> {
+    try {
+      this._users.forgotPassword(email);
+      const response = new ForgotPasswordResponseDTO();
+      response.message = "Thank you. A mail will be sent out.";
       return response;
     } catch (error) {
       if (error instanceof Error) {
@@ -86,7 +116,7 @@ export class UsersController {
   @Post("/login")
   public async login(
     @Body()
-    { data: { email, password } }: CredentialsRequestDTO,
+    { data: { email, password } }: LoginCredentialsRequestDTO,
   ): Promise<UserTokenResponseDTO> {
     const user = await this._users.findUserWithCredentials(email, password);
 

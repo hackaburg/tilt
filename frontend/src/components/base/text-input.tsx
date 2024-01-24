@@ -5,10 +5,11 @@ import { useCallback } from "react";
 import { useFocus } from "../../hooks/use-focus";
 import { Elevated } from "./elevated";
 import { FormField } from "./form-field";
+import { FaEye } from "react-icons/fa6";
 
 const FieldStyle = css`
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.5rem;
   font-size: 14px;
   border: none;
 `;
@@ -108,7 +109,7 @@ export const TextInput = ({
         spellCheck={false}
         autoComplete={autoCompleteField}
         {...fieldProps}
-      />
+      ></Input>
     );
 
   const elevationLevel = isFocused ? 2 : 1;
