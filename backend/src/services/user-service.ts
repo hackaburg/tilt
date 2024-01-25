@@ -30,6 +30,10 @@ export interface IUserService extends IService {
     password: string,
   ): Promise<User>;
 
+  /**
+   * Sets the forgot password token on a user with the given email.
+   * @param email
+   */
   forgotPassword(email: string): void;
 
   /**
@@ -187,6 +191,7 @@ export class UserService implements IUserService {
     // it's safe to use an emtpy secret here and set a real secret 10 lines below,
     // since the user isn't verified and, by default, this user isn't elevated yet
     user.tokenSecret = "";
+    user.forgotPasswordToken = "";
 
     try {
       await this._users.save(user);

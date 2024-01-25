@@ -4,14 +4,9 @@ import { useCallback, useState } from "react";
 import { useLoginContext } from "../../contexts/login-context";
 import { useApi } from "../../hooks/use-api";
 import { Button } from "../base/button";
-import {
-  CenteredContainer,
-  FlexColumnContainer,
-  StyleableFlexContainer,
-} from "../base/flex";
+import { FlexColumnContainer, StyleableFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
-import { Text } from "../base/text";
 import { TextInput, TextInputType } from "../base/text-input";
 
 const ButtonContainer = styled(StyleableFlexContainer)`
