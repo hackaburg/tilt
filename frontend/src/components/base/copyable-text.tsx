@@ -55,9 +55,11 @@ export const CopyableText = ({ text }: ICopyableTextProps) => {
         />
       </Elevated>
 
-      <Button onClick={handleCopy} primary>
-        Copy to clipboard
-      </Button>
+      <div style={{ marginTop: "2rem" }}>
+        <Button onClick={handleCopy} primary>
+          Copy to clipboard
+        </Button>
+      </div>
     </FlexColumnContainer>
   );
 };
