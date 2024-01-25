@@ -5,7 +5,6 @@ import { useCallback } from "react";
 import { useFocus } from "../../hooks/use-focus";
 import { Elevated } from "./elevated";
 import { FormField } from "./form-field";
-import { FaEye } from "react-icons/fa6";
 
 const FieldStyle = css`
   width: 100%;
