@@ -341,6 +341,6 @@ describe("UserService", () => {
     );
     const result = await userService.findUsersByIDs([user.id]);
 
-    expect(result[0]?.email).toBe(user.email);
+    return expect(result[0]?.email).toBe(user.email);
   });
 });

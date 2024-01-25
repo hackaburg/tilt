@@ -104,7 +104,6 @@ describe("SettingsService", () => {
 
     await settingsService.updateSettings(updatedSettings);
     const settings = await settingsService.getSettings();
-
     expect(settings.email.admittedEmail.htmlTemplate).toBe(
       updatedSettings.email.admittedEmail.htmlTemplate,
     );
