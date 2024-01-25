@@ -141,6 +141,11 @@ describe("SettingsService", () => {
           subject: "bar",
           textTemplate: "foobar",
         },
+        forgotPasswordEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
       },
       frontend: {
         colorGradientEnd: "gradient-end",
@@ -200,6 +205,11 @@ describe("SettingsService", () => {
         },
         sender: "test@foo.bar",
         verifyEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+        forgotPasswordEmail: {
           htmlTemplate: "foo",
           subject: "bar",
           textTemplate: "foobar",
