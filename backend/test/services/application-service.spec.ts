@@ -100,6 +100,8 @@ describe(ApplicationService.name, () => {
     await database.nuke();
 
     user = new User();
+    user.firstName = "";
+    user.lastName = "";
     user.email = "";
     user.password = "";
     user.role = UserRole.User;
