@@ -10,5 +10,6 @@ export const MockEmailTemplateService = jest.fn(
       bootstrap: jest.fn(),
       sendAdmittedEmail: jest.fn(),
       sendVerifyEmail: jest.fn(),
+      sendForgotPasswordEmail: jest.fn(),
     }),
 );

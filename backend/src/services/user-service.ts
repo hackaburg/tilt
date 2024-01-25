@@ -13,6 +13,11 @@ import {
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
 import { ITokenService, TokenServiceToken } from "./token-service";
 import { BadRequestError } from "routing-controllers";
+import {
+  HaveibeenpwnedServiceToken,
+  IHaveibeenpwnedService,
+  PasswordReuseError,
+} from "./haveibeenpwned-service";
 
 /**
  * An interface describing user handling.
@@ -124,6 +129,8 @@ export class UserService implements IUserService {
   private _users!: Repository<User>;
 
   public constructor(
+    @Inject(HaveibeenpwnedServiceToken)
+    private readonly _haveibeenpwned: IHaveibeenpwnedService,
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
     @Inject(LoggerServiceToken) private readonly _logger: ILoggerService,
     @Inject(TokenServiceToken)
@@ -152,7 +159,6 @@ export class UserService implements IUserService {
     email: string,
     password: string,
   ): Promise<User> {
-    /*
     const passwordReuseCount = await this._haveibeenpwned.getPasswordUsedCount(
       password,
     );
@@ -160,7 +166,6 @@ export class UserService implements IUserService {
     if (passwordReuseCount > 0) {
       throw new PasswordReuseError(passwordReuseCount);
     }
-    */
 
     const existingUser = await this._users.findOne({
       where: {
