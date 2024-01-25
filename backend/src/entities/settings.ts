@@ -48,11 +48,11 @@ export class EmailSettings {
   @Type(() => EmailTemplate)
   @Column(() => EmailTemplate)
   public verifyEmail!: EmailTemplate;
-  @Column(() => EmailTemplate)
-  public forgotPasswordEmail!: EmailTemplate;
   @Type(() => EmailTemplate)
   @Column(() => EmailTemplate)
   public admittedEmail!: EmailTemplate;
+  @Column(() => EmailTemplate)
+  public forgotPasswordEmail!: EmailTemplate;
 }
 
 export class EmailTemplate {
