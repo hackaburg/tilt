@@ -14,5 +14,19 @@ export const SignupDone = () => (
       It might take a minute or two to arrive, and to be safe, please also check
       your junk mail.
     </Text>
+    <div>
+      <a
+        href="/login"
+        style={{
+          color: "#9ac017",
+          textDecoration: "none",
+          float: "left",
+          fontSize: "0.8rem",
+          marginTop: "0.5rem",
+        }}
+      >
+        {"« Back to login"}
+      </a>
+    </div>
   </FlexColumnContainer>
 );
