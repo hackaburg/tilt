@@ -3,10 +3,16 @@ import * as React from "react";
 import { useCallback, useState } from "react";
 import { useApi } from "../../hooks/use-api";
 import { Button } from "../base/button";
-import { FlexColumnContainer, StyleableFlexContainer } from "../base/flex";
+import {
+  FlexColumnContainer,
+  Spacer,
+  StyleableFlexContainer,
+} from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { TextInput, TextInputType } from "../base/text-input";
+import { InternalLink } from "../base/link";
+import { Routes } from "../../routes";
 
 const ButtonContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;
@@ -17,6 +23,7 @@ const ButtonContainer = styled(StyleableFlexContainer)`
  */
 export const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const {
     isFetching: loginInProgress,
@@ -25,10 +32,11 @@ export const ForgotPassword = () => {
   } = useApi(
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await api.forgotPassword(email);
+        const response = await api.forgotPassword(email);
+        setMessage(() => response);
       }
     },
-    [email],
+    [email, message],
   );
 
   const formInProgress = loginInProgress;
@@ -42,7 +50,7 @@ export const ForgotPassword = () => {
       <Heading text="Forgot Your Password?" />
 
       {loginError && (
-        <Message error>
+        <Message type="error">
           <b>Reset password error: </b> {loginError.message}
         </Message>
       )}
@@ -59,20 +67,14 @@ export const ForgotPassword = () => {
           autoCompleteField="email"
         />
 
-        <div>
-          <a
-            href="/login"
-            style={{
-              color: "#9ac017",
-              textDecoration: "none",
-              float: "left",
-              fontSize: "0.8rem",
-              marginTop: "0.5rem",
-            }}
-          >
-            {"« Back to login"}
-          </a>
-        </div>
+        <InternalLink to={Routes.Login}>« Back to login</InternalLink>
+        <Spacer></Spacer>
+
+        {message && (
+          <Message type="info">
+            <b>{message} </b>
+          </Message>
+        )}
 
         <ButtonContainer style={{ marginTop: "1rem", width: "100%" }}>
           <Button

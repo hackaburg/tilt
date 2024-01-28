@@ -22,7 +22,7 @@
   "devDependencies": {
     "@babel/core": "^7.11.4",
     "@emotion/core": "^10.0.28",
-    "@emotion/styled": "^10.0.27",
+    "@emotion/styled": "^11.11.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
     "@types/bcrypt": "^3.0.0",
     "@types/chart.js": "^2.9.23",
@@ -77,6 +77,8 @@
     "webpack-dev-server": "^3.8.1"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@mui/material": "^5.15.6",
     "@slack/webhook": "^5.0.0",
     "@types/file-saver": "^2.0.5",
     "@types/react": "^18.0.15",

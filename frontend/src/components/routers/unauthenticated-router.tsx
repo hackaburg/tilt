@@ -15,6 +15,7 @@ import { ForgotPassword } from "../pages/forgot-password";
 import { ResetPassword } from "../pages/reset-password";
 import { SignupDone } from "../pages/signup-done";
 import { RoutedVerifyEmail } from "../pages/verify-email";
+import { variables } from "../../theme";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   overflow-y: auto;
@@ -27,7 +28,7 @@ const RouterContainer = styled(Elevated)`
   padding: 1rem;
   width: min(390px, 100vw);
   border-top: 4px solid;
-  border-color: #9ac017;
+  border-color:  ${variables.colorLink};
 }`;
 
 /**

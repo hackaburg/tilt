@@ -2,6 +2,8 @@ import * as React from "react";
 import { FlexColumnContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Text } from "../base/text";
+import { InternalLink } from "../base/link";
+import { Routes } from "../../routes";
 
 /**
  * A "you're signed up wait for the email" message.
@@ -15,18 +17,7 @@ export const SignupDone = () => (
       your junk mail.
     </Text>
     <div>
-      <a
-        href="/login"
-        style={{
-          color: "#9ac017",
-          textDecoration: "none",
-          float: "left",
-          fontSize: "0.8rem",
-          marginTop: "0.5rem",
-        }}
-      >
-        {"« Back to login"}
-      </a>
+      <InternalLink to={Routes.Login}>« Back to login</InternalLink>
     </div>
   </FlexColumnContainer>
 );

@@ -7,7 +7,9 @@ import { FlexColumnContainer, StyleableFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { TextInput, TextInputType } from "../base/text-input";
-import { useLocation } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
+import { InternalLink } from "../base/link";
+import { Routes } from "../../routes";
 
 const ButtonContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;
@@ -23,6 +25,7 @@ export const ResetPassword = () => {
   const token = new URLSearchParams(location.search).get("token");
 
   const {
+    value: resetDone,
     isFetching: loginInProgress,
     error: loginError,
     forcePerformRequest: forgotPasswordRequest,
@@ -30,7 +33,9 @@ export const ResetPassword = () => {
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
         await api.resetPassword(password, token!);
+        return true;
       }
+      return false;
     },
     [password],
   );
@@ -41,19 +46,23 @@ export const ResetPassword = () => {
     event.preventDefault();
   }, []);
 
+  if (resetDone) {
+    return <Redirect to={Routes.Login} />;
+  }
+
   return (
     <FlexColumnContainer>
       <Heading text="Rest Your Password" />
 
       {loginError && (
-        <Message error>
+        <Message type="error">
           <b>Reset password error: </b> {loginError.message}
         </Message>
       )}
 
       <form onSubmit={handleSubmit}>
         <TextInput
-          title="Password"
+          title="New Password"
           placeholder="please don't use 'password'"
           value={password}
           onChange={(value) => setPassword(value)}
@@ -61,21 +70,8 @@ export const ResetPassword = () => {
           name="password"
           autoCompleteField="current-password"
         />
-        <div>
-          <a
-            href="/login"
-            style={{
-              color: "#9ac017",
-              textDecoration: "none",
-              float: "left",
-              fontSize: "0.8rem",
-              marginTop: "0.5rem",
-            }}
-          >
-            {"« Back to login"}
-          </a>
-        </div>
 
+        <InternalLink to={Routes.Login}>« Back to login</InternalLink>
         <ButtonContainer style={{ marginTop: "1rem", width: "100%" }}>
           <Button
             onClick={forgotPasswordRequest}

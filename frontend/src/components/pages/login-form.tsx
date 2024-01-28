@@ -8,6 +8,8 @@ import { FlexColumnContainer, StyleableFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { TextInput, TextInputType } from "../base/text-input";
+import { InternalLink } from "../base/link";
+import { Routes } from "../../routes";
 
 const ButtonContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;
@@ -46,7 +48,7 @@ export const LoginForm = () => {
       <Heading text="Sign in to your account" />
 
       {loginError && (
-        <Message error>
+        <Message type="error">
           <b>Login error: </b> {loginError.message}
         </Message>
       )}
@@ -73,16 +75,9 @@ export const LoginForm = () => {
         />
 
         <div>
-          <a
-            href="/forgot-password"
-            style={{
-              color: "#9ac017",
-              textDecoration: "none",
-              float: "right",
-            }}
-          >
+          <InternalLink to={Routes.ForgotPassword}>
             Forgot Password?
-          </a>
+          </InternalLink>
         </div>
 
         <ButtonContainer style={{ marginTop: "1rem", width: "100%" }}>
@@ -101,15 +96,7 @@ export const LoginForm = () => {
             }}
           >
             New user?{" "}
-            <a
-              href="/register-form"
-              style={{
-                color: "#9ac017",
-                textDecoration: "none",
-              }}
-            >
-              Register
-            </a>
+            <InternalLink to={Routes.RegisterForm}>Register</InternalLink>
           </div>
         </ButtonContainer>
       </form>

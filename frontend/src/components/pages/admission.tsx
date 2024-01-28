@@ -750,13 +750,13 @@ export const Admission = () => {
       </Text>
 
       {error && (
-        <Message error>
+        <Message type="error">
           <b>Error:</b> {error.message}
         </Message>
       )}
 
       {probableNameQuestion == null && (
-        <Message warn>
+        <Message type="warning">
           <b>Warnings:</b>
           <ul>
             <li>
