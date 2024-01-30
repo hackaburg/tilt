@@ -25,7 +25,7 @@ export const VerifyEmail = ({ location: { hash } }: IVerifyEmailProps) => {
       <Heading text="Verifying your email" />
 
       {error ? (
-        <Message error>
+        <Message type="error">
           <b>Error:</b> {error.message}
         </Message>
       ) : verificationInProgress ? (

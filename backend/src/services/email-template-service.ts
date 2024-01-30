@@ -9,6 +9,10 @@ interface IVerifyEmailContext {
   verifyToken: string;
 }
 
+interface IForgotPasswordEmailContext {
+  forgotPasswordToken: string;
+}
+
 /**
  * A service to send email templates.
  */
@@ -18,6 +22,12 @@ export interface IEmailTemplateService extends IService {
    * @param user The user expecting the verification email
    */
   sendVerifyEmail(user: User): Promise<void>;
+
+  /**
+   * Sends a "forgot password" email to the given user.
+   * @param user The user expecting the password forgot email
+   */
+  sendForgotPasswordEmail(user: User): Promise<void>;
 
   /**
    * Sends a "you're in" email to the given user.
@@ -83,6 +93,27 @@ export class EmailTemplateService implements IEmailTemplateService {
       email.verifyEmail,
       {
         verifyToken: user.verifyToken,
+      },
+    );
+
+    await this._email.sendEmail(
+      email.sender,
+      user.email,
+      template.subject,
+      template.htmlTemplate,
+      template.textTemplate,
+    );
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async sendForgotPasswordEmail(user: User): Promise<void> {
+    const { email } = await this._settings.getSettings();
+    const template = this.compileTemplate<IForgotPasswordEmailContext>(
+      email.forgotPasswordEmail,
+      {
+        forgotPasswordToken: user.forgotPasswordToken,
       },
     );
 

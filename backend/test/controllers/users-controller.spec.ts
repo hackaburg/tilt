@@ -26,6 +26,8 @@ describe("UsersController", () => {
 
     const email = "test@foo.bar";
     const password = "password";
+    const firstName = "john";
+    const lastName = "doe";
 
     const user = new User();
     user.email = email;
@@ -33,21 +35,32 @@ describe("UsersController", () => {
 
     const response = await controller.signup({
       data: {
+        firstName,
+        lastName,
         email,
         password,
       },
     });
 
     expect(response.email).toEqual(email);
-    expect(userService.mocks.signup).toBeCalledWith(email, password);
+    expect(userService.mocks.signup).toBeCalledWith(
+      firstName,
+      lastName,
+      email,
+      password,
+    );
   });
 
   it("handles invalid signup requests", async () => {
     expect.assertions(1);
+    const firstName = "john";
+    const lastName = "doe";
 
     userService.mocks.signup.mockRejectedValue(0);
     const promise = controller.signup({
       data: {
+        firstName,
+        lastName,
         email: "test@foo.bar",
         password: "password",
       },

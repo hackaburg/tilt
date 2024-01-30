@@ -50,6 +50,12 @@ export const EmailSettings = () => {
     [updateEmailSettings, settings],
   );
 
+  const handleForgotPasswordEmailChange = useCallback(
+    (forgotPasswordEmail: EmailSettingsDTO["forgotPasswordEmail"]) =>
+      updateEmailSettings({ forgotPasswordEmail }),
+    [updateEmailSettings, settings],
+  );
+
   return (
     <SettingsSection title="Mail settings">
       <p>Emails sent out will contain the following sender address:</p>
@@ -102,6 +108,14 @@ export const EmailSettings = () => {
               title="Admitted email"
               template={settings.email.admittedEmail}
               onTemplateChange={handleAdmittedEmailChange}
+            />
+          </EmailTemplateEditorContainer>
+
+          <EmailTemplateEditorContainer>
+            <EmailTemplateEditor
+              title="Forgot Password email"
+              template={settings.email.forgotPasswordEmail}
+              onTemplateChange={handleForgotPasswordEmailChange}
             />
           </EmailTemplateEditorContainer>
         </>

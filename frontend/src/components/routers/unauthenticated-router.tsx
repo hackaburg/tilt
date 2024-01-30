@@ -9,9 +9,13 @@ import {
   PageSizedContainer,
   StyleableFlexContainer,
 } from "../base/flex";
-import { LoginSignupForm } from "../pages/login-signup-form";
+import { LoginForm } from "../pages/login-form";
+import { RegisterForm } from "../pages/register-form";
+import { ForgotPassword } from "../pages/forgot-password";
+import { ResetPassword } from "../pages/reset-password";
 import { SignupDone } from "../pages/signup-done";
 import { RoutedVerifyEmail } from "../pages/verify-email";
+import { variables } from "../../theme";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   overflow-y: auto;
@@ -22,8 +26,10 @@ const BackgroundContainer = styled(StyleableFlexContainer)`
 
 const RouterContainer = styled(Elevated)`
   padding: 1rem;
-  width: min(320px, 100vw);
-`;
+  width: min(390px, 100vw);
+  border-top: 4px solid;
+  border-color:  ${variables.colorLink};
+}`;
 
 /**
  * A router for unauthenticated users.
@@ -43,7 +49,10 @@ export const UnauthenticatedRouter = () => {
         <CenteredContainer>
           <RouterContainer level={1}>
             <Switch>
-              <Route path={Routes.Login} component={LoginSignupForm} />
+              <Route path={Routes.Login} component={LoginForm} />
+              <Route path={Routes.ForgotPassword} component={ForgotPassword} />
+              <Route path={Routes.ResetPassword} component={ResetPassword} />
+              <Route path={Routes.RegisterForm} component={RegisterForm} />
               <Route path={Routes.SignupDone} component={SignupDone} />
               <Route path={Routes.VerifyEmail} component={RoutedVerifyEmail} />
             </Switch>

@@ -100,11 +100,14 @@ describe(ApplicationService.name, () => {
     await database.nuke();
 
     user = new User();
+    user.firstName = "";
+    user.lastName = "";
     user.email = "";
     user.password = "";
     user.role = UserRole.User;
     user.verifyToken = "";
     user.tokenSecret = "";
+    user.forgotPasswordToken = "";
 
     const userRepo = database.getRepository(User);
     await userRepo.save(user);

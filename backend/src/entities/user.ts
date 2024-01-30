@@ -15,6 +15,10 @@ export class User {
   public readonly createdAt!: Date;
   @UpdateDateColumn()
   public readonly updatedAt!: Date;
+  @Column()
+  public firstName!: string;
+  @Column()
+  public lastName!: string;
   @Column({ unique: true })
   public email!: string;
   @Column({ select: false })
@@ -23,6 +27,8 @@ export class User {
   public tokenSecret!: string;
   @Column()
   public verifyToken!: string;
+  @Column()
+  public forgotPasswordToken!: string;
   @Column()
   public role!: UserRole;
   @Column({ default: null, type: "datetime" })

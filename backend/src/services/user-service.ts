@@ -9,13 +9,15 @@ import {
   EmailTemplateServiceToken,
   IEmailTemplateService,
 } from "./email-template-service";
+
+import { ILoggerService, LoggerServiceToken } from "./logger-service";
+import { ITokenService, TokenServiceToken } from "./token-service";
+import { BadRequestError } from "routing-controllers";
 import {
   HaveibeenpwnedServiceToken,
   IHaveibeenpwnedService,
   PasswordReuseError,
 } from "./haveibeenpwned-service";
-import { ILoggerService, LoggerServiceToken } from "./logger-service";
-import { ITokenService, TokenServiceToken } from "./token-service";
 
 /**
  * An interface describing user handling.
@@ -26,7 +28,18 @@ export interface IUserService extends IService {
    * @param email The user's email
    * @param password The user's plaintext password
    */
-  signup(email: string, password: string): Promise<User>;
+  signup(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<User>;
+
+  /**
+   * Sets the forgot password token on a user with the given email.
+   * @param email
+   */
+  forgotPassword(email: string): void;
 
   /**
    * Sets the verified flag on a user with the given token.
@@ -54,6 +67,17 @@ export interface IUserService extends IService {
   findUserWithCredentials(
     email: string,
     password: string,
+  ): Promise<User | undefined>;
+
+  /**
+   * Checks the user's password reset.
+   * @param email The user's email
+   * @param password The user's password
+   * @param token The reset token
+   */
+  verifyUserResetPassword(
+    password: string,
+    token: string,
   ): Promise<User | undefined>;
 
   /**
@@ -124,10 +148,17 @@ export class UserService implements IUserService {
 
   /**
    * Adds a new user.
+   * @param firstName The user's first name
+   * @param lastName The user's last name
    * @param email The user's email
    * @param password The user's password
    */
-  public async signup(email: string, password: string): Promise<User> {
+  public async signup(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<User> {
     const passwordReuseCount = await this._haveibeenpwned.getPasswordUsedCount(
       password,
     );
@@ -155,6 +186,8 @@ export class UserService implements IUserService {
     }
 
     const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
     user.email = email;
     user.password = await hash(password, 10);
     user.verifyToken = await genSalt(10);
@@ -163,6 +196,7 @@ export class UserService implements IUserService {
     // it's safe to use an emtpy secret here and set a real secret 10 lines below,
     // since the user isn't verified and, by default, this user isn't elevated yet
     user.tokenSecret = "";
+    user.forgotPasswordToken = "";
 
     try {
       await this._users.save(user);
@@ -178,6 +212,25 @@ export class UserService implements IUserService {
 
     await this._email.sendVerifyEmail(user);
     return user;
+  }
+
+  /**
+   * Generate a login token for the given user.
+   * @param user The user to generate a token for
+   */
+  public async forgotPassword(email: string): Promise<void> {
+    const user = await this._users.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (user) {
+      user.forgotPasswordToken = await genSalt(10);
+      await this._users.save(user);
+      this._logger.debug(`${user.email} forgot password`);
+      await this._email.sendForgotPasswordEmail(user);
+    }
   }
 
   /**
@@ -257,6 +310,33 @@ export class UserService implements IUserService {
     if (passwordsMatch) {
       return await this._users.findOneOrFail(user.id);
     }
+  }
+
+  /**
+   * Checks the user's password reset.
+   * @param email The user's email
+   * @param password The user's password
+   */
+  public async verifyUserResetPassword(
+    password: string,
+    token: string,
+  ): Promise<User | undefined> {
+    const user = await this._users.findOne({
+      where: {
+        forgotPasswordToken: token,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestError("invalid token");
+    }
+
+    if (user.forgotPasswordToken === token) {
+      user.password = await hash(password, 10);
+      user.forgotPasswordToken = "";
+      await this._users.save(user);
+    }
+    return;
   }
 
   /**

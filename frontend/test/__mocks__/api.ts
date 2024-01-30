@@ -25,4 +25,6 @@ export const api: IMockedApi = {
   storeProfileFormAnswers: jest.fn(),
   updateSettings: jest.fn(),
   verifyEmail: jest.fn(),
+  forgotPassword: jest.fn(),
+  resetPassword: jest.fn(),
 };

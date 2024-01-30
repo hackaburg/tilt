@@ -85,8 +85,7 @@ export const System = () => {
         answered.
       </Text>
       <CopyableText text={allDataJSON} />
-
-      <Divider />
+      <br></br>
       <Subheading text="Prune data" />
       <Text>
         When the event is over, you might want to delete all user data but keep

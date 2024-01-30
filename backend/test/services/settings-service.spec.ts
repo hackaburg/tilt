@@ -86,6 +86,11 @@ describe("SettingsService", () => {
           subject: "bar",
           textTemplate: "foobar",
         },
+        forgotPasswordEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
       },
       frontend: {
         colorGradientEnd: "gradient-end",
@@ -99,7 +104,6 @@ describe("SettingsService", () => {
 
     await settingsService.updateSettings(updatedSettings);
     const settings = await settingsService.getSettings();
-
     expect(settings.email.admittedEmail.htmlTemplate).toBe(
       updatedSettings.email.admittedEmail.htmlTemplate,
     );
@@ -132,6 +136,11 @@ describe("SettingsService", () => {
         },
         sender: "test@foo.bar",
         verifyEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+        forgotPasswordEmail: {
           htmlTemplate: "foo",
           subject: "bar",
           textTemplate: "foobar",
@@ -195,6 +204,11 @@ describe("SettingsService", () => {
         },
         sender: "test@foo.bar",
         verifyEmail: {
+          htmlTemplate: "foo",
+          subject: "bar",
+          textTemplate: "foobar",
+        },
+        forgotPasswordEmail: {
           htmlTemplate: "foo",
           subject: "bar",
           textTemplate: "foobar",

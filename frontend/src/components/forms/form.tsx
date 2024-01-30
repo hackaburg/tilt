@@ -165,7 +165,7 @@ export const Form = ({ type }: IFormProps) => {
 
   if (initialFetchError) {
     return (
-      <Message error>
+      <Message type="error">
         <b>Error fetching form:</b> {initialFetchError.message}
       </Message>
     );
@@ -220,7 +220,7 @@ export const Form = ({ type }: IFormProps) => {
             <VerticallyCenteredContainer>
               <FlexRowColumnContainer isBig>
                 {submitError && (
-                  <Message error>
+                  <Message type="error">
                     <b>Error: </b> {submitError.message}
                   </Message>
                 )}

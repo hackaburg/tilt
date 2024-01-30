@@ -22,6 +22,10 @@ import { IUserService, UserServiceToken } from "../services/user-service";
 import {
   convertBetweenEntityAndDTO,
   CredentialsRequestDTO,
+  ForgotPasswordRequestDTO,
+  ForgotPasswordResponseDTO,
+  LoginCredentialsRequestDTO,
+  PasswordResetRequestDTO,
   SignupResponseDTO,
   SuccessResponseDTO,
   UserDTO,
@@ -46,12 +50,39 @@ export class UsersController {
   @Post("/signup")
   public async signup(
     @Body()
-    { data: { email, password } }: CredentialsRequestDTO,
+    { data: { firstName, lastName, email, password } }: CredentialsRequestDTO,
   ): Promise<SignupResponseDTO> {
     try {
-      const user = await this._users.signup(email, password);
+      const user = await this._users.signup(
+        firstName,
+        lastName,
+        email,
+        password,
+      );
       const response = new SignupResponseDTO();
       response.email = user.email;
+      return response;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestError(error.message);
+      }
+      throw new BadRequestError(String(error));
+    }
+  }
+
+  /**
+   * Forgot password.
+   */
+  @HttpCode(201)
+  @Post("/forgot-password")
+  public async forgotPassword(
+    @Body()
+    { data: { email } }: ForgotPasswordRequestDTO,
+  ): Promise<ForgotPasswordResponseDTO> {
+    try {
+      this._users.forgotPassword(email);
+      const response = new ForgotPasswordResponseDTO();
+      response.message = "Thank you. A mail will be sent out.";
       return response;
     } catch (error) {
       if (error instanceof Error) {
@@ -80,13 +111,32 @@ export class UsersController {
   }
 
   /**
+   * Verifies a user using their token.
+   * @param token The token to verify.
+   */
+  @Post("/reset-password")
+  public async resetPassword(
+    @Body()
+    { data: { password, token } }: PasswordResetRequestDTO,
+  ): Promise<SuccessResponseDTO> {
+    try {
+      await this._users.verifyUserResetPassword(password, token);
+      const response = new SuccessResponseDTO();
+      response.success = true;
+      return response;
+    } catch (error) {
+      throw new BadRequestError("invalid token");
+    }
+  }
+
+  /**
    * Generates a login token for the given credentials.
    * @param body The user's login credentials
    */
   @Post("/login")
   public async login(
     @Body()
-    { data: { email, password } }: CredentialsRequestDTO,
+    { data: { email, password } }: LoginCredentialsRequestDTO,
   ): Promise<UserTokenResponseDTO> {
     const user = await this._users.findUserWithCredentials(email, password);
 

@@ -58,7 +58,7 @@ const TableHeaderCell = styled.th`
 
   border-right: 1px solid #555;
 
-  :last-of-type {
+  :last-of-type:after {
     border: none;
   }
 `;
@@ -751,23 +751,23 @@ export const Admission = () => {
             are the only available special filters.
           </Text>
 
-          {error && (
-            <Message error>
-              <b>Error:</b> {error.message}
-            </Message>
-          )}
+      {error && (
+        <Message type="error">
+          <b>Error:</b> {error.message}
+        </Message>
+      )}
 
-          {probableNameQuestion == null && (
-            <Message warn>
-              <b>Warnings:</b>
-              <ul>
-                <li>
-                  We couldn't find a "name" question. Are you asking for this
-                  information?
-                </li>
-              </ul>
-            </Message>
-          )}
+      {probableNameQuestion == null && (
+        <Message type="warning">
+          <b>Warnings:</b>
+          <ul>
+            <li>
+              We couldn't find a "name" question. Are you asking for this
+              information?
+            </li>
+          </ul>
+        </Message>
+      )}
 
           <NonGrowingFlexContainer>
             <a style={{ width: "20rem", marginTop: "1rem" }}>

@@ -49,8 +49,9 @@ describe("UserService", () => {
 
   it("adds users", async () => {
     expect.assertions(1);
-
-    await userService.signup("test@foo.bar", "password");
+    const firstName = "john";
+    const lastName = "doe";
+    await userService.signup(firstName, lastName, "test@foo.bar", "password");
     const users = await userRepo.find();
     expect(users.length).toBe(1);
   });
@@ -60,35 +61,59 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const password = "password";
-    const existingUser = await userService.signup(email, password);
+    const firstName = "john";
+    const lastName = "doe";
+    const existingUser = await userService.signup(
+      firstName,
+      lastName,
+      email,
+      password,
+    );
 
-    const unverifiedPromise = userService.signup(email, password);
+    const unverifiedPromise = userService.signup(
+      firstName,
+      lastName,
+      email,
+      password,
+    );
     await expect(unverifiedPromise).resolves.toBeDefined();
 
     await userService.verifyUserByVerifyToken(existingUser.verifyToken);
-    const verifiedPromise = userService.signup(email, password);
+    const verifiedPromise = userService.signup(
+      firstName,
+      lastName,
+      email,
+      password,
+    );
     await expect(verifiedPromise).rejects.toBeDefined();
   });
 
   it("hashes user passwords", async () => {
     expect.assertions(1);
-
+    const firstName = "john";
+    const lastName = "doe";
     const password = "password";
-    await userService.signup("test@foo.bar", password);
+    await userService.signup(firstName, lastName, "test@foo.bar", password);
     const [user] = await userRepo.find();
     expect(user.password).not.toEqual(password);
   });
 
   it("rejects incomplete signups", async () => {
     expect.assertions(2);
+    const firstName = "john";
+    const lastName = "doe";
 
     const missingEmailPromise = userService.signup(
+      firstName,
+      lastName,
       undefined as any,
       "password",
     );
     await expect(missingEmailPromise).rejects.toBeDefined();
 
     const missingPasswordPromise = userService.signup(
+      firstName,
+      lastName,
       "test@foo.bar",
       undefined as any,
     );
@@ -97,8 +122,10 @@ describe("UserService", () => {
 
   it("sends a 'verify your email address' email", async () => {
     expect.assertions(1);
+    const firstName = "john";
+    const lastName = "doe";
 
-    await userService.signup("test@foo.bar", "password");
+    await userService.signup(firstName, lastName, "test@foo.bar", "password");
     expect(emailTemplates.mocks.sendVerifyEmail).toHaveBeenCalled();
   });
 
@@ -107,8 +134,10 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const password = "password";
-    await userService.signup(email, password);
-    await userService.signup(email, password);
+    const firstName = "john";
+    const lastName = "doe";
+    await userService.signup(firstName, lastName, email, password);
+    await userService.signup(lastName, lastName, email, password);
 
     const users = await userRepo.find();
     expect(users).toHaveLength(1);
@@ -119,16 +148,22 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const password = "password";
-    await userService.signup(email, password);
-    await userService.signup(email, password);
+    const firstName = "john";
+    const lastName = "doe";
+    await userService.signup(firstName, lastName, email, password);
+    await userService.signup(firstName, lastName, email, password);
 
     expect(emailTemplates.mocks.sendVerifyEmail).toHaveBeenCalledTimes(2);
   });
 
   it("verifies users using their token", async () => {
     expect.assertions(1);
+    const firstName = "john";
+    const lastName = "doe";
 
     const { verifyToken } = await userService.signup(
+      firstName,
+      lastName,
       "test@foo.bar",
       "password",
     );
@@ -139,31 +174,54 @@ describe("UserService", () => {
 
   it("ignores invalid verification tokens", async () => {
     expect.assertions(1);
+    const firstName = "john";
+    const lastName = "doe";
 
-    await userService.signup("test@foo.bar", "password");
+    await userService.signup(firstName, lastName, "test@foo.bar", "password");
     const promise = userService.verifyUserByVerifyToken("verify me plz");
     await expect(promise).rejects.toBeDefined();
   });
 
   it("creates login tokens", async () => {
     expect.assertions(1);
+    const firstName = "john";
+    const lastName = "doe";
 
-    const user = await userService.signup("test@foo.bar", "password");
+    const user = await userService.signup(
+      firstName,
+      lastName,
+      "test@foo.bar",
+      "password",
+    );
     userService.generateLoginToken(user);
     expect(tokens.mocks.sign).toBeCalled();
   });
 
   it("generates random login secrets", async () => {
     expect.assertions(1);
+    const firstName = "john";
+    const lastName = "doe";
 
-    const user = await userService.signup("test@foo.bar", "password");
+    const user = await userService.signup(
+      firstName,
+      lastName,
+      "test@foo.bar",
+      "password",
+    );
     expect(user.tokenSecret.length).toBeGreaterThan(3);
   });
 
   it("decodes login tokens", async () => {
     expect.assertions(3);
+    const firstName = "john";
+    const lastName = "doe";
 
-    const user = await userService.signup("test@foo.bar", "password");
+    const user = await userService.signup(
+      firstName,
+      lastName,
+      "test@foo.bar",
+      "password",
+    );
     tokens.mocks.decode.mockReturnValue({
       secret: user.tokenSecret,
     });
@@ -190,7 +248,9 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const password = "password";
-    const user = await userService.signup(email, password);
+    const firstName = "john";
+    const lastName = "doe";
+    const user = await userService.signup(firstName, lastName, email, password);
     await userService.verifyUserByVerifyToken(user.verifyToken);
     const loggedInUser = await userService.findUserWithCredentials(
       email,
@@ -206,7 +266,9 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const password = "password";
-    await userService.signup(email, password);
+    const firstName = "john";
+    const lastName = "doe";
+    await userService.signup(firstName, lastName, email, password);
 
     const userWithWrongPassword = await userService.findUserWithCredentials(
       email,
@@ -226,7 +288,14 @@ describe("UserService", () => {
 
     const email = "test@foo.bar";
     const password = "password";
-    const signedUpUser = await userService.signup(email, password);
+    const firstName = "john";
+    const lastName = "doe";
+    const signedUpUser = await userService.signup(
+      firstName,
+      lastName,
+      email,
+      password,
+    );
     await userService.verifyUserByVerifyToken(signedUpUser.verifyToken);
 
     const loggedInUser = await userService.findUserWithCredentials(
@@ -240,14 +309,21 @@ describe("UserService", () => {
     expect.assertions(2);
 
     const password = "password";
+    const firstName = "john";
+    const lastName = "doe";
     haveibeenpwned.mocks.getPasswordUsedCount.mockResolvedValue(0);
-    await userService.signup("test@foo.bar", password);
+    await userService.signup(firstName, lastName, "test@foo.bar", password);
     expect(haveibeenpwned.mocks.getPasswordUsedCount).toHaveBeenCalledWith(
       password,
     );
 
     haveibeenpwned.mocks.getPasswordUsedCount.mockResolvedValue(1337);
-    const promise = userService.signup("test@foo.bar", password);
+    const promise = userService.signup(
+      firstName,
+      lastName,
+      "test@foo.bar",
+      password,
+    );
     expect(promise).rejects.toBeDefined();
   });
 
@@ -255,9 +331,16 @@ describe("UserService", () => {
     expect.assertions(1);
 
     const email = "test@foo.bar";
-    const user = await userService.signup(email, "password");
+    const firstName = "john";
+    const lastName = "doe";
+    const user = await userService.signup(
+      firstName,
+      lastName,
+      email,
+      "password",
+    );
     const result = await userService.findUsersByIDs([user.id]);
 
-    expect(result[0]?.email).toBe(user.email);
+    return expect(result[0]?.email).toBe(user.email);
   });
 });

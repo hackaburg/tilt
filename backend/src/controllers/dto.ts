@@ -267,6 +267,10 @@ export class EmailSettingsDTO implements DTO<EmailSettings> {
   @Type(() => EmailTemplateDTO)
   @ValidateNested()
   @Expose()
+  public forgotPasswordEmail!: EmailTemplateDTO;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
   public admittedEmail!: EmailTemplateDTO;
 }
 
@@ -291,12 +295,34 @@ export class UpdateSettingsRequestDTO implements IApiRequest<SettingsDTO> {
   public data!: SettingsDTO;
 }
 
-export class CredentialsDTO {
+export class LoginCredentialsDTO {
   @IsEmail()
   public email!: string;
   @IsString()
   @MinLength(6)
   public password!: string;
+}
+
+export class CredentialsDTO {
+  @IsString()
+  @MinLength(3)
+  public firstName!: string;
+  @IsString()
+  @MinLength(3)
+  public lastName!: string;
+  @IsEmail()
+  public email!: string;
+  @IsString()
+  @MinLength(6)
+  public password!: string;
+}
+
+export class PasswordResetDTO {
+  @IsString()
+  @MinLength(6)
+  public password!: string;
+  @IsString()
+  public token!: string;
 }
 
 export class CredentialsRequestDTO implements IApiRequest<CredentialsDTO> {
@@ -305,9 +331,41 @@ export class CredentialsRequestDTO implements IApiRequest<CredentialsDTO> {
   public data!: CredentialsDTO;
 }
 
+export class LoginCredentialsRequestDTO
+  implements IApiRequest<LoginCredentialsDTO>
+{
+  @Type(() => LoginCredentialsDTO)
+  @ValidateNested()
+  public data!: LoginCredentialsDTO;
+}
+
+export class PasswordResetRequestDTO implements IApiRequest<PasswordResetDTO> {
+  @Type(() => PasswordResetDTO)
+  @ValidateNested()
+  public data!: PasswordResetDTO;
+}
+
+export class ForgotPasswordRequestDTO
+  implements IApiRequest<ForgotPasswordDTO>
+{
+  @Type(() => ForgotPasswordDTO)
+  @ValidateNested()
+  public data!: ForgotPasswordDTO;
+}
+
+export class ForgotPasswordDTO {
+  @Expose()
+  public email!: string;
+}
+
 export class SignupResponseDTO {
   @Expose()
   public email!: string;
+}
+
+export class ForgotPasswordResponseDTO {
+  @Expose()
+  public message!: string;
 }
 
 export class SuccessResponseDTO {

@@ -3,7 +3,7 @@ import * as React from "react";
 import { StyleableFlexContainer } from "./flex";
 
 const FormFieldContainer = styled(StyleableFlexContainer)`
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 `;
 
 const Title = styled.label`
@@ -32,7 +32,6 @@ export const FormField = ({ title, children, mandatory }: IFormFieldProps) => (
       {title}
       {mandatory && <MandatoryIndicator>*</MandatoryIndicator>}
     </Title>
-
     {children}
   </FormFieldContainer>
 );
