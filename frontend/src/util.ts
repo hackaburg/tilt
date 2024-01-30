@@ -20,7 +20,7 @@ const prependZero = (value: number): string =>
  * @param date The date to format
  */
 export const dateToString = (date: Date) =>
-  `${date.getFullYear()}-${prependZero(date.getMonth() + 1)}-${prependZero(
+  `${prependZero(date.getMonth() + 1)}.${date.getFullYear()}.${prependZero(
     date.getDate(),
   )}`;
 

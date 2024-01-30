@@ -1,5 +1,10 @@
 import * as React from "react";
+import { FlexColumnContainer, Spacer, StyleableFlexContainer } from "./flex";
+import styled from "@emotion/styled";
 
+const Border = styled(StyleableFlexContainer)`
+  border-top: 1px dashed #ccc;
+`;
 /**
  * A vertical divider.
  */
@@ -13,4 +18,15 @@ export const Divider = () => (
       backgroundColor: "black",
     }}
   ></hr>
+);
+
+/**
+ * A vertical divider slim.
+ */
+export const DividerSlim = () => (
+  <FlexColumnContainer>
+    <Spacer />
+    <Border />
+    <Spacer />
+  </FlexColumnContainer>
 );

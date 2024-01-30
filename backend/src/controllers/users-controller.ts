@@ -147,6 +147,9 @@ export class UsersController {
     const response = new UserTokenResponseDTO();
     response.token = this._users.generateLoginToken(user);
     response.user = convertBetweenEntityAndDTO(user, UserDTO);
+    const userDetails = await this._users.getUser(user.email);
+    response.user.firstName = userDetails.firstName;
+    response.user.lastName = userDetails.lastName;
     return response;
   }
 
@@ -162,6 +165,9 @@ export class UsersController {
     const response = new UserTokenResponseDTO();
     response.token = this._users.generateLoginToken(user);
     response.user = convertBetweenEntityAndDTO(user, UserDTO);
+    const userDetails = await this._users.getUser(user.email);
+    response.user.firstName = userDetails.firstName;
+    response.user.lastName = userDetails.lastName;
     return response;
   }
 
