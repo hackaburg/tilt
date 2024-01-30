@@ -20,6 +20,7 @@ export const Spacer = () => <SpacerDiv />;
 
 const FullWidthSpacerDiv = styled.div`
   display: flex;
+  flex-grow: 1;
 `;
 
 export const FullWidthSpacer = () => <FullWidthSpacerDiv />
