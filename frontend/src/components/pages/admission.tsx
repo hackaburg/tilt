@@ -737,7 +737,7 @@ export const Admission = () => {
   return (
     <Page>
       <div style={{position: "relative"}}>
-        <div style={{position: "sticky", top: "20px", backgroundColor: "white", zIndex: 50}}>
+        <div style={{position: "sticky", top: "0px", backgroundColor: "white", zIndex: 50}}>
           <Heading text="Admission" />
           <Divider />
 
