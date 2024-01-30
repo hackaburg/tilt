@@ -17,6 +17,7 @@ import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
 import { Page } from "./page";
 import { Divider } from "../base/divider";
+import { SimpleCard } from "../base/simple-card";
 
 /**
  * The start page every user sees after logging in.
@@ -65,21 +66,12 @@ export const Status = () => {
     <Page>
       {user! && (
         <>
-          <Heading text="Dashboard" />
+          <Heading text={`Welcome ${user?.firstName}`} />
           <Divider />
           <Subheading text="The current status of your application and all relevant links for Hackaburg can be found here." />
         </>
       )}
-      <div
-        style={{
-          borderRadius: "1rem",
-          boxShadow:
-            "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
-          padding: "2rem",
-          paddingTop: "1rem",
-          marginTop: "2rem",
-        }}
-      >
+      <SimpleCard>
         <ProgressStep
           index={1}
           title="Register"
@@ -309,7 +301,7 @@ export const Status = () => {
             </>
           )}
         </ProgressStep>
-      </div>
+      </SimpleCard>
     </Page>
   );
 };

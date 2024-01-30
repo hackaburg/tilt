@@ -11,7 +11,7 @@ const TitledNumberContainer = styled(StyleableFlexContainer)`
 `;
 
 const Big = styled(StyleableFlexContainer)`
-  font-size: 2rem;
+  font-size: 3rem;
   padding: 0.5rem 0;
 `;
 

@@ -8,7 +8,7 @@ import { useApi } from "../../hooks/use-api";
 import { useDerivedState } from "../../hooks/use-derived-state";
 import { isBetween, isConfirmationExpired, Nullable } from "../../util";
 import { Button } from "../base/button";
-import { Divider } from "../base/divider";
+import { DividerSlim } from "../base/divider";
 import {
   FlexColumnContainer,
   FlexRowColumnContainer,
@@ -195,7 +195,7 @@ export const Form = ({ type }: IFormProps) => {
 
     return (
       <FlexColumnContainer key={String(question.id)}>
-        <Divider />
+        <DividerSlim />
 
         <StringifiedUnifiedQuestion
           onChange={(value) => handleQuestionValueChange(question.id!, value)}
