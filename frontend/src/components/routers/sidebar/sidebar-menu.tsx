@@ -47,7 +47,7 @@ const Link = styled(NavLink)`
 `;
 
 interface ISidebarMenuItemProps {
-  to: string;
+  to?: string;
   onClick?: () => any;
   children: any;
 }
