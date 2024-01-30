@@ -23,6 +23,7 @@ import {
   FlexColumnContainer,
   FlexRowColumnContainer,
   FlexRowContainer,
+  FullWidthSpacer,
   NonGrowingFlexContainer,
   Spacer,
   StyleableFlexContainer,
@@ -375,8 +376,8 @@ export const Admission = () => {
           if (firstSeenPartialTeam != null) {
             const choice = prompt(
               `You're about to admit the team '${firstSeenPartialTeam}', but you missed some team members:\n\n` +
-                `${missingPartialTeamMemberEmails}\n` +
-                `Type 'show' (without quotes) to view the missing team members, or type 'ignore' (without quotes) to continue partially admitting this team.`,
+              `${missingPartialTeamMemberEmails}\n` +
+              `Type 'show' (without quotes) to view the missing team members, or type 'ignore' (without quotes) to continue partially admitting this team.`,
             );
 
             if (choice == null) {
@@ -397,8 +398,8 @@ export const Admission = () => {
         if (
           !confirm(
             `Are you sure you want to admit the following ${selectedRowIDs.length} application(s):\n\n` +
-              `${applicationList}\n\n` +
-              `This will send out admission emails, which you can't undo.`,
+            `${applicationList}\n\n` +
+            `This will send out admission emails, which you can't undo.`,
           )
         ) {
           return;
@@ -441,8 +442,8 @@ export const Admission = () => {
       const name =
         probableNameQuestion != null
           ? applicationsByUserID[id].answersByQuestionID[
-              probableNameQuestion.id!
-            ]
+          probableNameQuestion.id!
+          ]
           : null;
 
       const isRowSelected = selectedRowIDs.includes(id);
@@ -471,54 +472,54 @@ export const Admission = () => {
       const questionsAndAnswers = !isRowExpanded
         ? null
         : questions
-            .map((question) => {
-              const answerValue = answersByQuestionID[question.id!];
+          .map((question) => {
+            const answerValue = answersByQuestionID[question.id!];
 
-              if (answerValue == null) {
-                return;
-              }
+            if (answerValue == null) {
+              return;
+            }
 
-              let answer: React.ReactNode = <Text>{answerValue}</Text>;
+            let answer: React.ReactNode = <Text>{answerValue}</Text>;
 
-              if (question.configuration.type === QuestionType.Text) {
-                if (question.configuration.convertAnswerToUrl) {
-                  const url = /^https?:\/\//.test(answerValue)
-                    ? answerValue
-                    : `http://${answerValue}`;
-                  answer = (
-                    <Text>
-                      <ExternalLink to={url}>{url}</ExternalLink>
-                    </Text>
-                  );
-                } else if (question.configuration.multiline) {
-                  answer = answerValue
-                    .trim()
-                    .split("\n")
-                    .filter((line) => line.length > 0)
-                    .map((line, index) => (
-                      <Text key={`${line}-${index}`}>{line}</Text>
-                    ));
-                }
-              } else if (question.configuration.type === QuestionType.Choices) {
-                const choices = answerValue
-                  .split(",")
-                  .map((choice, index) => (
-                    <li key={`${choice}-${index}`}>{choice}</li>
-                  ));
-
-                answer = <ul>{choices}</ul>;
-              }
-
-              return (
-                <FlexColumnContainer key={String(question.id)}>
+            if (question.configuration.type === QuestionType.Text) {
+              if (question.configuration.convertAnswerToUrl) {
+                const url = /^https?:\/\//.test(answerValue)
+                  ? answerValue
+                  : `http://${answerValue}`;
+                answer = (
                   <Text>
-                    <b>{question.title}</b>
+                    <ExternalLink to={url}>{url}</ExternalLink>
                   </Text>
-                  {answer}
-                </FlexColumnContainer>
-              );
-            })
-            .filter((answer) => answer != null);
+                );
+              } else if (question.configuration.multiline) {
+                answer = answerValue
+                  .trim()
+                  .split("\n")
+                  .filter((line) => line.length > 0)
+                  .map((line, index) => (
+                    <Text key={`${line}-${index}`}>{line}</Text>
+                  ));
+              }
+            } else if (question.configuration.type === QuestionType.Choices) {
+              const choices = answerValue
+                .split(",")
+                .map((choice, index) => (
+                  <li key={`${choice}-${index}`}>{choice}</li>
+                ));
+
+              answer = <ul>{choices}</ul>;
+            }
+
+            return (
+              <FlexColumnContainer key={String(question.id)}>
+                <Text>
+                  <b>{question.title}</b>
+                </Text>
+                {answer}
+              </FlexColumnContainer>
+            );
+          })
+          .filter((answer) => answer != null);
 
       const handleDeleteAccount = async () => {
         if (!confirm(`Are you sure you want to delete ${name}'s account?`)) {
@@ -584,16 +585,32 @@ export const Admission = () => {
             </TableCell>
 
             <TableCell>{name}</TableCell>
+            <TableCell>
+              {!checkedIn && (
+                <Button onClick={handleCheckInAccount} primary>
+                  Check in
+                </Button>
+              )}
+            </TableCell>
           </RowComponent>
 
           <tr>
             {isRowExpanded && (
-              <ExpandedCell colSpan={4}>
+              <ExpandedCell colSpan={5}>
                 <QuestionaireContainer>
                   <Subheading text="Application" />
 
+                  <FlexRowContainer>
+                    <FullWidthSpacer />
+                    <NonGrowingFlexContainer>
+                      <Button onClick={handleDeleteAccount}>
+                        Delete account
+                      </Button>
+                    </NonGrowingFlexContainer>
+                  </FlexRowContainer>
+
                   {questionsAndAnswers != null &&
-                  questionsAndAnswers.length > 0 ? (
+                    questionsAndAnswers.length > 0 ? (
                     questionsAndAnswers
                   ) : (
                     <Muted>This application appears to be empty.</Muted>
@@ -603,24 +620,6 @@ export const Admission = () => {
                     <FlexRowColumnContainer>
                       <Subheading text="Meta" />
                     </FlexRowColumnContainer>
-
-                    <NonGrowingFlexContainer>
-                      <Button onClick={handleDeleteAccount}>
-                        Delete account
-                      </Button>
-                    </NonGrowingFlexContainer>
-
-                    {!checkedIn && (
-                      <>
-                        <Spacer />
-
-                        <NonGrowingFlexContainer>
-                          <Button onClick={handleCheckInAccount} primary>
-                            Check in
-                          </Button>
-                        </NonGrowingFlexContainer>
-                      </>
-                    )}
                   </FlexRowContainer>
 
                   <Text>
@@ -736,8 +735,8 @@ export const Admission = () => {
 
   return (
     <Page>
-      <div style={{position: "relative"}}>
-        <div style={{position: "sticky", top: "0px", backgroundColor: "white", zIndex: 50}}>
+      <div style={{ position: "relative" }}>
+        <div style={{ position: "sticky", top: "0px", backgroundColor: "white", zIndex: 50 }}>
           <Heading text="Admission" />
           <Divider />
 
@@ -751,23 +750,23 @@ export const Admission = () => {
             are the only available special filters.
           </Text>
 
-      {error && (
-        <Message type="error">
-          <b>Error:</b> {error.message}
-        </Message>
-      )}
+          {error && (
+            <Message type="error">
+              <b>Error:</b> {error.message}
+            </Message>
+          )}
 
-      {probableNameQuestion == null && (
-        <Message type="warning">
-          <b>Warnings:</b>
-          <ul>
-            <li>
-              We couldn't find a "name" question. Are you asking for this
-              information?
-            </li>
-          </ul>
-        </Message>
-      )}
+          {probableNameQuestion == null && (
+            <Message type="warning">
+              <b>Warnings:</b>
+              <ul>
+                <li>
+                  We couldn't find a "name" question. Are you asking for this
+                  information?
+                </li>
+              </ul>
+            </Message>
+          )}
 
           <NonGrowingFlexContainer>
             <a style={{ width: "20rem", marginTop: "1rem" }}>
@@ -787,14 +786,16 @@ export const Admission = () => {
                 />
               }
               button={
-                <Button
-                  disable={selectedRowIDs.length === 0}
-                  loading={isAdmitting}
-                  onClick={admit}
-                  primary
-                >
-                  Admit
-                </Button>
+                <div style={{ marginTop: "-7px" }}>
+                  <Button
+                    disable={selectedRowIDs.length === 0}
+                    loading={isAdmitting}
+                    onClick={admit}
+                    primary
+                  >
+                    Admit
+                  </Button>
+                </div>
               }
             />
           </NonGrowingFlexContainer>
@@ -809,7 +810,8 @@ export const Admission = () => {
                   <col style={{ width: "5%" }} />
                   {!isResponsive && <col style={{ width: "10%" }} />}
                   <col style={{ width: "40%" }} />
-                  <col style={{ width: "45%" }} />
+                  <col style={{ width: "25%" }} />
+                  <col style={{ width: "30%" }} />
                 </colgroup>
 
                 <TableHead>
@@ -825,6 +827,7 @@ export const Admission = () => {
                     {!isResponsive && <TableHeaderCell />}
                     <TableHeaderCell>E-mail</TableHeaderCell>
                     <TableHeaderCell>Name</TableHeaderCell>
+                    <TableHeaderCell>Check In</TableHeaderCell>
                   </tr>
                 </TableHead>
 

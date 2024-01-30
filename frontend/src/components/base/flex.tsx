@@ -18,6 +18,12 @@ const SpacerDiv = styled.div`
  */
 export const Spacer = () => <SpacerDiv />;
 
+const FullWidthSpacerDiv = styled.div`
+  display: flex;
+`;
+
+export const FullWidthSpacer = () => <FullWidthSpacerDiv />
+
 const FlexColumnContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
