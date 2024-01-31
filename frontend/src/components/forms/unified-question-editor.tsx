@@ -14,7 +14,7 @@ import { Nullable } from "../../util";
 import { Checkboxes } from "../base/checkbox";
 import { Spacer, StyleableFlexContainer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
-import { Select } from "../base/select";
+import { SelectWrapper } from "../base/select";
 import { TextInput, TextInputType } from "../base/text-input";
 import { ChoicesQuestionEditor } from "./choices-question-editor";
 import { CountryQuestionEditor } from "./country-question-editor";
@@ -231,11 +231,12 @@ export const UnifiedQuestionEditor = ({
       <Meta>
         <FlexRowContainer>
           <FlexRowColumnContainer>
-            <Select
+            <SelectWrapper
               onChange={handleQuestionTypeChange}
               value={question.configuration.type}
               values={availableQuestionTypes}
               title="Question type"
+              description={question.description}
             />
           </FlexRowColumnContainer>
           <Spacer />
@@ -276,11 +277,12 @@ export const UnifiedQuestionEditor = ({
 
         <FlexRowContainer>
           <FlexRowColumnContainer>
-            <Select
+            <SelectWrapper
               values={parentChoices}
               value={currentParentChoice}
               onChange={handleQuestionParentIDChange}
               title="Parent question"
+              description={question.description}
             />
           </FlexRowColumnContainer>
           <Spacer />

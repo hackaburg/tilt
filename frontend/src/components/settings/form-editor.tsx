@@ -90,8 +90,6 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
 
   const editableQuestions = form.questions.map((question, questionIndex) => (
     <FlexColumnContainer key={question.id ?? question.title}>
-      <Divider />
-
       <QuestionEditor
         onQuestionChange={handleQuestionChange}
         question={question}

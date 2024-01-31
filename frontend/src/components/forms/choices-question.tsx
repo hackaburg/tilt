@@ -4,7 +4,7 @@ import type {
   QuestionDTO,
 } from "../../api/types/dto";
 import { Checkboxes } from "../base/checkbox";
-import { Select } from "../base/select";
+import { SelectWrapper } from "../base/select";
 
 interface IChoicesQuestionProps {
   question: QuestionDTO<ChoicesQuestionConfigurationDTO>;
@@ -24,13 +24,14 @@ export const ChoicesQuestion = ({
 }: IChoicesQuestionProps) => {
   if (question.configuration.displayAsDropdown) {
     return (
-      <Select
+      <SelectWrapper
         mandatory={question.mandatory}
         onChange={(value) => onSelectedChanged([value])}
         title={question.title}
         value={selected[0]}
         values={question.configuration.choices}
         isDisabled={isDisabled}
+        description={question.description}
       />
     );
   }

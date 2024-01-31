@@ -1,20 +1,13 @@
-import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import { Elevated } from "./elevated";
 import { FormField } from "./form-field";
-
-const SelectContainer = styled(Elevated)`
-  padding: 0.75rem 1rem;
-`;
-
-const Field = styled.select`
-  width: 100%;
-  -webkit-appearance: none;
-  background-color: transparent;
-  border: none;
-  font-size: 14px;
-`;
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 
 interface ISelectProps {
   values: string[];
@@ -24,12 +17,13 @@ interface ISelectProps {
   title: string;
   mandatory?: boolean;
   isDisabled?: boolean;
+  description?: string;
 }
 
 /**
  * A select dropdown.
  */
-export const Select = ({
+export const SelectWrapper = ({
   values,
   value,
   onChange,
@@ -37,28 +31,36 @@ export const Select = ({
   placeholder,
   mandatory,
   isDisabled = false,
+  description,
 }: ISelectProps) => {
   const options = values.map((optionValue) => (
-    <option key={optionValue} value={optionValue}>
+    <MenuItem key={optionValue} value={optionValue}>
       {optionValue}
-    </option>
+    </MenuItem>
   ));
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) =>
-      onChange(event.target.value),
+    (event: SelectChangeEvent) => onChange(event.target.value),
     [onChange],
   );
 
   return (
-    <FormField title={title} mandatory={mandatory}>
-      <SelectContainer level={1}>
-        <Field value={value} onChange={handleChange} disabled={isDisabled}>
-          {placeholder && <option>{placeholder}</option>}
+    <div>
+      <FormField title={title} mandatory={mandatory}>
+        <FormControl fullWidth style={{ marginTop: "0.5rem" }}>
+          <InputLabel id="demo-simple-select-label">{description}</InputLabel>
+          <Select
+            value={value}
+            label={description}
+            onChange={handleChange}
+            disabled={isDisabled}
+          >
+            {placeholder && <MenuItem>{placeholder}</MenuItem>}
 
-          {options}
-        </Field>
-      </SelectContainer>
-    </FormField>
+            {options}
+          </Select>
+        </FormControl>
+      </FormField>
+    </div>
   );
 };

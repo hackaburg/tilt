@@ -3,8 +3,8 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
 import { useFocus } from "../../hooks/use-focus";
-import { Elevated } from "./elevated";
 import { FormField } from "./form-field";
+import { TextField } from "@mui/material";
 
 const FieldStyle = css`
   width: 100%;
@@ -49,6 +49,7 @@ interface ITextInputProps<TValue = any> {
   name?: string;
   autoCompleteField?: string;
   rows?: number;
+  description?: string;
 }
 
 /**
@@ -69,6 +70,7 @@ export const TextInput = ({
   isDisabled = false,
   name,
   autoCompleteField,
+  description,
   rows,
 }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus(autoFocus);
@@ -102,22 +104,22 @@ export const TextInput = ({
     fieldType === TextInputType.Area ? (
       <Area {...fieldProps} rows={rows} />
     ) : (
-      <Input
-        type={fieldType}
-        min={min}
-        max={max}
-        step={allowDecimals ? "any" : 1}
-        spellCheck={false}
-        autoComplete={autoCompleteField}
-        {...fieldProps}
-      ></Input>
+      <div>
+        <TextField
+          style={{ marginTop: "0.5rem" }}
+          type={fieldType}
+          id="outlined-basic"
+          variant="outlined"
+          label={description}
+          fullWidth
+          {...fieldProps}
+        />
+      </div>
     );
-
-  const elevationLevel = isFocused ? 2 : 1;
 
   return (
     <FormField title={title} mandatory={mandatory}>
-      <Elevated level={elevationLevel}>{field}</Elevated>
+      {field}
     </FormField>
   );
 };

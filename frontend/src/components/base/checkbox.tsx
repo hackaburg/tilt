@@ -8,14 +8,17 @@ import {
   VerticallyCenteredContainer,
 } from "./flex";
 import { FormField } from "./form-field";
+import { Checkbox } from "@mui/material";
 
 const ItemContainer = styled(StyleableFlexContainer)`
-  padding: 0.5rem 0;
+  padding: 0;
 `;
 
 const Label = styled.label`
   padding-left: 0.5rem;
 `;
+
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 interface ICheckboxesProps {
   radio?: boolean;
@@ -65,11 +68,12 @@ export const Checkboxes = ({
   const checkboxes = values.map((checkboxValue, index) => (
     <ItemContainer key={checkboxIDs[index]}>
       <VerticallyCenteredContainer>
-        <input
+        <Checkbox
+          {...label}
           id={checkboxIDs[index]}
           name={radio ? groupID : undefined}
           checked={selected.includes(checkboxValue)}
-          type={radio ? "radio" : "checkbox"}
+          typeof={radio ? "radio" : "checkbox"}
           onChange={toggleChecked}
           disabled={isDisabled}
         />
