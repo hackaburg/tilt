@@ -61,7 +61,7 @@ export const SidebarMenuItem = ({
   children,
 }: ISidebarMenuItemProps) => (
   <LI>
-    <Link to={to} exact onClick={onClick}>
+    <Link to={to!} exact onClick={onClick}>
       {children}
     </Link>
   </LI>

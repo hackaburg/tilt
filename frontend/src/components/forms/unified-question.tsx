@@ -65,7 +65,7 @@ const Question = ({
         <CountryQuestion
           question={question as QuestionDTO<CountryQuestionConfigurationDTO>}
           onChange={onChange}
-          value={value}
+          valueInput={value}
           isDisabled={isDisabled}
         />
       );
