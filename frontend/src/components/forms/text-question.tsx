@@ -29,6 +29,7 @@ export const TextQuestion = ({
       title={question.title}
       mandatory={question.mandatory}
       isDisabled={isDisabled}
+      description={question.description}
       type={
         question.configuration.multiline
           ? TextInputType.Area

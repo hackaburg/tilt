@@ -9,7 +9,6 @@ import type {
 } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { FlexColumnContainer } from "../base/flex";
-import { Markdown } from "../base/markdown";
 import { ChoicesQuestion } from "./choices-question";
 import { CountryQuestion } from "./country-question";
 import { NumberQuestion } from "./number-question";
@@ -87,7 +86,6 @@ export const UnifiedQuestion = ({
   isDisabled,
 }: IQuestionProps) => (
   <FlexColumnContainer>
-    <Markdown text={question.description} />
     <Question
       question={question}
       value={value}

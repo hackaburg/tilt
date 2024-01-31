@@ -9,7 +9,7 @@ const FormFieldContainer = styled(StyleableFlexContainer)`
 const Title = styled.label`
   display: block;
   padding-bottom: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: bold;
 `;
 

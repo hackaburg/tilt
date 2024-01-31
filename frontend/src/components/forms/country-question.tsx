@@ -4,7 +4,9 @@ import type {
   CountryQuestionConfigurationDTO,
   QuestionDTO,
 } from "../../api/types/dto";
-import { Select } from "../base/select";
+import { Autocomplete, TextField } from "@mui/material";
+import { FormField } from "../base/form-field";
+import { useCallback } from "react";
 
 /**
  * A list of countries known to tilt.
@@ -27,13 +29,27 @@ export const CountryQuestion = ({
   onChange,
   question,
   isDisabled,
-}: ICountryQuestionProps) => (
-  <Select
-    mandatory={question.mandatory}
-    title={question.title}
-    value={value}
-    values={countryNames}
-    onChange={onChange}
-    isDisabled={isDisabled}
-  />
-);
+}: ICountryQuestionProps) => {
+  const handleChange = useCallback(
+    (event: React.SyntheticEvent, value: string | null) => onChange(value!),
+    [onChange],
+  );
+
+  return (
+    <div>
+      <FormField title={question.title} mandatory={question.mandatory}>
+        <Autocomplete
+          disablePortal
+          options={countryNames}
+          fullWidth
+          renderInput={(params) => (
+            <TextField {...params} label={question.description} />
+          )}
+          disabled={isDisabled}
+          onChange={handleChange}
+          value={value}
+        />
+      </FormField>
+    </div>
+  );
+};
