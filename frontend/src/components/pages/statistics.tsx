@@ -20,7 +20,6 @@ import { InternalLink } from "../base/link";
 import { Text } from "../base/text";
 import { TimeChart } from "../base/time-chart";
 import { TitledNumber } from "../base/titled-number";
-import { WorldMap } from "../base/worldmap";
 import { Page } from "./page";
 import { SimpleCard } from "../base/simple-card";
 import { Grid } from "@mui/material";
@@ -212,7 +211,6 @@ export const Statistics = () => {
     }, [safeApplications]);
 
   const statistics = allQuestions.map(({ id, configuration, title }) => {
-    const key = `${title}-${id}`;
     const counts = answersByQuestionID[id!];
 
     if (!counts) {

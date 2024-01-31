@@ -18,10 +18,6 @@ const Area = styled.textarea`
   resize: vertical;
 `;
 
-const Input = styled.input`
-  ${FieldStyle}
-`;
-
 /**
  * The type of the text input.
  */
@@ -63,13 +59,9 @@ export const TextInput = ({
   type = TextInputType.Text,
   autoFocus = false,
   mandatory,
-  min,
-  max,
   maxLength = 1024,
-  allowDecimals,
   isDisabled = false,
   name,
-  autoCompleteField,
   description,
   rows,
 }: ITextInputProps) => {
@@ -112,6 +104,7 @@ export const TextInput = ({
           variant="outlined"
           label={description}
           fullWidth
+          focused={isFocused}
           {...fieldProps}
         />
       </div>

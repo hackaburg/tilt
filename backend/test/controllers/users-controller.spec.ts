@@ -91,6 +91,11 @@ describe("UsersController", () => {
     (user as any).id = 1;
     userService.mocks.findUserWithCredentials.mockResolvedValue(user);
 
+    userService.mocks.getUser.mockResolvedValue({
+      firstName: "firstName",
+      lastName: "lastName",
+    });
+
     const token = "token";
     userService.mocks.generateLoginToken.mockReturnValue(token);
     const response = await controller.login({
@@ -111,6 +116,10 @@ describe("UsersController", () => {
     user.role = UserRole.Moderator;
     userService.mocks.findUserWithCredentials.mockResolvedValue(user);
     userService.mocks.generateLoginToken.mockReturnValue("token");
+    userService.mocks.getUser.mockResolvedValue({
+      firstName: "firstName",
+      lastName: "lastName",
+    });
     const response = await controller.login({
       data: {
         email: "test@foo.bar",
@@ -143,6 +152,10 @@ describe("UsersController", () => {
     const user = new User();
     user.role = role;
     userService.mocks.generateLoginToken.mockReturnValue(token);
+    userService.mocks.getUser.mockResolvedValue({
+      firstName: "firstname",
+      lastName: "lastName",
+    });
     const response = await controller.refreshLoginToken(user);
     expect(response.token).toBe(token);
     expect(response.user.role).toBe(role);

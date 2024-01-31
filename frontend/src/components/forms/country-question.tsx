@@ -15,8 +15,8 @@ export const countryNames = countries.map(({ country }) => country).sort();
 
 interface ICountryQuestionProps {
   question: QuestionDTO<CountryQuestionConfigurationDTO>;
-  value: string;
-  onChange: (value: string) => any;
+  valueInput: string;
+  onChange: (event: React.SyntheticEvent, value: string) => any;
   isDisabled?: boolean;
 }
 
@@ -25,13 +25,14 @@ interface ICountryQuestionProps {
  * Basically a choices question, but separating it allows better visualization.
  */
 export const CountryQuestion = ({
-  value,
+  valueInput,
   onChange,
   question,
   isDisabled,
 }: ICountryQuestionProps) => {
   const handleChange = useCallback(
-    (event: React.SyntheticEvent, value: string | null) => onChange(value!),
+    (event: React.SyntheticEvent, value: string | null) =>
+      onChange(event, value!),
     [onChange],
   );
 
@@ -47,7 +48,7 @@ export const CountryQuestion = ({
           )}
           disabled={isDisabled}
           onChange={handleChange}
-          value={value}
+          value={valueInput}
         />
       </FormField>
     </div>
