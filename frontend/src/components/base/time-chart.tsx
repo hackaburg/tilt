@@ -9,7 +9,7 @@ const options = {
     xAxes: [
       {
         time: {
-          unit: "day",
+          unit: "month",
         },
         type: "time",
       },
@@ -43,7 +43,7 @@ export const TimeChart = ({ title, values }: ITimeChartProps) => {
     return {
       datasets: [
         {
-          backgroundColor: transparentChartColors[0],
+          backgroundColor: transparentChartColors[1],
           borderColor: chartColors[0],
           data: values as IValue[],
           label: title,
@@ -52,5 +52,5 @@ export const TimeChart = ({ title, values }: ITimeChartProps) => {
     } as ChartData;
   }, [title, values]);
 
-  return <Line data={data} height={300} options={options} />;
+  return <Line data={data} height={100} options={options} />;
 };

@@ -5,7 +5,6 @@ import type { FormSettingsDTO, QuestionDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { moveArrayItemDown, moveArrayItemUp } from "../../util";
 import { Button } from "../base/button";
-import { Divider } from "../base/divider";
 import { Elevated } from "../base/elevated";
 import { FlexColumnContainer, Spacer } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
@@ -90,8 +89,6 @@ export const FormEditor = ({ form, onFormChange }: IFormEditorProps) => {
 
   const editableQuestions = form.questions.map((question, questionIndex) => (
     <FlexColumnContainer key={question.id ?? question.title}>
-      <Divider />
-
       <QuestionEditor
         onQuestionChange={handleQuestionChange}
         question={question}

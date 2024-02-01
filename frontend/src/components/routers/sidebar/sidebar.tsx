@@ -14,6 +14,9 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import { VscSettings } from "react-icons/vsc";
 import { FaHeartBroken } from "react-icons/fa";
 import { GrUserExpert } from "react-icons/gr";
+import sha256 from "sha256";
+import { NavLink } from "react-router-dom";
+import { transitionDuration } from "../../../config";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -23,6 +26,30 @@ const BackgroundContainer = styled(StyleableFlexContainer)`
     ${variables.colorGradientStart},
     ${variables.colorGradientEnd}
   );
+`;
+
+const LI = styled.li`
+  display: block;
+`;
+
+const Link = styled(NavLink)`
+  display: block;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+
+  transition-property: background-color;
+  transition-duration: ${transitionDuration};
+
+  color: #929292;
+  text-decoration: none;
+
+  &.active {
+    color: white;
+  }
+
+  &:hover {
+    color: white;
+  }
 `;
 
 /**
@@ -39,6 +66,13 @@ export const Sidebar = () => {
   const role = user?.role ?? UserRole.User;
   const isAdmitted = user?.admitted ?? false;
   const isElevatedUser = [UserRole.Moderator, UserRole.Root].includes(role);
+
+  const getGravatarUrl = (mail: string, size: string) => {
+    const address = String(mail).trim().toLowerCase();
+    const hash = sha256(address);
+    // Grab the actual image URL
+    return `https://www.gravatar.com/avatar/${hash}?s=${size}`;
+  };
 
   const H1 = styled.h1`
     font-size: 2.3rem;
@@ -136,10 +170,33 @@ export const Sidebar = () => {
         )}
       </SidebarMenu>
       <div style={{ bottom: "1rem", position: "absolute" }}>
-        <SidebarMenuItem to={Routes.Logout} onClick={logout}>
-          <BiLogOutCircle />
-          <span style={{ marginLeft: "1rem" }}> Logout</span>
-        </SidebarMenuItem>
+        <LI>
+          <div style={{ display: "flex", padding: "1rem" }}>
+            <img
+              style={{ borderRadius: "5rem" }}
+              height={50}
+              src={getGravatarUrl(user?.email ?? "", "50")}
+            />
+            <div
+              style={{
+                padding: "0.8rem",
+                paddingTop: "0.45rem",
+                marginLeft: "0.5rem",
+                color: "white",
+              }}
+            >
+              <p style={{ fontSize: "1rem", margin: "0" }}>
+                {user?.firstName} {user?.lastName}
+              </p>
+              <p style={{ fontSize: "0.6rem", margin: "0" }}>{user?.email}</p>
+            </div>
+            <Link to={Routes.Logout} exact onClick={logout}>
+              <div style={{ marginLeft: "0.5rem", marginTop: "-0.5rem" }}>
+                <BiLogOutCircle size={25} />
+              </div>
+            </Link>
+          </div>
+        </LI>
       </div>
     </BackgroundContainer>
   );

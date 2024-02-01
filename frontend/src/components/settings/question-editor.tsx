@@ -15,6 +15,7 @@ import {
 import { SortingButtons } from "../forms/sorting-buttons";
 import { UnifiedQuestion } from "../forms/unified-question";
 import { UnifiedQuestionEditor } from "../forms/unified-question-editor";
+import { SimpleCard } from "../base/simple-card";
 
 const ButtonContainer = styled(StyleableFlexContainer)`
   align-self: flex-end;
@@ -74,44 +75,46 @@ export const QuestionEditor = ({
   }, [onDeleteQuestion, question]);
 
   return (
-    <FlexColumnContainer>
-      <ButtonContainer>
-        <FlexRowContainer>
-          <SortingButtons
-            onClickMoveDown={onMoveDown}
-            onClickMoveUp={onMoveUp}
+    <SimpleCard>
+      <FlexColumnContainer>
+        <ButtonContainer>
+          <FlexRowContainer>
+            <SortingButtons
+              onClickMoveDown={onMoveDown}
+              onClickMoveUp={onMoveUp}
+            />
+
+            <Spacer />
+
+            {isEditing ? (
+              <>
+                <RemoveButton onClick={handleDelete}>
+                  Delete question
+                </RemoveButton>
+                <FinishButton onClick={toggleEditing}>
+                  Finish editing
+                </FinishButton>
+              </>
+            ) : (
+              <MetaButton onClick={toggleEditing}>Edit</MetaButton>
+            )}
+          </FlexRowContainer>
+        </ButtonContainer>
+
+        {isEditing ? (
+          <UnifiedQuestionEditor
+            question={question}
+            onQuestionChange={onQuestionChange}
+            allQuestions={allQuestions}
           />
-
-          <Spacer />
-
-          {isEditing ? (
-            <>
-              <RemoveButton onClick={handleDelete}>
-                Delete question
-              </RemoveButton>
-              <FinishButton onClick={toggleEditing}>
-                Finish editing
-              </FinishButton>
-            </>
-          ) : (
-            <MetaButton onClick={toggleEditing}>Edit</MetaButton>
-          )}
-        </FlexRowContainer>
-      </ButtonContainer>
-
-      {isEditing ? (
-        <UnifiedQuestionEditor
-          question={question}
-          onQuestionChange={onQuestionChange}
-          allQuestions={allQuestions}
-        />
-      ) : (
-        <UnifiedQuestion
-          question={question}
-          value={fortune}
-          onChange={ignoreChange}
-        />
-      )}
-    </FlexColumnContainer>
+        ) : (
+          <UnifiedQuestion
+            question={question}
+            value={fortune}
+            onChange={ignoreChange}
+          />
+        )}
+      </FlexColumnContainer>
+    </SimpleCard>
   );
 };

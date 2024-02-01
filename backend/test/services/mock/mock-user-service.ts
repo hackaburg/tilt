@@ -20,5 +20,6 @@ export const MockUserService = jest.fn(
       verifyUserByVerifyToken: jest.fn(),
       verifyUserResetPassword: jest.fn(),
       forgotPassword: jest.fn(),
+      getUser: jest.fn(),
     }),
 );

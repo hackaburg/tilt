@@ -8,7 +8,6 @@ import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { isConfirmationExpired, roundDateToDay } from "../../util";
 import { CircleChart } from "../base/circle-chart";
-import { Collapsible } from "../base/collapsible";
 import { Divider } from "../base/divider";
 import {
   FlexRowColumnContainer,
@@ -16,16 +15,19 @@ import {
   NonGrowingFlexContainer,
   StyleableFlexContainer,
 } from "../base/flex";
-import { Heading } from "../base/headings";
+import { Heading, Subheading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { Text } from "../base/text";
 import { TimeChart } from "../base/time-chart";
 import { TitledNumber } from "../base/titled-number";
-import { WorldMap } from "../base/worldmap";
 import { Page } from "./page";
+import { SimpleCard } from "../base/simple-card";
+import { Grid } from "@mui/material";
 
 const ChartContainer = styled(StyleableFlexContainer)`
-  width: min(300px, 100vw);
+  width: min(400px, 100vw);
+  postion: relative;
+  margin: auto;
 `;
 
 interface IAnswerCount {
@@ -209,7 +211,6 @@ export const Statistics = () => {
     }, [safeApplications]);
 
   const statistics = allQuestions.map(({ id, configuration, title }) => {
-    const key = `${title}-${id}`;
     const counts = answersByQuestionID[id!];
 
     if (!counts) {
@@ -219,19 +220,25 @@ export const Statistics = () => {
     switch (configuration.type) {
       case QuestionType.Choices:
         return (
-          <Collapsible key={key} title={title}>
-            <ChartContainer>
-              <CircleChart counts={counts} />
-            </ChartContainer>
-          </Collapsible>
+          <FlexRowColumnContainer>
+            <SimpleCard>
+              <Subheading text={title} />
+              <Divider />
+              <ChartContainer>
+                <CircleChart counts={counts} />
+              </ChartContainer>
+            </SimpleCard>
+          </FlexRowColumnContainer>
         );
 
-      case QuestionType.Country:
+      /*case QuestionType.Country:
         return (
-          <Collapsible key={key} title={title}>
+          <SimpleCard>
+            <Subheading text={title} />
+            <Divider />
             <WorldMap counts={counts} />
-          </Collapsible>
-        );
+          </SimpleCard>
+        );*/
 
       default:
         return null;
@@ -246,66 +253,84 @@ export const Statistics = () => {
 
         <FlexRowContainer>
           <FlexRowColumnContainer>
-            <TitledNumber title="Users" value={safeApplications.length} />
+            <SimpleCard>
+              <TitledNumber title="Users" value={safeApplications.length} />
+            </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <TitledNumber title="Applied" value={percentages.submitted} />
+            <SimpleCard>
+              <TitledNumber title="Applied" value={percentages.submitted} />
+            </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <TitledNumber title="Admitted" value={percentages.admitted} />
+            <SimpleCard>
+              <TitledNumber title="Admitted" value={percentages.admitted} />
+            </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <TitledNumber title="Confirmed" value={percentages.confirmed} />
+            <SimpleCard>
+              <TitledNumber title="Confirmed" value={percentages.confirmed} />
+            </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <TitledNumber title="Declined" value={percentages.declined} />
+            <SimpleCard>
+              <TitledNumber title="Declined" value={percentages.declined} />
+            </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <TitledNumber
-              title="Confirmed Netto"
-              value={percentages.confirmedNetto}
-            />
+            <SimpleCard>
+              <TitledNumber
+                title="Confirmed Netto"
+                value={percentages.confirmedNetto}
+              />
+            </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <TitledNumber title="Expired" value={percentages.expired} />
+            <SimpleCard>
+              <TitledNumber title="Expired" value={percentages.expired} />
+            </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-            <TitledNumber title="Checked in" value={percentages.checkedIn} />
+            <SimpleCard>
+              <TitledNumber title="Checked in" value={percentages.checkedIn} />
+            </SimpleCard>
           </FlexRowColumnContainer>
         </FlexRowContainer>
 
-        <Divider />
+        <FlexRowContainer>
+          <FlexRowColumnContainer>
+            <SimpleCard>
+              <Subheading text="Applications over time" />
+              <Divider></Divider>
+              <FlexRowContainer>
+                <FlexRowColumnContainer>
+                  <TimeChart
+                    values={applicationsOverTime}
+                    title="Applications over time"
+                  />
+                </FlexRowColumnContainer>
+                <FlexRowColumnContainer>
+                  <TimeChart
+                    values={cummulativeApplicationsOverTime}
+                    title="Cummulative applications over time"
+                  />
+                </FlexRowColumnContainer>
+              </FlexRowContainer>
+            </SimpleCard>
+          </FlexRowColumnContainer>
+        </FlexRowContainer>
 
-        <Collapsible title="Applications over time">
-          <FlexRowContainer>
-            <FlexRowColumnContainer>
-              <ChartContainer>
-                <TimeChart
-                  values={applicationsOverTime}
-                  title="Applications over time"
-                />
-              </ChartContainer>
-            </FlexRowColumnContainer>
-            <FlexRowColumnContainer>
-              <ChartContainer>
-                <TimeChart
-                  values={cummulativeApplicationsOverTime}
-                  title="Cummulative applications over time"
-                />
-              </ChartContainer>
-            </FlexRowColumnContainer>
-          </FlexRowContainer>
-        </Collapsible>
-
-        <Divider />
+        <div style={{ padding: "1.9rem" }}>
+          <Grid container spacing={4} justifyContent="center">
+            {statistics}
+          </Grid>
+        </div>
 
         <Text>
           These statistics are automatically generated from all answers by all
           users. If you need detailed answers per user, go to the{" "}
           <InternalLink to={Routes.Admission}>admission</InternalLink> page.
         </Text>
-
-        {statistics}
       </NonGrowingFlexContainer>
     </Page>
   );

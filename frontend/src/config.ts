@@ -73,16 +73,16 @@ const chartColorMap = {
   grey: "rgb(201, 203, 207)",
   orange: "rgb(255, 159, 64)",
   purple: "rgb(153, 102, 255)",
-  red: "rgb(255, 99, 132)",
-  yellow: "rgb(255, 205, 86)",
+  black: "rgb(0, 0, 0)",
+  greenSpecial: "rgb(86, 209, 117)",
 };
 
 /**
  * Colors for charts, taken from chartjs.org
  */
 export const chartColors = [
-  chartColorMap.red,
-  chartColorMap.yellow,
+  chartColorMap.black,
+  chartColorMap.greenSpecial,
   chartColorMap.blue,
   chartColorMap.orange,
   chartColorMap.purple,

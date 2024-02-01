@@ -8,7 +8,6 @@ import { useApi } from "../../hooks/use-api";
 import { useDerivedState } from "../../hooks/use-derived-state";
 import { isBetween, isConfirmationExpired, Nullable } from "../../util";
 import { Button } from "../base/button";
-import { Divider } from "../base/divider";
 import {
   FlexColumnContainer,
   FlexRowColumnContainer,
@@ -23,6 +22,7 @@ import { Muted } from "../base/muted";
 import { Placeholder } from "../base/placeholder";
 import { Page } from "../pages/page";
 import { StringifiedUnifiedQuestion } from "./stringified-unified-question";
+import { SimpleCard } from "../base/simple-card";
 
 /**
  * An enum describing the type of form we want to render.
@@ -195,8 +195,6 @@ export const Form = ({ type }: IFormProps) => {
 
     return (
       <FlexColumnContainer key={String(question.id)}>
-        <Divider />
-
         <StringifiedUnifiedQuestion
           onChange={(value) => handleQuestionValueChange(question.id!, value)}
           value={state[question.id!] ?? ""}
@@ -212,9 +210,8 @@ export const Form = ({ type }: IFormProps) => {
   return (
     <Page>
       <NonGrowingFlexContainer>
-        <Heading text={title} />
-        {questions}
-
+        <Heading text={`Profile: ${user?.firstName} ${user?.lastName}`} />
+        <SimpleCard>{questions}</SimpleCard>
         {!isFormDisabled && (
           <SubmitContainer>
             <VerticallyCenteredContainer>

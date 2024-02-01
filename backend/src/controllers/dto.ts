@@ -373,6 +373,17 @@ export class SuccessResponseDTO {
   public success!: boolean;
 }
 
+export class UserDetailsRepsonseDTO {
+  @Expose()
+  public firstName!: string;
+  @Expose()
+  public lastName!: string;
+  @Expose()
+  public email!: string;
+  @Expose()
+  public role!: UserRole;
+}
+
 export class UserTokenResponseDTO {
   @Expose()
   public token!: string;
@@ -425,6 +436,10 @@ export class UserDTO {
   public id!: number;
   @Expose()
   public email!: string;
+  @Expose()
+  public firstName!: string;
+  @Expose()
+  public lastName!: string;
   @Expose()
   public createdAt!: Date;
   @Transform(
