@@ -218,7 +218,7 @@ export const Statistics = () => {
     }
 
     switch (configuration.type) {
-      case QuestionType.Choices:
+      /*case QuestionType.Choices:
         return (
           <FlexRowColumnContainer>
             <SimpleCard>
