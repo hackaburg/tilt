@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import * as React from "react";
 import { useMemo } from "react";
 import { ApplicationDTO, QuestionDTO } from "../../api/types/dto";
@@ -7,13 +6,12 @@ import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { isConfirmationExpired, roundDateToDay } from "../../util";
-import { CircleChart } from "../base/circle-chart";
+/*import { CircleChart } from "../base/circle-chart";*/
 import { Divider } from "../base/divider";
 import {
   FlexRowColumnContainer,
   FlexRowContainer,
   NonGrowingFlexContainer,
-  StyleableFlexContainer,
 } from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { InternalLink } from "../base/link";
@@ -24,11 +22,11 @@ import { Page } from "./page";
 import { SimpleCard } from "../base/simple-card";
 import { Grid } from "@mui/material";
 
-const ChartContainer = styled(StyleableFlexContainer)`
+/*const ChartContainer = styled(StyleableFlexContainer)`
   width: min(400px, 100vw);
   postion: relative;
   margin: auto;
-`;
+`;*/
 
 interface IAnswerCount {
   [answer: string]: number;
@@ -210,7 +208,7 @@ export const Statistics = () => {
       return [overTime, cummulativeOverTime];
     }, [safeApplications]);
 
-  const statistics = allQuestions.map(({ id, configuration, title }) => {
+  const statistics = allQuestions.map(({ id, configuration }) => {
     const counts = answersByQuestionID[id!];
 
     if (!counts) {
