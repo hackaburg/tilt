@@ -1,5 +1,7 @@
 import * as React from "react";
-import { countryNames } from "./country-question";
+import countries from "country-json/src/country-by-abbreviation.json";
+
+const countryNames = countries.map((country) => country.country);
 
 /**
  * A pseud-editor for country questions.

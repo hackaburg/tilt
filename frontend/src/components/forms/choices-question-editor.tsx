@@ -94,28 +94,26 @@ export const ChoicesQuestionEditor = ({
   const choicesText = question.configuration.choices.join(separator);
 
   return (
-    <>
-      <FlexRowContainer>
-        <FlexRowColumnContainer>
-          <TextInput
-            type={TextInputType.Area}
-            title="Options (one per line)"
-            placeholder="no options"
-            value={choicesText}
-            onChange={handleChoicesUpdate}
-          />
-        </FlexRowColumnContainer>
-        <Spacer />
-        <FlexRowColumnContainer>
-          <Checkboxes
-            values={appearanceOptions}
-            selected={selectedAppearanceOptions}
-            onChange={handleAppearanceChange}
-            title="Appearance"
-            radio
-          />
-        </FlexRowColumnContainer>
-      </FlexRowContainer>
-    </>
+    <FlexRowContainer>
+      <FlexRowColumnContainer>
+        <TextInput
+          type={TextInputType.Area}
+          title="Options (one per line)"
+          placeholder="no options"
+          value={choicesText}
+          onChange={handleChoicesUpdate}
+        />
+      </FlexRowColumnContainer>
+      <Spacer />
+      <FlexRowColumnContainer>
+        <Checkboxes
+          values={appearanceOptions}
+          selected={selectedAppearanceOptions}
+          onChange={handleAppearanceChange}
+          title="Appearance"
+          radio
+        />
+      </FlexRowColumnContainer>
+    </FlexRowContainer>
   );
 };
