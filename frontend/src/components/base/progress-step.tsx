@@ -8,7 +8,6 @@ import {
   Spacer,
   StyleableFlexContainer,
 } from "./flex";
-import { Subheading } from "./headings";
 
 const StepConnector = styled(StyleableFlexContainer)`
   position: relative;
@@ -113,8 +112,7 @@ export const ProgressStep = ({
         </StepContainer>
         <Spacer />
         <FlexRowColumnContainer>
-          <Subheading text={title} />
-
+          <h2 style={{ marginTop: "-0.2rem" }}>{title}</h2>
           {children}
         </FlexRowColumnContainer>
         <Spacer /> <Spacer />

@@ -172,11 +172,17 @@ export const Sidebar = () => {
       <div style={{ bottom: "1rem", position: "absolute" }}>
         <LI>
           <div style={{ display: "flex", padding: "1rem" }}>
-            <img
-              style={{ borderRadius: "5rem" }}
-              height={50}
-              src={getGravatarUrl(user?.email ?? "", "50")}
-            />
+            <a
+              href="https://www.gravatar.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                style={{ borderRadius: "5rem" }}
+                height={50}
+                src={getGravatarUrl(user?.email ?? "", "50")}
+              />
+            </a>
             <div
               style={{
                 padding: "0.8rem",

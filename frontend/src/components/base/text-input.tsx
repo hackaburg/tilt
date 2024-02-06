@@ -1,22 +1,8 @@
-import { css } from "@emotion/core";
-import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
 import { useFocus } from "../../hooks/use-focus";
 import { FormField } from "./form-field";
 import { TextField } from "@mui/material";
-
-const FieldStyle = css`
-  width: 100%;
-  padding: 0.75rem 0.5rem;
-  font-size: 14px;
-  border: none;
-`;
-
-const Area = styled.textarea`
-  ${FieldStyle}
-  resize: vertical;
-`;
 
 /**
  * The type of the text input.
@@ -63,7 +49,6 @@ export const TextInput = ({
   isDisabled = false,
   name,
   description,
-  rows,
 }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus(autoFocus);
   const fieldType = type || TextInputType.Text;
@@ -92,23 +77,20 @@ export const TextInput = ({
     ),
   };
 
-  const field =
-    fieldType === TextInputType.Area ? (
-      <Area {...fieldProps} rows={rows} />
-    ) : (
-      <div>
-        <TextField
-          style={{ marginTop: "0.5rem" }}
-          type={fieldType}
-          id="outlined-basic"
-          variant="outlined"
-          label={description}
-          fullWidth
-          focused={isFocused}
-          {...fieldProps}
-        />
-      </div>
-    );
+  const field = (
+    <div>
+      <TextField
+        style={{ marginTop: "0.5rem" }}
+        type={fieldType}
+        id="outlined-basic"
+        variant="outlined"
+        label={description}
+        fullWidth
+        focused={isFocused}
+        {...fieldProps}
+      />
+    </div>
+  );
 
   return (
     <FormField title={title} mandatory={mandatory}>
