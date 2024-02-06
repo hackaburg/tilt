@@ -112,15 +112,12 @@ export const Form = ({ type }: IFormProps) => {
     useState<Nullable<readonly AnswerDTO[]>>(null);
 
   const handleSubmit = useCallback(() => {
-    {
-      console.log(state);
-      return setSynchronizedAnswers(
-        [...Object.entries(state)].map<AnswerDTO>(([questionID, value]) => ({
-          questionID: Number(questionID),
-          value,
-        })),
-      );
-    }
+    setSynchronizedAnswers(
+      [...Object.entries(state)].map<AnswerDTO>(([questionID, value]) => ({
+        questionID: Number(questionID),
+        value,
+      })),
+    );
   }, [state]);
 
   const { updateUser } = useLoginContext();

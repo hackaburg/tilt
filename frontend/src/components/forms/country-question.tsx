@@ -6,7 +6,6 @@ import type {
 } from "../../api/types/dto";
 import { Autocomplete, Box, TextField } from "@mui/material";
 import { FormField } from "../base/form-field";
-import { useCallback } from "react";
 
 /**
  * A list of countries known to tilt.
@@ -38,7 +37,7 @@ export const CountryQuestion = ({
           getOptionLabel={(option) => option.country}
           fullWidth
           autoHighlight
-          onChange={(e, v) => onChange(v?.country ?? "")}
+          onChange={(_e, v) => onChange(v?.country ?? "")}
           renderInput={(params) => (
             <TextField {...params} label={question.description} />
           )}
