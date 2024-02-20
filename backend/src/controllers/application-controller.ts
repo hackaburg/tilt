@@ -8,6 +8,7 @@ import {
   JsonController,
   NotAcceptableError,
   NotFoundError,
+  Param,
   Post,
   Put,
 } from "routing-controllers";
@@ -260,5 +261,21 @@ export class ApplicationController {
     const team = convertBetweenEntityAndDTO(teamDTO, Team);
     const createdTeam = await this._teams.createTeam(team);
     return convertBetweenEntityAndDTO(createdTeam, TeamDTO);
+  }
+
+  /**
+   * Get team by id.
+   * @param id The id of the team
+   */
+  @Get("/team/:id")
+  @Authorized(UserRole.User)
+  public async getTeamByID(@Param("id") teamId: number): Promise<TeamDTO> {
+    const team = await this._teams.getTeamByID(teamId);
+
+    if (team == null) {
+      throw new NotFoundError(`no team with id ${teamId}`);
+    }
+
+    return convertBetweenEntityAndDTO(team, TeamDTO);
   }
 }

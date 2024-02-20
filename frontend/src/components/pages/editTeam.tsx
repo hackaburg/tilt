@@ -1,17 +1,28 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
-import { Heading } from "../base/headings";
+import { Heading, Subheading, Subsubheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { TextInput, TextInputType } from "../base/text-input";
 import { useApi } from "../../hooks/use-api";
 import { Redirect } from "react-router";
 import { Routes } from "../../routes";
-import { Autocomplete, Box, InputLabel, TextField, Theme } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Divider,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
+import { create } from "domain";
 
 const HeaderContainer = styled(StyleableFlexContainer)`
   justify-content: space-between;
@@ -21,16 +32,21 @@ const HeaderContainer = styled(StyleableFlexContainer)`
 /**
  * A settings dashboard to configure all parts of tilt.
  */
-export const CreateTeam = () => {
+export const EditTeam = () => {
   const loginState = useLoginContext();
   const { user } = loginState;
+  const params = new URLSearchParams(document.location.search);
+  let editable = true;
+
+  const { value: teamById } = useApi(
+    async (api) => api.getTeamByID(Number(params.get("id"))),
+    [],
+  );
 
   const [title, setTitle] = React.useState("");
   const [desciption, setDescription] = React.useState("");
   const [teamImg, setTeamImg] = React.useState("");
-  const [users, setUsers] = React.useState([
-    { id: user?.id, name: user?.firstName + " " + user?.lastName },
-  ] as UserListDto[]);
+  const [users, setUsers] = React.useState([] as UserListDto[]);
 
   const {
     value: didCreateTeam,
@@ -84,30 +100,58 @@ export const CreateTeam = () => {
     return users.some((u) => u.id === user.id);
   }
 
+  React.useEffect(() => {
+    if (teamById) {
+      setTitle(teamById.title);
+      setDescription(teamById.description);
+      setTeamImg(teamById.teamImg);
+      setUsers(createUserArray());
+      editable = user?.id === Number(teamById?.users![0]);
+    }
+  }, [teamById]);
+
+  function createUserArray() {
+    let userArray = [] as UserListDto[];
+    teamById?.users!.forEach((u) => {
+      let foundUser = userList.find((user) => user.id === Number(u));
+      userArray.push(foundUser!);
+    });
+    console.log("userList", userList);
+    console.log("userArray", userArray);
+    return userArray;
+  }
+
   return (
     <Page>
       <HeaderContainer>
-        <Heading text="Create New Team" />
+        <Heading text={`Edit Team - ${teamById?.title}`} />
+
         <NonGrowingFlexContainer>
           <a style={{ width: "15rem", marginTop: "1rem" }}>
-            <Button
-              loading={createTeamInProgress}
-              disable={createTeamInProgress}
-              onClick={sendCreateTeamRequest}
-              primary={true}
-            >
-              Create
-            </Button>
+            {editable ? (
+              <Button
+                loading={createTeamInProgress}
+                disable={createTeamInProgress}
+                onClick={sendCreateTeamRequest}
+                primary={true}
+              >
+                Save Changes
+              </Button>
+            ) : null}
           </a>
         </NonGrowingFlexContainer>
       </HeaderContainer>
-      <form onSubmit={handleSubmit}>
+      <Subheading
+        text={"Please be aware that only owners can edit a team"}
+      ></Subheading>
+      <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
         <TextInput
           title="Team Title"
           placeholder="Your team name"
           value={title}
           onChange={(value) => setTitle(value)}
           type={TextInputType.Text}
+          isDisabled={!editable}
         />
         <TextInput
           title="Team Description"
@@ -115,15 +159,22 @@ export const CreateTeam = () => {
           value={desciption}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
+          isDisabled={!editable}
         />
-        <TextInput
-          title="Team Image (URL; imgsize: 200x200px)"
-          placeholder="Your team image"
-          value={teamImg}
-          onChange={(value) => setTeamImg(value)}
-          type={TextInputType.Area}
-        />
-        <div style={{ width: "100%" }}>
+        <div>
+          <TextInput
+            title="Team Image (URL; imgsize: 200x200px)"
+            placeholder="Your team image"
+            value={teamImg}
+            onChange={(value) => setTeamImg(value)}
+            type={TextInputType.Area}
+            isDisabled={!editable}
+          />
+          {teamImg !== "" ? (
+            <img src={teamImg} style={{ width: "200px", height: "200px" }} />
+          ) : null}
+        </div>
+        <div style={{ width: "100%", marginTop: "1rem" }}>
           <InputLabel
             style={{
               fontWeight: "bold",
@@ -139,10 +190,10 @@ export const CreateTeam = () => {
               <Autocomplete
                 freeSolo
                 style={{
-                  width: index === 0 ? "100%" : "90%",
+                  width: index === 0 || !editable ? "100%" : "90%",
                   marginBottom: "1rem",
                 }}
-                id="combo-box-demo"
+                disabled={!editable}
                 value={user}
                 options={userList}
                 getOptionLabel={(option) => option.name}
@@ -150,7 +201,7 @@ export const CreateTeam = () => {
                   <TextField
                     {...params}
                     label={index === 0 ? "Team Owner" : "Users"}
-                    disabled={index === 0}
+                    disabled={index === 0 || !editable}
                   />
                 )}
                 renderOption={(props, option, state, ownerState) => (
@@ -170,7 +221,7 @@ export const CreateTeam = () => {
                 )}
                 onChange={(_e, v) => onChange(index, v as UserListDto)}
               />
-              {index === 0 ? null : (
+              {index === 0 || !editable ? null : (
                 <MdDeleteOutline
                   size={30}
                   style={{
@@ -188,11 +239,27 @@ export const CreateTeam = () => {
             </div>
           ))}
 
-          <div style={{ marginTop: "1rem", width: "10rem" }}>
-            <Button onClick={addMember} primary={true}>
-              Add member
-            </Button>
-          </div>
+          {editable ? (
+            <div>
+              <div style={{ marginTop: "1rem", width: "10rem" }}>
+                <Button onClick={addMember} primary={true}>
+                  Add member
+                </Button>
+              </div>
+              {/*  <Card style={{ marginTop: "1rem", backgroundColor: "#ffd4d4" }}>
+                <CardActionArea>
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      Danger Zone
+                    </Typography>
+                    <div style={{ marginTop: "1rem", width: "15rem" }}>
+                      <Button color="red">Delete Group</Button>
+                    </div>
+                  </CardContent>
+                </CardActionArea>
+              </Card> */}
+            </div>
+          ) : null}
         </div>
       </form>
     </Page>

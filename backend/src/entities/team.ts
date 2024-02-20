@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Team {
@@ -7,10 +6,10 @@ export class Team {
   public readonly id!: number;
   @Column({ length: 1024 })
   public title!: string;
-  @OneToMany(() => User, (user) => user.id)
-  public users!: User[];
-  @Column({ length: 1024 })
+  @Column("simple-array")
+  public users!: Number[];
+  @Column()
   public teamImg!: string;
-  @Column({ length: 1024 })
+  @Column("longtext")
   public description!: string;
 }

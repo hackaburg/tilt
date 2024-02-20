@@ -235,7 +235,7 @@ export class ApiClient {
     title: string,
     description: string,
     teamImg: string,
-    users: any[],
+    users: number[],
   ): Promise<void> {
     await this.post<ApplicationControllerMethods["createTeam"]>(
       "/application/team",
@@ -408,6 +408,15 @@ export class ApiClient {
   public async getAllTeams(): Promise<readonly TeamDTO[]> {
     return await this.get<ApplicationControllerMethods["getAllTeams"]>(
       "/application/team",
+    );
+  }
+
+  /**
+   * @return team by id
+   */
+  public async getTeamByID(id: number): Promise<TeamDTO> {
+    return await this.get<ApplicationControllerMethods["getTeamByID"]>(
+      `/application/team/${id}`,
     );
   }
 

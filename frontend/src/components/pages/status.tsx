@@ -68,7 +68,7 @@ export const Status = () => {
         <>
           <Heading text={`Welcome ${user?.firstName}`} />
           <Divider />
-          <Subheading text="The current status of your application and all relevant links for Hackaburg can be found here." />
+          <Subheading text="The status of our application and all links for Hackaburg can be found here." />
         </>
       )}
       <SimpleCard>
@@ -77,10 +77,7 @@ export const Status = () => {
           title="Register"
           state={ProgressStepState.Completed}
         >
-          <Text>
-            We had to start this progress meter somewhere. You already
-            registered and we think that's a good first step.
-          </Text>
+          <Subheading text="You already registered and that's a good first step." />
         </ProgressStep>
 
         <ProgressStep
@@ -94,12 +91,12 @@ export const Status = () => {
         >
           {!user?.admitted && (
             <>
-              <Text>
-                You answer a few questions in our{" "}
+              <Text style={{ fontSize: "1.25rem" }}>
+                Please fill your{" "}
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
-                </InternalLink>{" "}
-                so we get to know you, any time between{" "}
+                </InternalLink>
+                , any time between{" "}
                 <b>{dateToString(settings.application.allowProfileFormFrom)}</b>{" "}
                 and{" "}
                 <b>
@@ -119,17 +116,12 @@ export const Status = () => {
                   </a>
                 </NonGrowingFlexContainer>
               </FlexRowContainer>
-              <Text>
-                Don't get confused, once you have filled out your profile and
-                pressed save, you can change your profile until we have you
-                confirmed in Step 3.
-              </Text>
             </>
           )}
           {user?.admitted && (
             <>
-              <Text>
-                Thanks for answering our questions. You successfully applied.
+              <Text style={{ fontSize: "1.25rem" }}>
+                You successfully applied. 🎉
               </Text>
             </>
           )}
@@ -155,9 +147,8 @@ export const Status = () => {
           )}
           {user?.confirmed && (
             <>
-              <Text>
-                Congratulations! We selected you to be part of our Hackathon
-                this year. Please continue with step 4.
+              <Text style={{ fontSize: "1.25rem" }}>
+                Congratulations! You got accepted for Hackaburg 2024.
               </Text>
             </>
           )}
@@ -195,7 +186,9 @@ export const Status = () => {
           )}
           {user?.confirmed && (
             <>
-              <Text>Thanks for confirming your spot!</Text>
+              <Text style={{ fontSize: "1.25rem" }}>
+                You confirmed your spot. 🎉
+              </Text>
             </>
           )}
           {user?.admitted && !user?.confirmed && (
@@ -275,13 +268,15 @@ export const Status = () => {
           )}
           {!isNotAttending && user?.confirmed && (
             <>
-              <Text>Everything went well! Hope to see you at the event.</Text>
+              <Text style={{ fontSize: "1.25rem" }}>
+                See you at the event {user.firstName}! 🎉
+              </Text>
             </>
           )}
           <Spacer />
-          <Text>
-            If you never the less can not make it to the event. Please tell us
-            and hand over your seat to someone else.
+          <Divider />
+          <Text style={{ fontSize: "1.25rem" }}>
+            If you anyhow can't make it, please let us know as soon as possible.
           </Text>
           {!isNotAttending && user?.confirmed && (
             <>

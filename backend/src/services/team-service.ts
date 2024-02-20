@@ -10,6 +10,7 @@ import { Team } from "../entities/team";
 export interface ITeamService extends IService {
   getAllTeams(): Promise<readonly Team[]>;
   createTeam(team: Team): Promise<Team>;
+  getTeamByID(id: number): Promise<Team | undefined>;
 }
 
 /**
@@ -33,7 +34,6 @@ export class TeamService implements ITeamService {
    */
   public async bootstrap(): Promise<void> {
     this._teams = this._database.getRepository(Team);
-    console.log("Team service bootstrapped", this._teams);
   }
 
   /**
@@ -48,11 +48,31 @@ export class TeamService implements ITeamService {
    * @param team The team to create
    */
   public async createTeam(team: Team): Promise<Team> {
+    const placeholder_img = [
+      "https://i.imgur.com/CWwOYnr.png",
+      "https://i.imgur.com/ZpFOtqy.png",
+      "https://i.imgur.com/p1pfzOq.png",
+      "https://i.imgur.com/uyovY3o.png",
+      "https://i.imgur.com/ZjbBQs5.png",
+      "https://i.imgur.com/NrdADj3.png",
+    ];
+
     try {
+      if (team.teamImg === "") {
+        team.teamImg = placeholder_img[1];
+      }
       return this._teams.save(team);
     } catch (e) {
       console.error(e);
       throw e;
     }
+  }
+
+  /**
+   * Gets a team by its id.
+   * @param id The id of the team
+   */
+  public async getTeamByID(id: number): Promise<Team | undefined> {
+    return this._teams.findOne(id);
   }
 }

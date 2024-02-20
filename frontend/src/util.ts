@@ -20,9 +20,9 @@ const prependZero = (value: number): string =>
  * @param date The date to format
  */
 export const dateToString = (date: Date) =>
-  `${prependZero(date.getMonth() + 1)}.${date.getFullYear()}.${prependZero(
-    date.getDate(),
-  )}`;
+  `${prependZero(date.getDate())}.${prependZero(
+    date.getMonth() + 1,
+  )}.${date.getFullYear()}`;
 
 /**
  * Extracts all public fields from a type to a new type. This is mainly used to

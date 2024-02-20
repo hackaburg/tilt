@@ -18,6 +18,8 @@ import sha256 from "sha256";
 import { NavLink } from "react-router-dom";
 import { transitionDuration } from "../../../config";
 import { GrGroup } from "react-icons/gr";
+import { Image } from "../../base/image";
+import { useSettingsContext } from "../../../contexts/settings-context";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -87,6 +89,12 @@ export const Sidebar = () => {
     margin-top: -0.5rem;
   `;
 
+  const ImageContainer = styled(StyleableFlexContainer)`
+    padding: 0rem;
+  `;
+
+  const { settings } = useSettingsContext();
+
   return (
     <BackgroundContainer>
       <div style={{ padding: "2rem" }}>
@@ -97,6 +105,10 @@ export const Sidebar = () => {
           event
         </p>
       </div>
+
+      <ImageContainer>
+        <Image src={settings?.frontend.sidebarImage} label="Hackathon logo" />
+      </ImageContainer>
 
       <SidebarMenu>
         <SidebarMenuItem to={Routes.Status}>
@@ -115,16 +127,18 @@ export const Sidebar = () => {
           <LuUser />
           <span style={{ marginLeft: "1rem" }}> Profile</span>
         </SidebarMenuItem>
+
+        {isAdmitted && (
+          <SidebarMenuItem to={Routes.ConfirmationForm}>
+            <GrUserExpert />
+            <span style={{ marginLeft: "1rem" }}> Confirmation</span>
+          </SidebarMenuItem>
+        )}
+
         <SidebarMenuItem to={Routes.Teams}>
           <GrGroup />
           <span style={{ marginLeft: "1rem" }}> Teams</span>
         </SidebarMenuItem>
-        {isAdmitted && (
-          <SidebarMenuItem to={Routes.ConfirmationForm}>
-            <GrUserExpert />
-            <span style={{ marginLeft: "1rem" }}>Confirmation</span>
-          </SidebarMenuItem>
-        )}
 
         {isElevatedUser && (
           <>

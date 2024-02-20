@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { Route, Switch } from "react-router";
+import { Route, Switch, useRouteMatch } from "react-router";
 import {
   mediaBreakpoints,
   sidebarWidth,
@@ -29,6 +29,7 @@ import { Map } from "../pages/map";
 import { Challenges } from "../pages/challenges";
 import { Teams } from "../pages/teams";
 import { CreateTeam } from "../pages/createTeam";
+import { EditTeam } from "../pages/editTeam";
 
 const SidebarSliderContainer = styled(StyleableFlexContainer)`
   position: fixed;
@@ -106,6 +107,9 @@ export const AuthenticatedRouter = () => {
               <Route path={Routes.Status} component={Status} />
               <Route path={Routes.Teams} component={Teams} />
               <Route path={Routes.CreateTeam} component={CreateTeam} />
+
+              <Route path={Routes.EditTeam} component={EditTeam} />
+
               <Route path={Routes.ProfileForm} component={ProfileForm} />
               <Route path={Routes.Map} component={Map} />
               <Route path={Routes.Challenges} component={Challenges} />

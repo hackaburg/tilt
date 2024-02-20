@@ -499,7 +499,7 @@ export class TeamDTO {
   @Expose()
   public title!: string;
   @Expose()
-  public users?: UserDTO[];
+  public users?: string[];
   @Expose()
   public teamImg!: string;
   @Expose()
@@ -510,7 +510,7 @@ export class TeamRequestDTO {
   @Expose()
   public title!: string;
   @Expose()
-  public users?: UserDTO[];
+  public users?: number[];
   @Expose()
   public teamImg!: string;
   @Expose()

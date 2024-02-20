@@ -50,7 +50,7 @@ export enum ProgressStepState {
 }
 
 const completedStyle: React.CSSProperties = {
-  backgroundColor: "#56d175",
+  backgroundColor: "#3fb28f",
   border: "none",
   color: "white",
 };
@@ -90,7 +90,7 @@ export const ProgressStep = ({
       }
 
       .completedStepConnector:after {
-        border-left: 2px solid #56d175;
+        border-left: 2px solid #3fb28f;
       }
     `}</style>
     <FlexColumnContainer>

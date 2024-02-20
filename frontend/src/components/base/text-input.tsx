@@ -88,6 +88,7 @@ export const TextInput = ({
         fullWidth
         focused={isFocused}
         {...fieldProps}
+        multiline={type === TextInputType.Area}
       />
     </div>
   );
