@@ -17,6 +17,7 @@ import { GrUserExpert } from "react-icons/gr";
 import sha256 from "sha256";
 import { NavLink } from "react-router-dom";
 import { transitionDuration } from "../../../config";
+import { GrGroup } from "react-icons/gr";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -113,6 +114,10 @@ export const Sidebar = () => {
         <SidebarMenuItem to={Routes.ProfileForm}>
           <LuUser />
           <span style={{ marginLeft: "1rem" }}> Profile</span>
+        </SidebarMenuItem>
+        <SidebarMenuItem to={Routes.Teams}>
+          <GrGroup />
+          <span style={{ marginLeft: "1rem" }}> Teams</span>
         </SidebarMenuItem>
         {isAdmitted && (
           <SidebarMenuItem to={Routes.ConfirmationForm}>
