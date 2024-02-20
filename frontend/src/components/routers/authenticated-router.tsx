@@ -28,6 +28,7 @@ import { SidebarToggle } from "./sidebar/sidebar-toggle";
 import { Map } from "../pages/map";
 import { Challenges } from "../pages/challenges";
 import { Teams } from "../pages/teams";
+import { CreateTeam } from "../pages/createTeam";
 
 const SidebarSliderContainer = styled(StyleableFlexContainer)`
   position: fixed;
@@ -104,6 +105,7 @@ export const AuthenticatedRouter = () => {
             <Switch>
               <Route path={Routes.Status} component={Status} />
               <Route path={Routes.Teams} component={Teams} />
+              <Route path={Routes.CreateTeam} component={CreateTeam} />
               <Route path={Routes.ProfileForm} component={ProfileForm} />
               <Route path={Routes.Map} component={Map} />
               <Route path={Routes.Challenges} component={Challenges} />

@@ -4,6 +4,7 @@
 export enum Routes {
   Admission = "/admission",
   Teams = "/teams",
+  CreateTeam = "/create-team",
   ConfirmationForm = "/confirm",
   ConfirmationFormApply = "/apply/confirm",
   Login = "/login",
@@ -34,6 +35,7 @@ export const defaultAuthenticatedRoute = Routes.Status;
 export const authenticatedRoutes = [
   Routes.Admission,
   Routes.Teams,
+  Routes.CreateTeam,
   Routes.ConfirmationForm,
   Routes.Logout,
   Routes.ProfileForm,

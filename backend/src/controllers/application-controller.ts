@@ -39,7 +39,11 @@ import {
   IDsRequestDTO,
   QuestionDTO,
   StoreAnswersRequestDTO,
+  TeamDTO,
+  TeamRequestDTO,
 } from "./dto";
+import { ITeamService, TeamServiceToken } from "../services/team-service";
+import { Team } from "../entities/team";
 
 @JsonController("/application")
 export class ApplicationController {
@@ -48,6 +52,8 @@ export class ApplicationController {
     private readonly _application: IApplicationService,
     @Inject(UserServiceToken)
     private readonly _users: IUserService,
+    @Inject(TeamServiceToken)
+    private readonly _teams: ITeamService,
   ) {}
 
   /**
@@ -231,5 +237,28 @@ export class ApplicationController {
     }
 
     await this._application.checkIn(user);
+  }
+
+  /**
+   * Gets all existing teams.
+   */
+  @Get("/team")
+  @Authorized(UserRole.User)
+  public async getAllTeams(): Promise<readonly TeamDTO[]> {
+    const teams = await this._teams.getAllTeams();
+    return teams.map((team) => convertBetweenEntityAndDTO(team, TeamDTO));
+  }
+
+  /**
+   * Creates a team.
+   */
+  @Post("/team")
+  @Authorized(UserRole.User)
+  public async createTeam(
+    @Body() { data: teamDTO }: { data: TeamRequestDTO },
+  ): Promise<TeamDTO> {
+    const team = convertBetweenEntityAndDTO(teamDTO, Team);
+    const createdTeam = await this._teams.createTeam(team);
+    return convertBetweenEntityAndDTO(createdTeam, TeamDTO);
   }
 }

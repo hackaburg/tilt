@@ -467,6 +467,13 @@ export class UserDTO {
   public checkedIn!: boolean;
 }
 
+export class UserListDto {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public name!: string;
+}
+
 export class ApplicationDTO {
   @Expose()
   @Type(() => UserDTO)
@@ -484,4 +491,28 @@ export class IDsRequestDTO implements IApiRequest<readonly number[]> {
 export class IDRequestDTO implements IApiRequest<number> {
   @IsInt()
   public data!: number;
+}
+
+export class TeamDTO {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public users?: UserDTO[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
+}
+
+export class TeamRequestDTO {
+  @Expose()
+  public title!: string;
+  @Expose()
+  public users?: UserDTO[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
 }

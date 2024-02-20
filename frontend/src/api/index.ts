@@ -19,7 +19,9 @@ import type {
   ApplicationDTO,
   FormDTO,
   SettingsDTO,
+  TeamDTO,
   UserDTO,
+  UserListDto,
 } from "./types/dto";
 
 type SettingsControllerMethods = ExtractControllerMethods<SettingsController>;
@@ -223,6 +225,30 @@ export class ApiClient {
   }
 
   /**
+   * Create a new team
+   * @param title The team's title
+   * @param description The team's description
+   * @param teamImg The team's image
+   * @param users The team's users
+   */
+  public async createTeam(
+    title: string,
+    description: string,
+    teamImg: string,
+    users: any[],
+  ): Promise<void> {
+    await this.post<ApplicationControllerMethods["createTeam"]>(
+      "/application/team",
+      {
+        title,
+        users,
+        teamImg,
+        description,
+      },
+    );
+  }
+
+  /**
    * Forgot password
    * @param email The user's email
    */
@@ -373,6 +399,24 @@ export class ApiClient {
       ...application,
       user: this.reviveUser(application.user),
     }));
+  }
+
+  /**
+   *
+   * @returns all teams
+   */
+  public async getAllTeams(): Promise<readonly TeamDTO[]> {
+    return await this.get<ApplicationControllerMethods["getAllTeams"]>(
+      "/application/team",
+    );
+  }
+
+  /**
+   *
+   * @returns all users
+   */
+  public async getAllUsers(): Promise<readonly UserListDto[]> {
+    return await this.get<UsersControllerMethods["getUserList"]>("/user/list");
   }
 
   /**
