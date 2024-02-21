@@ -110,10 +110,11 @@ export const ProgressStep = ({
         </StepContainer>
         <Spacer />
         <FlexRowColumnContainer>
-          <div style={{ display: "flex" }}>
-            <h2 style={{ marginTop: "-0.2rem" }}>{title}</h2>
-          </div>
+          <h2 style={{ marginTop: "-0.2rem", marginBottom: "0.5rem" }}>
+            {title}
+          </h2>
           {children}
+          <Spacer />
         </FlexRowColumnContainer>
         <Spacer /> <Spacer />
       </FlexRowContainer>
