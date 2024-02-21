@@ -15,7 +15,7 @@ const StepConnector = styled(StyleableFlexContainer)`
   :after {
     position: absolute;
     left: 0.6rem;
-    top: 3rem;
+    top: 2rem;
     content: "";
     border-left: 2px dashed grey;
     margin-left: 5px;
@@ -94,8 +94,6 @@ export const ProgressStep = ({
       }
     `}</style>
     <FlexColumnContainer>
-      <Spacer />
-
       <FlexRowContainer>
         <StepContainer>
           <StepIndex
@@ -112,7 +110,9 @@ export const ProgressStep = ({
         </StepContainer>
         <Spacer />
         <FlexRowColumnContainer>
-          <h2 style={{ marginTop: "-0.2rem" }}>{title}</h2>
+          <div style={{ display: "flex" }}>
+            <h2 style={{ marginTop: "-0.2rem" }}>{title}</h2>
+          </div>
           {children}
         </FlexRowColumnContainer>
         <Spacer /> <Spacer />

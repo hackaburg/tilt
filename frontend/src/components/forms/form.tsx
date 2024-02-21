@@ -16,13 +16,14 @@ import {
   StyleableFlexContainer,
   VerticallyCenteredContainer,
 } from "../base/flex";
-import { Heading } from "../base/headings";
+import { Heading, Subheading } from "../base/headings";
 import { Message } from "../base/message";
 import { Muted } from "../base/muted";
 import { Placeholder } from "../base/placeholder";
 import { Page } from "../pages/page";
 import { StringifiedUnifiedQuestion } from "./stringified-unified-question";
 import { SimpleCard } from "../base/simple-card";
+import { Divider } from "../base/divider";
 
 /**
  * An enum describing the type of form we want to render.
@@ -211,6 +212,8 @@ export const Form = ({ type }: IFormProps) => {
     <Page>
       <NonGrowingFlexContainer>
         <Heading text={`Profile: ${user?.firstName} ${user?.lastName}`} />
+        <Divider />
+        <Subheading text="All important information about you - for us." />
         <SimpleCard>{questions}</SimpleCard>
         {!isFormDisabled && (
           <SubmitContainer>

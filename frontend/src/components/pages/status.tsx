@@ -18,6 +18,7 @@ import { Text } from "../base/text";
 import { Page } from "./page";
 import { Divider } from "../base/divider";
 import { SimpleCard } from "../base/simple-card";
+import { Chip } from "@mui/material";
 
 /**
  * The start page every user sees after logging in.
@@ -68,7 +69,7 @@ export const Status = () => {
         <>
           <Heading text={`Welcome ${user?.firstName}`} />
           <Divider />
-          <Subheading text="The status of our application and all links for Hackaburg can be found here." />
+          <Subheading text="The status of our application and all links for Hackaburg 2024 can be found here." />
         </>
       )}
       <SimpleCard>
@@ -77,7 +78,9 @@ export const Status = () => {
           title="Register"
           state={ProgressStepState.Completed}
         >
-          <Subheading text="You already registered and that's a good first step." />
+          <Text style={{ fontSize: "1.15rem" }}>
+            You already registered and that's a good first step.
+          </Text>
         </ProgressStep>
 
         <ProgressStep
@@ -89,39 +92,36 @@ export const Status = () => {
               : ProgressStepState.Pending
           }
         >
-          {!user?.admitted && (
+          {!user?.profileSubmitted && (
             <>
-              <Text style={{ fontSize: "1.25rem" }}>
+              <Text style={{ fontSize: "1.15rem" }}>
                 Please fill your{" "}
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between{" "}
-                <b>{dateToString(settings.application.allowProfileFormFrom)}</b>{" "}
-                and{" "}
-                <b>
-                  {dateToString(settings.application.allowProfileFormUntil)}
-                </b>
-                .
+                , any time between <b>01.03.2024 - 31.04.2024</b>
               </Text>
             </>
           )}
-          {!user?.admitted && (
+          {!user?.profileSubmitted && (
             <>
               <Spacer />
               <FlexRowContainer>
                 <NonGrowingFlexContainer>
-                  <a href={Routes.ProfileFormApply}>
+                  <a href={Routes.ProfileForm}>
                     <Button primary={true}>Fill profile form</Button>
                   </a>
                 </NonGrowingFlexContainer>
               </FlexRowContainer>
             </>
           )}
-          {user?.admitted && (
+          {user?.profileSubmitted && (
             <>
-              <Text style={{ fontSize: "1.25rem" }}>
-                You successfully applied. 🎉
+              <Text style={{ fontSize: "1.15rem" }}>
+                You successfully applied. 🎉 You can still edit your{" "}
+                <InternalLink to={Routes.ProfileForm}>
+                  profile form
+                </InternalLink>
               </Text>
             </>
           )}
@@ -129,7 +129,7 @@ export const Status = () => {
 
         <ProgressStep
           index={3}
-          title="Get acceptance e-mail"
+          title="Get accepted"
           state={
             user?.admitted
               ? ProgressStepState.Completed
@@ -138,17 +138,16 @@ export const Status = () => {
         >
           {!user?.confirmed && (
             <>
-              <Text>
-                We'll go through applications in batches. Hang tight, we'll let
-                you know once we selected your application, but it might take
-                some time.
+              <Text style={{ fontSize: "1.15rem" }}>
+                We will look through all applications and send you a acceptance
+                mail unitl <b>01.05.2024</b>.
               </Text>
             </>
           )}
           {user?.confirmed && (
             <>
-              <Text style={{ fontSize: "1.25rem" }}>
-                Congratulations! You got accepted for Hackaburg 2024.
+              <Text style={{ fontSize: "1.15rem" }}>
+                Congratulations! You got accepted for Hackaburg 2024. 🎉
               </Text>
             </>
           )}
@@ -167,10 +166,9 @@ export const Status = () => {
         >
           {!user?.confirmed && (
             <>
-              <Text>
-                If you received an acceptance e-mail, you still need to confirm
-                your spot and provide some final information like your dietary
-                needs
+              <Text style={{ fontSize: "1.15rem" }}>
+                If you got accepted, you need to confirm your spot until{" "}
+                <b>14.05.2024</b>
                 {user?.admitted && (
                   <>
                     {" "}
@@ -186,7 +184,7 @@ export const Status = () => {
           )}
           {user?.confirmed && (
             <>
-              <Text style={{ fontSize: "1.25rem" }}>
+              <Text style={{ fontSize: "1.15rem" }}>
                 You confirmed your spot. 🎉
               </Text>
             </>
@@ -196,15 +194,15 @@ export const Status = () => {
               <Spacer />
               <FlexRowContainer>
                 <NonGrowingFlexContainer>
-                  <a href={Routes.ConfirmationFormApply}>
+                  <InternalLink to={Routes.ConfirmationFormApply}>
                     <Button primary={true}>Fill confirmation form</Button>
-                  </a>
+                  </InternalLink>
                 </NonGrowingFlexContainer>
               </FlexRowContainer>
 
               <Spacer />
 
-              <Text>
+              <Text style={{ fontSize: "1.15rem" }}>
                 You have{" "}
                 <b>
                   {settings.application.hoursToConfirm} hours{" "}
@@ -217,7 +215,7 @@ export const Status = () => {
           )}
           {deadline != null && user?.admitted && !user?.confirmed && (
             <>
-              <Text>
+              <Text style={{ fontSize: "1.15rem" }}>
                 Your confirmation {isExpired ? <b>was</b> : "is"} due on{" "}
                 <b>{dateToString(deadline)}</b>
                 {user?.declined && (
@@ -263,36 +261,47 @@ export const Status = () => {
         >
           {!isNotAttending && !user?.confirmed && (
             <>
-              <Text>If all goes well, we'll meet you at the event.</Text>
+              <Text style={{ fontSize: "1.15rem" }}>
+                If all goes well, we'll meet you at the event.
+              </Text>
             </>
           )}
           {!isNotAttending && user?.confirmed && (
             <>
-              <Text style={{ fontSize: "1.25rem" }}>
+              <Text style={{ fontSize: "1.15rem" }}>
                 See you at the event {user.firstName}! 🎉
               </Text>
             </>
           )}
-          <Spacer />
-          <Divider />
-          <Text style={{ fontSize: "1.25rem" }}>
-            If you anyhow can't make it, please let us know as soon as possible.
-          </Text>
           {!isNotAttending && user?.confirmed && (
             <>
               <Spacer />
+              <div
+                style={{
+                  backgroundColor: "lightgrey",
+                  padding: "1rem",
+                  borderRadius: "1rem",
+                }}
+              >
+                <Text style={{ fontSize: "1.15rem" }}>
+                  If you anyhow can't make it, please let us know as soon as
+                  possible.
+                </Text>
 
-              <FlexRowContainer>
-                <NonGrowingFlexContainer>
-                  <Button
-                    loading={isDecliningSpot}
-                    disable={isNotAttending}
-                    onClick={handleDeclineSpot}
-                  >
-                    I can't make it
-                  </Button>
-                </NonGrowingFlexContainer>
-              </FlexRowContainer>
+                <Spacer />
+
+                <FlexRowContainer>
+                  <NonGrowingFlexContainer>
+                    <Button
+                      loading={isDecliningSpot}
+                      disable={isNotAttending}
+                      onClick={handleDeclineSpot}
+                    >
+                      I can't make it
+                    </Button>
+                  </NonGrowingFlexContainer>
+                </FlexRowContainer>
+              </div>
             </>
           )}
         </ProgressStep>

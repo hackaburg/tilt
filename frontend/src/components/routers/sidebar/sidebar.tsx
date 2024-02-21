@@ -91,6 +91,8 @@ export const Sidebar = () => {
 
   const ImageContainer = styled(StyleableFlexContainer)`
     padding: 0rem;
+    position: absolute;
+    opacity: 0.3;
   `;
 
   const { settings } = useSettingsContext();
@@ -106,9 +108,9 @@ export const Sidebar = () => {
         </p>
       </div>
 
-      <ImageContainer>
+      {/*  <ImageContainer>
         <Image src={settings?.frontend.sidebarImage} label="Hackathon logo" />
-      </ImageContainer>
+      </ImageContainer> */}
 
       <SidebarMenu>
         <SidebarMenuItem to={Routes.Status}>

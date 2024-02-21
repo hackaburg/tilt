@@ -337,7 +337,7 @@ export class UserService implements IUserService {
     password: string,
   ): Promise<User | undefined> {
     const user = await this._users.findOne({
-      select: ["id", "password", "role", "verifyToken"],
+      select: ["id", "password", "role", "verifyToken", "profileSubmitted"],
       where: {
         email,
       },

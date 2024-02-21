@@ -465,6 +465,8 @@ export class UserDTO {
   public declined!: boolean;
   @Expose()
   public checkedIn!: boolean;
+  @Expose()
+  public profileSubmitted!: boolean;
 }
 
 export class UserListDto {

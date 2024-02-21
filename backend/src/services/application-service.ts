@@ -406,6 +406,8 @@ export class ApplicationService implements IApplicationService {
       user.initialProfileFormSubmittedAt = new Date();
       await this._users.updateUser(user);
     }
+    user.profileSubmitted = true;
+    await this._users.updateUser(user);
   }
 
   /**
