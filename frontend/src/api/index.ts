@@ -20,6 +20,7 @@ import type {
   FormDTO,
   SettingsDTO,
   TeamDTO,
+  TeamResponseDTO,
   UserDTO,
   UserListDto,
 } from "./types/dto";
@@ -249,6 +250,68 @@ export class ApiClient {
   }
 
   /**
+   * Update new team
+   * @param id The team's id
+   * @param title The team's title
+   * @param description The team's description
+   * @param teamImg The team's image
+   * @param users The team's users
+   */
+  public async updateTeam(
+    id: number,
+    title: string,
+    description: string,
+    teamImg: string,
+    users: number[],
+  ): Promise<void> {
+    await this.put<ApplicationControllerMethods["updateTeam"]>(
+      "/application/team",
+      {
+        id,
+        title,
+        users,
+        teamImg,
+        description,
+      },
+    );
+  }
+
+  /*
+   * Request to join a team
+   * @param teamId The team's id
+   * @param userId The user's id
+   */
+  public async requestToJoinTeam(teamId: number): Promise<void> {
+    await this.post<ApplicationControllerMethods["requestToJoinTeam"]>(
+      `/application/team/${teamId}/request`,
+      {} as never,
+    );
+  }
+
+  /*
+   * Accept a user to a team
+   * @param teamId The team's id
+   * @param userId The user's id
+   */
+  public async acceptUserToTeam(teamId: number, userId: number): Promise<void> {
+    console.log("acceptUserToTeam");
+    await this.put<ApplicationControllerMethods["acceptUserToTeam"]>(
+      `/application/team/${teamId}/accept/${userId}`,
+      {} as never,
+    );
+  }
+
+  /*
+   * Delete a team by id
+   * @param id The team's id
+   */
+  public async deleteTeam(id: number): Promise<void> {
+    await this.delete<ApplicationControllerMethods["deleteTeamByID"]>(
+      `/application/team/${id}`,
+    );
+  }
+
+  /**
    * Forgot password
    * @param email The user's email
    */
@@ -414,7 +477,7 @@ export class ApiClient {
   /**
    * @return team by id
    */
-  public async getTeamByID(id: number): Promise<TeamDTO> {
+  public async getTeamByID(id: number): Promise<TeamResponseDTO> {
     return await this.get<ApplicationControllerMethods["getTeamByID"]>(
       `/application/team/${id}`,
     );

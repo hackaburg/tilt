@@ -11,6 +11,7 @@ import { useApi } from "../../hooks/use-api";
 import { TeamDTO } from "../../api/types/dto";
 import { GrGroup } from "react-icons/gr";
 import { Link } from "react-router-dom";
+import { Collapsible } from "../base/collapsible";
 
 const HeaderContainer = styled(StyleableFlexContainer)`
   justify-content: space-between;
@@ -23,7 +24,8 @@ const HeaderContainer = styled(StyleableFlexContainer)`
 export const Teams = () => {
   const { value: allTeams } = useApi(async (api) => api.getAllTeams(), []);
 
-  const teams = allTeams ?? [];
+  //sort teams in which the current user in
+  let teams = allTeams ?? [];
 
   return (
     <Page>
@@ -37,11 +39,22 @@ export const Teams = () => {
           </a>
         </NonGrowingFlexContainer>
       </HeaderContainer>
-      <Subheading
-        text={
-          "Find a team easier. This is a new feature we use the first time. Here you find a list of all teams."
-        }
-      ></Subheading>
+
+      <Collapsible
+        title=" This is a new feature this year. You can create or join a team. Expand
+        to get more information."
+      >
+        This is a new feature this year. You can create or join a team. Expand
+        to get more information. This is a new feature this year. You can create
+        or join a team. Expand to get more information. This is a new feature
+        this year. You can create or join a team. Expand to get more
+        information. This is a new feature this year. You can create or join a
+        team. Expand to get more information. This is a new feature this year.
+        You can create or join a team. Expand to get more information. This is a
+        new feature this year. You can create or join a team. Expand to get more
+        information. This is a new feature this year. You can create or join a
+        team. Expand to get more information.
+      </Collapsible>
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>
         {Array.from(teams).map((team: TeamDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>

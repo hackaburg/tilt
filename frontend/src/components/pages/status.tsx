@@ -20,6 +20,11 @@ import { Divider } from "../base/divider";
 import { SimpleCard } from "../base/simple-card";
 import { Grid } from "@mui/material";
 
+import discord from "../../../assets/discord.png";
+import instagram from "../../../assets/instagram.png";
+import newsletter from "../../../assets/newsletter.jpg";
+import team from "../../../assets/team.png";
+
 /**
  * The start page every user sees after logging in.
  */
@@ -320,7 +325,7 @@ export const Status = () => {
             }}
           >
             <img
-              src="https://i.imgur.com/8GR9qRE.png"
+              src={discord}
               alt="discord"
               style={{
                 width: "100%",
@@ -344,7 +349,7 @@ export const Status = () => {
               </p>
               <p
                 style={{
-                  minHeight: "6.5rem",
+                  minHeight: "4.5rem",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "-webkit-box",
@@ -353,8 +358,7 @@ export const Status = () => {
                 }}
               >
                 The discord is open to everyone. Use it to introduce yourself
-                and tell us and the community what you need (team members,
-                ideas, hardware etc.)
+                and tell us what you need (team members, ideas, hardware etc.)
               </p>
               <a
                 href="https://discord.gg/hackaburg"
@@ -378,7 +382,7 @@ export const Status = () => {
             }}
           >
             <img
-              src="https://i.imgur.com/pXFDebt.png"
+              src={instagram}
               alt="discord"
               style={{
                 width: "100%",
@@ -402,7 +406,7 @@ export const Status = () => {
               </p>
               <p
                 style={{
-                  minHeight: "6.5rem",
+                  minHeight: "4.5rem",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "-webkit-box",
@@ -436,7 +440,7 @@ export const Status = () => {
             }}
           >
             <img
-              src="https://i.imgur.com/FjO6pMZ.jpeg"
+              src={newsletter}
               alt="discord"
               style={{
                 width: "100%",
@@ -460,7 +464,7 @@ export const Status = () => {
               </p>
               <p
                 style={{
-                  minHeight: "6.5rem",
+                  minHeight: "4.5rem",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "-webkit-box",
@@ -493,7 +497,7 @@ export const Status = () => {
             }}
           >
             <img
-              src="https://i.imgur.com/xctZPJk.png"
+              src={team}
               alt="discord"
               style={{
                 width: "100%",
@@ -517,7 +521,7 @@ export const Status = () => {
               </p>
               <p
                 style={{
-                  minHeight: "6.5rem",
+                  minHeight: "4.5rem",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   display: "-webkit-box",
@@ -528,7 +532,7 @@ export const Status = () => {
                 New <b>Feature</b> this year. You can create or join a team.
               </p>
               <a
-                href="https://26490796.sibforms.com/serve/MUIFAPx4aKGKuMbU3UZxk_ODAxapOpxY9oApe-LFK48oC2HcUpuUDG5RfLrplRnzmlE2fhnxFsrLWAO1LoVerg8hegpCyxQDQ85Ac45SzhCZXZlT8m5RRT7wDfIbcv9GgTCPGWiw6QSSK2qQR2n6ST8ezKWg-QTn0tCj8LRENn-vhJpHafi3096LcWLZQXDIx_IzJZaOLL7Chfdk"
+                href={Routes.Teams}
                 style={{
                   color: "black",
                   textDecoration: "none",

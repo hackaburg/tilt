@@ -89,14 +89,6 @@ export const Sidebar = () => {
     margin-top: -0.5rem;
   `;
 
-  const ImageContainer = styled(StyleableFlexContainer)`
-    padding: 0rem;
-    position: absolute;
-    opacity: 0.3;
-  `;
-
-  const { settings } = useSettingsContext();
-
   return (
     <BackgroundContainer>
       <div style={{ padding: "2rem" }}>

@@ -1,28 +1,23 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
-import { Heading, Subheading, Subsubheading } from "../base/headings";
+import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { TextInput, TextInputType } from "../base/text-input";
 import { useApi } from "../../hooks/use-api";
-import { Redirect } from "react-router";
-import { Routes } from "../../routes";
 import {
   Autocomplete,
   Box,
   Card,
-  CardActionArea,
   CardContent,
-  Divider,
   InputLabel,
   TextField,
-  Typography,
 } from "@mui/material";
 import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
-import { create } from "domain";
+import { useHistory } from "react-router-dom";
 
 const HeaderContainer = styled(StyleableFlexContainer)`
   justify-content: space-between;
@@ -36,27 +31,32 @@ export const EditTeam = () => {
   const loginState = useLoginContext();
   const { user } = loginState;
   const params = new URLSearchParams(document.location.search);
-  let editable = true;
 
   const { value: teamById } = useApi(
     async (api) => api.getTeamByID(Number(params.get("id"))),
     [],
   );
 
+  const [currentUserId, setCurrentUserId] = React.useState(0);
+  const [editable, setEditable] = React.useState(false);
+  const [id, setId] = React.useState(0);
   const [title, setTitle] = React.useState("");
   const [desciption, setDescription] = React.useState("");
   const [teamImg, setTeamImg] = React.useState("");
   const [users, setUsers] = React.useState([] as UserListDto[]);
+  const [request, setRequest] = React.useState([] as UserListDto[]);
+  const [currentUserToAddId, setCurrentUserToAddId] = React.useState(0);
 
   const {
-    value: didCreateTeam,
-    isFetching: createTeamInProgress,
-    error: createTeamError,
-    forcePerformRequest: sendCreateTeamRequest,
+    value: didUpdateTeam,
+    isFetching: updateTeamInProgress,
+    error: updateTeamError,
+    forcePerformRequest: sendSaveTeamRequest,
   } = useApi(
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await api.createTeam(
+        await api.updateTeam(
+          id,
           title,
           desciption,
           teamImg,
@@ -66,8 +66,48 @@ export const EditTeam = () => {
       }
       return false;
     },
-    [title, desciption, teamImg, users],
+    [currentUserId, editable, id, title, desciption, teamImg, users, request],
   );
+
+  const { forcePerformRequest: sendRequestToJoin } = useApi(
+    async (api, wasTriggeredManually) => {
+      if (wasTriggeredManually) {
+        await api.requestToJoinTeam(Number(params.get("id")));
+        return true;
+      }
+      return false;
+    },
+    [],
+  );
+
+  const { forcePerformRequest: sendAcceptUserToTeam } = useApi(
+    async (api, wasTriggeredManually) => {
+      if (wasTriggeredManually) {
+        await api.acceptUserToTeam(
+          Number(params.get("id")),
+          request.find((u) => u.id === currentUserToAddId)!.id,
+        );
+        return true;
+      }
+      return false;
+    },
+    [],
+  );
+
+  const {
+    value: didDelete,
+    isFetching: deleteInProgress,
+    error: deleteError,
+    forcePerformRequest: deleteGroup,
+  } = useApi(async (api, wasTriggeredManually) => {
+    if (wasTriggeredManually) {
+      if (confirm("Are you sure you want to delete this team?")) {
+        await api.deleteTeam(Number(params.get("id")));
+        return true;
+      }
+    }
+    return false;
+  }, []);
 
   const { value: allUsers } = useApi(async (api) => api.getAllUsers(), []);
 
@@ -77,11 +117,19 @@ export const EditTeam = () => {
     event.preventDefault();
   }, []);
 
-  const createTeamDone =
-    Boolean(didCreateTeam) && !createTeamInProgress && !createTeamError;
+  const updateTeamDone =
+    Boolean(didUpdateTeam) && !updateTeamInProgress && !updateTeamError;
 
-  if (createTeamDone) {
-    return <Redirect to={Routes.Teams} />;
+  const didDeleteDone = Boolean(didDelete) && !deleteInProgress && !deleteError;
+
+  if (updateTeamDone) {
+    const history = useHistory();
+    history.replace(`/teams/${id}`);
+  }
+
+  if (didDeleteDone) {
+    const history = useHistory();
+    history.push("/teams");
   }
 
   function addMember() {
@@ -102,23 +150,19 @@ export const EditTeam = () => {
 
   React.useEffect(() => {
     if (teamById) {
+      setCurrentUserId(Number(params.get("id")));
+      setId(teamById.id);
       setTitle(teamById.title);
       setDescription(teamById.description);
       setTeamImg(teamById.teamImg);
-      setUsers(createUserArray());
-      editable = user?.id === Number(teamById?.users![0]);
+      setUsers(teamById.users!);
+      setRequest(teamById.requests!);
+      setEditable(user?.id === Number(teamById?.users![0].id));
     }
   }, [teamById]);
 
-  function createUserArray() {
-    let userArray = [] as UserListDto[];
-    teamById?.users!.forEach((u) => {
-      let foundUser = userList.find((user) => user.id === Number(u));
-      userArray.push(foundUser!);
-    });
-    console.log("userList", userList);
-    console.log("userArray", userArray);
-    return userArray;
+  function notInUserList() {
+    return !users.some((u) => u.id === user?.id);
   }
 
   return (
@@ -130,12 +174,17 @@ export const EditTeam = () => {
           <a style={{ width: "15rem", marginTop: "1rem" }}>
             {editable ? (
               <Button
-                loading={createTeamInProgress}
-                disable={createTeamInProgress}
-                onClick={sendCreateTeamRequest}
+                loading={updateTeamInProgress}
+                disable={updateTeamInProgress}
+                onClick={sendSaveTeamRequest}
                 primary={true}
               >
                 Save Changes
+              </Button>
+            ) : null}
+            {!editable && notInUserList() ? (
+              <Button onClick={sendRequestToJoin} primary={true}>
+                Request to join team
               </Button>
             ) : null}
           </a>
@@ -163,7 +212,7 @@ export const EditTeam = () => {
         />
         <div>
           <TextInput
-            title="Team Image (URL; imgsize: 200x200px)"
+            title="Team Image (URL; imgsize: 200x300px)"
             placeholder="Your team image"
             value={teamImg}
             onChange={(value) => setTeamImg(value)}
@@ -200,6 +249,10 @@ export const EditTeam = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    sx={{
+                      border:
+                        user.id === currentUserId ? "2px solid #3fb28f" : "",
+                    }}
                     label={index === 0 ? "Team Owner" : "Users"}
                     disabled={index === 0 || !editable}
                   />
@@ -247,20 +300,88 @@ export const EditTeam = () => {
                 </Button>
               </div>
               {/*  <Card style={{ marginTop: "1rem", backgroundColor: "#ffd4d4" }}>
-                <CardActionArea>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                      Danger Zone
-                    </Typography>
-                    <div style={{ marginTop: "1rem", width: "15rem" }}>
-                      <Button color="red">Delete Group</Button>
-                    </div>
-                  </CardContent>
-                </CardActionArea>
-              </Card> */}
+                  <CardActionArea>
+                    <CardContent>
+                      <Typography variant="body2" color="text.secondary">
+                        Danger Zone
+                      </Typography>
+                      <div style={{ marginTop: "1rem", width: "15rem" }}>
+                        <Button color="red">Delete Group</Button>
+                      </div>
+                    </CardContent>
+                  </CardActionArea>
+                </Card> */}
             </div>
           ) : null}
         </div>
+        {request.length > 0 ? (
+          <div>
+            <InputLabel
+              style={{
+                fontWeight: "bold",
+                color: "black",
+                marginBottom: "0.5rem",
+                marginTop: "2rem",
+              }}
+              id="demo-multiple-name-label"
+            >
+              These users requested to join your team
+            </InputLabel>
+            {request.map((request, index) => (
+              <div key={index} style={{ display: "flex" }}>
+                <TextField
+                  label="Users"
+                  value={request.name}
+                  disabled
+                  style={{ width: "90%" }}
+                />
+                <div
+                  style={{
+                    width: "10rem",
+                    marginLeft: "1rem",
+                    marginTop: "0.5rem",
+                  }}
+                >
+                  <Button
+                    loading={updateTeamInProgress}
+                    disable={updateTeamInProgress}
+                    onClick={() => {
+                      setCurrentUserToAddId(request.id);
+                      sendAcceptUserToTeam();
+                    }}
+                    primary={true}
+                  >
+                    Add to Team
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+        {editable ? (
+          <div style={{ marginTop: "2rem" }}>
+            <Card variant="outlined" style={{ background: "#ffcdd2" }}>
+              <CardContent>
+                <Subheading text={"Danger Zone"} />
+                <p>
+                  Please be aware if you delete a team it is gone. We will not
+                  recover it.
+                </p>
+                <div style={{ marginTop: "1rem", width: "15rem" }}>
+                  <Button
+                    loading={deleteInProgress}
+                    disable={deleteInProgress}
+                    onClick={deleteGroup}
+                    primary={true}
+                    color="error"
+                  >
+                    Delete Group
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
       </form>
     </Page>
   );

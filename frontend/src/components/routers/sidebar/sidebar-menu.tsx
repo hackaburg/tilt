@@ -23,7 +23,7 @@ export const SidebarMenu = ({ children }: ISidebarMenuProps) => (
 );
 
 const LI = styled.li`
-  display: block;
+  display: flex;
 `;
 
 const Link = styled(NavLink)`

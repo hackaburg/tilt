@@ -274,7 +274,7 @@ export class UserService implements IUserService {
     return users.map((user) => {
       const userDto = new UserListDto();
       userDto.id = user.id;
-      userDto.name = `${user.firstName} ${user.lastName}`;
+      userDto.name = `${user.firstName} ${user.lastName[0]}. #${user.id}`;
       return userDto;
     });
   }

@@ -495,6 +495,13 @@ export class IDRequestDTO implements IApiRequest<number> {
   public data!: number;
 }
 
+export class UserResponseDto {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public name!: string;
+}
+
 export class TeamDTO {
   @Expose()
   public id!: number;
@@ -508,7 +515,37 @@ export class TeamDTO {
   public description!: string;
 }
 
+export class TeamResponseDTO {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  @Type(() => UserResponseDto)
+  public users?: UserResponseDto[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
+  @Expose()
+  @Type(() => UserResponseDto)
+  public requests?: UserResponseDto[];
+}
+
 export class TeamRequestDTO {
+  @Expose()
+  public title!: string;
+  @Expose()
+  public users?: number[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
+}
+
+export class TeamUpdateDTO {
+  @Expose()
+  public id!: number;
   @Expose()
   public title!: string;
   @Expose()

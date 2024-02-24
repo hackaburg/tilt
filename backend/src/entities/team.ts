@@ -12,4 +12,6 @@ export class Team {
   public teamImg!: string;
   @Column("longtext")
   public description!: string;
+  @Column("simple-array")
+  public requests!: Number[];
 }

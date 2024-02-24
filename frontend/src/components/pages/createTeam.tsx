@@ -117,7 +117,7 @@ export const CreateTeam = () => {
           type={TextInputType.Area}
         />
         <TextInput
-          title="Team Image (URL; imgsize: 200x200px)"
+          title="Team Image (URL; imgsize: 200x300px); leave this field empty to get one of our cool animal images"
           placeholder="Your team image"
           value={teamImg}
           onChange={(value) => setTeamImg(value)}
@@ -145,6 +145,7 @@ export const CreateTeam = () => {
                 id="combo-box-demo"
                 value={user}
                 options={userList}
+                disabled={index === 0}
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                   <TextField

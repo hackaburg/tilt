@@ -8,6 +8,7 @@ import {
   Spacer,
   StyleableFlexContainer,
 } from "./flex";
+import { mediaBreakpoints } from "../../config";
 
 const StepConnector = styled(StyleableFlexContainer)`
   position: relative;
@@ -24,6 +25,12 @@ const StepConnector = styled(StyleableFlexContainer)`
 
   :last-child:after {
     display: none;
+  }
+
+  @media screen and (max-width: ${mediaBreakpoints.tablet}) {
+    :after {
+      display: none;
+    }
   }
 `;
 
