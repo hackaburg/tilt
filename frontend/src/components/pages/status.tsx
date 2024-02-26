@@ -20,9 +20,13 @@ import { Divider } from "../base/divider";
 import { SimpleCard } from "../base/simple-card";
 import { Grid } from "@mui/material";
 
+// @ts-ignore
 import discord from "../../../assets/discord.png";
+// @ts-ignore
 import instagram from "../../../assets/instagram.png";
+// @ts-ignore
 import newsletter from "../../../assets/newsletter.jpg";
+// @ts-ignore
 import team from "../../../assets/team.png";
 
 /**

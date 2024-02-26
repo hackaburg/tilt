@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
+import { Heading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { Chip, Grid } from "@mui/material";

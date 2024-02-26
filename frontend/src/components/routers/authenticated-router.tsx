@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { Route, Switch, useRouteMatch } from "react-router";
+import { Route, Switch } from "react-router";
 import {
   mediaBreakpoints,
   sidebarWidth,

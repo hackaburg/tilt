@@ -155,7 +155,9 @@ export const CreateTeam = () => {
                 value={singleUser}
                 options={userList}
                 disabled={index === 0}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) =>
+                  typeof option === "string" ? option : option.name
+                }
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -163,7 +165,7 @@ export const CreateTeam = () => {
                     disabled={index === 0}
                   />
                 )}
-                renderOption={(props, option, state, ownerState) => (
+                renderOption={(props, option, _state, ownerState) => (
                   <Box
                     sx={{
                       borderRadius: "8px",

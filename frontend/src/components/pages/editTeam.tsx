@@ -255,7 +255,9 @@ export const EditTeam = () => {
                   disabled={!editable}
                   value={singleUser}
                   options={userList}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.name
+                  }
                   renderInput={(paramsAuto) => (
                     <TextField
                       {...paramsAuto}
@@ -267,7 +269,7 @@ export const EditTeam = () => {
                       disabled={index === 0 || !editable}
                     />
                   )}
-                  renderOption={(props, option, state, ownerState) => (
+                  renderOption={(props, option, _state, ownerState) => (
                     <Box
                       sx={{
                         borderRadius: "8px",

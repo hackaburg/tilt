@@ -8,7 +8,7 @@ const P = styled.p`
 interface ITextProps {
   children: React.ReactNode;
   className?: string;
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
 }
 
 /**
