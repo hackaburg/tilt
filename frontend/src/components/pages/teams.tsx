@@ -39,20 +39,17 @@ export const Teams = () => {
         </NonGrowingFlexContainer>
       </HeaderContainer>
 
-      <Collapsible
-        title=" This is a new feature this year. You can create or join a team. Expand
-        to get more information."
-      >
-        This is a new feature this year. You can create or join a team. Expand
-        to get more information. This is a new feature this year. You can create
-        or join a team. Expand to get more information. This is a new feature
-        this year. You can create or join a team. Expand to get more
-        information. This is a new feature this year. You can create or join a
-        team. Expand to get more information. This is a new feature this year.
-        You can create or join a team. Expand to get more information. This is a
-        new feature this year. You can create or join a team. Expand to get more
-        information. This is a new feature this year. You can create or join a
-        team. Expand to get more information.
+      <Collapsible title="Create or join a team. Get more information.">
+        This is a new feature this year. You can create or join a team. You can
+        add other users to your team and remove them as well. The team owner can
+        delete the team and remove users from the team. If you want to join a
+        team you can send a request to join the team and the team owner can
+        accept or reject the request.
+        <br></br>
+        <br></br>
+        Please be aware that this is the beta version of the team feature. If
+        you have any feedback or suggestions, please let us know.
+        <a href="mailto:support@hackaburg.de">support@hackaburg.de</a>
       </Collapsible>
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>
         {Array.from(teams).map((team: TeamDTO, index) => (

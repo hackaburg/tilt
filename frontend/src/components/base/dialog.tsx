@@ -17,7 +17,7 @@ import { FaLinkedin } from "react-icons/fa";
  */
 export interface SimpleDialogProps {
   open: boolean;
-  onClose: (value: string) => void;
+  onClose: (value: true) => void;
 }
 
 /**
@@ -26,19 +26,23 @@ export interface SimpleDialogProps {
  * @returns the dialog
  */
 export const SimpleDialog = (props: SimpleDialogProps) => {
-  const { open } = props;
+  const { onClose, open } = props;
 
   const handleClick = () => {
     navigator.clipboard.writeText("https://hackaburg.de");
   };
 
+  const handleClose = () => {
+    onClose(true);
+  };
+
   return (
-    <Dialog open={open}>
+    <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Invite a friend to join</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Let Google help apps determine location. This means sending anonymous
-          location data to Google, even when no apps are running.
+          Please feel free to invite a friend to join Hackaburg 2024. You can
+          use the following link to invite them.
           <div>
             <TextField
               id="outlined-basic"
