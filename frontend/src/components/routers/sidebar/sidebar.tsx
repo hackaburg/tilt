@@ -9,7 +9,7 @@ import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuUser } from "react-icons/lu";
 import { BiLogOutCircle } from "react-icons/bi";
-import { FaRegCircleCheck } from "react-icons/fa6";
+import { FaHandHoldingHeart, FaRegCircleCheck } from "react-icons/fa6";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { VscSettings } from "react-icons/vsc";
 import { FaHeartBroken } from "react-icons/fa";
@@ -18,6 +18,8 @@ import sha256 from "sha256";
 import { NavLink } from "react-router-dom";
 import { transitionDuration } from "../../../config";
 import { GrGroup } from "react-icons/gr";
+import { Button } from "@mui/material";
+import { SimpleDialog } from "../../base/dialog";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -58,10 +60,19 @@ const Link = styled(NavLink)`
  */
 export const Sidebar = () => {
   const loginState = useLoginContext();
+  const [open, setOpen] = React.useState(false);
 
   if (!loginState.isLoggedIn) {
     return null;
   }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const { user, logout } = loginState;
   const role = user?.role ?? UserRole.User;
@@ -183,6 +194,23 @@ export const Sidebar = () => {
           </>
         )}
       </SidebarMenu>
+      <div style={{ bottom: "8rem", position: "absolute", width: "90%" }}>
+        <Button
+          variant="outlined"
+          style={{
+            color: "#3fb28f",
+            margin: "1rem",
+            borderColor: "#3fb28f",
+            fontSize: "1rem",
+            width: "100%",
+          }}
+          startIcon={<FaHandHoldingHeart />}
+          onClick={handleClickOpen}
+        >
+          Invite a friend
+        </Button>
+      </div>
+      <SimpleDialog open={open} onClose={handleClose} />
       <div style={{ bottom: "1rem", position: "absolute" }}>
         <LI>
           <div style={{ display: "flex", padding: "1rem" }}>

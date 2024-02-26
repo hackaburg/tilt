@@ -108,9 +108,9 @@ export const Status = () => {
               <Spacer />
               <FlexRowContainer>
                 <NonGrowingFlexContainer>
-                  <a href={Routes.ProfileForm}>
+                  <InternalLink to={Routes.ProfileForm}>
                     <Button primary={true}>Fill profile form</Button>
-                  </a>
+                  </InternalLink>
                 </NonGrowingFlexContainer>
               </FlexRowContainer>
             </>
@@ -526,16 +526,9 @@ export const Status = () => {
               >
                 New <b>Feature</b> this year. You can create or join a team.
               </p>
-              <a
-                href={Routes.Teams}
-                style={{
-                  color: "black",
-                  textDecoration: "none",
-                  marginTop: "-1rem",
-                }}
-              >
+              <InternalLink to={Routes.Teams}>
                 <Button>Teams</Button>
-              </a>
+              </InternalLink>
             </div>
           </div>
         </Grid>
