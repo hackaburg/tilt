@@ -402,7 +402,7 @@ export const Status = () => {
                   textOverflow: "ellipsis",
                 }}
               >
-                Follow us on Social Media
+                Our Social Media
               </p>
               <p
                 style={{
@@ -460,7 +460,7 @@ export const Status = () => {
                   textOverflow: "ellipsis",
                 }}
               >
-                Subscribe our Newsletter
+                Our Newsletter
               </p>
               <p
                 style={{

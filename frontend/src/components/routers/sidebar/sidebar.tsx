@@ -18,8 +18,6 @@ import sha256 from "sha256";
 import { NavLink } from "react-router-dom";
 import { transitionDuration } from "../../../config";
 import { GrGroup } from "react-icons/gr";
-import { Image } from "../../base/image";
-import { useSettingsContext } from "../../../contexts/settings-context";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -131,7 +129,10 @@ export const Sidebar = () => {
 
         <SidebarMenuItem to={Routes.Teams}>
           <GrGroup />
-          <span style={{ marginLeft: "1rem" }}> Teams</span>
+          <span style={{ marginLeft: "1rem" }}>
+            {" "}
+            Teams <b style={{ color: "#3fb28f", fontSize: "1rem" }}> - beta</b>
+          </span>
         </SidebarMenuItem>
 
         {isElevatedUser && (

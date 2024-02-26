@@ -5,7 +5,7 @@ import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { TextInput, TextInputType } from "../base/text-input";
-import { useApi } from "../../hooks/use-api";
+import { api, useApi } from "../../hooks/use-api";
 import {
   Autocomplete,
   Box,
@@ -18,6 +18,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
+import { Message } from "../base/message";
 
 const HeaderContainer = styled(StyleableFlexContainer)`
   justify-content: space-between;
@@ -39,13 +40,13 @@ export const EditTeam = () => {
 
   const [currentUserId, setCurrentUserId] = React.useState(0);
   const [editable, setEditable] = React.useState(false);
+  const [isTeamMember, setIsTeamMember] = React.useState(false);
   const [id, setId] = React.useState(0);
   const [title, setTitle] = React.useState("");
   const [desciption, setDescription] = React.useState("");
   const [teamImg, setTeamImg] = React.useState("");
   const [users, setUsers] = React.useState([] as UserListDto[]);
   const [request, setRequest] = React.useState([] as UserListDto[]);
-  const [currentUserToAddId, setCurrentUserToAddId] = React.useState(0);
 
   const {
     value: didUpdateTeam,
@@ -69,30 +70,24 @@ export const EditTeam = () => {
     [currentUserId, editable, id, title, desciption, teamImg, users, request],
   );
 
-  const { forcePerformRequest: sendRequestToJoin } = useApi(
-    async (api, wasTriggeredManually) => {
-      if (wasTriggeredManually) {
-        await api.requestToJoinTeam(Number(params.get("id")));
-        return true;
-      }
-      return false;
-    },
-    [],
-  );
+  const {
+    value: didSendRequestToJoin,
+    forcePerformRequest: sendRequestToJoin,
+  } = useApi(async (api, wasTriggeredManually) => {
+    if (wasTriggeredManually) {
+      await api.requestToJoinTeam(Number(params.get("id")));
+      return true;
+    }
+    return false;
+  }, []);
 
-  const { forcePerformRequest: sendAcceptUserToTeam } = useApi(
-    async (api, wasTriggeredManually) => {
-      if (wasTriggeredManually) {
-        await api.acceptUserToTeam(
-          Number(params.get("id")),
-          request.find((u) => u.id === currentUserToAddId)!.id,
-        );
-        return true;
-      }
-      return false;
-    },
-    [],
-  );
+  async function acceptUserToTeam(userId: number) {
+    await api.acceptUserToTeam(
+      Number(params.get("id")),
+      request.find((u) => u.id === userId)!.id,
+    );
+    history.go(0);
+  }
 
   const {
     value: didDelete,
@@ -122,9 +117,9 @@ export const EditTeam = () => {
 
   const didDeleteDone = Boolean(didDelete) && !deleteInProgress && !deleteError;
 
-  if (updateTeamDone) {
+  if (updateTeamDone || didSendRequestToJoin) {
     const history = useHistory();
-    history.replace(`/teams/${id}`);
+    history.go(0);
   }
 
   if (didDeleteDone) {
@@ -158,11 +153,15 @@ export const EditTeam = () => {
       setUsers(teamById.users!);
       setRequest(teamById.requests!);
       setEditable(user?.id === Number(teamById?.users![0].id));
+      setIsTeamMember(teamById.users!.some((u) => u.id === user?.id));
     }
   }, [teamById]);
 
   function notInUserList() {
-    return !users.some((u) => u.id === user?.id);
+    return (
+      !users.some((u) => u.id === user?.id) &&
+      !request.some((u) => u.id === user?.id)
+    );
   }
 
   return (
@@ -172,7 +171,7 @@ export const EditTeam = () => {
 
         <NonGrowingFlexContainer>
           <a style={{ width: "15rem", marginTop: "1rem" }}>
-            {editable ? (
+            {isTeamMember ? (
               <Button
                 loading={updateTeamInProgress}
                 disable={updateTeamInProgress}
@@ -190,9 +189,16 @@ export const EditTeam = () => {
           </a>
         </NonGrowingFlexContainer>
       </HeaderContainer>
-      <Subheading
-        text={"Please be aware that only owners can edit a team"}
-      ></Subheading>
+      {!isTeamMember ? null : (
+        <Subheading text={"You are part of this team"}></Subheading>
+      )}
+      <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+        {updateTeamError && (
+          <Message type="error">
+            <b>Update Team Error: </b> {updateTeamError.message}
+          </Message>
+        )}
+      </div>
       <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
         <TextInput
           title="Team Title"
@@ -200,15 +206,15 @@ export const EditTeam = () => {
           value={title}
           onChange={(value) => setTitle(value)}
           type={TextInputType.Text}
-          isDisabled={!editable}
+          isDisabled={!isTeamMember}
         />
         <TextInput
           title="Team Description"
-          placeholder="Your team description"
+          placeholder="Your team description (maybe also add the communication channel e.g. Discord, Signal, WhatsApp, etc. may add a link to the channel)"
           value={desciption}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
-          isDisabled={!editable}
+          isDisabled={!isTeamMember}
         />
         <div>
           <TextInput
@@ -216,8 +222,8 @@ export const EditTeam = () => {
             placeholder="Your team image"
             value={teamImg}
             onChange={(value) => setTeamImg(value)}
-            type={TextInputType.Area}
-            isDisabled={!editable}
+            type={TextInputType.Text}
+            isDisabled={!isTeamMember}
           />
           {teamImg !== "" ? (
             <img src={teamImg} style={{ width: "200px", height: "200px" }} />
@@ -232,65 +238,67 @@ export const EditTeam = () => {
             }}
             id="demo-multiple-name-label"
           >
-            Select Team Members
+            Team Members (can only be changed by the team owner)
           </InputLabel>
-          {users.map((user, index) => (
-            <div key={index} style={{ display: "flex" }}>
-              <Autocomplete
-                freeSolo
-                style={{
-                  width: index === 0 || !editable ? "100%" : "90%",
-                  marginBottom: "1rem",
-                }}
-                disabled={!editable}
-                value={user}
-                options={userList}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    sx={{
-                      border:
-                        user.id === currentUserId ? "2px solid #3fb28f" : "",
+          <div style={{ marginTop: "1.5rem" }}>
+            {users.map((user, index) => (
+              <div key={index} style={{ display: "flex" }}>
+                <Autocomplete
+                  freeSolo
+                  style={{
+                    width: index === 0 || !editable ? "100%" : "90%",
+                    marginBottom: "1rem",
+                  }}
+                  disabled={!editable}
+                  value={user}
+                  options={userList}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{
+                        background:
+                          user.id === currentUserId ? "#3fb28f" : "white",
+                      }}
+                      label={index === 0 ? "Team Owner" : "Users"}
+                      disabled={index === 0 || !editable}
+                    />
+                  )}
+                  renderOption={(props, option, state, ownerState) => (
+                    <Box
+                      sx={{
+                        borderRadius: "8px",
+                        margin: "5px",
+                        padding: "5px",
+                      }}
+                      component="li"
+                      {...props}
+                      aria-disabled={alreadyInList(option)}
+                    >
+                      {ownerState.getOptionLabel(option)}{" "}
+                      {alreadyInList(option) ? " - already a member" : ""}
+                    </Box>
+                  )}
+                  onChange={(_e, v) => onChange(index, v as UserListDto)}
+                />
+                {index === 0 || !editable ? null : (
+                  <MdDeleteOutline
+                    size={30}
+                    style={{
+                      marginLeft: "2rem",
+                      marginTop: "0.75rem",
+                      cursor: "pointer",
                     }}
-                    label={index === 0 ? "Team Owner" : "Users"}
-                    disabled={index === 0 || !editable}
+                    onClick={() => {
+                      const newUsers = [...users];
+                      newUsers.splice(index, 1);
+                      setUsers(newUsers);
+                    }}
                   />
                 )}
-                renderOption={(props, option, state, ownerState) => (
-                  <Box
-                    sx={{
-                      borderRadius: "8px",
-                      margin: "5px",
-                      padding: "5px",
-                    }}
-                    component="li"
-                    {...props}
-                    aria-disabled={alreadyInList(option)}
-                  >
-                    {ownerState.getOptionLabel(option)}{" "}
-                    {alreadyInList(option) ? " - already a member" : ""}
-                  </Box>
-                )}
-                onChange={(_e, v) => onChange(index, v as UserListDto)}
-              />
-              {index === 0 || !editable ? null : (
-                <MdDeleteOutline
-                  size={30}
-                  style={{
-                    marginLeft: "2rem",
-                    marginTop: "0.75rem",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    const newUsers = [...users];
-                    newUsers.splice(index, 1);
-                    setUsers(newUsers);
-                  }}
-                />
-              )}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
 
           {editable ? (
             <div>
@@ -299,18 +307,6 @@ export const EditTeam = () => {
                   Add member
                 </Button>
               </div>
-              {/*  <Card style={{ marginTop: "1rem", backgroundColor: "#ffd4d4" }}>
-                  <CardActionArea>
-                    <CardContent>
-                      <Typography variant="body2" color="text.secondary">
-                        Danger Zone
-                      </Typography>
-                      <div style={{ marginTop: "1rem", width: "15rem" }}>
-                        <Button color="red">Delete Group</Button>
-                      </div>
-                    </CardContent>
-                  </CardActionArea>
-                </Card> */}
             </div>
           ) : null}
         </div>
@@ -325,7 +321,8 @@ export const EditTeam = () => {
               }}
               id="demo-multiple-name-label"
             >
-              These users requested to join your team
+              These users requested to join this team (can only be changed by
+              the team owner)
             </InputLabel>
             {request.map((request, index) => (
               <div key={index} style={{ display: "flex" }}>
@@ -342,22 +339,24 @@ export const EditTeam = () => {
                     marginTop: "0.5rem",
                   }}
                 >
-                  <Button
-                    loading={updateTeamInProgress}
-                    disable={updateTeamInProgress}
-                    onClick={() => {
-                      setCurrentUserToAddId(request.id);
-                      sendAcceptUserToTeam();
-                    }}
-                    primary={true}
-                  >
-                    Add to Team
-                  </Button>
+                  {!editable ? null : (
+                    <Button
+                      loading={updateTeamInProgress}
+                      disable={updateTeamInProgress}
+                      onClick={async () => {
+                        await acceptUserToTeam(request.id);
+                      }}
+                      primary={true}
+                    >
+                      Add to Team
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         ) : null}
+
         {editable ? (
           <div style={{ marginTop: "2rem" }}>
             <Card variant="outlined" style={{ background: "#ffcdd2" }}>

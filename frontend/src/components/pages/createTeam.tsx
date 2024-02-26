@@ -12,6 +12,7 @@ import { Autocomplete, Box, InputLabel, TextField, Theme } from "@mui/material";
 import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
+import { Message } from "../base/message";
 
 const HeaderContainer = styled(StyleableFlexContainer)`
   justify-content: space-between;
@@ -101,6 +102,14 @@ export const CreateTeam = () => {
           </a>
         </NonGrowingFlexContainer>
       </HeaderContainer>
+      <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+        {createTeamError && (
+          <Message type="error">
+            <b>Create Team Error: </b> {createTeamError.message}
+          </Message>
+        )}
+      </div>
+
       <form onSubmit={handleSubmit}>
         <TextInput
           title="Team Title"
@@ -111,7 +120,7 @@ export const CreateTeam = () => {
         />
         <TextInput
           title="Team Description"
-          placeholder="Your team description"
+          placeholder="Your team description (maybe also add the communication channel e.g. Discord, Signal, WhatsApp, etc. may add a link to the channel)"
           value={desciption}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
@@ -121,7 +130,7 @@ export const CreateTeam = () => {
           placeholder="Your team image"
           value={teamImg}
           onChange={(value) => setTeamImg(value)}
-          type={TextInputType.Area}
+          type={TextInputType.Text}
         />
         <div style={{ width: "100%" }}>
           <InputLabel

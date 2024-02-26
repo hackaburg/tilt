@@ -16,10 +16,7 @@ export interface ITeamService extends IService {
   getAllTeams(): Promise<readonly Team[]>;
   createTeam(team: Team): Promise<Team>;
   updateTeam(team: Team): Promise<Team>;
-  getTeamByID(
-    id: number,
-    currentUserId: number,
-  ): Promise<TeamResponseDTO | undefined>;
+  getTeamByID(id: number): Promise<TeamResponseDTO | undefined>;
   acceptUserToTeam(
     teamId: number,
     userId: number,
@@ -66,6 +63,18 @@ export class TeamService implements ITeamService {
    * @param team The team to update
    */
   public async updateTeam(team: Team): Promise<Team> {
+    if (team.title === "") {
+      throw new Error("Team title cannot be empty");
+    }
+
+    if (team.description === "") {
+      throw new Error("Team description cannot be empty");
+    }
+
+    if (team.users.length === 0) {
+      throw new Error("Please add at least one user to the team");
+    }
+
     return this._teams.save(team);
   }
 
@@ -81,7 +90,37 @@ export class TeamService implements ITeamService {
       "https://i.imgur.com/uyovY3o.png",
       "https://i.imgur.com/ZjbBQs5.png",
       "https://i.imgur.com/NrdADj3.png",
+      "https://i.imgur.com/qRSgY3B.png",
+      "https://i.imgur.com/oCBHuP6.png",
+      "https://i.imgur.com/lZ2CX4I.png",
+      "https://i.imgur.com/kJDnZfj.png",
+      "https://i.imgur.com/wTWrswV.png",
+      "https://i.imgur.com/seFyjfb.png",
     ];
+
+    if (team.title === "") {
+      throw new Error("Team title cannot be empty");
+    }
+
+    if (team.description === "") {
+      throw new Error("Team description cannot be empty");
+    }
+
+    if (team.users.length === 0) {
+      throw new Error("Please add at least one user to the team");
+    }
+
+    //check if requesting user has already 5 teams created
+    let user = team.users[0];
+    const allTeams = await this._database.getRepository(Team).find();
+    let userTeams = allTeams.filter(
+      (team) => team.users[0].toString() === user.toString(),
+    );
+    if (userTeams.length >= 5) {
+      throw new Error(
+        "You already have created 5 teams. Please delete one first.",
+      );
+    }
 
     try {
       if (team.teamImg === "") {
@@ -99,10 +138,7 @@ export class TeamService implements ITeamService {
    * Gets a team by its id.
    * @param id The id of the team
    */
-  public async getTeamByID(
-    id: number,
-    currentUserId: number,
-  ): Promise<TeamResponseDTO | undefined> {
+  public async getTeamByID(id: number): Promise<TeamResponseDTO | undefined> {
     let team = await this._teams.findOne(id);
 
     if (team == null) {
@@ -117,17 +153,13 @@ export class TeamService implements ITeamService {
         };
       });
 
-      if (currentUserId === teamResponse.users[0].id) {
-        let userRequests = await this._users.findByIds(team?.requests!);
-        teamResponse.requests = userRequests.map((user) => {
-          return {
-            id: user.id,
-            name: `${user.firstName} ${user.lastName[0]}. #${user.id}`,
-          };
-        });
-      } else {
-        teamResponse.requests = [];
-      }
+      let userRequests = await this._users.findByIds(team?.requests!);
+      teamResponse.requests = userRequests.map((user) => {
+        return {
+          id: user.id,
+          name: `${user.firstName} ${user.lastName[0]}. #${user.id}`,
+        };
+      });
 
       return teamResponse;
     }

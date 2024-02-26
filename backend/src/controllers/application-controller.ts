@@ -321,9 +321,8 @@ export class ApplicationController {
   @Authorized(UserRole.User)
   public async getTeamByID(
     @Param("id") teamId: number,
-    @CurrentUser() user: User,
   ): Promise<TeamResponseDTO> {
-    const team = await this._teams.getTeamByID(teamId, user.id);
+    const team = await this._teams.getTeamByID(teamId);
 
     if (team == null) {
       throw new NotFoundError(`no team with id ${teamId}`);

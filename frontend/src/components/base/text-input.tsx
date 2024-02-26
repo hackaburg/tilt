@@ -89,6 +89,7 @@ export const TextInput = ({
         focused={isFocused}
         {...fieldProps}
         multiline={type === TextInputType.Area}
+        rows={type === TextInputType.Area ? 3 : undefined}
       />
     </div>
   );

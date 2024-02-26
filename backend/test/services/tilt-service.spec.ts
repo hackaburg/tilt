@@ -16,6 +16,7 @@ import { MockSlackNotificationService } from "./mock/mock-slack-service";
 import { MockTokenService } from "./mock/mock-token-service";
 import { MockUnixSignalService } from "./mock/mock-unix-signal-service";
 import { MockUserService } from "./mock/mock-user-service";
+import { MockTeamsService } from "./mock/mock-teams-service";
 
 describe("TiltService", () => {
   it("bootstraps all services", async () => {
@@ -30,6 +31,7 @@ describe("TiltService", () => {
     const config = addService(new MockConfigurationService({}));
     const database = addService(new MockDatabaseService());
     const users = addService(new MockUserService());
+    const teams = addService(new MockTeamsService());
     const http = addService(new MockHttpService());
     const tokens = addService(new MockTokenService());
     const settings = addService(new MockSettingsService());
@@ -54,6 +56,7 @@ describe("TiltService", () => {
       emailTemplates.instance,
       tokens.instance,
       users.instance,
+      teams.instance,
       settings.instance,
       questions.instance,
       application.instance,
