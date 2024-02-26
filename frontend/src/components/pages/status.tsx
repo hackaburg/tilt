@@ -20,15 +20,6 @@ import { Divider } from "../base/divider";
 import { SimpleCard } from "../base/simple-card";
 import { Grid } from "@mui/material";
 
-// @ts-ignore
-import discord from "../../../assets/discord.png";
-// @ts-ignore
-import instagram from "../../../assets/instagram.png";
-// @ts-ignore
-import newsletter from "../../../assets/newsletter.jpg";
-// @ts-ignore
-import team from "../../../assets/team.png";
-
 /**
  * The start page every user sees after logging in.
  */
@@ -329,7 +320,7 @@ export const Status = () => {
             }}
           >
             <img
-              src={discord}
+              src="https://i.imgur.com/3pU0Ycr.png"
               alt="discord"
               style={{
                 width: "100%",
@@ -386,7 +377,7 @@ export const Status = () => {
             }}
           >
             <img
-              src={instagram}
+              src="https://i.imgur.com/IbQJ7q5.png"
               alt="discord"
               style={{
                 width: "100%",
@@ -444,7 +435,7 @@ export const Status = () => {
             }}
           >
             <img
-              src={newsletter}
+              src="https://i.imgur.com/vhS8tU4.jpeg"
               alt="discord"
               style={{
                 width: "100%",
@@ -501,7 +492,7 @@ export const Status = () => {
             }}
           >
             <img
-              src={team}
+              src="https://i.imgur.com/zatzqe3.png"
               alt="discord"
               style={{
                 width: "100%",
