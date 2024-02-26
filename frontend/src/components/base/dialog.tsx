@@ -9,11 +9,22 @@ import { FaWhatsapp } from "react-icons/fa6";
 import { MdOutlineMail } from "react-icons/md";
 import { FaLinkedin } from "react-icons/fa";
 
+/**
+ * The props for the simple dialog
+ * @param open - whether the dialog is open
+ * @param onClose - the function to call when the dialog is closed
+ * @returns the dialog
+ */
 export interface SimpleDialogProps {
   open: boolean;
   onClose: (value: string) => void;
 }
 
+/**
+ * The simple dialog
+ * @param props - the props
+ * @returns the dialog
+ */
 export const SimpleDialog = (props: SimpleDialogProps) => {
   const { open } = props;
 
