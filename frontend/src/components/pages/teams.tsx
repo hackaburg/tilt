@@ -24,8 +24,7 @@ const HeaderContainer = styled(StyleableFlexContainer)`
 export const Teams = () => {
   const { value: allTeams } = useApi(async (api) => api.getAllTeams(), []);
 
-  //sort teams in which the current user in
-  let teams = allTeams ?? [];
+  const teams = allTeams ?? [];
 
   return (
     <Page>

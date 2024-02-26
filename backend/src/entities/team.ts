@@ -7,11 +7,11 @@ export class Team {
   @Column({ length: 1024 })
   public title!: string;
   @Column("simple-array")
-  public users!: Number[];
+  public users!: number[];
   @Column()
   public teamImg!: string;
   @Column("longtext")
   public description!: string;
   @Column("simple-array")
-  public requests!: Number[];
+  public requests!: number[];
 }

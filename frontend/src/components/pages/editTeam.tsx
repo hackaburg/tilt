@@ -34,7 +34,7 @@ export const EditTeam = () => {
   const params = new URLSearchParams(document.location.search);
 
   const { value: teamById } = useApi(
-    async (api) => api.getTeamByID(Number(params.get("id"))),
+    async (apiClient) => apiClient.getTeamByID(Number(params.get("id"))),
     [],
   );
 
@@ -54,9 +54,9 @@ export const EditTeam = () => {
     error: updateTeamError,
     forcePerformRequest: sendSaveTeamRequest,
   } = useApi(
-    async (api, wasTriggeredManually) => {
+    async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await api.updateTeam(
+        await apiClient.updateTeam(
           id,
           title,
           desciption,
@@ -73,9 +73,9 @@ export const EditTeam = () => {
   const {
     value: didSendRequestToJoin,
     forcePerformRequest: sendRequestToJoin,
-  } = useApi(async (api, wasTriggeredManually) => {
+  } = useApi(async (apiClient, wasTriggeredManually) => {
     if (wasTriggeredManually) {
-      await api.requestToJoinTeam(Number(params.get("id")));
+      await apiClient.requestToJoinTeam(Number(params.get("id")));
       return true;
     }
     return false;
@@ -94,17 +94,20 @@ export const EditTeam = () => {
     isFetching: deleteInProgress,
     error: deleteError,
     forcePerformRequest: deleteGroup,
-  } = useApi(async (api, wasTriggeredManually) => {
+  } = useApi(async (apiClient, wasTriggeredManually) => {
     if (wasTriggeredManually) {
       if (confirm("Are you sure you want to delete this team?")) {
-        await api.deleteTeam(Number(params.get("id")));
+        await apiClient.deleteTeam(Number(params.get("id")));
         return true;
       }
     }
     return false;
   }, []);
 
-  const { value: allUsers } = useApi(async (api) => api.getAllUsers(), []);
+  const { value: allUsers } = useApi(
+    async (apiClient) => apiClient.getAllUsers(),
+    [],
+  );
 
   const userList = allUsers ?? [];
 
@@ -132,15 +135,15 @@ export const EditTeam = () => {
   }
 
   function onChange(index: number, value: UserListDto) {
-    setUsers((users) => {
-      const newUsers = [...users];
+    setUsers((uList) => {
+      const newUsers = [...uList];
       newUsers[index] = value;
       return newUsers;
     });
   }
 
-  function alreadyInList(user: UserListDto) {
-    return users.some((u) => u.id === user.id);
+  function alreadyInList(singleUser: UserListDto) {
+    return users.some((u) => u.id === singleUser.id);
   }
 
   React.useEffect(() => {
@@ -241,7 +244,7 @@ export const EditTeam = () => {
             Team Members (can only be changed by the team owner)
           </InputLabel>
           <div style={{ marginTop: "1.5rem" }}>
-            {users.map((user, index) => (
+            {users.map((singleUser, index) => (
               <div key={index} style={{ display: "flex" }}>
                 <Autocomplete
                   freeSolo
@@ -250,15 +253,15 @@ export const EditTeam = () => {
                     marginBottom: "1rem",
                   }}
                   disabled={!editable}
-                  value={user}
+                  value={singleUser}
                   options={userList}
                   getOptionLabel={(option) => option.name}
-                  renderInput={(params) => (
+                  renderInput={(paramsAuto) => (
                     <TextField
-                      {...params}
+                      {...paramsAuto}
                       sx={{
                         background:
-                          user.id === currentUserId ? "#3fb28f" : "white",
+                          singleUser.id === currentUserId ? "#3fb28f" : "white",
                       }}
                       label={index === 0 ? "Team Owner" : "Users"}
                       disabled={index === 0 || !editable}
@@ -324,11 +327,11 @@ export const EditTeam = () => {
               These users requested to join this team (can only be changed by
               the team owner)
             </InputLabel>
-            {request.map((request, index) => (
+            {request.map((r, index) => (
               <div key={index} style={{ display: "flex" }}>
                 <TextField
                   label="Users"
-                  value={request.name}
+                  value={r.name}
                   disabled
                   style={{ width: "90%" }}
                 />
@@ -344,7 +347,7 @@ export const EditTeam = () => {
                       loading={updateTeamInProgress}
                       disable={updateTeamInProgress}
                       onClick={async () => {
-                        await acceptUserToTeam(request.id);
+                        await acceptUserToTeam(r.id);
                       }}
                       primary={true}
                     >

@@ -13,16 +13,37 @@ import { User } from "../entities/user";
  * An interface describing user handling.
  */
 export interface ITeamService extends IService {
+  /**
+   * Get all teams
+   */
   getAllTeams(): Promise<readonly Team[]>;
+  /**
+   * Create new team
+   */
   createTeam(team: Team): Promise<Team>;
+  /**
+   *  Update team
+   */
   updateTeam(team: Team): Promise<Team>;
+  /**
+   * Get team by id
+   */
   getTeamByID(id: number): Promise<TeamResponseDTO | undefined>;
+  /**
+   * Accept user request to join team
+   */
   acceptUserToTeam(
     teamId: number,
     userId: number,
     currentUserId: User,
   ): Promise<void>;
+  /**
+   * Delete single team by id
+   */
   deleteTeamByID(id: number, currentUserId: User): Promise<void>;
+  /**
+   * Request to join a team
+   */
   requestToJoinTeam(teamId: number, user: User): Promise<void>;
 }
 
@@ -110,12 +131,12 @@ export class TeamService implements ITeamService {
       throw new Error("Please add at least one user to the team");
     }
 
-    //check if requesting user has already 5 teams created
-    let user = team.users[0];
+    const user = team.users[0];
     const allTeams = await this._database.getRepository(Team).find();
-    let userTeams = allTeams.filter(
-      (team) => team.users[0].toString() === user.toString(),
+    const userTeams = allTeams.filter(
+      (t) => t.users[0].toString() === user.toString(),
     );
+
     if (userTeams.length >= 5) {
       throw new Error(
         "You already have created 5 teams. Please delete one first.",
@@ -130,7 +151,6 @@ export class TeamService implements ITeamService {
       team.requests = [];
       return this._teams.save(team);
     } catch (e) {
-      console.error(e);
       throw e;
     }
   }
@@ -139,13 +159,13 @@ export class TeamService implements ITeamService {
    * @param id The id of the team
    */
   public async getTeamByID(id: number): Promise<TeamResponseDTO | undefined> {
-    let team = await this._teams.findOne(id);
+    const team = await this._teams.findOne(id);
 
     if (team == null) {
       return undefined;
     } else {
       const teamResponse = convertBetweenEntityAndDTO(team, TeamResponseDTO);
-      let users = await this._users.findByIds(team?.users!);
+      const users = await this._users.findByIds(team?.users!);
       teamResponse.users = users.map((user) => {
         return {
           id: user.id,
@@ -153,7 +173,7 @@ export class TeamService implements ITeamService {
         };
       });
 
-      let userRequests = await this._users.findByIds(team?.requests!);
+      const userRequests = await this._users.findByIds(team?.requests!);
       teamResponse.requests = userRequests.map((user) => {
         return {
           id: user.id,
@@ -177,7 +197,6 @@ export class TeamService implements ITeamService {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    //convert team.requests to string array
     const requests = team.requests.map((id) => id.toString());
 
     if (requests.indexOf(user.id.toString()) > -1) {
@@ -198,7 +217,6 @@ export class TeamService implements ITeamService {
   public async deleteTeamByID(id: number, currentUserId: User): Promise<void> {
     const team = await this._teams.findOne(id);
 
-    //check if user is the owner of the team
     if (team?.users[0].toString() !== currentUserId.id.toString()) {
       throw new Error("You are not the owner of this team");
     }
@@ -225,12 +243,10 @@ export class TeamService implements ITeamService {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    //check if user is the owner of the team
     if (team?.users[0].toString() !== user.id.toString()) {
       throw new Error("You are not the owner of this team");
     }
 
-    //convert team.requests to string array
     const requests = team.requests.map((id) => id.toString());
 
     if (requests.indexOf(userId.toString()) === -1) {

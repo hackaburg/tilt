@@ -276,7 +276,7 @@ export class ApiClient {
     );
   }
 
-  /*
+  /**
    * Request to join a team
    * @param teamId The team's id
    * @param userId The user's id
@@ -288,20 +288,19 @@ export class ApiClient {
     );
   }
 
-  /*
+  /**
    * Accept a user to a team
    * @param teamId The team's id
    * @param userId The user's id
    */
   public async acceptUserToTeam(teamId: number, userId: number): Promise<void> {
-    console.log("acceptUserToTeam");
     await this.put<ApplicationControllerMethods["acceptUserToTeam"]>(
       `/application/team/${teamId}/accept/${userId}`,
       {} as never,
     );
   }
 
-  /*
+  /**
    * Delete a team by id
    * @param id The team's id
    */
@@ -465,7 +464,7 @@ export class ApiClient {
   }
 
   /**
-   *
+   * Get all teams
    * @returns all teams
    */
   public async getAllTeams(): Promise<readonly TeamDTO[]> {
@@ -475,6 +474,7 @@ export class ApiClient {
   }
 
   /**
+   * Get Team by Id
    * @return team by id
    */
   public async getTeamByID(id: number): Promise<TeamResponseDTO> {
@@ -484,7 +484,7 @@ export class ApiClient {
   }
 
   /**
-   *
+   * Get all users
    * @returns all users
    */
   public async getAllUsers(): Promise<readonly UserListDto[]> {

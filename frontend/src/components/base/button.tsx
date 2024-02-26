@@ -95,7 +95,7 @@ export const Button = ({
       {children}
       {loading && (
         <SpinnerContainer>
-          {color == undefined ? (
+          {color === undefined ? (
             <Spinner
               color={primary ? "black" : "white"}
               size={20}

@@ -8,7 +8,7 @@ import { TextInput, TextInputType } from "../base/text-input";
 import { useApi } from "../../hooks/use-api";
 import { Redirect } from "react-router";
 import { Routes } from "../../routes";
-import { Autocomplete, Box, InputLabel, TextField, Theme } from "@mui/material";
+import { Autocomplete, Box, InputLabel, TextField } from "@mui/material";
 import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
@@ -74,15 +74,15 @@ export const CreateTeam = () => {
   }
 
   function onChange(index: number, value: UserListDto) {
-    setUsers((users) => {
-      const newUsers = [...users];
+    setUsers((u) => {
+      const newUsers = [...u];
       newUsers[index] = value;
       return newUsers;
     });
   }
 
-  function alreadyInList(user: UserListDto) {
-    return users.some((u) => u.id === user.id);
+  function alreadyInList(singleUser: UserListDto) {
+    return users.some((u) => u.id === singleUser.id);
   }
 
   return (
@@ -143,7 +143,7 @@ export const CreateTeam = () => {
           >
             Select Team Members
           </InputLabel>
-          {users.map((user, index) => (
+          {users.map((singleUser, index) => (
             <div key={index} style={{ display: "flex" }}>
               <Autocomplete
                 freeSolo
@@ -152,7 +152,7 @@ export const CreateTeam = () => {
                   marginBottom: "1rem",
                 }}
                 id="combo-box-demo"
-                value={user}
+                value={singleUser}
                 options={userList}
                 disabled={index === 0}
                 getOptionLabel={(option) => option.name}

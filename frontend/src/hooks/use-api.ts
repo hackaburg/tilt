@@ -3,6 +3,9 @@ import { ApiClient } from "../api";
 import { apiBaseUrl } from "../config";
 import { Nullable } from "../util";
 
+/**
+ * Export Api Client
+ */
 export const api = new ApiClient(apiBaseUrl);
 
 interface IApiResult<T> {
