@@ -24,7 +24,7 @@ export interface ITeamService extends IService {
   /**
    *  Update team
    */
-  updateTeam(team: Team): Promise<Team>;
+  updateTeam(team: Team, user: User): Promise<Team>;
   /**
    * Get team by id
    */
@@ -83,7 +83,7 @@ export class TeamService implements ITeamService {
    * Updates a team.
    * @param team The team to update
    */
-  public async updateTeam(team: Team): Promise<Team> {
+  public async updateTeam(team: Team, user: User): Promise<Team> {
     if (team.title === "") {
       throw new Error("Team title cannot be empty");
     }
@@ -94,6 +94,20 @@ export class TeamService implements ITeamService {
 
     if (team.users.length === 0) {
       throw new Error("Please add at least one user to the team");
+    }
+
+    const originTeam = await this._teams.findOne(team.id);
+    const originTeamUsers = originTeam?.users.map((id) => id.toString());
+
+    if (!originTeamUsers!.includes(user.id.toString())) {
+      throw new Error("You are not a member of this team");
+    }
+
+    if (originTeam?.users.join() !== team.users.join()) {
+      if (originTeam!.users[0].toString() !== user.id.toString()) {
+        throw new Error("You are not the owner of this team");
+      }
+      return this._teams.save(team);
     }
 
     return this._teams.save(team);

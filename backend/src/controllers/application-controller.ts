@@ -273,9 +273,10 @@ export class ApplicationController {
   @Authorized(UserRole.User)
   public async updateTeam(
     @Body() { data: teamDTO }: { data: TeamUpdateDTO },
+    @CurrentUser() user: User,
   ): Promise<TeamDTO> {
     const team = convertBetweenEntityAndDTO(teamDTO, Team);
-    const updateTeam = await this._teams.updateTeam(team);
+    const updateTeam = await this._teams.updateTeam(team, user);
     return convertBetweenEntityAndDTO(updateTeam, TeamDTO);
   }
 
