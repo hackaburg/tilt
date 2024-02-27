@@ -24,6 +24,7 @@ import { Page } from "../pages/page";
 import { StringifiedUnifiedQuestion } from "./stringified-unified-question";
 import { SimpleCard } from "../base/simple-card";
 import { Divider } from "../base/divider";
+import { useNotificationContext } from "../../contexts/notification-context";
 
 /**
  * An enum describing the type of form we want to render.
@@ -58,6 +59,7 @@ export const Form = ({ type }: IFormProps) => {
   const { user } = useLoginContext();
   const isExpired = user == null ? false : isConfirmationExpired(user);
   const isNotAttending = user?.declined || isExpired;
+  const { showNotification } = useNotificationContext();
 
   const now = Date.now();
   const isProfileFormAvailable =
@@ -119,6 +121,7 @@ export const Form = ({ type }: IFormProps) => {
         value,
       })),
     );
+    showNotification("Successfully submitted");
   }, [state]);
 
   const { updateUser } = useLoginContext();
@@ -214,6 +217,7 @@ export const Form = ({ type }: IFormProps) => {
         <Heading text={`Profile: ${user?.firstName} ${user?.lastName}`} />
         <Divider />
         <Subheading text="All important information about you - for us." />
+
         <SimpleCard>{questions}</SimpleCard>
         {!isFormDisabled && (
           <SubmitContainer>
@@ -228,26 +232,27 @@ export const Form = ({ type }: IFormProps) => {
 
               <Spacer />
 
-              <NonGrowingFlexContainer>
-                <VerticallyCenteredContainer>
-                  {!isDirty && !isUnanswered && (
-                    <NonGrowingFlexContainer>
-                      <Muted>All changes saved</Muted>
-                    </NonGrowingFlexContainer>
-                  )}
+              <div style={{ width: "35rem", display: "flex" }}>
+                {!isDirty && !isUnanswered && (
+                  <div style={{ width: "20rem", marginTop: "0.5rem" }}>
+                    <Muted>
+                      All changes saved. You still can edit it until you get
+                      accepted by us.{" "}
+                    </Muted>
+                  </div>
+                )}
 
-                  <Spacer />
+                <Spacer />
 
-                  <Button
-                    primary
-                    onClick={handleSubmit}
-                    loading={isSubmitting}
-                    disable={!isDirty || isFormDisabled}
-                  >
-                    Submit
-                  </Button>
-                </VerticallyCenteredContainer>
-              </NonGrowingFlexContainer>
+                <Button
+                  primary
+                  onClick={handleSubmit}
+                  loading={isSubmitting}
+                  disable={!isDirty || isFormDisabled}
+                >
+                  Please submit
+                </Button>
+              </div>
             </VerticallyCenteredContainer>
           </SubmitContainer>
         )}

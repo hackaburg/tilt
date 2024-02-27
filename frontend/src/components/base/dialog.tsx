@@ -83,14 +83,19 @@ export const SimpleDialog = (props: SimpleDialogProps) => {
                 Mail
               </MuiButton>
 
-              <MuiButton
+              <a
                 href="http://www.linkedin.com/shareArticle?mini=true&url=hackaburg.de&title=Hackaburg 2024&summary=I am visiting Hackaburg this year! Join me at https://hackaburg.de&source=Hackaburg"
-                variant="outlined"
-                startIcon={<FaLinkedin />}
-                style={{ color: "black", borderColor: "black" }}
+                target="_blank"
+                rel="noreferrer"
               >
-                LinkedIn
-              </MuiButton>
+                <MuiButton
+                  variant="outlined"
+                  startIcon={<FaLinkedin />}
+                  style={{ color: "black", borderColor: "black" }}
+                >
+                  LinkedIn
+                </MuiButton>
+              </a>
             </div>{" "}
           </div>
         </DialogContentText>

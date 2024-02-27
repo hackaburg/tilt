@@ -118,10 +118,16 @@ export const Status = () => {
           {user?.profileSubmitted && (
             <>
               <Text style={{ fontSize: "1.15rem" }}>
-                You successfully applied. 🎉 You can still edit your{" "}
-                <InternalLink to={Routes.ProfileForm}>
-                  profile form
-                </InternalLink>
+                You successfully applied. 🎉
+                {!user?.confirmed && (
+                  <>
+                    {" "}
+                    You can still edit your{" "}
+                    <InternalLink to={Routes.ProfileForm}>
+                      profile form
+                    </InternalLink>
+                  </>
+                )}
               </Text>
             </>
           )}
@@ -357,6 +363,7 @@ export const Status = () => {
               </p>
               <a
                 href="https://discord.gg/hackaburg"
+                target="_blank"
                 style={{
                   color: "black",
                   textDecoration: "none",
@@ -378,7 +385,7 @@ export const Status = () => {
           >
             <img
               src="https://i.imgur.com/IbQJ7q5.png"
-              alt="discord"
+              alt="socialmedia"
               style={{
                 width: "100%",
                 height: "10rem",
@@ -415,6 +422,7 @@ export const Status = () => {
               </p>
               <a
                 href="https://linktr.ee/hackaburg"
+                target="_blank"
                 style={{
                   color: "black",
                   textDecoration: "none",
@@ -436,7 +444,7 @@ export const Status = () => {
           >
             <img
               src="https://i.imgur.com/vhS8tU4.jpeg"
-              alt="discord"
+              alt="newsletter"
               style={{
                 width: "100%",
                 height: "10rem",
@@ -468,10 +476,11 @@ export const Status = () => {
                 }}
               >
                 You know mail is <b>really reliable</b> to stay up to date. And
-                you can be sure we won't <b>span</b> you.
+                you can be sure we won't <b>spam</b> you.
               </p>
               <a
                 href="https://26490796.sibforms.com/serve/MUIFAPx4aKGKuMbU3UZxk_ODAxapOpxY9oApe-LFK48oC2HcUpuUDG5RfLrplRnzmlE2fhnxFsrLWAO1LoVerg8hegpCyxQDQ85Ac45SzhCZXZlT8m5RRT7wDfIbcv9GgTCPGWiw6QSSK2qQR2n6ST8ezKWg-QTn0tCj8LRENn-vhJpHafi3096LcWLZQXDIx_IzJZaOLL7Chfdk"
+                target="_blank"
                 style={{
                   color: "black",
                   textDecoration: "none",
@@ -493,7 +502,7 @@ export const Status = () => {
           >
             <img
               src="https://i.imgur.com/zatzqe3.png"
-              alt="discord"
+              alt="team"
               style={{
                 width: "100%",
                 height: "10rem",
