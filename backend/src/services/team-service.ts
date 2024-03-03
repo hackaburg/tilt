@@ -180,12 +180,20 @@ export class TeamService implements ITeamService {
     } else {
       const teamResponse = convertBetweenEntityAndDTO(team, TeamResponseDTO);
       const users = await this._users.findByIds(team?.users!);
-      teamResponse.users = users.map((user) => {
-        return {
-          id: user.id,
-          name: `${user.firstName} ${user.lastName[0]}. #${user.id}`,
-        };
+      const mappedUsers: any = [];
+
+      teamResponse.users!.forEach((userId) => {
+        users.map((user) => {
+          if (user.id.toString() === userId.toString()) {
+            mappedUsers.push({
+              id: user.id,
+              name: `${user.firstName} ${user.lastName[0]}. #${user.id}`,
+            });
+          }
+        });
       });
+
+      teamResponse.users = mappedUsers;
 
       const userRequests = await this._users.findByIds(team?.requests!);
       teamResponse.requests = userRequests.map((user) => {

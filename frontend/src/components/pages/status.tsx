@@ -200,12 +200,11 @@ export const Status = () => {
               <Spacer />
               <FlexRowContainer>
                 <NonGrowingFlexContainer>
-                  <InternalLink to={Routes.ConfirmationFormApply}>
+                  <InternalLink to={Routes.ConfirmationForm}>
                     <Button primary={true}>Fill confirmation form</Button>
                   </InternalLink>
                 </NonGrowingFlexContainer>
               </FlexRowContainer>
-
               <Spacer />
 
               <Text style={{ fontSize: "1.15rem" }}>
