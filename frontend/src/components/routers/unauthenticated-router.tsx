@@ -31,6 +31,18 @@ const RouterContainer = styled(Elevated)`
   border-color:  ${variables.colorLink};
 }`;
 
+const H1 = styled.h1`
+  font-size: 2.3rem;
+  margin: 0;
+  padding: 0.25rem 0;
+`;
+
+const H2 = styled.h2`
+  font-size: 1.6rem;
+  margin: 0;
+  margin-top: -0.5rem;
+`;
+
 /**
  * A router for unauthenticated users.
  */
@@ -47,6 +59,23 @@ export const UnauthenticatedRouter = () => {
         }}
       >
         <CenteredContainer>
+          <div style={{ marginBottom: "2rem" }}>
+            <H1 style={{ color: "white" }}>HACKABURG</H1>
+            <H2 style={{ color: "white" }}>CONTROL CENTER</H2>
+            <p style={{ color: "white" }}>
+              Apply here for the event and get all important information
+              <br></br> for{" "}
+              <a
+                href="https://hackaburg.de"
+                target="_blank"
+                style={{ color: "#3fb28f" }}
+              >
+                {" "}
+                <b>Hackaburg 2024</b>
+              </a>{" "}
+            </p>
+          </div>
+
           <RouterContainer level={1}>
             <Switch>
               <Route path={Routes.Login} component={LoginForm} />

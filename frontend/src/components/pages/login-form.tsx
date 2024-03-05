@@ -46,7 +46,7 @@ export const LoginForm = () => {
 
   return (
     <FlexColumnContainer>
-      <Heading text="Sign in to your account" />
+      <Heading text="Login" />
 
       {loginError && (
         <Message type="error">
