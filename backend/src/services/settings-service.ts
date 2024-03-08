@@ -151,6 +151,7 @@ export class SettingsService implements ISettingsService {
     const emailSettings = new EmailSettings();
     emailSettings.verifyEmail = this.getDefaultEmailTemplate();
     emailSettings.admittedEmail = this.getDefaultEmailTemplate();
+    emailSettings.submittedEmail = this.getDefaultEmailTemplate();
     emailSettings.forgotPasswordEmail = this.getDefaultEmailTemplate();
     emailSettings.sender = "support@hackaburg.de";
 
