@@ -272,6 +272,10 @@ export class EmailSettingsDTO implements DTO<EmailSettings> {
   @ValidateNested()
   @Expose()
   public admittedEmail!: EmailTemplateDTO;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
+  public submittedEmail!: EmailTemplateDTO;
 }
 
 export class EmailTemplateDTO implements DTO<EmailTemplate> {
