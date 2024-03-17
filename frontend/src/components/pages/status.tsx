@@ -316,7 +316,7 @@ export const Status = () => {
         <Divider />{" "}
       </div>
       <Grid container spacing={3} style={{ marginTop: "0rem" }}>
-        <Grid item xs={12} md={6} lg={3} xl={3}>
+        {/*  <Grid item xs={12} md={6} lg={3} xl={3}>
           <div
             style={{
               borderRadius: "1rem",
@@ -373,7 +373,7 @@ export const Status = () => {
               </a>
             </div>
           </div>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} md={6} lg={3} xl={3}>
           <div
             style={{
