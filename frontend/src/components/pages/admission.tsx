@@ -37,6 +37,7 @@ import { TextInput } from "../base/text-input";
 import { Page } from "./page";
 import { saveAs } from "file-saver";
 import { Divider } from "../base/divider";
+import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -398,7 +399,7 @@ export const Admission = () => {
 
   const isResponsive = useIsResponsive();
   const tableRows = useMemo(() => {
-    return visibleApplications.map(({ user }) => {
+    return visibleApplications.map(({ user }, index) => {
       const {
         id,
         email,
@@ -525,7 +526,8 @@ export const Admission = () => {
 
       const cityIndex = questions.find((q) => q.title === "City")?.id!;
       const countryIndex = questions.find((q) => q.title === "Country")?.id!;
-
+      console.log(questions);
+      const genderIndex = questions.find((q) => q.title === "Gender")?.id!;
       return (
         <React.Fragment key={String(id)}>
           <RowComponent onClick={handleExpandRow}>
@@ -537,13 +539,27 @@ export const Admission = () => {
                 readOnly
               />
             </TableCell>
-
+            <TableCell>{index + 1}</TableCell>
             <TableCell>{email}</TableCell>
             <TableCell>{name}</TableCell>
-
+            <TableCell>
+              {answersByQuestionID[genderIndex] == "Male" ? (
+                <BsGenderMale />
+              ) : (
+                <BsGenderFemale />
+              )}
+            </TableCell>
             <TableCell>{user.createdAt.toUTCString()}</TableCell>
             <TableCell>
-              {`${answersByQuestionID[cityIndex]}, ${answersByQuestionID[countryIndex]}`}
+              {`${
+                answersByQuestionID[cityIndex]
+                  ? answersByQuestionID[cityIndex]
+                  : "--"
+              }, ${
+                answersByQuestionID[countryIndex]
+                  ? answersByQuestionID[countryIndex]
+                  : "--"
+              }`}
             </TableCell>
           </RowComponent>
 
@@ -767,18 +783,21 @@ export const Admission = () => {
             <Table>
               <colgroup>
                 <col style={{ width: "5%" }} />
-                {!isResponsive && <col style={{ width: "10%" }} />}
+                <col style={{ width: "5%" }} />
                 <col style={{ width: "30%" }} />
-                <col style={{ width: "30%" }} />
-                <col style={{ width: "30%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "20%" }} />
               </colgroup>
 
               <TableHead>
                 <tr>
                   <TableHeaderCell />
+                  <TableHeaderCell>Index</TableHeaderCell>
                   <TableHeaderCell>E-mail</TableHeaderCell>
-                  <TableHeaderCell>Name</TableHeaderCell>
-                  <TableHeaderCell>Submitted At</TableHeaderCell>
+                  <TableHeaderCell>Firstname / Lastname</TableHeaderCell>
+                  <TableHeaderCell>Gender</TableHeaderCell>
+                  <TableHeaderCell>Created At</TableHeaderCell>
                   <TableHeaderCell>City/Location</TableHeaderCell>
                 </tr>
               </TableHead>
