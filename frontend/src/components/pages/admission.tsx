@@ -526,7 +526,6 @@ export const Admission = () => {
 
       const cityIndex = questions.find((q) => q.title === "City")?.id!;
       const countryIndex = questions.find((q) => q.title === "Country")?.id!;
-      console.log(questions);
       const genderIndex = questions.find((q) => q.title === "Gender")?.id!;
       return (
         <React.Fragment key={String(id)}>
