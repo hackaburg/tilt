@@ -732,18 +732,6 @@ export const Admission = () => {
         </Message>
       )}
 
-      {probableNameQuestion == null && (
-        <Message type="warning">
-          <b>Warnings:</b>
-          <ul>
-            <li>
-              We couldn't find a "name" question. Are you asking for this
-              information?
-            </li>
-          </ul>
-        </Message>
-      )}
-
       <NonGrowingFlexContainer>
         <a style={{ width: "20rem", marginTop: "1rem" }}>
           <Button primary={true} onClick={exportToCsv}>
