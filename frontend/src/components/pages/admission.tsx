@@ -523,6 +523,9 @@ export const Admission = () => {
         RowComponent = AdmittedRow;
       }
 
+      const cityIndex = questions.find((q) => q.title === "City")?.id!;
+      const countryIndex = questions.find((q) => q.title === "Country")?.id!;
+
       return (
         <React.Fragment key={String(id)}>
           <RowComponent onClick={handleExpandRow}>
@@ -537,15 +540,16 @@ export const Admission = () => {
 
             <TableCell>{email}</TableCell>
             <TableCell>{name}</TableCell>
+
             <TableCell>{user.createdAt.toUTCString()}</TableCell>
             <TableCell>
-              {`${answersByQuestionID[6]}, ${answersByQuestionID[9]}`}
+              {`${answersByQuestionID[cityIndex]}, ${answersByQuestionID[countryIndex]}`}
             </TableCell>
           </RowComponent>
 
           <tr>
             {isRowExpanded && (
-              <ExpandedCell colSpan={4}>
+              <ExpandedCell colSpan={6}>
                 <QuestionaireContainer>
                   <Subheading text="Application" />
 
@@ -771,7 +775,7 @@ export const Admission = () => {
 
               <TableHead>
                 <tr>
-                  {!isResponsive && <TableHeaderCell />}
+                  <TableHeaderCell />
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Name</TableHeaderCell>
                   <TableHeaderCell>Submitted At</TableHeaderCell>
