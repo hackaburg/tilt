@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { AnswerDTO, ApplicationDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
@@ -16,7 +16,6 @@ import {
   Nullable,
 } from "../../util";
 import { Button } from "../base/button";
-import { Chevron } from "../base/chevron";
 import { Code } from "../base/code";
 import { Elevated } from "../base/elevated";
 import {
@@ -26,7 +25,6 @@ import {
   NonGrowingFlexContainer,
   Spacer,
   StyleableFlexContainer,
-  VerticallyCenteredContainer,
 } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
@@ -93,6 +91,7 @@ const CheckedInRow = styled.tr`
 const TableCell = styled.td`
   border-right: 1px solid #e0e0e0;
   padding: 0.75rem 1rem;
+  cursor: pointer;
 
   :last-of-type {
     border: none;
@@ -105,14 +104,6 @@ const ExpandedCell = styled.td`
 
 const QuestionaireContainer = styled(StyleableFlexContainer)`
   padding: 1rem;
-`;
-
-const DetailsButton = styled.button`
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  font-size: inherit;
-  color: currentColor;
 `;
 
 interface IAnswersByQuestionID {
@@ -305,23 +296,6 @@ export const Admission = () => {
 
   const [expandedRowIDs, setExpandedRowIDs] = useState<readonly number[]>([]);
 
-  const handleSelectHeaderCheckbox = useCallback(() => {
-    const visibleIDs = visibleApplications.map(({ user: { id } }) => id);
-
-    if (allVisibleSelected) {
-      setSelectedRowIDs((value) =>
-        value.filter((id) => !visibleIDs.includes(id)),
-      );
-
-      return;
-    }
-
-    setSelectedRowIDs((value) => {
-      const set = new Set([...visibleIDs, ...value]);
-      return [...set];
-    });
-  }, [allVisibleSelected, visibleApplications]);
-
   const {
     error: admitError,
     isFetching: isAdmitting,
@@ -345,7 +319,6 @@ export const Admission = () => {
 
           let firstSeenPartialTeam: Nullable<string> = null;
           let missingPartialTeamMemberEmails = "";
-
           for (const { user } of applicationsSortedByDate) {
             const { answersByQuestionID } = applicationsByUserID[user.id];
             const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
@@ -438,12 +411,7 @@ export const Admission = () => {
         checkedIn,
       } = user;
 
-      const name =
-        probableNameQuestion != null
-          ? applicationsByUserID[id].answersByQuestionID[
-              probableNameQuestion.id!
-            ]
-          : null;
+      const name = user.firstName + " " + user.lastName;
 
       const isRowSelected = selectedRowIDs.includes(id);
       const handleSelectRow = () => {
@@ -557,7 +525,7 @@ export const Admission = () => {
 
       return (
         <React.Fragment key={String(id)}>
-          <RowComponent>
+          <RowComponent onClick={handleExpandRow}>
             <TableCell align="center">
               <input
                 type="checkbox"
@@ -567,23 +535,12 @@ export const Admission = () => {
               />
             </TableCell>
 
-            {!isResponsive && (
-              <TableCell>
-                <DetailsButton onClick={handleExpandRow}>
-                  <VerticallyCenteredContainer>
-                    {isRowExpanded ? "Collapse" : "Expand"}
-                    <Spacer />
-                    <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
-                  </VerticallyCenteredContainer>
-                </DetailsButton>
-              </TableCell>
-            )}
-
-            <TableCell>
-              <ExternalLink to={`mailto:${email}`}>{email}</ExternalLink>
-            </TableCell>
-
+            <TableCell>{email}</TableCell>
             <TableCell>{name}</TableCell>
+            <TableCell>{user.createdAt.toDateString()}</TableCell>
+            <TableCell>
+              {`${answersByQuestionID[6]}, ${answersByQuestionID[9]}`}
+            </TableCell>
           </RowComponent>
 
           <tr>
@@ -807,23 +764,18 @@ export const Admission = () => {
               <colgroup>
                 <col style={{ width: "5%" }} />
                 {!isResponsive && <col style={{ width: "10%" }} />}
-                <col style={{ width: "40%" }} />
-                <col style={{ width: "45%" }} />
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "30%" }} />
               </colgroup>
 
               <TableHead>
                 <tr>
-                  <TableHeaderCell align="center">
-                    <input
-                      type="checkbox"
-                      ref={headerCheckboxRef}
-                      onClick={handleSelectHeaderCheckbox}
-                    />
-                  </TableHeaderCell>
-
                   {!isResponsive && <TableHeaderCell />}
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Name</TableHeaderCell>
+                  <TableHeaderCell>Submitted At</TableHeaderCell>
+                  <TableHeaderCell>City/Location</TableHeaderCell>
                 </tr>
               </TableHead>
 
