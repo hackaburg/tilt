@@ -16,6 +16,8 @@ import { ResetPassword } from "../pages/reset-password";
 import { SignupDone } from "../pages/signup-done";
 import { RoutedVerifyEmail } from "../pages/verify-email";
 import { variables } from "../../theme";
+import { Button } from "@mui/material";
+import { MdSupportAgent } from "react-icons/md";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   overflow-y: auto;
@@ -86,6 +88,21 @@ export const UnauthenticatedRouter = () => {
               <Route path={Routes.VerifyEmail} component={RoutedVerifyEmail} />
             </Switch>
           </RouterContainer>
+          <a href="mailto:support@hackaburg.de">
+            <Button
+              variant="outlined"
+              style={{
+                color: "white",
+                borderColor: "white",
+                marginTop: "1rem",
+                fontSize: "1rem",
+                width: "100%",
+              }}
+              startIcon={<MdSupportAgent />}
+            >
+              Need help?
+            </Button>
+          </a>
         </CenteredContainer>
       </BackgroundContainer>
     </PageSizedContainer>
