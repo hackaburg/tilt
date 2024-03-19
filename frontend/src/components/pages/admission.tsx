@@ -311,7 +311,7 @@ export const Admission = () => {
             const { answersByQuestionID } = applicationsByUserID[id];
             const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
 
-            if (teamAnswer == null) {
+            if (teamAnswer === null) {
               continue;
             }
 
@@ -399,7 +399,7 @@ export const Admission = () => {
 
   const isResponsive = useIsResponsive();
   const tableRows = useMemo(() => {
-    return visibleApplications.map(({ user }, index) => {
+    return visibleApplications.map(({ user }, userIndex) => {
       const {
         id,
         email,
@@ -538,11 +538,11 @@ export const Admission = () => {
                 readOnly
               />
             </TableCell>
-            <TableCell>{index + 1}</TableCell>
+            <TableCell>{userIndex + 1}</TableCell>
             <TableCell>{email}</TableCell>
             <TableCell>{name}</TableCell>
             <TableCell>
-              {answersByQuestionID[genderIndex] == "Male" ? (
+              {answersByQuestionID[genderIndex] === "Male" ? (
                 <BsGenderMale />
               ) : (
                 <BsGenderFemale />
