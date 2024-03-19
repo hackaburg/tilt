@@ -537,7 +537,7 @@ export const Admission = () => {
 
             <TableCell>{email}</TableCell>
             <TableCell>{name}</TableCell>
-            <TableCell>{user.createdAt.toDateString()}</TableCell>
+            <TableCell>{user.createdAt.toUTCString()}</TableCell>
             <TableCell>
               {`${answersByQuestionID[6]}, ${answersByQuestionID[9]}`}
             </TableCell>
