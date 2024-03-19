@@ -20,6 +20,7 @@ import { transitionDuration } from "../../../config";
 import { GrGroup } from "react-icons/gr";
 import { Button } from "@mui/material";
 import { SimpleDialog } from "../../base/dialog";
+import { MdSupportAgent } from "react-icons/md";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -195,11 +196,27 @@ export const Sidebar = () => {
         )}
       </SidebarMenu>
       <div style={{ bottom: "8rem", position: "absolute", width: "90%" }}>
+        <a href="mailto:support@hackaburg.de">
+          <Button
+            variant="outlined"
+            style={{
+              color: "white",
+              margin: "1rem",
+              borderColor: "white",
+              fontSize: "1rem",
+              width: "100%",
+            }}
+            startIcon={<MdSupportAgent />}
+          >
+            Need help?
+          </Button>
+        </a>
         <Button
           variant="outlined"
           style={{
             color: "#3fb28f",
             margin: "1rem",
+            marginTop: "0",
             borderColor: "#3fb28f",
             fontSize: "1rem",
             width: "100%",
