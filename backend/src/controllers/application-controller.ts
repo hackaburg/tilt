@@ -8,6 +8,7 @@ import {
   JsonController,
   NotAcceptableError,
   NotFoundError,
+  Param,
   Post,
   Put,
 } from "routing-controllers";
@@ -39,7 +40,14 @@ import {
   IDsRequestDTO,
   QuestionDTO,
   StoreAnswersRequestDTO,
+  SuccessResponseDTO,
+  TeamDTO,
+  TeamRequestDTO,
+  TeamResponseDTO,
+  TeamUpdateDTO,
 } from "./dto";
+import { ITeamService, TeamServiceToken } from "../services/team-service";
+import { Team } from "../entities/team";
 
 @JsonController("/application")
 export class ApplicationController {
@@ -48,6 +56,8 @@ export class ApplicationController {
     private readonly _application: IApplicationService,
     @Inject(UserServiceToken)
     private readonly _users: IUserService,
+    @Inject(TeamServiceToken)
+    private readonly _teams: ITeamService,
   ) {}
 
   /**
@@ -231,5 +241,110 @@ export class ApplicationController {
     }
 
     await this._application.checkIn(user);
+  }
+
+  /**
+   * Gets all existing teams.
+   */
+  @Get("/team")
+  @Authorized(UserRole.User)
+  public async getAllTeams(): Promise<readonly TeamDTO[]> {
+    const teams = await this._teams.getAllTeams();
+    return teams.map((team) => convertBetweenEntityAndDTO(team, TeamDTO));
+  }
+
+  /**
+   * Creates a team.
+   */
+  @Post("/team")
+  @Authorized(UserRole.User)
+  public async createTeam(
+    @Body() { data: teamDTO }: { data: TeamRequestDTO },
+  ): Promise<TeamDTO> {
+    const team = convertBetweenEntityAndDTO(teamDTO, Team);
+    const createdTeam = await this._teams.createTeam(team);
+    return convertBetweenEntityAndDTO(createdTeam, TeamDTO);
+  }
+
+  /**
+   * Update a team.
+   */
+  @Put("/team")
+  @Authorized(UserRole.User)
+  public async updateTeam(
+    @Body() { data: teamDTO }: { data: TeamUpdateDTO },
+    @CurrentUser() user: User,
+  ): Promise<TeamDTO> {
+    const team = convertBetweenEntityAndDTO(teamDTO, Team);
+    const updateTeam = await this._teams.updateTeam(team, user);
+    return convertBetweenEntityAndDTO(updateTeam, TeamDTO);
+  }
+
+  /**
+   * Request to join a team.
+   * @param teamId The id of the team
+   */
+  @Post("/team/:id/request")
+  @Authorized(UserRole.User)
+  public async requestToJoinTeam(
+    @Param("id") teamId: number,
+    @CurrentUser() user: User,
+  ): Promise<SuccessResponseDTO> {
+    await this._teams.requestToJoinTeam(teamId, user);
+    const response = new SuccessResponseDTO();
+    response.success = true;
+    return response;
+  }
+
+  /**
+   * Accept a user to a team.
+   * @param teamId The id of the team
+   * @param userId The id of the user
+   */
+  @Put("/team/:teamId/accept/:userId")
+  @Authorized(UserRole.User)
+  public async acceptUserToTeam(
+    @Param("teamId") teamId: number,
+    @Param("userId") userId: number,
+    @CurrentUser() user: User,
+  ): Promise<SuccessResponseDTO> {
+    await this._teams.acceptUserToTeam(teamId, userId, user);
+    const response = new SuccessResponseDTO();
+    response.success = true;
+    return response;
+  }
+
+  /**
+   * Get team by id.
+   * @param id The id of the team
+   */
+  @Get("/team/:id")
+  @Authorized(UserRole.User)
+  public async getTeamByID(
+    @Param("id") teamId: number,
+  ): Promise<TeamResponseDTO> {
+    const team = await this._teams.getTeamByID(teamId);
+
+    if (team == null) {
+      throw new NotFoundError(`no team with id ${teamId}`);
+    }
+
+    return team;
+  }
+
+  /**
+   * Delete a team by id
+   * @param id The id of the team
+   */
+  @Delete("/team/:id")
+  @Authorized(UserRole.User)
+  public async deleteTeamByID(
+    @Param("id") teamId: number,
+    @CurrentUser() user: User,
+  ): Promise<SuccessResponseDTO> {
+    await this._teams.deleteTeamByID(teamId, user);
+    const response = new SuccessResponseDTO();
+    response.success = true;
+    return response;
   }
 }

@@ -8,6 +8,7 @@ import {
   Spacer,
   StyleableFlexContainer,
 } from "./flex";
+import { mediaBreakpoints } from "../../config";
 
 const StepConnector = styled(StyleableFlexContainer)`
   position: relative;
@@ -15,7 +16,7 @@ const StepConnector = styled(StyleableFlexContainer)`
   :after {
     position: absolute;
     left: 0.6rem;
-    top: 3rem;
+    top: 2rem;
     content: "";
     border-left: 2px dashed grey;
     margin-left: 5px;
@@ -24,6 +25,12 @@ const StepConnector = styled(StyleableFlexContainer)`
 
   :last-child:after {
     display: none;
+  }
+
+  @media screen and (max-width: ${mediaBreakpoints.tablet}) {
+    :after {
+      display: none;
+    }
   }
 `;
 
@@ -50,7 +57,7 @@ export enum ProgressStepState {
 }
 
 const completedStyle: React.CSSProperties = {
-  backgroundColor: "#56d175",
+  backgroundColor: "#3fb28f",
   border: "none",
   color: "white",
 };
@@ -90,12 +97,10 @@ export const ProgressStep = ({
       }
 
       .completedStepConnector:after {
-        border-left: 2px solid #56d175;
+        border-left: 2px solid #3fb28f;
       }
     `}</style>
     <FlexColumnContainer>
-      <Spacer />
-
       <FlexRowContainer>
         <StepContainer>
           <StepIndex
@@ -112,8 +117,11 @@ export const ProgressStep = ({
         </StepContainer>
         <Spacer />
         <FlexRowColumnContainer>
-          <h2 style={{ marginTop: "-0.2rem" }}>{title}</h2>
+          <h2 style={{ marginTop: "-0.2rem", marginBottom: "0.5rem" }}>
+            {title}
+          </h2>
           {children}
+          <Spacer />
         </FlexRowColumnContainer>
         <Spacer /> <Spacer />
       </FlexRowContainer>

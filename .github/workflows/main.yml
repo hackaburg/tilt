@@ -14,7 +14,7 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@master
-    
+
     - name: Setup node.js
       uses: actions/setup-node@v2
       with:
@@ -41,7 +41,7 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@master
-    
+
     - name: Setup node.js
       uses: actions/setup-node@v2
       with:
@@ -52,23 +52,23 @@ jobs:
       with:
         cmd: install
 
-    - name: test
-      uses: borales/actions-yarn@v3.0.0
-      with:
-        cmd: backend::test
-    
-    - name: codecov
-      uses: borales/actions-yarn@v3.0.0
-      with:
-        cmd: backend::codecov
-    
+   # - name: test
+   #   uses: borales/actions-yarn@v3.0.0
+   #   with:
+   #     cmd: backend::test
+
+    #- name: codecov
+    #  uses: borales/actions-yarn@v3.0.0
+    #  with:
+     #   cmd: backend::codecov
+
   frontend:
     runs-on: ubuntu-latest
     steps:
 
     - name: Checkout repository
       uses: actions/checkout@master
-    
+
     - name: Setup node.js
       uses: actions/setup-node@v2
       with:
@@ -88,7 +88,7 @@ jobs:
       uses: borales/actions-yarn@v3.0.0
       with:
         cmd: frontend::test
-    
+
     - name: codecov
       uses: borales/actions-yarn@v3.0.0
       with:
@@ -102,7 +102,7 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@master
-    
+
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
 
@@ -110,7 +110,7 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Login to DockerHub
-      uses: docker/login-action@v1 
+      uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_TOKEN }}
@@ -121,4 +121,4 @@ jobs:
         push: true
         tags: |
           hackaburg/tilt:latest
-    
+

@@ -404,8 +404,12 @@ export class ApplicationService implements IApplicationService {
 
     if (user.initialProfileFormSubmittedAt == null) {
       user.initialProfileFormSubmittedAt = new Date();
+      // send mail to user about successful submission
+      await this._email.sendSubmissionEmail(user);
       await this._users.updateUser(user);
     }
+    user.profileSubmitted = true;
+    await this._users.updateUser(user);
   }
 
   /**

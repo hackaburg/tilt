@@ -18,6 +18,7 @@ import { Text } from "../base/text";
 import { Page } from "./page";
 import { Divider } from "../base/divider";
 import { SimpleCard } from "../base/simple-card";
+import { Grid } from "@mui/material";
 
 /**
  * The start page every user sees after logging in.
@@ -68,7 +69,7 @@ export const Status = () => {
         <>
           <Heading text={`Welcome ${user?.firstName}`} />
           <Divider />
-          <Subheading text="The current status of your application and all relevant links for Hackaburg can be found here." />
+          <Subheading text="The status of our application and all links for Hackaburg 2024 can be found here." />
         </>
       )}
       <SimpleCard>
@@ -77,9 +78,8 @@ export const Status = () => {
           title="Register"
           state={ProgressStepState.Completed}
         >
-          <Text>
-            We had to start this progress meter somewhere. You already
-            registered and we think that's a good first step.
+          <Text style={{ fontSize: "1.15rem" }}>
+            You already registered and that's a good first step.
           </Text>
         </ProgressStep>
 
@@ -92,44 +92,42 @@ export const Status = () => {
               : ProgressStepState.Pending
           }
         >
-          {!user?.admitted && (
+          {!user?.profileSubmitted && (
             <>
-              <Text>
-                You answer a few questions in our{" "}
+              <Text style={{ fontSize: "1.15rem" }}>
+                Please fill your{" "}
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
-                </InternalLink>{" "}
-                so we get to know you, any time between{" "}
-                <b>{dateToString(settings.application.allowProfileFormFrom)}</b>{" "}
-                and{" "}
-                <b>
-                  {dateToString(settings.application.allowProfileFormUntil)}
-                </b>
-                .
+                </InternalLink>
+                , any time between <b>01.03.2024 - 31.04.2024</b>
               </Text>
             </>
           )}
-          {!user?.admitted && (
+          {!user?.profileSubmitted && (
             <>
               <Spacer />
               <FlexRowContainer>
                 <NonGrowingFlexContainer>
-                  <a href={Routes.ProfileFormApply}>
+                  <InternalLink to={Routes.ProfileForm}>
                     <Button primary={true}>Fill profile form</Button>
-                  </a>
+                  </InternalLink>
                 </NonGrowingFlexContainer>
               </FlexRowContainer>
-              <Text>
-                Don't get confused, once you have filled out your profile and
-                pressed save, you can change your profile until we have you
-                confirmed in Step 3.
-              </Text>
             </>
           )}
-          {user?.admitted && (
+          {user?.profileSubmitted && (
             <>
-              <Text>
-                Thanks for answering our questions. You successfully applied.
+              <Text style={{ fontSize: "1.15rem" }}>
+                You successfully applied. 🎉
+                {!user?.confirmed && (
+                  <>
+                    {" "}
+                    You can still edit your{" "}
+                    <InternalLink to={Routes.ProfileForm}>
+                      profile form
+                    </InternalLink>
+                  </>
+                )}
               </Text>
             </>
           )}
@@ -137,7 +135,7 @@ export const Status = () => {
 
         <ProgressStep
           index={3}
-          title="Get acceptance e-mail"
+          title="Get accepted"
           state={
             user?.admitted
               ? ProgressStepState.Completed
@@ -146,18 +144,16 @@ export const Status = () => {
         >
           {!user?.confirmed && (
             <>
-              <Text>
-                We'll go through applications in batches. Hang tight, we'll let
-                you know once we selected your application, but it might take
-                some time.
+              <Text style={{ fontSize: "1.15rem" }}>
+                We will come back to you and send you a acceptance mail unitl{" "}
+                <b>01.05.2024</b>.
               </Text>
             </>
           )}
           {user?.confirmed && (
             <>
-              <Text>
-                Congratulations! We selected you to be part of our Hackathon
-                this year. Please continue with step 4.
+              <Text style={{ fontSize: "1.15rem" }}>
+                Congratulations! You got accepted for Hackaburg 2024. 🎉
               </Text>
             </>
           )}
@@ -176,10 +172,9 @@ export const Status = () => {
         >
           {!user?.confirmed && (
             <>
-              <Text>
-                If you received an acceptance e-mail, you still need to confirm
-                your spot and provide some final information like your dietary
-                needs
+              <Text style={{ fontSize: "1.15rem" }}>
+                If you got accepted, you need to confirm your spot until{" "}
+                <b>14.05.2024</b>
                 {user?.admitted && (
                   <>
                     {" "}
@@ -195,7 +190,9 @@ export const Status = () => {
           )}
           {user?.confirmed && (
             <>
-              <Text>Thanks for confirming your spot!</Text>
+              <Text style={{ fontSize: "1.15rem" }}>
+                You confirmed your spot. 🎉
+              </Text>
             </>
           )}
           {user?.admitted && !user?.confirmed && (
@@ -203,15 +200,14 @@ export const Status = () => {
               <Spacer />
               <FlexRowContainer>
                 <NonGrowingFlexContainer>
-                  <a href={Routes.ConfirmationFormApply}>
+                  <InternalLink to={Routes.ConfirmationForm}>
                     <Button primary={true}>Fill confirmation form</Button>
-                  </a>
+                  </InternalLink>
                 </NonGrowingFlexContainer>
               </FlexRowContainer>
-
               <Spacer />
 
-              <Text>
+              <Text style={{ fontSize: "1.15rem" }}>
                 You have{" "}
                 <b>
                   {settings.application.hoursToConfirm} hours{" "}
@@ -224,7 +220,7 @@ export const Status = () => {
           )}
           {deadline != null && user?.admitted && !user?.confirmed && (
             <>
-              <Text>
+              <Text style={{ fontSize: "1.15rem" }}>
                 Your confirmation {isExpired ? <b>was</b> : "is"} due on{" "}
                 <b>{dateToString(deadline)}</b>
                 {user?.declined && (
@@ -270,38 +266,281 @@ export const Status = () => {
         >
           {!isNotAttending && !user?.confirmed && (
             <>
-              <Text>If all goes well, we'll meet you at the event.</Text>
+              <Text style={{ fontSize: "1.15rem" }}>
+                If all goes well, we'll meet you at the event.
+              </Text>
             </>
           )}
           {!isNotAttending && user?.confirmed && (
             <>
-              <Text>Everything went well! Hope to see you at the event.</Text>
+              <Text style={{ fontSize: "1.15rem" }}>
+                See you at the event {user.firstName}! 🎉
+              </Text>
             </>
           )}
-          <Spacer />
-          <Text>
-            If you never the less can not make it to the event. Please tell us
-            and hand over your seat to someone else.
-          </Text>
           {!isNotAttending && user?.confirmed && (
             <>
               <Spacer />
+              <div
+                style={{
+                  backgroundColor: "lightgrey",
+                  padding: "1rem",
+                  borderRadius: "1rem",
+                }}
+              >
+                <Text style={{ fontSize: "1.15rem" }}>
+                  If you anyhow can't make it, please let us know as soon as
+                  possible.
+                </Text>
 
-              <FlexRowContainer>
-                <NonGrowingFlexContainer>
-                  <Button
-                    loading={isDecliningSpot}
-                    disable={isNotAttending}
-                    onClick={handleDeclineSpot}
-                  >
-                    I can't make it
-                  </Button>
-                </NonGrowingFlexContainer>
-              </FlexRowContainer>
+                <Spacer />
+
+                <FlexRowContainer>
+                  <NonGrowingFlexContainer>
+                    <Button
+                      loading={isDecliningSpot}
+                      disable={isNotAttending}
+                      onClick={handleDeclineSpot}
+                    >
+                      I can't make it
+                    </Button>
+                  </NonGrowingFlexContainer>
+                </FlexRowContainer>
+              </div>
             </>
           )}
         </ProgressStep>
       </SimpleCard>
+      <div style={{ marginTop: "2rem" }}>
+        <Heading text="Get in Touch" />
+        <Divider />{" "}
+      </div>
+      <Grid container spacing={3} style={{ marginTop: "0rem" }}>
+        {/*  <Grid item xs={12} md={6} lg={3} xl={3}>
+          <div
+            style={{
+              borderRadius: "1rem",
+              boxShadow:
+                "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+            }}
+          >
+            <img
+              src="https://i.imgur.com/3pU0Ycr.png"
+              alt="discord"
+              style={{
+                width: "100%",
+                height: "10rem",
+                borderTopLeftRadius: "1rem",
+                borderTopRightRadius: "1rem",
+                objectFit: "cover",
+              }}
+            />
+            <div style={{ padding: "1rem" }}>
+              <p
+                style={{
+                  fontSize: "1.5rem",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  margin: "0rem",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                Join us on Discord
+              </p>
+              <p
+                style={{
+                  minHeight: "4.5rem",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 6,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
+                The discord is open to everyone. Use it to introduce yourself
+                and tell us what you need (team members, ideas, hardware etc.)
+              </p>
+              <a
+                href="https://discord.gg/hackaburg"
+                target="_blank"
+                style={{
+                  color: "black",
+                  textDecoration: "none",
+                  marginTop: "-1rem",
+                }}
+              >
+                <Button>Join Discord</Button>
+              </a>
+            </div>
+          </div>
+        </Grid> */}
+        <Grid item xs={12} md={6} lg={3} xl={3}>
+          <div
+            style={{
+              borderRadius: "1rem",
+              boxShadow:
+                "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+            }}
+          >
+            <img
+              src="https://i.imgur.com/IbQJ7q5.png"
+              alt="socialmedia"
+              style={{
+                width: "100%",
+                height: "10rem",
+                borderTopLeftRadius: "1rem",
+                borderTopRightRadius: "1rem",
+                objectFit: "cover",
+              }}
+            />
+            <div style={{ padding: "1rem" }}>
+              <p
+                style={{
+                  fontSize: "1.5rem",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  margin: "0rem",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                Our Social Media
+              </p>
+              <p
+                style={{
+                  minHeight: "4.5rem",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 6,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
+                We post information about the event every week on{" "}
+                <b>Instagram</b> and <b>LinkedIn</b>. So follow us to stay up to
+                date.
+              </p>
+              <a
+                href="https://linktr.ee/hackaburg"
+                target="_blank"
+                style={{
+                  color: "black",
+                  textDecoration: "none",
+                  marginTop: "-1rem",
+                }}
+              >
+                <Button>Follow</Button>
+              </a>
+            </div>
+          </div>
+        </Grid>
+        <Grid item xs={12} md={6} lg={3} xl={3}>
+          <div
+            style={{
+              borderRadius: "1rem",
+              boxShadow:
+                "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+            }}
+          >
+            <img
+              src="https://i.imgur.com/vhS8tU4.jpeg"
+              alt="newsletter"
+              style={{
+                width: "100%",
+                height: "10rem",
+                borderTopLeftRadius: "1rem",
+                borderTopRightRadius: "1rem",
+                objectFit: "cover",
+              }}
+            />
+            <div style={{ padding: "1rem" }}>
+              <p
+                style={{
+                  fontSize: "1.5rem",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  margin: "0rem",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                Our Newsletter
+              </p>
+              <p
+                style={{
+                  minHeight: "4.5rem",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 6,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
+                You know mail is <b>really reliable</b> to stay up to date. And
+                you can be sure we won't <b>spam</b> you.
+              </p>
+              <a
+                href="https://26490796.sibforms.com/serve/MUIFAPx4aKGKuMbU3UZxk_ODAxapOpxY9oApe-LFK48oC2HcUpuUDG5RfLrplRnzmlE2fhnxFsrLWAO1LoVerg8hegpCyxQDQ85Ac45SzhCZXZlT8m5RRT7wDfIbcv9GgTCPGWiw6QSSK2qQR2n6ST8ezKWg-QTn0tCj8LRENn-vhJpHafi3096LcWLZQXDIx_IzJZaOLL7Chfdk"
+                target="_blank"
+                style={{
+                  color: "black",
+                  textDecoration: "none",
+                  marginTop: "-1rem",
+                }}
+              >
+                <Button>Subscribe</Button>
+              </a>
+            </div>
+          </div>
+        </Grid>
+        <Grid item xs={12} md={6} lg={3} xl={3}>
+          <div
+            style={{
+              borderRadius: "1rem",
+              boxShadow:
+                "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+            }}
+          >
+            <img
+              src="https://i.imgur.com/zatzqe3.png"
+              alt="team"
+              style={{
+                width: "100%",
+                height: "10rem",
+                borderTopLeftRadius: "1rem",
+                borderTopRightRadius: "1rem",
+                objectFit: "cover",
+              }}
+            />
+            <div style={{ padding: "1rem" }}>
+              <p
+                style={{
+                  fontSize: "1.5rem",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  margin: "0rem",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                Create / Join a Team
+              </p>
+              <p
+                style={{
+                  minHeight: "4.5rem",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 6,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
+                New <b>Feature</b> this year. You can create or join a team.
+              </p>
+              <InternalLink to={Routes.Teams}>
+                <Button>Teams</Button>
+              </InternalLink>
+            </div>
+          </div>
+        </Grid>
+      </Grid>
     </Page>
   );
 };

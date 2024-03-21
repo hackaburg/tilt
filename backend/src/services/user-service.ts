@@ -18,7 +18,7 @@ import {
   IHaveibeenpwnedService,
   PasswordReuseError,
 } from "./haveibeenpwned-service";
-import { UserDetailsRepsonseDTO } from "../controllers/dto";
+import { UserDetailsRepsonseDTO, UserListDto } from "../controllers/dto";
 
 /**
  * An interface describing user handling.
@@ -52,6 +52,11 @@ export interface IUserService extends IService {
    * Gets a user by their mail.
    */
   getUser(userEmail: string): Promise<UserDetailsRepsonseDTO>;
+
+  /**
+   * Get all users only name and id
+   */
+  getAllUsers(): Promise<UserListDto[]>;
 
   /**
    * Generate a login token for the given user.
@@ -259,6 +264,22 @@ export class UserService implements IUserService {
   }
 
   /**
+   *  Get all users
+   */
+  public async getAllUsers(): Promise<UserListDto[]> {
+    const users = await this._users.find({
+      select: ["id", "firstName", "lastName"],
+    });
+
+    return users.map((user) => {
+      const userDto = new UserListDto();
+      userDto.id = user.id;
+      userDto.name = `${user.firstName} ${user.lastName[0]}. #${user.id}`;
+      return userDto;
+    });
+  }
+
+  /**
    * Verifies an account using it's verifyToken.
    * @param verifyToken The token sent to the user
    */
@@ -316,7 +337,7 @@ export class UserService implements IUserService {
     password: string,
   ): Promise<User | undefined> {
     const user = await this._users.findOne({
-      select: ["id", "password", "role", "verifyToken"],
+      select: ["id", "password", "role", "verifyToken", "profileSubmitted"],
       where: {
         email,
       },

@@ -3,7 +3,10 @@ import { ApiClient } from "../api";
 import { apiBaseUrl } from "../config";
 import { Nullable } from "../util";
 
-const api = new ApiClient(apiBaseUrl);
+/**
+ * Export Api Client
+ */
+export const api = new ApiClient(apiBaseUrl);
 
 interface IApiResult<T> {
   value: Nullable<T>;

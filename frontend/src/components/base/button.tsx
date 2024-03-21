@@ -65,6 +65,7 @@ interface IButtonProps {
   disable?: boolean;
   primary?: boolean;
   loading?: boolean;
+  color?: string;
 }
 
 /**
@@ -76,6 +77,7 @@ export const Button = ({
   disable = false,
   primary = false,
   loading = false,
+  color,
 }: IButtonProps) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
@@ -93,7 +95,15 @@ export const Button = ({
       {children}
       {loading && (
         <SpinnerContainer>
-          <Spinner color={primary ? "black" : "white"} size={20} width={0.15} />
+          {color === undefined ? (
+            <Spinner
+              color={primary ? "black" : "white"}
+              size={20}
+              width={0.15}
+            />
+          ) : (
+            <Spinner color={color} size={20} width={0.15} />
+          )}
         </SpinnerContainer>
       )}
     </Component>

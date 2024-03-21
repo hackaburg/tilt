@@ -29,6 +29,7 @@ import {
   SignupResponseDTO,
   SuccessResponseDTO,
   UserDTO,
+  UserListDto,
   UserTokenResponseDTO,
 } from "./dto";
 
@@ -169,6 +170,15 @@ export class UsersController {
     response.user.firstName = userDetails.firstName;
     response.user.lastName = userDetails.lastName;
     return response;
+  }
+
+  /**
+   * Get user list only with names and ids
+   */
+  @Get("/list")
+  @Authorized(UserRole.User)
+  public async getUserList(): Promise<UserListDto[]> {
+    return await this._users.getAllUsers();
   }
 
   /**

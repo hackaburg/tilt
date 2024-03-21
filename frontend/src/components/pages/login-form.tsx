@@ -10,6 +10,7 @@ import { Message } from "../base/message";
 import { TextInput, TextInputType } from "../base/text-input";
 import { InternalLink } from "../base/link";
 import { Routes } from "../../routes";
+import MuiButton from "@mui/material/Button";
 
 const ButtonContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;
@@ -45,7 +46,7 @@ export const LoginForm = () => {
 
   return (
     <FlexColumnContainer>
-      <Heading text="Sign in to your account" />
+      <Heading text="Login" />
 
       {loginError && (
         <Message type="error">
@@ -89,15 +90,17 @@ export const LoginForm = () => {
           >
             Login
           </Button>
-          <div
+          <MuiButton
+            variant="outlined"
             style={{
-              textAlign: "center",
-              padding: "1rem",
+              color: "black",
+              borderColor: "black",
+              marginTop: "1rem",
             }}
           >
-            New user?{" "}
+            <a style={{ marginRight: "0.5rem" }}>New user? </a>
             <InternalLink to={Routes.RegisterForm}>Register</InternalLink>
-          </div>
+          </MuiButton>
         </ButtonContainer>
       </form>
     </FlexColumnContainer>
