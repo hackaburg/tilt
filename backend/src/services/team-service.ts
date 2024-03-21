@@ -145,6 +145,10 @@ export class TeamService implements ITeamService {
       throw new Error("Please add at least one user to the team");
     }
 
+    if (team.users.length > 8) {
+      throw new Error("A team can have a maximum of 5 users");
+    }
+
     const user = team.users[0];
     const allTeams = await this._database.getRepository(Team).find();
     const userTeams = allTeams.filter(
