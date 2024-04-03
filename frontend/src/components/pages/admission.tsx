@@ -19,7 +19,6 @@ import { Button } from "../base/button";
 import { Code } from "../base/code";
 import { Elevated } from "../base/elevated";
 import {
-  FlexColumnContainer,
   FlexRowColumnContainer,
   FlexRowContainer,
   NonGrowingFlexContainer,
