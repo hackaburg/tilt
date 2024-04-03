@@ -38,6 +38,7 @@ import { Page } from "./page";
 import { saveAs } from "file-saver";
 import { Divider } from "../base/divider";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
+import { Grid } from "@mui/material";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -475,16 +476,32 @@ export const Admission = () => {
                     <li key={`${choice}-${index}`}>{choice}</li>
                   ));
 
-                answer = <ul>{choices}</ul>;
+                answer = (
+                  <ul style={{ margin: 0, marginLeft: "-1rem" }}>{choices}</ul>
+                );
               }
 
               return (
-                <FlexColumnContainer key={String(question.id)}>
-                  <Text>
-                    <b>{question.title}</b>
-                  </Text>
-                  {answer}
-                </FlexColumnContainer>
+                <Grid
+                  style={{ padding: "0.5rem" }}
+                  item
+                  xs={4}
+                  key={String(question.id)}
+                >
+                  <div
+                    style={{
+                      border: "1px solid",
+                      borderRadius: "5px",
+                      padding: "0.5rem",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Text>
+                      <b>{question.title}</b>
+                    </Text>
+                    {answer}
+                  </div>
+                </Grid>
               );
             })
             .filter((answer) => answer != null);
@@ -529,7 +546,7 @@ export const Admission = () => {
       const genderIndex = questions.find((q) => q.title === "Gender")?.id!;
       return (
         <React.Fragment key={String(id)}>
-          <RowComponent onClick={handleExpandRow}>
+          <RowComponent>
             <TableCell align="center">
               <input
                 type="checkbox"
@@ -538,18 +555,20 @@ export const Admission = () => {
                 readOnly
               />
             </TableCell>
-            <TableCell>{userIndex + 1}</TableCell>
-            <TableCell>{email}</TableCell>
-            <TableCell>{name}</TableCell>
-            <TableCell>
+            <TableCell onClick={handleExpandRow}>{userIndex + 1}</TableCell>
+            <TableCell onClick={handleExpandRow}>{email}</TableCell>
+            <TableCell onClick={handleExpandRow}>{name}</TableCell>
+            <TableCell onClick={handleExpandRow}>
               {answersByQuestionID[genderIndex] === "Male" ? (
                 <BsGenderMale />
               ) : (
                 <BsGenderFemale />
               )}
             </TableCell>
-            <TableCell>{user.createdAt.toUTCString()}</TableCell>
-            <TableCell>
+            <TableCell onClick={handleExpandRow}>
+              {user.createdAt.toUTCString()}
+            </TableCell>
+            <TableCell onClick={handleExpandRow}>
               {`${
                 answersByQuestionID[cityIndex]
                   ? answersByQuestionID[cityIndex]
@@ -564,13 +583,13 @@ export const Admission = () => {
 
           <tr>
             {isRowExpanded && (
-              <ExpandedCell colSpan={6}>
+              <ExpandedCell colSpan={7}>
                 <QuestionaireContainer>
                   <Subheading text="Application" />
 
                   {questionsAndAnswers != null &&
                   questionsAndAnswers.length > 0 ? (
-                    questionsAndAnswers
+                    <Grid container>{questionsAndAnswers}</Grid>
                   ) : (
                     <Muted>This application appears to be empty.</Muted>
                   )}

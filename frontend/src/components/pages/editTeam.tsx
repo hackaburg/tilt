@@ -231,7 +231,13 @@ export const EditTeam = () => {
           {teamImg !== "" ? (
             <img src={teamImg} style={{ width: "200px", height: "200px" }} />
           ) : null}
+          {!editable && notInUserList() ? (
+            <Button onClick={sendRequestToJoin} primary={true}>
+              Regenerate Animal Image
+            </Button>
+          ) : null}
         </div>
+
         <div style={{ width: "100%", marginTop: "1rem" }}>
           <InputLabel
             style={{
