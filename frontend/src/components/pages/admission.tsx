@@ -399,7 +399,7 @@ export const Admission = () => {
 
   const isResponsive = useIsResponsive();
   const tableRows = useMemo(() => {
-    return visibleApplications.map(({ user }, userIndex) => {
+    return visibleApplications.map(({ user, teams }, userIndex) => {
       const {
         id,
         email,
@@ -411,6 +411,8 @@ export const Admission = () => {
         declined,
         checkedIn,
       } = user;
+
+      const teamNumber = teams.length;
 
       const name = user.firstName + " " + user.lastName;
 
@@ -557,6 +559,7 @@ export const Admission = () => {
             <TableCell onClick={handleExpandRow}>{userIndex + 1}</TableCell>
             <TableCell onClick={handleExpandRow}>{email}</TableCell>
             <TableCell onClick={handleExpandRow}>{name}</TableCell>
+            <TableCell onClick={handleExpandRow}>{teamNumber}</TableCell>
             <TableCell onClick={handleExpandRow}>
               {answersByQuestionID[genderIndex] === "Male" ? (
                 <BsGenderMale />
@@ -789,9 +792,10 @@ export const Admission = () => {
               <colgroup>
                 <col style={{ width: "5%" }} />
                 <col style={{ width: "5%" }} />
-                <col style={{ width: "30%" }} />
+                <col style={{ width: "25%" }} />
                 <col style={{ width: "15%" }} />
-                <col style={{ width: "10%" }} />
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "5%" }} />
                 <col style={{ width: "20%" }} />
               </colgroup>
 
@@ -801,6 +805,7 @@ export const Admission = () => {
                   <TableHeaderCell>Index</TableHeaderCell>
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Firstname / Lastname</TableHeaderCell>
+                  <TableHeaderCell>Teams</TableHeaderCell>
                   <TableHeaderCell>Gender</TableHeaderCell>
                   <TableHeaderCell>Created At</TableHeaderCell>
                   <TableHeaderCell>City/Location</TableHeaderCell>

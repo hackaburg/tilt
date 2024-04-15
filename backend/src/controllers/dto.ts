@@ -485,6 +485,8 @@ export class ApplicationDTO {
   @Type(() => UserDTO)
   public user!: UserDTO;
   @Expose()
+  public teams!: string[];
+  @Expose()
   @Type(() => AnswerDTO)
   public answers!: AnswerDTO[];
 }
