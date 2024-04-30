@@ -563,13 +563,13 @@ export const Admission = () => {
             <TableCell onClick={handleExpandRow}>{teamNumber}</TableCell>
             <TableCell onClick={handleExpandRow}>
               {answersByQuestionID[genderIndex] === "Male" ? (
-                <p>
+                <div>
                   <BsGenderMale /> M
-                </p>
+                </div>
               ) : (
-                <p>
-                  <BsGenderFemale /> F
-                </p>
+                <div>
+                <BsGenderFemale /> F
+              </div>
               )}
             </TableCell>
             <TableCell onClick={handleExpandRow}>
