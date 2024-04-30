@@ -568,8 +568,8 @@ export const Admission = () => {
                 </div>
               ) : (
                 <div>
-                <BsGenderFemale /> F
-              </div>
+                  <BsGenderFemale /> F
+                </div>
               )}
             </TableCell>
             <TableCell onClick={handleExpandRow}>
