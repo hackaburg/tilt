@@ -413,6 +413,7 @@ export const Admission = () => {
       } = user;
 
       const teamNumber = teams.length;
+      const teamNames = teams;
 
       const name = user.firstName + " " + user.lastName;
 
@@ -562,9 +563,13 @@ export const Admission = () => {
             <TableCell onClick={handleExpandRow}>{teamNumber}</TableCell>
             <TableCell onClick={handleExpandRow}>
               {answersByQuestionID[genderIndex] === "Male" ? (
-                <BsGenderMale />
+                <p>
+                  <BsGenderMale /> M
+                </p>
               ) : (
-                <BsGenderFemale />
+                <p>
+                  <BsGenderFemale /> F
+                </p>
               )}
             </TableCell>
             <TableCell onClick={handleExpandRow}>
@@ -585,7 +590,7 @@ export const Admission = () => {
 
           <tr>
             {isRowExpanded && (
-              <ExpandedCell colSpan={7}>
+              <ExpandedCell colSpan={8}>
                 <QuestionaireContainer>
                   <Subheading text="Application" />
 
@@ -595,6 +600,15 @@ export const Admission = () => {
                   ) : (
                     <Muted>This application appears to be empty.</Muted>
                   )}
+
+                  <FlexRowContainer>
+                    <FlexRowColumnContainer>
+                      <Subheading text="Teams" />
+                      {teamNames.map((teamName, index) => (
+                        <li key={index}>{teamName}</li>
+                      ))}
+                    </FlexRowColumnContainer>
+                  </FlexRowContainer>
 
                   <FlexRowContainer>
                     <FlexRowColumnContainer>
