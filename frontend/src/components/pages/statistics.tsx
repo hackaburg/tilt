@@ -252,27 +252,27 @@ export const Statistics = () => {
 
         <FlexRowContainer>
           <FlexRowColumnContainer>
-          <SimpleCard>
+            <SimpleCard>
               <TitledNumber title="Users" value={safeApplications.length} />
             </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-          <SimpleCard>
+            <SimpleCard>
               <TitledNumber title="Applied" value={percentages.submitted} />
             </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-          <SimpleCard>
+            <SimpleCard>
               <TitledNumber title="Admitted" value={percentages.admitted} />
             </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-          <SimpleCard>
+            <SimpleCard>
               <TitledNumber title="Confirmed" value={percentages.confirmed} />
             </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-          <SimpleCard>
+            <SimpleCard>
               <TitledNumber title="Declined" value={percentages.declined} />
             </SimpleCard>
           </FlexRowColumnContainer>
@@ -285,12 +285,12 @@ export const Statistics = () => {
             </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-          <SimpleCard>
+            <SimpleCard>
               <TitledNumber title="Expired" value={percentages.expired} />
             </SimpleCard>
           </FlexRowColumnContainer>
           <FlexRowColumnContainer>
-          <SimpleCard>
+            <SimpleCard>
               <TitledNumber title="Checked in" value={percentages.checkedIn} />
             </SimpleCard>
           </FlexRowColumnContainer>
