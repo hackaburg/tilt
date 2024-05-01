@@ -8,9 +8,7 @@ import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import {
   isConfirmationExpired,
-  percentageToString,
   roundDateToDay,
-  safeDivide,
 } from "../../util";
 import { CircleChart } from "../base/circle-chart";
 import { Collapsible } from "../base/collapsible";
@@ -21,7 +19,7 @@ import {
   NonGrowingFlexContainer,
   StyleableFlexContainer,
 } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
+import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { Text } from "../base/text";
 import { TimeChart } from "../base/time-chart";
@@ -29,7 +27,6 @@ import { TitledNumber } from "../base/titled-number";
 import { WorldMap } from "../base/worldmap";
 import { Page } from "./page";
 import { SimpleCard } from "../base/simple-card";
-import { Grid } from "@mui/material";
 
 const ChartContainer = styled(StyleableFlexContainer)`
   width: min(300px, 100vw);
