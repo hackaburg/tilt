@@ -174,7 +174,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 If you got accepted, you need to confirm your spot until{" "}
-                <b>14.05.2024</b>
+                <b>08.05.2024</b>
                 {user?.admitted && (
                   <>
                     {" "}
