@@ -145,7 +145,7 @@ export const Status = () => {
           {!user?.confirmed && (
             <>
               <Text style={{ fontSize: "1.15rem" }}>
-                We will come back to you and send you a acceptance mail unitl{" "}
+                We will come back to you and send you a acceptance mail until{" "}
                 <b>01.05.2024</b>.
               </Text>
             </>
