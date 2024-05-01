@@ -6,10 +6,7 @@ import { QuestionType } from "../../api/types/enums";
 import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
-import {
-  isConfirmationExpired,
-  roundDateToDay,
-} from "../../util";
+import { isConfirmationExpired, roundDateToDay } from "../../util";
 import { CircleChart } from "../base/circle-chart";
 import { Collapsible } from "../base/collapsible";
 import { Divider } from "../base/divider";
