@@ -683,7 +683,8 @@ export const Admission = () => {
 
   const exportToCsv = () => {
     const header = [
-      "Name",
+      "FirstName",
+      "LastName",
       "Email",
       "Admitted",
       "Confirmed",
@@ -715,6 +716,8 @@ export const Admission = () => {
 
     const rows = applicationsSortedByDate.map((application, index) => {
       return [
+        application.user.firstName,
+        application.user.lastName,
         application.user.id,
         application.user.email,
         application.user.admitted,
