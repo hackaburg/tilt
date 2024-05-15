@@ -316,64 +316,66 @@ export const Status = () => {
         <Divider />{" "}
       </div>
       <Grid container spacing={3} style={{ marginTop: "0rem" }}>
-        {  <Grid item xs={12} md={6} lg={3} xl={3}>
-          <div
-            style={{
-              borderRadius: "1rem",
-              boxShadow:
-                "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
-            }}
-          >
-            <img
-              src="https://i.imgur.com/3pU0Ycr.png"
-              alt="discord"
+        {
+          <Grid item xs={12} md={6} lg={3} xl={3}>
+            <div
               style={{
-                width: "100%",
-                height: "10rem",
-                borderTopLeftRadius: "1rem",
-                borderTopRightRadius: "1rem",
-                objectFit: "cover",
+                borderRadius: "1rem",
+                boxShadow:
+                  "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
               }}
-            />
-            <div style={{ padding: "1rem" }}>
-              <p
+            >
+              <img
+                src="https://i.imgur.com/3pU0Ycr.png"
+                alt="discord"
                 style={{
-                  fontSize: "1.5rem",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  margin: "0rem",
-                  textOverflow: "ellipsis",
+                  width: "100%",
+                  height: "10rem",
+                  borderTopLeftRadius: "1rem",
+                  borderTopRightRadius: "1rem",
+                  objectFit: "cover",
                 }}
-              >
-                Join us on Discord
-              </p>
-              <p
-                style={{
-                  minHeight: "4.5rem",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "-webkit-box",
-                  WebkitLineClamp: 6,
-                  WebkitBoxOrient: "vertical",
-                }}
-              >
-                The discord is open to everyone. Use it to introduce yourself
-                and tell us what you need (team members, ideas, hardware etc.)
-              </p>
-              <a
-                href="https://discord.gg/hackaburg"
-                target="_blank"
-                style={{
-                  color: "black",
-                  textDecoration: "none",
-                  marginTop: "-1rem",
-                }}
-              >
-                <Button>Join Discord</Button>
-              </a>
+              />
+              <div style={{ padding: "1rem" }}>
+                <p
+                  style={{
+                    fontSize: "1.5rem",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    margin: "0rem",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  Join us on Discord
+                </p>
+                <p
+                  style={{
+                    minHeight: "4.5rem",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 6,
+                    WebkitBoxOrient: "vertical",
+                  }}
+                >
+                  The discord is open to everyone. Use it to introduce yourself
+                  and tell us what you need (team members, ideas, hardware etc.)
+                </p>
+                <a
+                  href="https://discord.gg/hackaburg"
+                  target="_blank"
+                  style={{
+                    color: "black",
+                    textDecoration: "none",
+                    marginTop: "-1rem",
+                  }}
+                >
+                  <Button>Join Discord</Button>
+                </a>
+              </div>
             </div>
-          </div>
-        </Grid> }
+          </Grid>
+        }
         <Grid item xs={12} md={6} lg={3} xl={3}>
           <div
             style={{
