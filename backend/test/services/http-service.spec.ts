@@ -163,7 +163,7 @@ describe("HttpService", () => {
       },
     } as any);
 
-    expect(userWithInvalidToken).not.toBeDefined();
+    expect(userWithInvalidToken).toBeNull();
   });
 
   it("checks authorization correctly", async () => {

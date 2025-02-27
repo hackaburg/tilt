@@ -24,14 +24,14 @@ services:
       - LOG_LEVEL=debug
       - LOG_FILENAME=tilt.log
       - MAIL_HOST=maildev
-      - MAIL_PORT=1025
+      - MAIL_PORT=465
       - MAIL_USERNAME=root@localhost
       - MAIL_PASSWORD=password
       - DATABASE_NAME=tilt
       - DATABASE_HOST=db
-      - DATABASE_PASSWORD=wowsuchpassword
+      - DATABASE_PASSWORD=this_is_not_secure_generate_something
       - DATABASE_PORT=3306
-      - DATABASE_USERNAME=root
+      - DATABASE_USERNAME=tilt
       - SECRET_JWT=wow_this_is_some_secure_password
     depends_on:
       - db
@@ -44,8 +44,10 @@ services:
     volumes:
       - ./db:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=wowsuchpassword
-      - MYSQL_DATABASE=tilt
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_DATABASE=tilt
+      - MARIADB_USER=tilt
+      - MARIADB_PASSWORD=this_is_not_secure_generate_something
     ports:
       - 3306:3306
     networks:
@@ -56,8 +58,8 @@ services:
     image: phpmyadmin/phpmyadmin:latest
     environment:
       - PMA_HOST=db
-      - PMA_USER=root
-      - PMA_PASSWORD=wowsuchpassword
+      - PMA_USER=tilt
+      - PMA_PASSWORD=this_is_not_secure_generate_something
     ports:
       - 8081:80
     networks:
@@ -68,8 +70,8 @@ services:
     image: djfarrelly/maildev
     command: bin/maildev --incoming-user root@localhost --incoming-pass password --hide-extensions STARTTLS
     ports:
-      - 8082:1080
-      - "2525:1025"
+      - 8082:1080  # Admin UI
+      - 465:1025   # SMTP
     networks:
       tilt_network:
         ipv4_address: 172.50.0.6

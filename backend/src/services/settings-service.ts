@@ -80,7 +80,10 @@ export class SettingsService implements ISettingsService {
    */
   public async getSettings(): Promise<Settings> {
     try {
-      const settings = await this._settings.findOneOrFail();
+      const [settings] = await this._settings.find();
+      if (settings === undefined) {
+        throw new Error('No settings found');
+      }
 
       this.sortQuestionsByOrder(settings);
 

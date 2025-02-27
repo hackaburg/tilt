@@ -28,7 +28,7 @@ export interface IHttpService extends IService {
    * Gets the current user from the incoming request.
    * @param action The currently performed action
    */
-  getCurrentUser(action: Action): Promise<User | undefined>;
+  getCurrentUser(action: Action): Promise<User | null>;
 
   /**
    * Checks whether the user from the incoming request is allowed to perform an action
@@ -73,6 +73,7 @@ export class HttpService implements IHttpService {
         await this.isActionAuthorized(action, roles),
       controllers: [join(__dirname, "../controllers/*")],
       cors: !this._config.isProductionEnabled,
+      // @ts-ignore https://github.com/typestack/routing-controllers/issues/1495
       currentUserChecker: async (action) => await this.getCurrentUser(action),
       defaultErrorHandler: false,
       defaults: {
@@ -127,16 +128,16 @@ export class HttpService implements IHttpService {
    * Gets the current user from the incoming request.
    * @param action The currently performed action
    */
-  public async getCurrentUser(action: Action): Promise<User | undefined> {
+  public async getCurrentUser(action: Action): Promise<User | null> {
     const token: string | undefined = action.request.headers.authorization;
     const prefix = "bearer ";
 
     if (!token) {
-      return;
+      return null;
     }
 
     if (!token.toLowerCase().startsWith(prefix)) {
-      return;
+      return null;
     }
 
     const tokenWithoutPrefix = token.substring(prefix.length);
@@ -144,7 +145,7 @@ export class HttpService implements IHttpService {
     try {
       return await this._users.findUserByLoginToken(tokenWithoutPrefix);
     } catch (error) {
-      return;
+      return null;
     }
   }
 

@@ -81,7 +81,11 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
         findFirstValidationError(validations) || "unknown validation error";
     }
 
-    if (!error.httpCode) {
+    if (error.httpCode) {
+      // Log all errors in debug mode
+      this._logger.debug(`Error: ${error.message} ${error.stack}`)
+    } else {
+      // Only log errors in production that aren't planned http error responses
       this._logger.error(error.message, { stack: error.stack });
       this._slack.sendMessage(`\`\`\`${error.stack}\`\`\``);
     }

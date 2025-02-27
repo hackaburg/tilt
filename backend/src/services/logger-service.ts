@@ -13,6 +13,11 @@ interface ICallerInformation {
   function: string;
 }
 
+interface ILoggerMetadata {
+  caller: ICallerInformation
+  meta: any[]
+}
+
 /**
  * An interface describing the logger service.
  */
@@ -93,7 +98,7 @@ export class LoggerService implements ILoggerService {
   public async bootstrap(): Promise<void> {
     const loggerFormat = format.printf(({ level, message, ...args }) => {
       const timestamp = new Date().toISOString();
-      const { meta, caller } = args;
+      const { meta, caller } = args as unknown as ILoggerMetadata;
       const logMessage = `[${timestamp}] [${level}] [${caller.file}:${caller.line}] [${caller.function}] ${message}`;
 
       if (Object.keys(meta).length > 0) {

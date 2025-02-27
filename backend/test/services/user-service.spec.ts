@@ -240,7 +240,7 @@ describe("UserService", () => {
       throw new Error("invalid token");
     });
     const user = await userService.findUserByLoginToken("token");
-    expect(user).not.toBeDefined();
+    expect(user).toBeNull();
   });
 
   it("finds users with correct credentials", async () => {
@@ -274,13 +274,13 @@ describe("UserService", () => {
       email,
       "nope",
     );
-    expect(userWithWrongPassword).not.toBeDefined();
+    expect(userWithWrongPassword).toBeNull();
 
     const userWithWrongEmail = await userService.findUserWithCredentials(
       "other@foo.bar",
       password,
     );
-    expect(userWithWrongEmail).not.toBeDefined();
+    expect(userWithWrongEmail).toBeNull();
   });
 
   it("fetches the user role for correct credentials", async () => {

@@ -4,6 +4,7 @@ import { EmailTemplate } from "../entities/settings";
 import { User } from "../entities/user";
 import { EmailServiceToken, IEmailService } from "./email-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
+import {ObjectLiteral} from "typeorm/common/ObjectLiteral";
 
 interface IVerifyEmailContext {
   verifyToken: string;
@@ -60,7 +61,7 @@ export class EmailTemplateService implements IEmailTemplateService {
    * @param text The text to compile
    * @param context The context to inject into the template
    */
-  private compile<TContext>(text: string, context: TContext): string {
+  private compile<TContext extends ObjectLiteral>(text: string, context: TContext): string {
     return [...Object.entries(context)].reduce(
       (replacedText, [variable, value]) =>
         replacedText.replace(new RegExp(`{{${variable}}}`, "g"), value),
@@ -73,7 +74,7 @@ export class EmailTemplateService implements IEmailTemplateService {
    * @param template The template to use for compilation
    * @param context The context to inject into the template
    */
-  private compileTemplate<TContext>(
+  private compileTemplate<TContext extends ObjectLiteral>(
     template: EmailTemplate,
     context: TContext,
   ): EmailTemplate {
