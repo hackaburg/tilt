@@ -93,9 +93,11 @@ jobs:
     #     cmd: frontend::test
 
     - name: codecov
-      uses: borales/actions-yarn@v3.0.0
-      with:
-        cmd: frontend::codecov
+      # using borales/actions-yarn@v3.0.0 breaks running ./codecov
+      run: |
+        curl -Os https://cli.codecov.io/latest/linux/codecov
+        sudo chmod +x codecov
+        yarn backend::codecov
 
   build:
     runs-on: ubuntu-latest
