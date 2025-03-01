@@ -17,12 +17,12 @@ export const sleep = (ms: number) =>
  * @param date The date to format
  */
 export const dateToString = (date: Date) => {
-  return date.toLocaleString('default', {
+  return date.toLocaleString("default", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-}
+};
 
 /**
  * Extracts all public fields from a type to a new type. This is mainly used to
