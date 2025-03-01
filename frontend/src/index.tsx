@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from "react-router-dom";
 import { RoutedApp } from "./components/app";
 import { documentBaseURL } from "./config";
@@ -23,4 +23,5 @@ const app = (
   </React.StrictMode>
 );
 
-ReactDOM.render(app, container);
+const root = createRoot(container!);
+root.render(app);

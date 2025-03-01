@@ -18,7 +18,7 @@ const MandatoryIndicator = styled.span`
 `;
 
 interface IFormFieldProps {
-  children: React.ReactChild;
+  children: React.ReactNode;
   title: string;
   mandatory?: boolean;
 }
