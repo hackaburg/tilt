@@ -12,7 +12,7 @@ import {
   IConfigurationService,
 } from "./config-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
-import {ObjectLiteral} from "typeorm/common/ObjectLiteral";
+import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
 
 type Entity<T> = new () => T;
 
@@ -76,7 +76,9 @@ export class DatabaseService implements IDatabaseService {
    * Gets a repository for the given entity.
    * @param entity The entity to get a repository for
    */
-  public getRepository<T extends ObjectLiteral>(entity: Entity<T>): Repository<T> {
+  public getRepository<T extends ObjectLiteral>(
+    entity: Entity<T>,
+  ): Repository<T> {
     return this._connection.manager.getRepository<T>(entity);
   }
 }

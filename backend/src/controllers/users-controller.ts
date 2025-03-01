@@ -40,7 +40,7 @@ export class UsersController {
   public constructor(
     @Inject(UserServiceToken) private readonly _users: IUserService,
     @Inject(ApplicationServiceToken)
-    private readonly _applications: IApplicationService
+    private readonly _applications: IApplicationService,
   ) {}
 
   /**

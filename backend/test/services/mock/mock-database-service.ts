@@ -28,7 +28,9 @@ export class TestDatabaseService implements IDatabaseService {
   /**
    * @inheritdoc
    */
-  public getRepository<T extends ObjectLiteral>(entity: new () => T): Repository<T> {
+  public getRepository<T extends ObjectLiteral>(
+    entity: new () => T,
+  ): Repository<T> {
     return this._connection.getRepository<T>(entity);
   }
 

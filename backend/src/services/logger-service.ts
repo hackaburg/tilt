@@ -14,8 +14,8 @@ interface ICallerInformation {
 }
 
 interface ILoggerMetadata {
-  caller: ICallerInformation
-  meta: any[]
+  caller: ICallerInformation;
+  meta: any[];
 }
 
 /**

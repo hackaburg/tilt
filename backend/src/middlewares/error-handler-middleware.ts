@@ -83,7 +83,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
 
     if (error.httpCode) {
       // Log all errors in debug mode
-      this._logger.debug(`Error: ${error.message} ${error.stack}`)
+      this._logger.debug(`Error: ${error.message} ${error.stack}`);
     } else {
       // Only log errors in production that aren't planned http error responses
       this._logger.error(error.message, { stack: error.stack });

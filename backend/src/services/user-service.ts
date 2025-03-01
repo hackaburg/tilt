@@ -293,14 +293,12 @@ export class UserService implements IUserService {
   public async findUserByLoginToken(token: string): Promise<User | null> {
     try {
       const { secret } = this._tokens.decode(token);
-      return await this._users.findOne(
-        {
-          where: {
-            tokenSecret: secret
-          },
-          cache: 20 * 1000,
+      return await this._users.findOne({
+        where: {
+          tokenSecret: secret,
         },
-      );
+        cache: 20 * 1000,
+      });
     } catch (error) {
       return null;
     }
@@ -336,7 +334,7 @@ export class UserService implements IUserService {
       return await this._users.findOneByOrFail({ id: user.id });
     }
 
-    return null
+    return null;
   }
 
   /**
