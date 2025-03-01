@@ -204,6 +204,8 @@ export class UserService implements IUserService {
     user.tokenSecret = "";
     user.forgotPasswordToken = "";
 
+    this._logger.debug(`signing ${user.email} up, token ${user.verifyToken}`);
+
     try {
       await this._users.save(user);
     } catch (error) {
@@ -213,8 +215,6 @@ export class UserService implements IUserService {
     // `genSalt` could technically collide, so we'll prepend the user's id
     user.tokenSecret = `${user.id}//${await genSalt(10)}`;
     await this._users.save(user);
-
-    this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
 
     await this._email.sendVerifyEmail(user);
     return user;

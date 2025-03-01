@@ -38,6 +38,8 @@ export class BootShutdownNotificationService
    * Registers signals to listen on and notifies the configured Slack webhook about state changes.
    */
   public async bootstrap(): Promise<void> {
+    this._logger.debug("registering signal handler");
+
     this._signals.registerSignalHandler("SIGINT", async (signal) => {
       const message = `received signal "${signal}", shutting down`;
 
@@ -46,6 +48,5 @@ export class BootShutdownNotificationService
     });
 
     await this._slack.sendMessage("tilt started");
-    this._logger.debug("registered signal handler");
   }
 }

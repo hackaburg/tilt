@@ -9,6 +9,43 @@ import {
 } from "typeorm";
 import { ApplicationSettings } from "./application-settings";
 
+export class FrontendSettings {
+  @Column()
+  public colorGradientStart!: string;
+  @Column()
+  public colorGradientEnd!: string;
+  @Column()
+  public colorLink!: string;
+  @Column()
+  public colorLinkHover!: string;
+  @Column()
+  public loginSignupImage!: string;
+  @Column()
+  public sidebarImage!: string;
+}
+
+export class EmailTemplate {
+  @Column()
+  public subject!: string;
+  @Column("text")
+  public htmlTemplate!: string;
+  @Column("text")
+  public textTemplate!: string;
+}
+
+export class EmailSettings {
+  @Column()
+  public sender!: string;
+  @Type(() => EmailTemplate)
+  @Column(() => EmailTemplate)
+  public verifyEmail!: EmailTemplate;
+  @Type(() => EmailTemplate)
+  @Column(() => EmailTemplate)
+  public admittedEmail!: EmailTemplate;
+  @Column(() => EmailTemplate)
+  public forgotPasswordEmail!: EmailTemplate;
+}
+
 @Entity()
 export class Settings {
   @PrimaryGeneratedColumn()
@@ -25,43 +62,6 @@ export class Settings {
   @Type(() => EmailSettings)
   @Column(() => EmailSettings)
   public email!: EmailSettings;
-}
-
-export class FrontendSettings {
-  @Column()
-  public colorGradientStart!: string;
-  @Column()
-  public colorGradientEnd!: string;
-  @Column()
-  public colorLink!: string;
-  @Column()
-  public colorLinkHover!: string;
-  @Column()
-  public loginSignupImage!: string;
-  @Column()
-  public sidebarImage!: string;
-}
-
-export class EmailSettings {
-  @Column()
-  public sender!: string;
-  @Type(() => EmailTemplate)
-  @Column(() => EmailTemplate)
-  public verifyEmail!: EmailTemplate;
-  @Type(() => EmailTemplate)
-  @Column(() => EmailTemplate)
-  public admittedEmail!: EmailTemplate;
-  @Column(() => EmailTemplate)
-  public forgotPasswordEmail!: EmailTemplate;
-}
-
-export class EmailTemplate {
-  @Column()
-  public subject!: string;
-  @Column("text")
-  public htmlTemplate!: string;
-  @Column("text")
-  public textTemplate!: string;
 }
 
 /**

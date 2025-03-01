@@ -271,7 +271,7 @@ If you found a bug or have an idea for a feature, simply [submit an issue](https
 The tilt repository ships with a [docker-compose.yml](docker-compose.yml), which includes a sample setup with MariaDB, the test SMTP server [MailDev](https://github.com/maildev/maildev) and phpMyAdmin. To mimic the proxy'd setup, it also includes build instructions for a tilt container, as well as an NGINX container. You usually only need `db`, `phpmyadmin` and `maildev`, therefore it's sufficient to start them using:
 
 ```bash
-$ docker compose up db phpmyadmin maildev
+docker compose up db phpmyadmin maildev
 ```
 
 For local development, the backend supports reading `.env` files. Refer to [`.env.example`](backend/.env.example) for such a configuration and match the ports from the Docker Compose configuration.
@@ -283,13 +283,13 @@ cp backend/.env.example backend/.env
 You can then start the backend using:
 
 ```bash
-$ yarn backend::start
+yarn backend::start
 ```
 
-As the frontend is built in modern React, we use [Webpack](https://webpack.js.org) and its devserver to develop. The backend runs on a different port, so we need to tell the frontend how to reach the backend. This can be done through the `API_BASE_URL` environment variable. To start the frontend devserver with the backend listening on port 3000, simply provide it using:
+As the frontend is built in modern React, we use [Webpack](https://webpack.js.org) and its devserver to develop. Visit localhost:8080 in your browser to view it. The backend runs on a different port, so we need to tell the frontend how to reach the backend. This can be done through the `API_BASE_URL` environment variable. To start the frontend devserver with the backend listening on port 3000, simply provide it using:
 
 ```bash
-$ API_BASE_URL=http://localhost:3000/api yarn frontend::start
+API_BASE_URL=http://localhost:3000/api yarn frontend::start
 ```
 
 We also provide a set of utility scripts in our [package.json](package.json)'s `script` section, such as linting, formatting and type-checking.

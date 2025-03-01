@@ -64,9 +64,11 @@ export class HttpService implements IHttpService {
     const app = express();
 
     if (!this._config.isProductionEnabled) {
+      this._logger.debug("enabling cors");
       app.use(cors());
-      this._logger.debug("enabled cors");
     }
+
+    this._logger.debug("initializing http controllers");
 
     useExpressServer(app, {
       authorizationChecker: async (action, roles?: UserRole[]) =>
@@ -87,8 +89,6 @@ export class HttpService implements IHttpService {
       routePrefix: apiRoutePrefix,
     });
 
-    this._logger.debug("initialized http controllers");
-
     const publicDirectory = this._config.config.http.publicDirectory;
     app.use(
       express.static(publicDirectory, {
@@ -103,6 +103,8 @@ export class HttpService implements IHttpService {
       }),
     );
 
+    this._logger.debug(`initializing static serving from ${publicDirectory}`);
+
     const indexFilePath = join(publicDirectory, "index.html");
     const indexFileContents = existsSync(indexFilePath)
       ? readFileSync(indexFilePath)
@@ -116,8 +118,6 @@ export class HttpService implements IHttpService {
       response.write(indexFileContents);
       response.end();
     });
-
-    this._logger.debug(`initialized static serving from ${publicDirectory}`);
 
     const port = this._config.config.http.port;
     app.listen(port);

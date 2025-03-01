@@ -71,7 +71,7 @@ services:
     command: bin/maildev --incoming-user root@localhost --incoming-pass password --hide-extensions STARTTLS
     ports:
       - 8082:1080  # Admin UI
-      - 465:1025   # SMTP
+      - 2525:1025  # SMTP. Use 465:1025 to make nodemailer use encryption.
     networks:
       tilt_network:
         ipv4_address: 172.50.0.6

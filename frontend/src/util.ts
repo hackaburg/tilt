@@ -12,17 +12,17 @@ export type Nullable<T> = T | null;
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-const prependZero = (value: number): string =>
-  value < 10 ? `0${value}` : `${value}`;
-
 /**
  * Formats a date "YYYY-MM-DD on HH:mm:ss" style.
  * @param date The date to format
  */
-export const dateToString = (date: Date) =>
-  `${prependZero(date.getMonth() + 1)}.${date.getFullYear()}.${prependZero(
-    date.getDate(),
-  )}`;
+export const dateToString = (date: Date) => {
+  return date.toLocaleString('default', {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 
 /**
  * Extracts all public fields from a type to a new type. This is mainly used to
