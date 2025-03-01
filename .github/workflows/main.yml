@@ -52,23 +52,16 @@ jobs:
       with:
         cmd: install
 
-    - name: Download codecov
-      run: |
-        curl -Os https://cli.codecov.io/latest/linux/codecov
-        sudo chmod +x codecov
-        ls -lhat
-        ./codecov --help
-
     - name: test
       uses: borales/actions-yarn@v3.0.0
       with:
         cmd: backend::test
 
     - name: codecov
+      # using borales/actions-yarn@v3.0.0 breaks running ./codecov
       run: |
-        ls -lhat
-        file ./codecov
-        ./codecov --help
+        curl -Os https://cli.codecov.io/latest/linux/codecov
+        sudo chmod +x codecov
         yarn backend::codecov
 
   frontend:
