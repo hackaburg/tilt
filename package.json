@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "backend::build": "tsc --project backend/tsconfig.prod.json",
-    "backend::codecov": "ls && ./codecov do-upload -f backend/coverage/*.json -F backend",
+    "backend::codecov": "./codecov do-upload -f backend/coverage/*.json -F backend",
     "backend::start": "cd backend/ && nodemon",
     "backend::test": "cd backend/ && jest --coverage --runInBand",
     "frontend::build": "cd frontend/ && NODE_ENV=production webpack --mode production",
