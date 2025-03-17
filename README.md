@@ -286,11 +286,13 @@ You can then start the backend using:
 yarn backend::start
 ```
 
-As the frontend is built in modern React, we use [Webpack](https://webpack.js.org) and its devserver to develop. Visit localhost:8080 in your browser to view it. The backend runs on a different port, so we need to tell the frontend how to reach the backend. This can be done through the `API_BASE_URL` environment variable. To start the frontend devserver with the backend listening on port 3000, simply provide it using:
+As the frontend is built in modern React, we use [Webpack](https://webpack.js.org) and its devserver to develop. The frontend is available at localhost:8080. The backend runs on a different port, so we need to tell the frontend how to reach the backend. This can be done through the `API_BASE_URL` environment variable. To start the frontend devserver with the backend listening on port 3000, simply provide it using:
 
 ```bash
 API_BASE_URL=http://localhost:3000/api yarn frontend::start
 ```
+
+After registering, open localhost:8082 to view the verification mail.
 
 We also provide a set of utility scripts in our [package.json](package.json)'s `script` section, such as linting, formatting and type-checking.
 
