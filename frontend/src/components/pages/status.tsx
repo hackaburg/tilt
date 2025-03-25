@@ -69,7 +69,7 @@ export const Status = () => {
         <>
           <Heading text={`Welcome ${user?.firstName}`} />
           <Divider />
-          <Subheading text="The status of our application and all links for Hackaburg 2024 can be found here." />
+          <Subheading text="The status of our application and all links for Hackaburg 2025 can be found here." />
         </>
       )}
       <SimpleCard>
@@ -99,7 +99,7 @@ export const Status = () => {
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between <b>01.03.2024 - 31.04.2024</b>
+                , any time between <b>01.03.205 - 31.04.2025</b>
               </Text>
             </>
           )}
@@ -146,14 +146,14 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 We will come back to you and send you a acceptance mail until{" "}
-                <b>01.05.2024</b>.
+                <b>15.05.2025</b>.
               </Text>
             </>
           )}
           {user?.confirmed && (
             <>
               <Text style={{ fontSize: "1.15rem" }}>
-                Congratulations! You got accepted for Hackaburg 2024. 🎉
+                Congratulations! You got accepted for Hackaburg 2025. 🎉
               </Text>
             </>
           )}
@@ -174,7 +174,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 If you got accepted, you need to confirm your spot until{" "}
-                <b>08.05.2024</b>
+                <b>15.05.2025</b>
                 {user?.admitted && (
                   <>
                     {" "}

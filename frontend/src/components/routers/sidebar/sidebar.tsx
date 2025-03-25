@@ -105,7 +105,7 @@ export const Sidebar = () => {
         <H1 style={{ color: "white" }}>HACKABURG</H1>
         <H2 style={{ color: "white" }}>CONTROL CENTER</H2>
         <p style={{ color: "white" }}>
-          All important information about <br></br>the <b>Hackaburg 2024</b>{" "}
+          All important information about <br></br>the <b>Hackaburg 2025</b>{" "}
           event
         </p>
       </div>

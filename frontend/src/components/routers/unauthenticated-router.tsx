@@ -73,7 +73,7 @@ export const UnauthenticatedRouter = () => {
                 style={{ color: "#3fb28f" }}
               >
                 {" "}
-                <b>Hackaburg 2024</b>
+                <b>Hackaburg 2025</b>
               </a>{" "}
             </p>
           </div>
