@@ -43,6 +43,8 @@ export class EmailSettings {
   @Column(() => EmailTemplate)
   public admittedEmail!: EmailTemplate;
   @Column(() => EmailTemplate)
+  public submittedEmail!: EmailTemplate;
+  @Column(() => EmailTemplate)
   public forgotPasswordEmail!: EmailTemplate;
 }
 

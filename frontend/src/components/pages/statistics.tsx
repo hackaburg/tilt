@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import * as React from "react";
 import { useMemo } from "react";
 import { ApplicationDTO, QuestionDTO } from "../../api/types/dto";
@@ -6,27 +7,27 @@ import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { isConfirmationExpired, roundDateToDay } from "../../util";
-/*import { CircleChart } from "../base/circle-chart";*/
+import { CircleChart } from "../base/circle-chart";
+import { Collapsible } from "../base/collapsible";
 import { Divider } from "../base/divider";
 import {
   FlexRowColumnContainer,
   FlexRowContainer,
   NonGrowingFlexContainer,
+  StyleableFlexContainer,
 } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
+import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { Text } from "../base/text";
 import { TimeChart } from "../base/time-chart";
 import { TitledNumber } from "../base/titled-number";
+import { WorldMap } from "../base/worldmap";
 import { Page } from "./page";
 import { SimpleCard } from "../base/simple-card";
-import { Grid } from "@mui/material";
 
-/*const ChartContainer = styled(StyleableFlexContainer)`
-  width: min(400px, 100vw);
-  postion: relative;
-  margin: auto;
-`;*/
+const ChartContainer = styled(StyleableFlexContainer)`
+  width: min(300px, 100vw);
+`;
 
 interface IAnswerCount {
   [answer: string]: number;
@@ -208,7 +209,8 @@ export const Statistics = () => {
       return [overTime, cummulativeOverTime];
     }, [safeApplications]);
 
-  const statistics = allQuestions.map(({ id, configuration }) => {
+  const statistics = allQuestions.map(({ id, configuration, title }) => {
+    const key = `${title}-${id}`;
     const counts = answersByQuestionID[id!];
 
     if (!counts) {
@@ -216,27 +218,21 @@ export const Statistics = () => {
     }
 
     switch (configuration.type) {
-      /*case QuestionType.Choices:
+      case QuestionType.Choices:
         return (
-          <FlexRowColumnContainer>
-            <SimpleCard>
-              <Subheading text={title} />
-              <Divider />
-              <ChartContainer>
-                <CircleChart counts={counts} />
-              </ChartContainer>
-            </SimpleCard>
-          </FlexRowColumnContainer>
+          <Collapsible key={key} title={title}>
+            <ChartContainer>
+              <CircleChart counts={counts} />
+            </ChartContainer>
+          </Collapsible>
         );
 
-      /*case QuestionType.Country:
+      case QuestionType.Country:
         return (
-          <SimpleCard>
-            <Subheading text={title} />
-            <Divider />
+          <Collapsible key={key} title={title}>
             <WorldMap counts={counts} />
-          </SimpleCard>
-        );*/
+          </Collapsible>
+        );
 
       default:
         return null;
@@ -247,7 +243,6 @@ export const Statistics = () => {
     <Page>
       <NonGrowingFlexContainer>
         <Heading text="Statistics" />
-        <Divider />
 
         <FlexRowContainer>
           <FlexRowColumnContainer>
@@ -295,40 +290,38 @@ export const Statistics = () => {
           </FlexRowColumnContainer>
         </FlexRowContainer>
 
-        <FlexRowContainer>
-          <FlexRowColumnContainer>
-            <SimpleCard>
-              <Subheading text="Applications over time" />
-              <Divider></Divider>
-              <FlexRowContainer>
-                <FlexRowColumnContainer>
-                  <TimeChart
-                    values={applicationsOverTime}
-                    title="Applications over time"
-                  />
-                </FlexRowColumnContainer>
-                <FlexRowColumnContainer>
-                  <TimeChart
-                    values={cummulativeApplicationsOverTime}
-                    title="Cummulative applications over time"
-                  />
-                </FlexRowColumnContainer>
-              </FlexRowContainer>
-            </SimpleCard>
-          </FlexRowColumnContainer>
-        </FlexRowContainer>
+        <Divider />
 
-        <div style={{ padding: "1.9rem" }}>
-          <Grid container spacing={4} justifyContent="center">
-            {statistics}
-          </Grid>
-        </div>
+        <Collapsible title="Applications over time">
+          <FlexRowContainer>
+            <FlexRowColumnContainer>
+              <ChartContainer>
+                <TimeChart
+                  values={applicationsOverTime}
+                  title="Applications over time"
+                />
+              </ChartContainer>
+            </FlexRowColumnContainer>
+            <FlexRowColumnContainer>
+              <ChartContainer>
+                <TimeChart
+                  values={cummulativeApplicationsOverTime}
+                  title="Cummulative applications over time"
+                />
+              </ChartContainer>
+            </FlexRowColumnContainer>
+          </FlexRowContainer>
+        </Collapsible>
+
+        <Divider />
 
         <Text>
           These statistics are automatically generated from all answers by all
           users. If you need detailed answers per user, go to the{" "}
           <InternalLink to={Routes.Admission}>admission</InternalLink> page.
         </Text>
+
+        {statistics}
       </NonGrowingFlexContainer>
     </Page>
   );

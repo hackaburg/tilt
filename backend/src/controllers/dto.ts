@@ -142,6 +142,10 @@ export class EmailSettingsDTO implements DTO<EmailSettings> {
   @ValidateNested()
   @Expose()
   public admittedEmail!: EmailTemplateDTO;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
+  public submittedEmail!: EmailTemplateDTO;
 }
 
 export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
@@ -418,6 +422,8 @@ export class UserDTO {
   public declined!: boolean;
   @Expose()
   public checkedIn!: boolean;
+  @Expose()
+  public profileSubmitted!: boolean;
 }
 
 export class UserTokenResponseDTO {
@@ -467,10 +473,19 @@ export class StoreAnswersRequestDTO
   public data!: readonly AnswerDTO[];
 }
 
+export class UserListDto {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public name!: string;
+}
+
 export class ApplicationDTO {
   @Expose()
   @Type(() => UserDTO)
   public user!: UserDTO;
+  @Expose()
+  public teams!: string[];
   @Expose()
   @Type(() => AnswerDTO)
   public answers!: AnswerDTO[];
@@ -484,4 +499,65 @@ export class IDsRequestDTO implements IApiRequest<readonly number[]> {
 export class IDRequestDTO implements IApiRequest<number> {
   @IsInt()
   public data!: number;
+}
+
+export class UserResponseDto {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public name!: string;
+}
+
+export class TeamDTO {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public users?: string[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
+}
+
+export class TeamResponseDTO {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  @Type(() => UserResponseDto)
+  public users?: UserResponseDto[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
+  @Expose()
+  @Type(() => UserResponseDto)
+  public requests?: UserResponseDto[];
+}
+
+export class TeamRequestDTO {
+  @Expose()
+  public title!: string;
+  @Expose()
+  public users?: number[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
+}
+
+export class TeamUpdateDTO {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public users?: number[];
+  @Expose()
+  public teamImg!: string;
+  @Expose()
+  public description!: string;
 }

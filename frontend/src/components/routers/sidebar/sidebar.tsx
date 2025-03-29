@@ -9,7 +9,7 @@ import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuUser } from "react-icons/lu";
 import { BiLogOutCircle } from "react-icons/bi";
-import { FaRegCircleCheck } from "react-icons/fa6";
+import { FaHandHoldingHeart, FaRegCircleCheck } from "react-icons/fa6";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { VscSettings } from "react-icons/vsc";
 import { FaHeartBroken } from "react-icons/fa";
@@ -17,6 +17,10 @@ import { GrUserExpert } from "react-icons/gr";
 import sha256 from "sha256";
 import { NavLink } from "react-router-dom";
 import { transitionDuration } from "../../../config";
+import { GrGroup } from "react-icons/gr";
+import { Button } from "@mui/material";
+import { SimpleDialog } from "../../base/dialog";
+import { MdSupportAgent } from "react-icons/md";
 
 const BackgroundContainer = styled(StyleableFlexContainer)`
   height: 100%;
@@ -57,10 +61,19 @@ const Link = styled(NavLink)`
  */
 export const Sidebar = () => {
   const loginState = useLoginContext();
+  const [open, setOpen] = React.useState(false);
 
   if (!loginState.isLoggedIn) {
     return null;
   }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const { user, logout } = loginState;
   const role = user?.role ?? UserRole.User;
@@ -97,6 +110,10 @@ export const Sidebar = () => {
         </p>
       </div>
 
+      {/*  <ImageContainer>
+        <Image src={settings?.frontend.sidebarImage} label="Hackathon logo" />
+      </ImageContainer> */}
+
       <SidebarMenu>
         <SidebarMenuItem to={Routes.Status}>
           <LuLayoutDashboard />
@@ -114,12 +131,21 @@ export const Sidebar = () => {
           <LuUser />
           <span style={{ marginLeft: "1rem" }}> Profile</span>
         </SidebarMenuItem>
+
         {isAdmitted && (
           <SidebarMenuItem to={Routes.ConfirmationForm}>
             <GrUserExpert />
-            <span style={{ marginLeft: "1rem" }}>Confirmation</span>
+            <span style={{ marginLeft: "1rem" }}> Confirmation</span>
           </SidebarMenuItem>
         )}
+
+        <SidebarMenuItem to={Routes.Teams}>
+          <GrGroup />
+          <span style={{ marginLeft: "1rem" }}>
+            {" "}
+            Teams <b style={{ color: "#3fb28f", fontSize: "1rem" }}> - beta</b>
+          </span>
+        </SidebarMenuItem>
 
         {isElevatedUser && (
           <>
@@ -169,6 +195,39 @@ export const Sidebar = () => {
           </>
         )}
       </SidebarMenu>
+      <div style={{ bottom: "8rem", position: "absolute", width: "90%" }}>
+        <a href="mailto:support@hackaburg.de">
+          <Button
+            variant="outlined"
+            style={{
+              color: "white",
+              margin: "1rem",
+              borderColor: "white",
+              fontSize: "1rem",
+              width: "100%",
+            }}
+            startIcon={<MdSupportAgent />}
+          >
+            Need help?
+          </Button>
+        </a>
+        <Button
+          variant="outlined"
+          style={{
+            color: "#3fb28f",
+            margin: "1rem",
+            marginTop: "0",
+            borderColor: "#3fb28f",
+            fontSize: "1rem",
+            width: "100%",
+          }}
+          startIcon={<FaHandHoldingHeart />}
+          onClick={handleClickOpen}
+        >
+          Invite a friend
+        </Button>
+      </div>
+      <SimpleDialog open={open} onClose={handleClose} />
       <div style={{ bottom: "1rem", position: "absolute" }}>
         <LI>
           <div style={{ display: "flex", padding: "1rem" }}>

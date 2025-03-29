@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { AnswerDTO, ApplicationDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
@@ -16,17 +16,14 @@ import {
   Nullable,
 } from "../../util";
 import { Button } from "../base/button";
-import { Chevron } from "../base/chevron";
 import { Code } from "../base/code";
 import { Elevated } from "../base/elevated";
 import {
-  FlexColumnContainer,
   FlexRowColumnContainer,
   FlexRowContainer,
   NonGrowingFlexContainer,
   Spacer,
   StyleableFlexContainer,
-  VerticallyCenteredContainer,
 } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
@@ -39,6 +36,8 @@ import { TextInput } from "../base/text-input";
 import { Page } from "./page";
 import { saveAs } from "file-saver";
 import { Divider } from "../base/divider";
+import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
+import { Grid } from "@mui/material";
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -93,6 +92,7 @@ const CheckedInRow = styled.tr`
 const TableCell = styled.td`
   border-right: 1px solid #e0e0e0;
   padding: 0.75rem 1rem;
+  cursor: pointer;
 
   :last-of-type {
     border: none;
@@ -105,14 +105,6 @@ const ExpandedCell = styled.td`
 
 const QuestionaireContainer = styled(StyleableFlexContainer)`
   padding: 1rem;
-`;
-
-const DetailsButton = styled.button`
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  font-size: inherit;
-  color: currentColor;
 `;
 
 interface IAnswersByQuestionID {
@@ -305,23 +297,6 @@ export const Admission = () => {
 
   const [expandedRowIDs, setExpandedRowIDs] = useState<readonly number[]>([]);
 
-  const handleSelectHeaderCheckbox = useCallback(() => {
-    const visibleIDs = visibleApplications.map(({ user: { id } }) => id);
-
-    if (allVisibleSelected) {
-      setSelectedRowIDs((value) =>
-        value.filter((id) => !visibleIDs.includes(id)),
-      );
-
-      return;
-    }
-
-    setSelectedRowIDs((value) => {
-      const set = new Set([...visibleIDs, ...value]);
-      return [...set];
-    });
-  }, [allVisibleSelected, visibleApplications]);
-
   const {
     error: admitError,
     isFetching: isAdmitting,
@@ -336,7 +311,7 @@ export const Admission = () => {
             const { answersByQuestionID } = applicationsByUserID[id];
             const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
 
-            if (teamAnswer == null) {
+            if (teamAnswer === null) {
               continue;
             }
 
@@ -345,7 +320,6 @@ export const Admission = () => {
 
           let firstSeenPartialTeam: Nullable<string> = null;
           let missingPartialTeamMemberEmails = "";
-
           for (const { user } of applicationsSortedByDate) {
             const { answersByQuestionID } = applicationsByUserID[user.id];
             const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
@@ -425,7 +399,7 @@ export const Admission = () => {
 
   const isResponsive = useIsResponsive();
   const tableRows = useMemo(() => {
-    return visibleApplications.map(({ user }) => {
+    return visibleApplications.map(({ user, teams }, userIndex) => {
       const {
         id,
         email,
@@ -438,12 +412,10 @@ export const Admission = () => {
         checkedIn,
       } = user;
 
-      const name =
-        probableNameQuestion != null
-          ? applicationsByUserID[id].answersByQuestionID[
-              probableNameQuestion.id!
-            ]
-          : null;
+      const teamNumber = teams.length;
+      const teamNames = teams;
+
+      const name = user.firstName + " " + user.lastName;
 
       const isRowSelected = selectedRowIDs.includes(id);
       const handleSelectRow = () => {
@@ -506,16 +478,32 @@ export const Admission = () => {
                     <li key={`${choice}-${index}`}>{choice}</li>
                   ));
 
-                answer = <ul>{choices}</ul>;
+                answer = (
+                  <ul style={{ margin: 0, marginLeft: "-1rem" }}>{choices}</ul>
+                );
               }
 
               return (
-                <FlexColumnContainer key={String(question.id)}>
-                  <Text>
-                    <b>{question.title}</b>
-                  </Text>
-                  {answer}
-                </FlexColumnContainer>
+                <Grid
+                  style={{ padding: "0.5rem" }}
+                  item
+                  xs={4}
+                  key={String(question.id)}
+                >
+                  <div
+                    style={{
+                      border: "1px solid",
+                      borderRadius: "5px",
+                      padding: "0.5rem",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Text>
+                      <b>{question.title}</b>
+                    </Text>
+                    {answer}
+                  </div>
+                </Grid>
               );
             })
             .filter((answer) => answer != null);
@@ -555,6 +543,9 @@ export const Admission = () => {
         RowComponent = AdmittedRow;
       }
 
+      const cityIndex = questions.find((q) => q.title === "City")?.id!;
+      const countryIndex = questions.find((q) => q.title === "Country")?.id!;
+      const genderIndex = questions.find((q) => q.title === "Gender")?.id!;
       return (
         <React.Fragment key={String(id)}>
           <RowComponent>
@@ -566,38 +557,58 @@ export const Admission = () => {
                 readOnly
               />
             </TableCell>
-
-            {!isResponsive && (
-              <TableCell>
-                <DetailsButton onClick={handleExpandRow}>
-                  <VerticallyCenteredContainer>
-                    {isRowExpanded ? "Collapse" : "Expand"}
-                    <Spacer />
-                    <Chevron size={20} rotation={isRowExpanded ? 0 : -90} />
-                  </VerticallyCenteredContainer>
-                </DetailsButton>
-              </TableCell>
-            )}
-
-            <TableCell>
-              <ExternalLink to={`mailto:${email}`}>{email}</ExternalLink>
+            <TableCell onClick={handleExpandRow}>{userIndex + 1}</TableCell>
+            <TableCell onClick={handleExpandRow}>{email}</TableCell>
+            <TableCell onClick={handleExpandRow}>{name}</TableCell>
+            <TableCell onClick={handleExpandRow}>{teamNumber}</TableCell>
+            <TableCell onClick={handleExpandRow}>
+              {answersByQuestionID[genderIndex] === "Male" ? (
+                <div>
+                  <BsGenderMale /> M
+                </div>
+              ) : (
+                <div>
+                  <BsGenderFemale /> F
+                </div>
+              )}
             </TableCell>
-
-            <TableCell>{name}</TableCell>
+            <TableCell onClick={handleExpandRow}>
+              {user.createdAt.toUTCString()}
+            </TableCell>
+            <TableCell onClick={handleExpandRow}>
+              {`${
+                answersByQuestionID[cityIndex]
+                  ? answersByQuestionID[cityIndex]
+                  : "--"
+              }, ${
+                answersByQuestionID[countryIndex]
+                  ? answersByQuestionID[countryIndex]
+                  : "--"
+              }`}
+            </TableCell>
           </RowComponent>
 
           <tr>
             {isRowExpanded && (
-              <ExpandedCell colSpan={4}>
+              <ExpandedCell colSpan={8}>
                 <QuestionaireContainer>
                   <Subheading text="Application" />
 
                   {questionsAndAnswers != null &&
                   questionsAndAnswers.length > 0 ? (
-                    questionsAndAnswers
+                    <Grid container>{questionsAndAnswers}</Grid>
                   ) : (
                     <Muted>This application appears to be empty.</Muted>
                   )}
+
+                  <FlexRowContainer>
+                    <FlexRowColumnContainer>
+                      <Subheading text="Teams" />
+                      {teamNames.map((teamName, index) => (
+                        <li key={index}>{teamName}</li>
+                      ))}
+                    </FlexRowColumnContainer>
+                  </FlexRowContainer>
 
                   <FlexRowContainer>
                     <FlexRowColumnContainer>
@@ -672,7 +683,8 @@ export const Admission = () => {
 
   const exportToCsv = () => {
     const header = [
-      "Name",
+      "FirstName",
+      "LastName",
       "Email",
       "Admitted",
       "Confirmed",
@@ -704,6 +716,8 @@ export const Admission = () => {
 
     const rows = applicationsSortedByDate.map((application, index) => {
       return [
+        application.user.firstName,
+        application.user.lastName,
         application.user.id,
         application.user.email,
         application.user.admitted,
@@ -755,18 +769,6 @@ export const Admission = () => {
         </Message>
       )}
 
-      {probableNameQuestion == null && (
-        <Message type="warning">
-          <b>Warnings:</b>
-          <ul>
-            <li>
-              We couldn't find a "name" question. Are you asking for this
-              information?
-            </li>
-          </ul>
-        </Message>
-      )}
-
       <NonGrowingFlexContainer>
         <a style={{ width: "20rem", marginTop: "1rem" }}>
           <Button primary={true} onClick={exportToCsv}>
@@ -806,24 +808,24 @@ export const Admission = () => {
             <Table>
               <colgroup>
                 <col style={{ width: "5%" }} />
-                {!isResponsive && <col style={{ width: "10%" }} />}
-                <col style={{ width: "40%" }} />
-                <col style={{ width: "45%" }} />
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "25%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "5%" }} />
+                <col style={{ width: "20%" }} />
               </colgroup>
 
               <TableHead>
                 <tr>
-                  <TableHeaderCell align="center">
-                    <input
-                      type="checkbox"
-                      ref={headerCheckboxRef}
-                      onClick={handleSelectHeaderCheckbox}
-                    />
-                  </TableHeaderCell>
-
-                  {!isResponsive && <TableHeaderCell />}
+                  <TableHeaderCell />
+                  <TableHeaderCell>Index</TableHeaderCell>
                   <TableHeaderCell>E-mail</TableHeaderCell>
-                  <TableHeaderCell>Name</TableHeaderCell>
+                  <TableHeaderCell>Firstname / Lastname</TableHeaderCell>
+                  <TableHeaderCell>Teams</TableHeaderCell>
+                  <TableHeaderCell>Gender</TableHeaderCell>
+                  <TableHeaderCell>Created At</TableHeaderCell>
+                  <TableHeaderCell>City/Location</TableHeaderCell>
                 </tr>
               </TableHead>
 

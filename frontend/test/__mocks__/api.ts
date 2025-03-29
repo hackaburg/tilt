@@ -27,4 +27,12 @@ export const api: IMockedApi = {
   verifyEmail: jest.fn(),
   forgotPassword: jest.fn(),
   resetPassword: jest.fn(),
+  createTeam: jest.fn(),
+  updateTeam: jest.fn(),
+  requestToJoinTeam: jest.fn(),
+  acceptUserToTeam: jest.fn(),
+  deleteTeam: jest.fn(),
+  getAllTeams: jest.fn(),
+  getTeamByID: jest.fn(),
+  getAllUsers: jest.fn(),
 };
