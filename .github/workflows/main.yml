@@ -15,6 +15,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@master
 
+    - name: Setup Python 3.11 (statt 3.12)
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install distutils
+      run: sudo apt-get update && sudo apt-get install -y python3-distutils
+
     - name: Setup node.js
       uses: actions/setup-node@v2
       with:
@@ -23,19 +31,16 @@ jobs:
     - name: Install dependencies
       uses: borales/actions-yarn@v3.0.0
       with:
-        node-version: '16'
         cmd: install
 
     - name: prettier
       uses: borales/actions-yarn@v3.0.0
       with:
-        node-version: '16'
         cmd: prettier --check
 
     - name: lint
       uses: borales/actions-yarn@v3.0.0
       with:
-        node-version: '16'
         cmd: lint
 
   backend:
@@ -44,6 +49,14 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@master
+
+    - name: Setup Python 3.11 (statt 3.12)
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install distutils
+      run: sudo apt-get update && sudo apt-get install -y python3-distutils
 
     - name: Setup node.js
       uses: actions/setup-node@v2
@@ -80,25 +93,21 @@ jobs:
     - name: Install dependencies
       uses: borales/actions-yarn@v3.0.0
       with:
-        node-version: '16'
         cmd: install
 
     - name: typecheck
       uses: borales/actions-yarn@v3.0.0
       with:
-        node-version: '16'
         cmd: frontend::typecheck
 
     - name: test
       uses: borales/actions-yarn@v3.0.0
       with:
-        node-version: '16'
         cmd: frontend::test
 
     - name: codecov
       uses: borales/actions-yarn@v3.0.0
       with:
-        node-version: '16'
         cmd: frontend::codecov
 
   build:
