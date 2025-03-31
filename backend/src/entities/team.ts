@@ -5,7 +5,6 @@ function Longtext() {
   // to keep backend tests and prepare tilt for the upcoming Hackaburg as quickly
   // as possible.
   if (process.env.NODE_ENV === "test") {
-    console.log("Using text instead of longtext for sqlite");
     return Column("text");
   }
   return Column("longtext");
