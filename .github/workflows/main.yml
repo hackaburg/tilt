@@ -23,16 +23,19 @@ jobs:
     - name: Install dependencies
       uses: borales/actions-yarn@v3.0.0
       with:
+        node-version: '16'
         cmd: install
 
     - name: prettier
       uses: borales/actions-yarn@v3.0.0
       with:
+        node-version: '16'
         cmd: prettier --check
 
     - name: lint
       uses: borales/actions-yarn@v3.0.0
       with:
+        node-version: '16'
         cmd: lint
 
   backend:
@@ -77,21 +80,25 @@ jobs:
     - name: Install dependencies
       uses: borales/actions-yarn@v3.0.0
       with:
+        node-version: '16'
         cmd: install
 
     - name: typecheck
       uses: borales/actions-yarn@v3.0.0
       with:
+        node-version: '16'
         cmd: frontend::typecheck
 
     - name: test
       uses: borales/actions-yarn@v3.0.0
       with:
+        node-version: '16'
         cmd: frontend::test
 
     - name: codecov
       uses: borales/actions-yarn@v3.0.0
       with:
+        node-version: '16'
         cmd: frontend::codecov
 
   build:
