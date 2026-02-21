@@ -60,7 +60,11 @@ export class UnixSignalService implements IUnixSignalService {
     handler: ISignalHandler,
   ): Promise<void> {
     if (!this._handlers.has(signal)) {
-      this._handlers.set(signal, [() => process.exit()]);
+      this._handlers.set(signal, [() => {
+        // TODO I don't know why
+        console.error("process.exit", signal, handler)
+        process.exit()
+      }]);
 
       process.on(signal, () => this.handleSignal(signal));
     }
