@@ -68,7 +68,7 @@ export interface IUserService extends IService {
    * Find a user with their login token.
    * @param token A user's login token
    */
-  findUserByLoginToken(token: string): Promise<User | undefined>;
+  findUserByLoginToken(token: string): Promise<User | null>;
 
   /**
    * Checks the user's credentials and returns the user.
@@ -78,7 +78,7 @@ export interface IUserService extends IService {
   findUserWithCredentials(
     email: string,
     password: string,
-  ): Promise<User | undefined>;
+  ): Promise<User | null>;
 
   /**
    * Checks the user's password reset.
@@ -209,6 +209,8 @@ export class UserService implements IUserService {
     user.tokenSecret = "";
     user.forgotPasswordToken = "";
 
+    this._logger.debug(`signing ${user.email} up, token ${user.verifyToken}`);
+
     try {
       await this._users.save(user);
     } catch (error) {
@@ -218,8 +220,6 @@ export class UserService implements IUserService {
     // `genSalt` could technically collide, so we'll prepend the user's id
     user.tokenSecret = `${user.id}//${await genSalt(10)}`;
     await this._users.save(user);
-
-    this._logger.debug(`${user.email} signed up, token ${user.verifyToken}`);
 
     await this._email.sendVerifyEmail(user);
     return user;
@@ -311,19 +311,17 @@ export class UserService implements IUserService {
    * Find a user with their login token.
    * @param token A user's login token
    */
-  public async findUserByLoginToken(token: string): Promise<User | undefined> {
+  public async findUserByLoginToken(token: string): Promise<User | null> {
     try {
       const { secret } = this._tokens.decode(token);
-      return await this._users.findOne(
-        {
+      return await this._users.findOne({
+        where: {
           tokenSecret: secret,
         },
-        {
-          cache: 20 * 1000,
-        },
-      );
+        cache: 20 * 1000,
+      });
     } catch (error) {
-      return;
+      return null;
     }
   }
 
@@ -335,7 +333,7 @@ export class UserService implements IUserService {
   public async findUserWithCredentials(
     email: string,
     password: string,
-  ): Promise<User | undefined> {
+  ): Promise<User | null> {
     const user = await this._users.findOne({
       select: ["id", "password", "role", "verifyToken", "profileSubmitted"],
       where: {
@@ -344,18 +342,20 @@ export class UserService implements IUserService {
     });
 
     if (!user) {
-      return;
+      return null;
     }
 
     if (user.verifyToken) {
-      return;
+      return null;
     }
 
     const passwordsMatch = await compare(password, user.password);
 
     if (passwordsMatch) {
-      return await this._users.findOneOrFail(user.id);
+      return await this._users.findOneByOrFail({ id: user.id });
     }
+
+    return null;
   }
 
   /**

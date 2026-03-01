@@ -79,21 +79,19 @@ export class SettingsService implements ISettingsService {
    * Gets the application settings.
    */
   public async getSettings(): Promise<Settings> {
-    try {
-      const settings = await this._settings.findOneOrFail();
+    let [settings] = await this._settings.find();
 
-      this.sortQuestionsByOrder(settings);
-
-      return settings;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      this._logger.debug(`error loading settings: ${message}`);
+    if (settings === undefined) {
       this._logger.info("no settings found. creating defaults");
-      const settings = this.getDefaultSettings();
+      settings = this.getDefaultSettings();
       await this._settings.save(settings);
       this._logger.debug("default settings saved", settings);
       return settings;
     }
+
+    this.sortQuestionsByOrder(settings);
+
+    return settings;
   }
 
   /**
@@ -108,7 +106,7 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
-   * Creates a application settings object with default values.
+   * Creates an application settings object with default values.
    */
   private getDefaultApplicationSettings(): ApplicationSettings {
     const applicationSettings = new ApplicationSettings();

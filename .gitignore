@@ -7,3 +7,4 @@ db/
 *.swp
 frontend/bundle/
 .vscode/
+.idea/

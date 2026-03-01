@@ -84,14 +84,14 @@ services:
       # tilt doesn't need root privileges on the database,
       # therefore a regular user account and a random root
       # password is the better choice
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
       # these two don't need to be called "tilt", but this is
       # a tilt example
-      - MYSQL_DATABASE=tilt
-      - MYSQL_USER=tilt
+      - MARIADB_DATABASE=tilt
+      - MARIADB_USER=tilt
       # genereate a password, as this one is shown publicly
       # in this repository
-      - MYSQL_PASSWORD=this_is_not_secure_generate_something
+      - MARIADB_PASSWORD=this_is_not_secure_generate_something
 
   tilt:
     image: hackaburg/tilt
@@ -167,13 +167,13 @@ server {
 Since database takes a brief moment for its setup, start with:
 
 ```bash
-$ docker-compose up tilt_mariadb
+$ docker compose up tilt_mariadb
 ```
 
 Then wait for MariaDB to accept incoming connections. Once this is done, you can stop `docker-compose` and start up everything with:
 
 ```bash
-$ docker-compose up
+$ docker compose up
 ```
 
 Depending on your setup, you might want to append the `-d` flag to run the containers in the background.
@@ -187,7 +187,7 @@ With everything up and running, you usually want to configure tilt. For this, yo
 Since you have access to the server running tilt, you can spawn a shell in the tilt container and invoke the [usermod script](backend/src/usermod.ts). Please note that we're using `node:alpine` as a base image and therefore don't ship Bash. This script takes two arguments, the email of the user you want to change, as well as the group you want to assign to this user. To assign the `root` group to `you@example.com`, run:
 
 ```bash
-$ docker-compose exec tilt sh
+$ docker compose exec tilt sh
 node@container:/app$ node backend/usermod.js you@example.com root
 ```
 
@@ -271,20 +271,28 @@ If you found a bug or have an idea for a feature, simply [submit an issue](https
 The tilt repository ships with a [docker-compose.yml](docker-compose.yml), which includes a sample setup with MariaDB, the test SMTP server [MailDev](https://github.com/maildev/maildev) and phpMyAdmin. To mimic the proxy'd setup, it also includes build instructions for a tilt container, as well as an NGINX container. You usually only need `db`, `phpmyadmin` and `maildev`, therefore it's sufficient to start them using:
 
 ```bash
-$ docker-compose up db phpmyadmin maildev
+docker compose up db phpmyadmin maildev
 ```
 
-For local development, the backend supports reading `.env` files. Refer to [`.env.example`](backend/.env.example) for such a configuration and match the ports from the Docker Compose configuration. You can then start the backend using:
+For local development, the backend supports reading `.env` files. Refer to [`.env.example`](backend/.env.example) for such a configuration and match the ports from the Docker Compose configuration.
 
 ```bash
-$ yarn backend::start
+cp backend/.env.example backend/.env
 ```
 
-As the frontend is built in modern React, we use [Webpack](https://webpack.js.org) and its devserver to develop. The backend runs on a different port, so we need to tell the frontend how to reach the backend. This can be done through the `API_BASE_URL` environment variable. To start the frontend devserver with the backend listening on port 3000, simply provide it using:
+You can then start the backend using:
 
 ```bash
-$ API_BASE_URL=http://localhost:3000/api yarn frontend::start
+yarn backend::start
 ```
+
+As the frontend is built in modern React, we use [Webpack](https://webpack.js.org) and its devserver to develop. The frontend is available at localhost:8080. The backend runs on a different port, so we need to tell the frontend how to reach the backend. This can be done through the `API_BASE_URL` environment variable. To start the frontend devserver with the backend listening on port 3000, simply provide it using:
+
+```bash
+API_BASE_URL=http://localhost:3000/api yarn frontend::start
+```
+
+After registering, open localhost:8082 to view the verification mail.
 
 We also provide a set of utility scripts in our [package.json](package.json)'s `script` section, such as linting, formatting and type-checking.
 

@@ -344,7 +344,7 @@ export class ApplicationService implements IApplicationService {
    * @param user A user whose answers we want to get
    */
   private async findAllExistingAnswers(user: User): Promise<Answer[]> {
-    return await this._answers.find({
+    return await this._answers.findBy({
       user: {
         id: user.id,
       },

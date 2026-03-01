@@ -28,7 +28,7 @@ export interface IHttpService extends IService {
    * Gets the current user from the incoming request.
    * @param action The currently performed action
    */
-  getCurrentUser(action: Action): Promise<User | undefined>;
+  getCurrentUser(action: Action): Promise<User | null>;
 
   /**
    * Checks whether the user from the incoming request is allowed to perform an action
@@ -64,15 +64,18 @@ export class HttpService implements IHttpService {
     const app = express();
 
     if (!this._config.isProductionEnabled) {
+      this._logger.debug("enabling cors");
       app.use(cors());
-      this._logger.debug("enabled cors");
     }
+
+    this._logger.debug("initializing http controllers");
 
     useExpressServer(app, {
       authorizationChecker: async (action, roles?: UserRole[]) =>
         await this.isActionAuthorized(action, roles),
       controllers: [join(__dirname, "../controllers/*")],
       cors: !this._config.isProductionEnabled,
+      // @ts-ignore https://github.com/typestack/routing-controllers/issues/1495
       currentUserChecker: async (action) => await this.getCurrentUser(action),
       defaultErrorHandler: false,
       defaults: {
@@ -85,8 +88,6 @@ export class HttpService implements IHttpService {
       middlewares: [join(__dirname, "../middlewares/*")],
       routePrefix: apiRoutePrefix,
     });
-
-    this._logger.debug("initialized http controllers");
 
     const publicDirectory = this._config.config.http.publicDirectory;
     app.use(
@@ -102,6 +103,8 @@ export class HttpService implements IHttpService {
       }),
     );
 
+    this._logger.debug(`initializing static serving from ${publicDirectory}`);
+
     const indexFilePath = join(publicDirectory, "index.html");
     const indexFileContents = existsSync(indexFilePath)
       ? readFileSync(indexFilePath)
@@ -116,8 +119,6 @@ export class HttpService implements IHttpService {
       response.end();
     });
 
-    this._logger.debug(`initialized static serving from ${publicDirectory}`);
-
     const port = this._config.config.http.port;
     app.listen(port);
     this._logger.info(`http server running on ${port}`);
@@ -127,16 +128,16 @@ export class HttpService implements IHttpService {
    * Gets the current user from the incoming request.
    * @param action The currently performed action
    */
-  public async getCurrentUser(action: Action): Promise<User | undefined> {
+  public async getCurrentUser(action: Action): Promise<User | null> {
     const token: string | undefined = action.request.headers.authorization;
     const prefix = "bearer ";
 
     if (!token) {
-      return;
+      return null;
     }
 
     if (!token.toLowerCase().startsWith(prefix)) {
-      return;
+      return null;
     }
 
     const tokenWithoutPrefix = token.substring(prefix.length);
@@ -144,7 +145,7 @@ export class HttpService implements IHttpService {
     try {
       return await this._users.findUserByLoginToken(tokenWithoutPrefix);
     } catch (error) {
-      return;
+      return null;
     }
   }
 

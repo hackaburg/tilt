@@ -96,7 +96,7 @@ export class TeamService implements ITeamService {
       throw new Error("Please add at least one user to the team");
     }
 
-    const originTeam = await this._teams.findOne(team.id);
+    const originTeam = await this._teams.findOneBy({ id: team.id });
     const originTeamUsers = originTeam?.users.map((id) => id.toString());
 
     if (!originTeamUsers!.includes(user.id.toString())) {
@@ -177,7 +177,7 @@ export class TeamService implements ITeamService {
    * @param id The id of the team
    */
   public async getTeamByID(id: number): Promise<TeamResponseDTO | undefined> {
-    const team = await this._teams.findOne(id);
+    const team = await this._teams.findOneBy({ id });
 
     if (team == null) {
       return undefined;
@@ -217,7 +217,7 @@ export class TeamService implements ITeamService {
    * @param user The user requesting to join
    */
   public async requestToJoinTeam(teamId: number, user: User): Promise<void> {
-    const team = await this._teams.findOne(teamId);
+    const team = await this._teams.findOneBy({ id: teamId });
 
     if (team == null) {
       throw new Error(`no team with id ${teamId}`);
@@ -241,7 +241,7 @@ export class TeamService implements ITeamService {
    * @param id The id of the team
    */
   public async deleteTeamByID(id: number, currentUserId: User): Promise<void> {
-    const team = await this._teams.findOne(id);
+    const team = await this._teams.findOneBy({ id });
 
     if (team?.users[0].toString() !== currentUserId.id.toString()) {
       throw new Error("You are not the owner of this team");
@@ -263,7 +263,7 @@ export class TeamService implements ITeamService {
     userId: number,
     user: User,
   ): Promise<void> {
-    const team = await this._teams.findOne(teamId);
+    const team = await this._teams.findOneBy({ id: teamId });
 
     if (team == null) {
       throw new Error(`no team with id ${teamId}`);

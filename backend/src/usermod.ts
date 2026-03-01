@@ -41,7 +41,7 @@ import { LoggerServiceToken } from "./services/logger-service";
   await database.bootstrap();
 
   const repo = database.getRepository(User);
-  const user = await repo.findOne({
+  const user = await repo.findOneBy({
     email,
   });
 

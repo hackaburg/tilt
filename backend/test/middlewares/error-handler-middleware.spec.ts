@@ -56,8 +56,8 @@ describe("ErrorHandlerMiddleware", () => {
 
     expect(res.mocks.json).toBeCalledWith({
       error:
-        errors[0].children[0].constraints![
-          Object.keys(errors[0].children[0].constraints!)[0]
+        errors[0].children![0].constraints![
+          Object.keys(errors[0].children![0].constraints!)[0]
         ],
       status: "error",
     } as IApiResponse<any>);

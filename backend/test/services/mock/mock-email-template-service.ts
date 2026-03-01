@@ -8,8 +8,9 @@ export const MockEmailTemplateService = jest.fn(
   () =>
     new MockedService<IEmailTemplateService>({
       bootstrap: jest.fn(),
-      sendAdmittedEmail: jest.fn(),
       sendVerifyEmail: jest.fn(),
       sendForgotPasswordEmail: jest.fn(),
+      sendSubmissionEmail: jest.fn(),
+      sendAdmittedEmail: jest.fn(),
     }),
 );

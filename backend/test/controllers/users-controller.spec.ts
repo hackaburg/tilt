@@ -133,7 +133,7 @@ describe("UsersController", () => {
   it("throws on invalid credentials", async () => {
     expect.assertions(1);
 
-    userService.mocks.findUserWithCredentials.mockResolvedValue(undefined);
+    userService.mocks.findUserWithCredentials.mockResolvedValue(null);
     const promise = controller.login({
       data: {
         email: "test@foo.bar",

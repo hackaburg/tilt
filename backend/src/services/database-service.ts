@@ -12,6 +12,7 @@ import {
   IConfigurationService,
 } from "./config-service";
 import { ILoggerService, LoggerServiceToken } from "./logger-service";
+import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
 
 type Entity<T> = new () => T;
 
@@ -23,7 +24,7 @@ export interface IDatabaseService extends IService {
    * Gets a repository for the given entity.
    * @param entity The entity to retrieve a repository for
    */
-  getRepository<T>(entity: Entity<T>): Repository<T>;
+  getRepository<T extends ObjectLiteral>(entity: Entity<T>): Repository<T>;
 }
 
 /**
@@ -51,6 +52,10 @@ export class DatabaseService implements IDatabaseService {
     useContainer(Container);
 
     try {
+      this._logger.info(
+        `connecting to database on "${this._config.config.database.host}"`,
+      );
+
       this._connection = await createConnection({
         database: this._config.config.database.databaseName,
         entities: [join(__dirname, "../entities/*")],
@@ -61,10 +66,6 @@ export class DatabaseService implements IDatabaseService {
         type: "mariadb",
         username: this._config.config.database.username,
       });
-
-      this._logger.info(
-        `connected to database on ${this._config.config.database.host}`,
-      );
     } catch (error) {
       this._logger.error(`unable to connect to database: ${error}`);
       process.exit(1);
@@ -75,7 +76,9 @@ export class DatabaseService implements IDatabaseService {
    * Gets a repository for the given entity.
    * @param entity The entity to get a repository for
    */
-  public getRepository<T>(entity: Entity<T>): Repository<T> {
+  public getRepository<T extends ObjectLiteral>(
+    entity: Entity<T>,
+  ): Repository<T> {
     return this._connection.manager.getRepository<T>(entity);
   }
 }

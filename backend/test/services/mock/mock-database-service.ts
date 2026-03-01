@@ -2,6 +2,7 @@ import { join } from "path";
 import { Connection, createConnection, Repository } from "typeorm";
 import { MockedService } from ".";
 import { IDatabaseService } from "../../../src/services/database-service";
+import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
 
 /**
  * A mocked database service.
@@ -27,7 +28,9 @@ export class TestDatabaseService implements IDatabaseService {
   /**
    * @inheritdoc
    */
-  public getRepository<T>(entity: new () => T): Repository<T> {
+  public getRepository<T extends ObjectLiteral>(
+    entity: new () => T,
+  ): Repository<T> {
     return this._connection.getRepository<T>(entity);
   }
 
@@ -39,7 +42,7 @@ export class TestDatabaseService implements IDatabaseService {
       database: ":memory:",
       entities: [join(__dirname, "../../../src/entities/*")],
       synchronize: true,
-      type: "mysql",
+      type: "sqlite",
     });
   }
 }

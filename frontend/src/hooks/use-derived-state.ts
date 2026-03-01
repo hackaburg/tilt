@@ -11,6 +11,10 @@ export const useDerivedState = <T>(
   deriveFn: () => T,
   deps?: readonly any[],
 ): [T, Dispatch<SetStateAction<T>>] => {
+  if (deps === undefined) {
+    deps = [];
+  }
+
   const derivedState = useMemo(deriveFn, deps);
   const [state, setState] = useState(derivedState);
 

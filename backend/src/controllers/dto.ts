@@ -58,19 +58,15 @@ export const convertBetweenEntityAndDTO = <TOutput>(
   outputClass: ClassDeclaration<TOutput>,
 ): TOutput => plainToClass(outputClass, [input])[0];
 
-export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
-  @Type(() => ApplicationSettingsDTO)
-  @ValidateNested()
+export class FormSettingsDTO implements DTO<FormSettings> {
+  @IsString()
   @Expose()
-  public application!: ApplicationSettingsDTO;
-  @Type(() => FrontendSettingsDTO)
-  @ValidateNested()
+  public title!: string;
+  @IsArray()
+  @Type(() => QuestionDTO)
+  @ValidateNested({ each: true })
   @Expose()
-  public frontend!: FrontendSettingsDTO;
-  @Type(() => EmailSettingsDTO)
-  @ValidateNested()
-  @Expose()
-  public email!: EmailSettingsDTO;
+  public questions!: QuestionDTO[];
 }
 
 export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
@@ -95,15 +91,76 @@ export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
   public hoursToConfirm!: number;
 }
 
-export class FormSettingsDTO implements DTO<FormSettings> {
+export class FrontendSettingsDTO implements DTO<FrontendSettings> {
+  @IsHexColor()
+  @Expose()
+  public colorGradientStart!: string;
+  @IsHexColor()
+  @Expose()
+  public colorGradientEnd!: string;
+  @IsHexColor()
+  @Expose()
+  public colorLink!: string;
+  @IsHexColor()
+  @Expose()
+  public colorLinkHover!: string;
+  @IsUrl()
+  @Expose()
+  public loginSignupImage!: string;
+  @IsUrl()
+  @Expose()
+  public sidebarImage!: string;
+}
+
+export class EmailTemplateDTO implements DTO<EmailTemplate> {
   @IsString()
   @Expose()
-  public title!: string;
-  @IsArray()
-  @Type(() => QuestionDTO)
-  @ValidateNested({ each: true })
+  public subject!: string;
+  @IsString()
   @Expose()
-  public questions!: QuestionDTO[];
+  @MaxLength(EmailTemplateSize)
+  public htmlTemplate!: string;
+  @IsString()
+  @Expose()
+  @MaxLength(EmailTemplateSize)
+  public textTemplate!: string;
+}
+
+export class EmailSettingsDTO implements DTO<EmailSettings> {
+  @IsString()
+  @Expose()
+  public sender!: string;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
+  public verifyEmail!: EmailTemplateDTO;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
+  public forgotPasswordEmail!: EmailTemplateDTO;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
+  public admittedEmail!: EmailTemplateDTO;
+  @Type(() => EmailTemplateDTO)
+  @ValidateNested()
+  @Expose()
+  public submittedEmail!: EmailTemplateDTO;
+}
+
+export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
+  @Type(() => ApplicationSettingsDTO)
+  @ValidateNested()
+  @Expose()
+  public application!: ApplicationSettingsDTO;
+  @Type(() => FrontendSettingsDTO)
+  @ValidateNested()
+  @Expose()
+  public frontend!: FrontendSettingsDTO;
+  @Type(() => EmailSettingsDTO)
+  @ValidateNested()
+  @Expose()
+  public email!: EmailSettingsDTO;
 }
 
 export abstract class QuestionConfigurationDTOBase {
@@ -235,63 +292,6 @@ export class QuestionDTO<TQuestionConfigurationDTO = IQuestionConfiguration>
   public showIfParentHasValue!: string | null;
 }
 
-export class FrontendSettingsDTO implements DTO<FrontendSettings> {
-  @IsHexColor()
-  @Expose()
-  public colorGradientStart!: string;
-  @IsHexColor()
-  @Expose()
-  public colorGradientEnd!: string;
-  @IsHexColor()
-  @Expose()
-  public colorLink!: string;
-  @IsHexColor()
-  @Expose()
-  public colorLinkHover!: string;
-  @IsUrl()
-  @Expose()
-  public loginSignupImage!: string;
-  @IsUrl()
-  @Expose()
-  public sidebarImage!: string;
-}
-
-export class EmailSettingsDTO implements DTO<EmailSettings> {
-  @IsString()
-  @Expose()
-  public sender!: string;
-  @Type(() => EmailTemplateDTO)
-  @ValidateNested()
-  @Expose()
-  public verifyEmail!: EmailTemplateDTO;
-  @Type(() => EmailTemplateDTO)
-  @ValidateNested()
-  @Expose()
-  public forgotPasswordEmail!: EmailTemplateDTO;
-  @Type(() => EmailTemplateDTO)
-  @ValidateNested()
-  @Expose()
-  public admittedEmail!: EmailTemplateDTO;
-  @Type(() => EmailTemplateDTO)
-  @ValidateNested()
-  @Expose()
-  public submittedEmail!: EmailTemplateDTO;
-}
-
-export class EmailTemplateDTO implements DTO<EmailTemplate> {
-  @IsString()
-  @Expose()
-  public subject!: string;
-  @IsString()
-  @Expose()
-  @MaxLength(EmailTemplateSize)
-  public htmlTemplate!: string;
-  @IsString()
-  @Expose()
-  @MaxLength(EmailTemplateSize)
-  public textTemplate!: string;
-}
-
 export class UpdateSettingsRequestDTO implements IApiRequest<SettingsDTO> {
   @Type(() => SettingsDTO)
   @ValidateNested()
@@ -349,17 +349,17 @@ export class PasswordResetRequestDTO implements IApiRequest<PasswordResetDTO> {
   public data!: PasswordResetDTO;
 }
 
+export class ForgotPasswordDTO {
+  @Expose()
+  public email!: string;
+}
+
 export class ForgotPasswordRequestDTO
   implements IApiRequest<ForgotPasswordDTO>
 {
   @Type(() => ForgotPasswordDTO)
   @ValidateNested()
   public data!: ForgotPasswordDTO;
-}
-
-export class ForgotPasswordDTO {
-  @Expose()
-  public email!: string;
 }
 
 export class SignupResponseDTO {
@@ -386,6 +386,44 @@ export class UserDetailsRepsonseDTO {
   public email!: string;
   @Expose()
   public role!: UserRole;
+}
+
+export class UserDTO {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public email!: string;
+  @Expose()
+  public firstName!: string;
+  @Expose()
+  public lastName!: string;
+  @Expose()
+  public createdAt!: Date;
+  @Transform(
+    ({ obj: rawObj }) => {
+      const obj = rawObj as User;
+      return !obj.verifyToken;
+    },
+    { toClassOnly: true },
+  )
+  @Expose()
+  public isVerified!: boolean;
+  @Expose()
+  public role!: UserRole;
+  @Expose()
+  public initialProfileFormSubmittedAt!: Date | null;
+  @Expose()
+  public confirmationExpiresAt!: Date | null;
+  @Expose()
+  public admitted!: boolean;
+  @Expose()
+  public confirmed!: boolean;
+  @Expose()
+  public declined!: boolean;
+  @Expose()
+  public checkedIn!: boolean;
+  @Expose()
+  public profileSubmitted!: boolean;
 }
 
 export class UserTokenResponseDTO {
@@ -433,44 +471,6 @@ export class StoreAnswersRequestDTO
   @ValidateNested({ each: true })
   @Type(() => AnswerDTO)
   public data!: readonly AnswerDTO[];
-}
-
-export class UserDTO {
-  @Expose()
-  public id!: number;
-  @Expose()
-  public email!: string;
-  @Expose()
-  public firstName!: string;
-  @Expose()
-  public lastName!: string;
-  @Expose()
-  public createdAt!: Date;
-  @Transform(
-    ({ obj: rawObj }) => {
-      const obj = rawObj as User;
-      return !obj.verifyToken;
-    },
-    { toClassOnly: true },
-  )
-  @Expose()
-  public isVerified!: boolean;
-  @Expose()
-  public role!: UserRole;
-  @Expose()
-  public initialProfileFormSubmittedAt!: Date | null;
-  @Expose()
-  public confirmationExpiresAt!: Date | null;
-  @Expose()
-  public admitted!: boolean;
-  @Expose()
-  public confirmed!: boolean;
-  @Expose()
-  public declined!: boolean;
-  @Expose()
-  public checkedIn!: boolean;
-  @Expose()
-  public profileSubmitted!: boolean;
 }
 
 export class UserListDto {

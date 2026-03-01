@@ -9,24 +9,6 @@ import {
 } from "typeorm";
 import { ApplicationSettings } from "./application-settings";
 
-@Entity()
-export class Settings {
-  @PrimaryGeneratedColumn()
-  public readonly id!: number;
-  @UpdateDateColumn()
-  public readonly updatedAt!: Date;
-  @Type(() => ApplicationSettings)
-  @OneToOne(() => ApplicationSettings, { cascade: true, eager: true })
-  @JoinColumn()
-  public application!: ApplicationSettings;
-  @Type(() => FrontendSettings)
-  @Column(() => FrontendSettings)
-  public frontend!: FrontendSettings;
-  @Type(() => EmailSettings)
-  @Column(() => EmailSettings)
-  public email!: EmailSettings;
-}
-
 export class FrontendSettings {
   @Column()
   public colorGradientStart!: string;
@@ -40,6 +22,15 @@ export class FrontendSettings {
   public loginSignupImage!: string;
   @Column()
   public sidebarImage!: string;
+}
+
+export class EmailTemplate {
+  @Column()
+  public subject!: string;
+  @Column("text")
+  public htmlTemplate!: string;
+  @Column("text")
+  public textTemplate!: string;
 }
 
 export class EmailSettings {
@@ -57,13 +48,22 @@ export class EmailSettings {
   public forgotPasswordEmail!: EmailTemplate;
 }
 
-export class EmailTemplate {
-  @Column()
-  public subject!: string;
-  @Column("text")
-  public htmlTemplate!: string;
-  @Column("text")
-  public textTemplate!: string;
+@Entity()
+export class Settings {
+  @PrimaryGeneratedColumn()
+  public readonly id!: number;
+  @UpdateDateColumn()
+  public readonly updatedAt!: Date;
+  @Type(() => ApplicationSettings)
+  @OneToOne(() => ApplicationSettings, { cascade: true, eager: true })
+  @JoinColumn()
+  public application!: ApplicationSettings;
+  @Type(() => FrontendSettings)
+  @Column(() => FrontendSettings)
+  public frontend!: FrontendSettings;
+  @Type(() => EmailSettings)
+  @Column(() => EmailSettings)
+  public email!: EmailSettings;
 }
 
 /**

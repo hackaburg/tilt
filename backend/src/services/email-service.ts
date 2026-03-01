@@ -48,6 +48,7 @@ export class EmailService implements IEmailService {
    */
   public async bootstrap(): Promise<void> {
     const { username, password, host, port } = this._config.config.mail;
+    this._logger.info(`connecting to smtp server on "${host}:${port}"`);
     this._transporter = createTransport({
       auth: {
         pass: password,
@@ -57,8 +58,6 @@ export class EmailService implements IEmailService {
       pool: true,
       port,
     });
-
-    this._logger.info(`connected to smtp on ${host}`);
   }
 
   /**
@@ -76,6 +75,7 @@ export class EmailService implements IEmailService {
     htmlBody: string,
     textBody: string,
   ): Promise<void> {
+    this._logger.debug(`sending email to "${to}"`);
     const info = await this._transporter.sendMail({
       from,
       html: htmlBody,
@@ -84,6 +84,6 @@ export class EmailService implements IEmailService {
       to,
     });
 
-    this._logger.debug(`sent email to ${to}`, { ...info });
+    this._logger.debug(`sent email to "${to}"`, { ...info });
   }
 }
