@@ -146,7 +146,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 We will come back to you and send you a acceptance mail until{" "}
-                <b>15.05.2025</b>.
+                <b>01.05.2025</b>.
               </Text>
             </>
           )}
@@ -174,7 +174,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 If you got accepted, you need to confirm your spot until{" "}
-                <b>15.05.2025</b>
+                <b>08.05.2025</b>
                 {user?.admitted && (
                   <>
                     {" "}
