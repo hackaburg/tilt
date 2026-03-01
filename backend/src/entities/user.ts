@@ -36,6 +36,8 @@ export class User {
   @Column({ default: null, type: "datetime" })
   public confirmationExpiresAt!: Date | null;
   @Column({ default: false })
+  public profileSubmitted!: boolean;
+  @Column({ default: false })
   public admitted!: boolean;
   @Column({ default: false })
   public confirmed!: boolean;

@@ -39,7 +39,7 @@ export class TestDatabaseService implements IDatabaseService {
       database: ":memory:",
       entities: [join(__dirname, "../../../src/entities/*")],
       synchronize: true,
-      type: "sqlite",
+      type: "mysql",
     });
   }
 }

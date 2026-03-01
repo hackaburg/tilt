@@ -151,8 +151,9 @@ export class SettingsService implements ISettingsService {
     const emailSettings = new EmailSettings();
     emailSettings.verifyEmail = this.getDefaultEmailTemplate();
     emailSettings.admittedEmail = this.getDefaultEmailTemplate();
+    emailSettings.submittedEmail = this.getDefaultEmailTemplate();
     emailSettings.forgotPasswordEmail = this.getDefaultEmailTemplate();
-    emailSettings.sender = "tilt@hackaburg.de";
+    emailSettings.sender = "support@hackaburg.de";
 
     // path.join() will replace https:// with https:/, which breaks urls
     const baseURLWithoutTrailingSlash =

@@ -18,6 +18,7 @@ import {
 } from "./question-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import { IUserService, UserServiceToken } from "./user-service";
+import { Team } from "../entities/team";
 
 /**
  * A form containing questions and given answers.
@@ -40,6 +41,7 @@ export interface IRawAnswer {
  */
 export interface IApplication {
   user: User;
+  teams: string[];
   answers: readonly Answer[];
 }
 
@@ -119,6 +121,7 @@ export const ApplicationServiceToken = new Token<IApplicationService>();
 @Service(ApplicationServiceToken)
 export class ApplicationService implements IApplicationService {
   private _answers!: Repository<Answer>;
+  private _teams!: Repository<Team>;
 
   constructor(
     @Inject(QuestionGraphServiceToken)
@@ -135,6 +138,7 @@ export class ApplicationService implements IApplicationService {
    */
   public async bootstrap(): Promise<void> {
     this._answers = this._database.getRepository(Answer);
+    this._teams = this._database.getRepository(Team);
   }
 
   /**
@@ -404,8 +408,12 @@ export class ApplicationService implements IApplicationService {
 
     if (user.initialProfileFormSubmittedAt == null) {
       user.initialProfileFormSubmittedAt = new Date();
+      // send mail to user about successful submission
+      await this._email.sendSubmissionEmail(user);
       await this._users.updateUser(user);
     }
+    user.profileSubmitted = true;
+    await this._users.updateUser(user);
   }
 
   /**
@@ -537,8 +545,13 @@ export class ApplicationService implements IApplicationService {
       }
     }
 
+    const allTeams = await this._teams.find();
+
     const applications = allUsers.map<IApplication>((user) => ({
       answers: answersByUserID.get(user.id) ?? [],
+      teams: allTeams
+        .filter((team) => team.users.toString().includes(user.id.toString()))
+        .map((team) => team.title),
       user,
     }));
 

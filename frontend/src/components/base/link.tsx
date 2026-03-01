@@ -19,7 +19,7 @@ const linkStyle = css`
 
 interface IInternalLinkProps {
   to: Routes;
-  children: string;
+  children: any;
 }
 
 const InternalRouterLink = styled(RouterLink)`
@@ -39,7 +39,7 @@ const A = styled.a`
 
 interface IExternalLinkProps {
   to: string;
-  children: string;
+  children: any;
 }
 
 /**

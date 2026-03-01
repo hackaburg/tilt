@@ -38,7 +38,7 @@ export const RegisterForm = () => {
 
       return false;
     },
-    [email, password],
+    [email, password, firstName, lastName],
   );
 
   const formInProgress = signupInProgress;
@@ -78,7 +78,7 @@ export const RegisterForm = () => {
           placeholder="Doe"
           value={lastName}
           onChange={(value) => setLastName(value)}
-          type={TextInputType.Email}
+          type={TextInputType.Text}
           name="lastName"
           autoFocus
           autoCompleteField="lastName"
@@ -89,7 +89,7 @@ export const RegisterForm = () => {
           value={email}
           onChange={(value) => setEmail(value)}
           type={TextInputType.Email}
-          name="username"
+          name="email"
           autoFocus
           autoCompleteField="username"
         />

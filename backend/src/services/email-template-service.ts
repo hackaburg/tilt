@@ -30,6 +30,12 @@ export interface IEmailTemplateService extends IService {
   sendForgotPasswordEmail(user: User): Promise<void>;
 
   /**
+   * Sends success email for profile submission
+   * @param user The user expecting the submission email
+   */
+  sendSubmissionEmail(user: User): Promise<void>;
+
+  /**
    * Sends a "you're in" email to the given user.
    * @param user The user expecting the admissioin email
    */
@@ -132,6 +138,22 @@ export class EmailTemplateService implements IEmailTemplateService {
   public async sendAdmittedEmail(user: User): Promise<void> {
     const { email } = await this._settings.getSettings();
     const template = this.compileTemplate(email.admittedEmail, {});
+
+    await this._email.sendEmail(
+      email.sender,
+      user.email,
+      template.subject,
+      template.htmlTemplate,
+      template.textTemplate,
+    );
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public async sendSubmissionEmail(user: User): Promise<void> {
+    const { email } = await this._settings.getSettings();
+    const template = this.compileTemplate(email.submittedEmail, {});
 
     await this._email.sendEmail(
       email.sender,
