@@ -41,7 +41,7 @@ export const SimpleDialog = (props: SimpleDialogProps) => {
       <DialogTitle>Invite a friend to join</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Please feel free to invite a friend to join Hackaburg 2024. You can
+          Please feel free to invite a friend to join Hackaburg 2025. You can
           use the following link to invite them.
           <div>
             <TextField
@@ -71,7 +71,7 @@ export const SimpleDialog = (props: SimpleDialogProps) => {
                 WhatsApp
               </MuiButton>
               <MuiButton
-                href="mailto:?subject=Hackaburg 2024&body=I am visiting Hackaburg this year! Join me at https://hackaburg.de"
+                href="mailto:?subject=Hackaburg 2025&body=I am visiting Hackaburg this year! Join me at https://hackaburg.de"
                 variant="outlined"
                 startIcon={<MdOutlineMail />}
                 style={{
@@ -84,7 +84,7 @@ export const SimpleDialog = (props: SimpleDialogProps) => {
               </MuiButton>
 
               <a
-                href="http://www.linkedin.com/shareArticle?mini=true&url=hackaburg.de&title=Hackaburg 2024&summary=I am visiting Hackaburg this year! Join me at https://hackaburg.de&source=Hackaburg"
+                href="http://www.linkedin.com/shareArticle?mini=true&url=hackaburg.de&title=Hackaburg 2025&summary=I am visiting Hackaburg this year! Join me at https://hackaburg.de&source=Hackaburg"
                 target="_blank"
                 rel="noreferrer"
               >
