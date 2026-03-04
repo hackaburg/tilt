@@ -63,9 +63,9 @@ export class UnixSignalService implements IUnixSignalService {
       // Ensure an erray with the default handler exists, to which more
       // handlers can be added
       const defaultHandler = () => {
-        console.error(`Received signal ${signal}, exiting`)
-        process.exit()
-      }
+        console.error(`Received signal ${signal}, exiting`);
+        process.exit();
+      };
 
       this._handlers.set(signal, [defaultHandler]);
 
