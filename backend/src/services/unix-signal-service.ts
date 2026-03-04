@@ -52,7 +52,7 @@ export class UnixSignalService implements IUnixSignalService {
 
   /**
    * Registers the given handler to execute for the given signal.
-   * @param signal The signal to register
+   * @param signal The signal to register, for example SIGINT
    * @param handler The handler to use for the signal
    */
   public async registerSignalHandler(
@@ -60,8 +60,17 @@ export class UnixSignalService implements IUnixSignalService {
     handler: ISignalHandler,
   ): Promise<void> {
     if (!this._handlers.has(signal)) {
-      this._handlers.set(signal, [() => process.exit()]);
+      // Ensure an erray with the default handler exists, to which more
+      // handlers can be added
+      const defaultHandler = () => {
+        console.error(`Received signal ${signal}, exiting`);
+        process.exit();
+      };
 
+      this._handlers.set(signal, [defaultHandler]);
+
+      // Ensure all added handlers in the array are called, when the signal event
+      // happens
       process.on(signal, () => this.handleSignal(signal));
     }
 

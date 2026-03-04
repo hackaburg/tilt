@@ -561,3 +561,47 @@ export class TeamUpdateDTO {
   @Expose()
   public description!: string;
 }
+
+export class CriteriaDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+}
+
+export class ProjectDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  @Type(() => TeamDTO)
+  @ValidateNested()
+  public team!: TeamDTO;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+  @Expose()
+  public allowRating!: boolean;
+}
+
+export class RatingDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  @Type(() => UserDTO)
+  @ValidateNested()
+  public user!: UserDTO;
+  @Expose()
+  @Type(() => ProjectDTO)
+  @ValidateNested()
+  public project!: ProjectDTO;
+  @Expose()
+  @Type(() => CriteriaDTO)
+  @ValidateNested()
+  public critera!: CriteriaDTO;
+  @Expose()
+  // 1 - 5
+  public rating!: number;
+}
