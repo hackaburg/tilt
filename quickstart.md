@@ -3,7 +3,7 @@
 ```sh
 # prep
 cp backend/.env.example backend/.env
-docker run --name backend --network host -v $(pwd):/app -w /app node:alpine yarn
+docker run --name backend --network host -v $(pwd):/app -w /app node:alpine yarn install
 
 # start everything
 docker compose up db phpmyadmin maildev
