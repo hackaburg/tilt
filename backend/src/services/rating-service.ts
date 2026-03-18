@@ -1,3 +1,4 @@
+import { ForbiddenError } from "routing-controller";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -8,6 +9,8 @@ import {
   convertBetweenEntityAndDTO,
 } from "../controllers/dto";
 import { User } from "../entities/user";
+import { Criteria } from "../entities/criteria";
+import { Rating } from "../entities/rating";
 
 export interface IRatingService extends IService {
   /**
@@ -30,10 +33,28 @@ export interface IRatingService extends IService {
    * Delete single rating by id
    */
   deleteRatingByID(id: number, currentUserId: User): Promise<void>;
+  //
+  //
   /**
-   * Request to join a rating
+   * Get all criterias
    */
-  requestToJoinRating(ratingId: number, user: User): Promise<void>;
+  getAllCriterias(): Promise<readonly Criteria[]>;
+  /**
+   * Create new criteria
+   */
+  createCriteria(criteria: Criteria): Promise<Criteria>;
+  /**
+   *  Update criteria
+   */
+  updateCriteria(criteria: Criteria): Promise<Criteria>;
+  /**
+   * Get criteria by id
+   */
+  getCriteriaByID(id: number): Promise<CriteriaResponseDTO | undefined>;
+  /**
+   * Delete single criteria by id
+   */
+  deleteCriteriaByID(id: number, currentUserId: User): Promise<void>;
 }
 
 /**

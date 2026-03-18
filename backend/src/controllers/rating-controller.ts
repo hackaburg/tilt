@@ -1,11 +1,29 @@
-import { Authorized, Delete, JsonController, ForbiddenError } from "routing-controllers";
+import {
+  Authorized,
+  Delete,
+  JsonController,
+  ForbiddenError,
+  CurrentUser,
+  Param,
+  Put,
+  Post,
+  Body
+} from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
-import { SettingsServiceToken } from "../services/settings-service";
-import { SettingsServiceToken } from "../services/settings-service";
+import { SettingsServiceToken, ISettingsService } from "../services/settings-service";
+import { RatingServiceToken, IRatingService } from "../services/rating-service";
+import {
+  RatingDTO,
+  CriteriaDTO,
+  SuccessResponseDTO,
+  convertBetweenEntityAndDTO
+} from "./dto";
+import { User } from "../entities/user";
+import { Criteria } from "../entities/criteria";
+import { Rating } from "../entities/rating";
 
-// The RatingController and RatingService group stuff concerning ratings and critiera
-// together. Feel free to separate, if you think that would be better.
+// TODO separate rating and criteria controller?
 
 @JsonController("/ratings")
 export class RatingController {
@@ -43,10 +61,10 @@ export class RatingController {
   @Post("/rate")
   @Authorized(UserRole.User)
   public async createRating(
-    @Body() { data: RatingDTO }: { data: RatingDTO },
+    @Body() { data: ratingDTO }: { data: RatingDTO },
     @CurrentUser() user: User,
-  ): Promise<readonly RatingDTO[]> {
-    const rating = convertBetweenEntityAndDTO(RatingDTO, Rating);
+  ): Promise<RatingDTO> {
+    const rating = convertBetweenEntityAndDTO(ratingDTO, Rating);
     const createdRating = await this._ratings.createRating(rating);
     return convertBetweenEntityAndDTO(createdRating, RatingDTO);
   }
@@ -58,9 +76,9 @@ export class RatingController {
   @Authorized(UserRole.Root)
   public async createCriteria(
     @Body() { data: criteriaDTO }: { data: CriteriaDTO },
-  ): Promise<readonly CriteriaDTO[]> {
+  ): Promise<CriteriaDTO> {
     const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
-    const createdCriteria = await this._ratings.createCriteria();
+    const createdCriteria = await this._ratings.createCriteria(criteria);
     return convertBetweenEntityAndDTO(createdCriteria, CriteriaDTO);
   }
 
@@ -70,12 +88,12 @@ export class RatingController {
   @Put("/criteria/:id")
   @Authorized(UserRole.Root)
   public async updateCriteria(
-    @Param("id") teamId: number,
+    @Param("id") criteriaId: number,
     @Body() { data: criteriaDTO }: { data: CriteriaDTO },
-  ): Promise<TeamDTO> {
+  ): Promise<CriteriaDTO> {
     // TODO There is a TeamUpdateDTO. CriteriaUpdateDTO?
-    const team = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
-    const updateTeam = await this._ratings.updateCriteria(team, user);
+    const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
+    const updateCriteria = await this._ratings.updateCriteria(criteria);
     return convertBetweenEntityAndDTO(updateCriteria, CriteriaDTO);
   }
 
