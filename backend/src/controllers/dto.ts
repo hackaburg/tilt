@@ -620,7 +620,7 @@ export class CriteriaResultDTO {
   @Expose()
   public averageRating!: number;
   @Expose()
-  public voteCount!: number;
+  public ratingsCount!: number;
 }
 
 export class ProjectRatingResultDTO {

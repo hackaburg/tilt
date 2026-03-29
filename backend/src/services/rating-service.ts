@@ -14,7 +14,7 @@ import { Criteria } from "../entities/criteria";
 export interface CriteriaRatingResult {
   criteria: Criteria;
   averageRating: number;
-  voteCount: number;
+  ratingsCount: number;
 }
 
 export interface ProjectRatingResult {
@@ -198,7 +198,7 @@ export class RatingService implements IRatingService {
         criteriaResults.push({
           criteria,
           averageRating,
-          voteCount: criteriaRatings.length,
+          ratingsCount: criteriaRatings.length,
         });
       }
 

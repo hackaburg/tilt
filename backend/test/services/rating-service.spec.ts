@@ -174,7 +174,7 @@ describe("RatingService", () => {
       expect(resultA).toBeDefined();
       expect(resultA.criteriaResults).toHaveLength(1);
       expect(resultA.criteriaResults[0].averageRating).toBe(3); // (2+4)/2
-      expect(resultA.criteriaResults[0].voteCount).toBe(2);
+      expect(resultA.criteriaResults[0].ratingsCount).toBe(2);
       expect(resultA.overallScore).toBe(3);
 
       const resultB = results.find((r) => r.project.id === projectB.id)!;
