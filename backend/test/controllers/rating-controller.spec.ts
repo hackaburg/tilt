@@ -7,11 +7,14 @@ import { RatingDTO } from "../../src/controllers/dto";
 import { Rating } from "../../src/entities/rating";
 import { User } from "../../src/entities/user";
 import { UserRole } from "../../src/entities/user-role";
+import { HttpService } from "../../src/services/http-service";
 import { IRatingService } from "../../src/services/rating-service";
 import { ISettingsService } from "../../src/services/settings-service";
+import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
 import { MockRatingService } from "../services/mock/mock-rating-service";
 import { MockSettingsService } from "../services/mock/mock-settings-service";
+import { MockUserService } from "../services/mock/mock-user-service";
 
 describe("RatingController", () => {
   let ratingService: MockedService<IRatingService>;
@@ -47,6 +50,7 @@ describe("RatingController", () => {
     let port: number;
     let httpRatingService: MockedService<IRatingService>;
     let httpSettingsService: MockedService<ISettingsService>;
+    let httpUserService: MockedService<IUserService>;
 
     const rootUser = Object.assign(new User(), { id: 1, role: UserRole.Root });
     const regularUser = Object.assign(new User(), { id: 2, role: UserRole.User });
@@ -59,6 +63,13 @@ describe("RatingController", () => {
     beforeAll(async () => {
       httpRatingService = new MockRatingService();
       httpSettingsService = new MockSettingsService();
+      httpUserService = new MockUserService();
+
+      httpUserService.mocks.findUserByLoginToken.mockImplementation(
+        async (token: string) => tokenMap[token] ?? null,
+      );
+
+      const httpService = new HttpService(null as any, null as any, httpUserService.instance);
 
       useContainer({
         get(target: Function) {
@@ -72,19 +83,8 @@ describe("RatingController", () => {
       const app = createExpressServer({
         controllers: [RatingController],
         routePrefix: "/api",
-        currentUserChecker: (action) => {
-          const authHeader: string | undefined = action.request.headers.authorization;
-          if (!authHeader?.toLowerCase().startsWith("bearer ")) return null;
-          return tokenMap[authHeader.substring(7)] ?? null;
-        },
-        authorizationChecker: (action, roles?: UserRole[]) => {
-          if (!roles?.length) return false;
-          const authHeader: string | undefined = action.request.headers.authorization;
-          if (!authHeader?.toLowerCase().startsWith("bearer ")) return false;
-          const user = tokenMap[authHeader.substring(7)];
-          if (!user) return false;
-          return roles.every(role => isRoleAllowed(role, user.role));
-        },
+        currentUserChecker: (action) => httpService.getCurrentUser(action),
+        authorizationChecker: (action, roles) => httpService.isActionAuthorized(action, roles),
       });
 
       server = http.createServer(app);
@@ -186,16 +186,3 @@ describe("RatingController", () => {
     });
   });
 });
-
-function isRoleAllowed(required: UserRole, actual: UserRole): boolean {
-  switch (actual) {
-    case UserRole.User:
-      return required === UserRole.User;
-    case UserRole.Moderator:
-      return required === UserRole.User || required === UserRole.Moderator;
-    case UserRole.Root:
-      return true;
-    default:
-      return false;
-  }
-}
