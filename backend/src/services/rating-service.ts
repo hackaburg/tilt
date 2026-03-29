@@ -5,15 +5,10 @@ import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import { Rating } from "../entities/rating";
-import {
-  RatingDTO,
-  CriteriaDTO,
-  convertBetweenEntityAndDTO,
-} from "../controllers/dto";
+import { RatingDTO } from "../controllers/dto";
 import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
-import { Criteria } from "../entities/criteria";
 
 export interface IRatingService extends IService {
   /**
@@ -36,28 +31,6 @@ export interface IRatingService extends IService {
    * Delete single rating by id
    */
   deleteRatingByID(id: number, currentUser: User): Promise<void>;
-  //
-  //
-  /**
-   * Get all criterias
-   */
-  getAllCriterias(): Promise<readonly Criteria[]>;
-  /**
-   * Create new criteria
-   */
-  createCriteria(criteria: Criteria): Promise<Criteria>;
-  /**
-   *  Update criteria
-   */
-  updateCriteria(criteria: Criteria): Promise<Criteria>;
-  /**
-   * Get criteria by id
-   */
-  getCriteriaByID(id: number): Promise<CriteriaDTO | undefined>;
-  /**
-   * Delete single criteria by id
-   */
-  deleteCriteriaByID(id: number, currentUserId: User): Promise<void>;
 }
 
 /**
