@@ -163,6 +163,9 @@ export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
   @ValidateNested()
   @Expose()
   public email!: EmailSettingsDTO;
+  @IsBoolean()
+  @Expose()
+  public allowRating!: boolean;
 }
 
 export abstract class QuestionConfigurationDTOBase {

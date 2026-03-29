@@ -30,7 +30,7 @@ export class RatingController {
    *  If there is time, add an update mechanism though.
    */
   @Post("/rate")
-  @Authorized(UserRole.User)
+  @Authorized(UserRole.Root)
   public async createRating(
     @Body() { data: ratingDTO }: { data: RatingDTO },
     @CurrentUser() user: User,

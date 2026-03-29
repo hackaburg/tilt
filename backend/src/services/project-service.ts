@@ -4,10 +4,7 @@ import { Repository } from "typeorm";
 import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { Project } from "../entities/project";
-import {
-  ProjectResponseDTO,
-  convertBetweenEntityAndDTO,
-} from "../controllers/dto";
+import { Team } from "../entities/team";
 import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
 
@@ -30,7 +27,7 @@ export interface IProjectService extends IService {
   /**
    * Get project by id
    */
-  getProjectByID(id: number): Promise<ProjectResponseDTO | undefined>;
+  getProjectByID(id: number): Promise<Project | undefined>;
   /**
    * Delete single project by id
    */
@@ -48,6 +45,7 @@ export const ProjectServiceToken = new Token<IProjectService>();
 @Service(ProjectServiceToken)
 export class ProjectService implements IProjectService {
   private _projects!: Repository<Project>;
+  private _teams!: Repository<Team>;
   private _users!: Repository<User>;
 
   public constructor(
@@ -59,6 +57,7 @@ export class ProjectService implements IProjectService {
    */
   public async bootstrap(): Promise<void> {
     this._projects = this._database.getRepository(Project);
+    this._teams = this._database.getRepository(Team);
     this._users = this._database.getRepository(User);
   }
 
@@ -105,7 +104,7 @@ export class ProjectService implements IProjectService {
    * Gets a project by its id.
    * @param id The id of the project
    */
-  public async getProjectByID(id: number): Promise<ProjectResponseDTO | undefined> {
+  public async getProjectByID(id: number): Promise<Project | undefined> {
     const project = await this._projects.findOneBy({ id });
     return project || undefined;
   }
@@ -117,7 +116,11 @@ export class ProjectService implements IProjectService {
   public async deleteProjectByID(id: number, currentUserId: User): Promise<void> {
     const project = await this._projects.findOneBy({ id });
 
-    this.checkPermission(project, user);
+    if (!project) {
+      throw new NotFoundError();
+    }
+
+    await this.checkPermission(project, currentUserId);
 
     await this._projects.delete(id);
 
@@ -128,11 +131,10 @@ export class ProjectService implements IProjectService {
    * Throw errors if the user is not allowed to modify/access the project.
    */
   private async checkPermission(project: Project, user: User): Promise<void> {
-    const team = await this._teams.getTeamById(project.teamId)
-    if (!team.users.inclues(user.id)) {
+    const team = await this._teams.findOneBy({ id: project.team.id });
+    if (!team || !team.users.includes(user.id)) {
       // Tried to access a project belonging to a different team, forbidden
-      // TODO test
-      throw new NotFoundError()
+      throw new NotFoundError();
     }
   }
 }
