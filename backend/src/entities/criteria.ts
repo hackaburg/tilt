@@ -10,5 +10,3 @@ export class Criteria {
   @Longtext()
   public description!: string;
 }
-
-// TODO Rating Project and Criteria DTO
