@@ -53,7 +53,7 @@ export class ProjectService implements IProjectService {
   ) {}
 
   /**
-   * Sets up the user service.
+   * Sets up the project service.
    */
   public async bootstrap(): Promise<void> {
     this._projects = this._database.getRepository(Project);

@@ -1,4 +1,4 @@
-import { ForbiddenError } from "routing-controller";
+import { ForbiddenError } from "routing-controllers";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -9,6 +9,8 @@ import {
   convertBetweenEntityAndDTO,
 } from "../controllers/dto";
 import { User } from "../entities/user";
+import { Team } from "../entities/team";
+import { Project } from "../entities/project";
 import { Criteria } from "../entities/criteria";
 import { Rating } from "../entities/rating";
 
@@ -68,6 +70,8 @@ export const RatingServiceToken = new Token<IRatingService>();
 @Service(RatingServiceToken)
 export class RatingService implements IRatingService {
   private _ratings!: Repository<Rating>;
+  private _projects!: Repository<Project>;
+  private _teams!: Repository<Team>;
   private _users!: Repository<User>;
 
   public constructor(
@@ -150,13 +154,13 @@ export class RatingService implements IRatingService {
       throw new ForbiddenError("Cannot create rating due to application settings")
     }
 
-    const project = await this._projects.getProject(data.id);
+    const project = await await this._projects.findOneBy({ id: data.id });
     if (!project.allowRating) {
       // TODO test
       throw new ForbiddenError("Creating a rating for this project is not allowed")
     }
 
-    const team = await this._teams.getTeamById(project.teamId)
+    const team = await this._teams.findOneById(project.teamId)
     if (team.users.inclues(user.id)) {
       // TODO test
       throw new ForbiddenError("You can't rate your own project")
