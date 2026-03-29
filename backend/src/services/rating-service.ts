@@ -1,4 +1,4 @@
-import { ForbiddenError } from "routing-controllers";
+import { ForbiddenError, NotFoundError } from "routing-controllers";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -109,7 +109,7 @@ export class RatingService implements IRatingService {
     // TODO only if user matches
     await this.checkPermission(rating, user);
     if (!originRating) {
-      throw new ForbiddenError("Rating not found");
+      throw new NotFoundError("Rating not found");
     }
     const originRatingUser = originRating.user;
     if (user.id != originRatingUser.id) {
@@ -146,7 +146,7 @@ export class RatingService implements IRatingService {
     const rating = await this._ratings.findOneBy({ id });
 
     if (!rating) {
-      throw new ForbiddenError("Rating not found");
+      throw new NotFoundError("Rating not found");
     }
 
     await this.checkPermission(rating, currentUserId);
@@ -167,7 +167,7 @@ export class RatingService implements IRatingService {
 
     const project = await this._projects.findOneBy({ id: rating.project.id });
     if (!project) {
-      throw new ForbiddenError("Project not found");
+      throw new NotFoundError("Project not found");
     }
     if (!project.allowRating) {
       // TODO test
@@ -176,7 +176,7 @@ export class RatingService implements IRatingService {
 
     const team = await this._teams.findOneBy({ id: project.team.id })
     if (!team) {
-      throw new ForbiddenError("Team not found");
+      throw new NotFoundError("Team not found");
     }
     if (team.users.includes(user.id)) {
       // TODO test
