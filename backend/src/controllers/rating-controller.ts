@@ -1,11 +1,7 @@
 import {
   Authorized,
-  Delete,
   JsonController,
-  ForbiddenError,
   CurrentUser,
-  Param,
-  Put,
   Post,
   Body
 } from "routing-controllers";
@@ -15,15 +11,10 @@ import { SettingsServiceToken, ISettingsService } from "../services/settings-ser
 import { RatingServiceToken, IRatingService } from "../services/rating-service";
 import {
   RatingDTO,
-  CriteriaDTO,
-  SuccessResponseDTO,
   convertBetweenEntityAndDTO
 } from "./dto";
 import { User } from "../entities/user";
-import { Criteria } from "../entities/criteria";
 import { Rating } from "../entities/rating";
-
-// TODO separate rating and criteria controller?
 
 @JsonController("/ratings")
 export class RatingController {
@@ -67,49 +58,6 @@ export class RatingController {
     const rating = convertBetweenEntityAndDTO(ratingDTO, Rating);
     const createdRating = await this._ratings.createRating(rating);
     return convertBetweenEntityAndDTO(createdRating, RatingDTO);
-  }
-
-  /**
-   * Create criteria.
-   */
-  @Post("/criteria")
-  @Authorized(UserRole.Root)
-  public async createCriteria(
-    @Body() { data: criteriaDTO }: { data: CriteriaDTO },
-  ): Promise<CriteriaDTO> {
-    const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
-    const createdCriteria = await this._ratings.createCriteria(criteria);
-    return convertBetweenEntityAndDTO(createdCriteria, CriteriaDTO);
-  }
-
-  /**
-   * Update criteria.
-   */
-  @Put("/criteria/:id")
-  @Authorized(UserRole.Root)
-  public async updateCriteria(
-    @Param("id") criteriaId: number,
-    @Body() { data: criteriaDTO }: { data: CriteriaDTO },
-  ): Promise<CriteriaDTO> {
-    // TODO There is a TeamUpdateDTO. CriteriaUpdateDTO?
-    const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
-    const updateCriteria = await this._ratings.updateCriteria(criteria);
-    return convertBetweenEntityAndDTO(updateCriteria, CriteriaDTO);
-  }
-
-  /**
-   * Delete criteria.
-   */
-  @Delete("/criteria/:id")
-  @Authorized(UserRole.Root)
-  public async deleteCriteria(
-    @Param("id") criteriaId: number,
-    @CurrentUser() user: User,
-  ): Promise<SuccessResponseDTO> {
-    await this._ratings.deleteCriteriaByID(criteriaId, user);
-    const response = new SuccessResponseDTO();
-    response.success = true;
-    return response;
   }
 
   // TODO write test that all the root endpoints are not accessible by users
