@@ -36,7 +36,7 @@ describe("RatingService", () => {
   beforeEach(async () => {
     settingsService = new MockSettingsService();
 
-    mockRatingsRepo = { findOneBy: jest.fn(), findOne: jest.fn(), save: jest.fn(), delete: jest.fn() };
+    mockRatingsRepo = { find: jest.fn(), findOneBy: jest.fn(), findOne: jest.fn(), save: jest.fn(), delete: jest.fn() };
     mockProjectsRepo = { findOneBy: jest.fn() };
     mockTeamsRepo = { findOneBy: jest.fn() };
     mockUsersRepo = { findOneBy: jest.fn() };
@@ -146,6 +146,40 @@ describe("RatingService", () => {
           BadRequestError,
         );
       });
+    });
+  });
+
+  describe("getRatingResults", () => {
+    it("aggregates ratings for two projects with two ratings each", async () => {
+      expect.assertions(8);
+
+      const projectA = Object.assign(new Project(), { id: 100, team: mockTeam });
+      const projectB = Object.assign(new Project(), { id: 200, team: mockTeam });
+      const criteriaC = Object.assign(new Criteria(), { id: 5 });
+
+      const ratingsFixture = [
+        Object.assign(new Rating(), { id: 1, project: projectA, critera: criteriaC, rating: 2 }),
+        Object.assign(new Rating(), { id: 2, project: projectA, critera: criteriaC, rating: 4 }),
+        Object.assign(new Rating(), { id: 3, project: projectB, critera: criteriaC, rating: 1 }),
+        Object.assign(new Rating(), { id: 4, project: projectB, critera: criteriaC, rating: 3 }),
+      ];
+
+      mockRatingsRepo.find.mockResolvedValue(ratingsFixture);
+
+      const results = await ratingService.getRatingResults();
+
+      expect(results).toHaveLength(2);
+
+      const resultA = results.find((r) => r.project.id === projectA.id)!;
+      expect(resultA).toBeDefined();
+      expect(resultA.criteriaResults).toHaveLength(1);
+      expect(resultA.criteriaResults[0].averageRating).toBe(3); // (2+4)/2
+      expect(resultA.criteriaResults[0].voteCount).toBe(2);
+      expect(resultA.overallScore).toBe(3);
+
+      const resultB = results.find((r) => r.project.id === projectB.id)!;
+      expect(resultB.criteriaResults[0].averageRating).toBe(2); // (1+3)/2
+      expect(resultB.overallScore).toBe(2);
     });
   });
 });
