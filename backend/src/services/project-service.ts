@@ -1,3 +1,4 @@
+import { NotFoundError } from "routing-controllers";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -8,6 +9,7 @@ import {
   convertBetweenEntityAndDTO,
 } from "../controllers/dto";
 import { User } from "../entities/user";
+import { UserRole } from "../entities/user-role";
 
 /**
  * An interface describing user handling.
@@ -72,9 +74,23 @@ export class ProjectService implements IProjectService {
    * @param project The project to update
    */
   public async updateProject(project: Project, user: User): Promise<Project> {
-    // TODO
-    await this.checkPermission(project, user);
-    // TODO allow changing allowRating only if admin
+    const existing = await this._projects.findOneBy({ id: project.id });
+
+    if (!existing) {
+      throw new NotFoundError();
+    }
+
+    await this.checkPermission(existing, user);
+
+    existing.title = project.title;
+    existing.description = project.description;
+
+    // Only admins may change allowRating
+    if (user.role === UserRole.Root) {
+      existing.allowRating = project.allowRating;
+    }
+
+    return this._projects.save(existing);
   }
 
   /**
