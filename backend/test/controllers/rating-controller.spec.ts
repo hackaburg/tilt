@@ -1,4 +1,5 @@
-import { getMetadataArgsStorage } from "routing-controllers";
+import * as http from "http";
+import { createExpressServer, useContainer } from "routing-controllers";
 import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
 import { RatingController } from "../../src/controllers/rating-controller";
@@ -42,33 +43,104 @@ describe("RatingController", () => {
   });
 
   describe("authorization", () => {
-    it("only allows admin (root) users to call createRating", () => {
-      expect.assertions(2);
+    let server: http.Server;
+    let port: number;
+    let httpRatingService: MockedService<IRatingService>;
+    let httpSettingsService: MockedService<ISettingsService>;
 
-      const storage = getMetadataArgsStorage();
-      const authEntry = storage.responseHandlers.find(
-        (h: any) =>
-          h.type === "authorized" &&
-          h.target === RatingController &&
-          h.method === "createRating",
-      );
+    const rootUser = Object.assign(new User(), { id: 1, role: UserRole.Root });
+    const regularUser = Object.assign(new User(), { id: 2, role: UserRole.User });
 
-      expect(authEntry).toBeDefined();
-      expect(authEntry!.value).toBe(UserRole.Root);
+    const tokenMap: Record<string, User> = {
+      "root-token": rootUser,
+      "user-token": regularUser,
+    };
+
+    beforeAll(async () => {
+      httpRatingService = new MockRatingService();
+      httpSettingsService = new MockSettingsService();
+
+      useContainer({
+        get(target: Function) {
+          if (target === RatingController) {
+            return new RatingController(httpSettingsService.instance, httpRatingService.instance);
+          }
+          return new (target as any)();
+        },
+      } as any);
+
+      const app = createExpressServer({
+        controllers: [RatingController],
+        routePrefix: "/api",
+        currentUserChecker: (action) => {
+          const authHeader: string | undefined = action.request.headers.authorization;
+          if (!authHeader?.toLowerCase().startsWith("bearer ")) return null;
+          return tokenMap[authHeader.substring(7)] ?? null;
+        },
+        authorizationChecker: (action, roles?: UserRole[]) => {
+          if (!roles?.length) return false;
+          const authHeader: string | undefined = action.request.headers.authorization;
+          if (!authHeader?.toLowerCase().startsWith("bearer ")) return false;
+          const user = tokenMap[authHeader.substring(7)];
+          if (!user) return false;
+          return roles.every(role => isRoleAllowed(role, user.role));
+        },
+      });
+
+      server = http.createServer(app);
+      await new Promise<void>(resolve => server.listen(0, () => resolve()));
+      port = (server.address() as any).port;
     });
 
-    it("does not allow non-admin users to call createRating", () => {
+    afterAll(async () => {
+      await new Promise<void>((resolve, reject) =>
+        server.close(err => (err ? reject(err) : resolve())),
+      );
+    });
+
+    it("rejects unauthenticated requests with 403", async () => {
       expect.assertions(1);
 
-      const storage = getMetadataArgsStorage();
-      const authEntry = storage.responseHandlers.find(
-        (h: any) =>
-          h.type === "authorized" &&
-          h.target === RatingController &&
-          h.method === "createRating",
-      );
+      const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: {} }),
+      });
 
-      expect(authEntry!.value).not.toBe(UserRole.User);
+      expect(response.status).toBe(403);
+    });
+
+    it("rejects requests from User-role users with 403", async () => {
+      expect.assertions(1);
+
+      const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer user-token",
+        },
+        body: JSON.stringify({ data: {} }),
+      });
+
+      expect(response.status).toBe(403);
+    });
+
+    it("passes authorization for admin (Root) users", async () => {
+      expect.assertions(1);
+
+      httpRatingService.mocks.createRating.mockResolvedValue({} as any);
+
+      const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer root-token",
+        },
+        body: JSON.stringify({ data: {} }),
+      });
+
+      // Authorization passed; any status other than 403 is acceptable here
+      expect(response.status).not.toBe(403);
     });
   });
 
@@ -114,3 +186,16 @@ describe("RatingController", () => {
     });
   });
 });
+
+function isRoleAllowed(required: UserRole, actual: UserRole): boolean {
+  switch (actual) {
+    case UserRole.User:
+      return required === UserRole.User;
+    case UserRole.Moderator:
+      return required === UserRole.User || required === UserRole.Moderator;
+    case UserRole.Root:
+      return true;
+    default:
+      return false;
+  }
+}
