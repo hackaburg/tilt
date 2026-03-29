@@ -5,7 +5,7 @@ import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import { Rating } from "../entities/rating";
-import { RatingDTO } from "../controllers/dto";
+import { RatingDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
 import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
@@ -105,7 +105,7 @@ export class RatingService implements IRatingService {
    */
   public async getRatingByID(id: number): Promise<RatingDTO | undefined> {
     const rating = await this._ratings.findOneBy({ id });
-    return rating || undefined;
+    return rating ? convertBetweenEntityAndDTO(rating, RatingDTO) : undefined;
   }
 
   /**
