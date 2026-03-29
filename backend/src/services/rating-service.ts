@@ -35,7 +35,7 @@ export interface IRatingService extends IService {
   /**
    * Delete single rating by id
    */
-  deleteRatingByID(id: number, currentUserId: User): Promise<void>;
+  deleteRatingByID(id: number, currentUser: User): Promise<void>;
   //
   //
   /**
@@ -102,19 +102,17 @@ export class RatingService implements IRatingService {
    * @param rating The rating to update
    */
   public async updateRating(rating: Rating, user: User): Promise<Rating> {
-    // TODO validate, throw Errors
-
     const originRating = await this._ratings.findOneBy({ id: rating.id });
 
-    // TODO only if user matches
-    await this.checkPermission(rating, user);
     if (!originRating) {
       throw new NotFoundError("Rating not found");
     }
-    const originRatingUser = originRating.user;
-    if (user.id != originRatingUser.id) {
-      throw new Error("")
+
+    if (user.id !== originRating.user.id) {
+      throw new ForbiddenError("You can only update your own ratings");
     }
+
+    await this.checkPermission(rating, user);
 
     return this._ratings.save(rating);
   }
@@ -124,8 +122,7 @@ export class RatingService implements IRatingService {
    * @param rating The rating to create
    */
   public async createRating(rating: Rating, user: User): Promise<Rating> {
-    // TODO validate
-    this.checkPermission(rating, user);
+    await this.checkPermission(rating, user);
     return this._ratings.save(rating);
   }
 
@@ -142,14 +139,18 @@ export class RatingService implements IRatingService {
    * Deletes a rating by its id.
    * @param id The id of the rating
    */
-  public async deleteRatingByID(id: number, currentUserId: User): Promise<void> {
+  public async deleteRatingByID(id: number, currentUser: User): Promise<void> {
     const rating = await this._ratings.findOneBy({ id });
 
     if (!rating) {
       throw new NotFoundError("Rating not found");
     }
 
-    await this.checkPermission(rating, currentUserId);
+    if (currentUser.id !== rating.user.id) {
+      throw new ForbiddenError("You can only delete your own ratings");
+    }
+
+    await this.checkPermission(rating, currentUser);
 
     await this._ratings.delete(id);
 
@@ -157,12 +158,9 @@ export class RatingService implements IRatingService {
   }
 
   private async checkPermission(rating: Rating, user: User): Promise<void> {
-    // TODO use this._database.blabla instead of _settings and such
-
     const settings = await this._settings.getSettings();
     if (!settings.allowRating) {
-      // TODO test
-      throw new ForbiddenError("Cannot create rating due to application settings")
+      throw new ForbiddenError("Rating is not allowed due to application settings")
     }
 
     const project = await this._projects.findOneBy({ id: rating.project.id });
@@ -170,8 +168,7 @@ export class RatingService implements IRatingService {
       throw new NotFoundError("Project not found");
     }
     if (!project.allowRating) {
-      // TODO test
-      throw new ForbiddenError("Creating a rating for this project is not allowed")
+      throw new ForbiddenError("Rating this project is not allowed")
     }
 
     const team = await this._teams.findOneBy({ id: project.team.id })
@@ -179,7 +176,6 @@ export class RatingService implements IRatingService {
       throw new NotFoundError("Team not found");
     }
     if (team.users.includes(user.id)) {
-      // TODO test
       throw new ForbiddenError("You can't rate your own project")
     }
   }

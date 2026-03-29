@@ -10,7 +10,9 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Max,
   MaxLength,
+  Min,
   MinLength,
   ValidateNested,
 } from "class-validator";
@@ -602,6 +604,8 @@ export class RatingDTO {
   @ValidateNested()
   public critera!: CriteriaDTO;
   @Expose()
-  // 1 - 5
+  @IsInt()
+  @Min(1)
+  @Max(5)
   public rating!: number;
 }

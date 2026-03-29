@@ -36,7 +36,7 @@ export class RatingController {
     @CurrentUser() user: User,
   ): Promise<RatingDTO> {
     const rating = convertBetweenEntityAndDTO(ratingDTO, Rating);
-    const createdRating = await this._ratings.createRating(rating);
+    const createdRating = await this._ratings.createRating(rating, user);
     return convertBetweenEntityAndDTO(createdRating, RatingDTO);
   }
 
