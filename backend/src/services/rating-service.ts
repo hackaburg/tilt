@@ -3,16 +3,17 @@ import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
+import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import { Rating } from "../entities/rating";
 import {
-  RatingResponseDTO,
+  RatingDTO,
+  CriteriaDTO,
   convertBetweenEntityAndDTO,
 } from "../controllers/dto";
 import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
 import { Criteria } from "../entities/criteria";
-import { Rating } from "../entities/rating";
 
 export interface IRatingService extends IService {
   /**
@@ -22,15 +23,15 @@ export interface IRatingService extends IService {
   /**
    * Create new rating
    */
-  createRating(rating: Rating): Promise<Rating>;
+  createRating(rating: Rating, user: User): Promise<Rating>;
   /**
    *  Update rating
    */
-  updateRating(rating: Rating): Promise<Rating>;
+  updateRating(rating: Rating, user: User): Promise<Rating>;
   /**
    * Get rating by id
    */
-  getRatingByID(id: number): Promise<RatingResponseDTO | undefined>;
+  getRatingByID(id: number): Promise<RatingDTO | undefined>;
   /**
    * Delete single rating by id
    */
@@ -52,7 +53,7 @@ export interface IRatingService extends IService {
   /**
    * Get criteria by id
    */
-  getCriteriaByID(id: number): Promise<CriteriaResponseDTO | undefined>;
+  getCriteriaByID(id: number): Promise<CriteriaDTO | undefined>;
   /**
    * Delete single criteria by id
    */
@@ -76,6 +77,7 @@ export class RatingService implements IRatingService {
 
   public constructor(
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
+    @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
   ) {}
 
   /**
@@ -106,7 +108,10 @@ export class RatingService implements IRatingService {
 
     // TODO only if user matches
     await this.checkPermission(rating, user);
-    const originRatingUser = originRating.users;
+    if (!originRating) {
+      throw new ForbiddenError("Rating not found");
+    }
+    const originRatingUser = originRating.user;
     if (user.id != originRatingUser.id) {
       throw new Error("")
     }
@@ -118,7 +123,7 @@ export class RatingService implements IRatingService {
    * Creates a rating.
    * @param rating The rating to create
    */
-  public async createRating(rating: Rating): Promise<Rating> {
+  public async createRating(rating: Rating, user: User): Promise<Rating> {
     // TODO validate
     this.checkPermission(rating, user);
     return this._ratings.save(rating);
@@ -128,7 +133,7 @@ export class RatingService implements IRatingService {
    * Gets a rating by its id.
    * @param id The id of the rating
    */
-  public async getRatingByID(id: number): Promise<RatingResponseDTO | undefined> {
+  public async getRatingByID(id: number): Promise<RatingDTO | undefined> {
     const rating = await this._ratings.findOneBy({ id });
     return rating || undefined;
   }
@@ -140,7 +145,11 @@ export class RatingService implements IRatingService {
   public async deleteRatingByID(id: number, currentUserId: User): Promise<void> {
     const rating = await this._ratings.findOneBy({ id });
 
-    await this.checkPermission(rating, user);
+    if (!rating) {
+      throw new ForbiddenError("Rating not found");
+    }
+
+    await this.checkPermission(rating, currentUserId);
 
     await this._ratings.delete(id);
 
