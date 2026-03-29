@@ -98,7 +98,7 @@ export class ProjectService implements IProjectService {
    * @param project The project to create
    */
   public async createProject(project: Project): Promise<Project> {
-    // TODO
+    return this._projects.save(project);
   }
 
   /**
