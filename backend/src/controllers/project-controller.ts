@@ -1,4 +1,4 @@
-import { Authorized, Delete, JsonController, NotFoundError, Put, Param, Body, CurrentUser } from "routing-controllers";
+import { Authorized, Get, JsonController, NotFoundError, Put, Param, Body, CurrentUser } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
 import { IProjectService, ProjectServiceToken } from "../services/project-service";
@@ -13,6 +13,16 @@ export class ProjectController {
   public constructor(
     @Inject(ProjectServiceToken) private readonly _projects: IProjectService,
   ) {}
+
+  /**
+   * Get all projects.
+   */
+  @Get("/")
+  @Authorized(UserRole.User)
+  public async getAllProjects(): Promise<ProjectDTO[]> {
+    const projects = await this._projects.getAllProjects();
+    return projects.map((p) => convertBetweenEntityAndDTO(p, ProjectDTO));
+  }
 
   /**
    * Update a project (mvp: create one project per team)

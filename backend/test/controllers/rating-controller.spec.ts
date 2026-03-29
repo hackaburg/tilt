@@ -110,8 +110,10 @@ describe("RatingController", () => {
       expect(response.status).toBe(403);
     });
 
-    it("rejects requests from User-role users with 403", async () => {
+    it("allows requests from User-role users", async () => {
       expect.assertions(1);
+
+      httpRatingService.mocks.createRating.mockResolvedValue({} as any);
 
       const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
         method: "POST",
@@ -122,7 +124,8 @@ describe("RatingController", () => {
         body: JSON.stringify({ data: {} }),
       });
 
-      expect(response.status).toBe(403);
+      // Authorization passed; any status other than 403 is acceptable here
+      expect(response.status).not.toBe(403);
     });
 
     it("passes authorization for admin (Root) users", async () => {

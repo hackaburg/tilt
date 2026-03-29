@@ -1,4 +1,5 @@
-import { ForbiddenError, NotFoundError } from "routing-controllers";
+import { BadRequestError, ForbiddenError, NotFoundError } from "routing-controllers";
+import { Criteria } from "../../src/entities/criteria";
 import { Project } from "../../src/entities/project";
 import { Rating } from "../../src/entities/rating";
 import { Team } from "../../src/entities/team";
@@ -25,15 +26,17 @@ describe("RatingService", () => {
     team: mockTeam,
     allowRating: true,
   });
+  const mockCriteria = Object.assign(new Criteria(), { id: 5 });
   const mockRating = Object.assign(new Rating(), {
     project: mockProject,
     user: mockUser,
+    critera: mockCriteria,
   });
 
   beforeEach(async () => {
     settingsService = new MockSettingsService();
 
-    mockRatingsRepo = { findOneBy: jest.fn(), save: jest.fn(), delete: jest.fn() };
+    mockRatingsRepo = { findOneBy: jest.fn(), findOne: jest.fn(), save: jest.fn(), delete: jest.fn() };
     mockProjectsRepo = { findOneBy: jest.fn() };
     mockTeamsRepo = { findOneBy: jest.fn() };
     mockUsersRepo = { findOneBy: jest.fn() };
@@ -121,6 +124,7 @@ describe("RatingService", () => {
         settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
         mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
         mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
+        mockRatingsRepo.findOne.mockResolvedValue(null);
         const savedRating = Object.assign(new Rating(), { ...mockRating, id: 42 });
         mockRatingsRepo.save.mockResolvedValue(savedRating);
 
@@ -128,6 +132,19 @@ describe("RatingService", () => {
 
         expect(result).toBe(savedRating);
         expect(mockRatingsRepo.save).toHaveBeenCalledWith(mockRating);
+      });
+
+      it("throws BadRequestError when user has already rated the same project and criteria", async () => {
+        expect.assertions(1);
+
+        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
+        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
+        mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
+        mockRatingsRepo.findOne.mockResolvedValue(mockRating);
+
+        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+          BadRequestError,
+        );
       });
     });
   });
