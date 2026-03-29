@@ -83,6 +83,8 @@ export class RatingService implements IRatingService {
    */
   public async bootstrap(): Promise<void> {
     this._ratings = this._database.getRepository(Rating);
+    this._projects = this._database.getRepository(Project);
+    this._teams = this._database.getRepository(Team);
     this._users = this._database.getRepository(User);
   }
 
@@ -154,14 +156,20 @@ export class RatingService implements IRatingService {
       throw new ForbiddenError("Cannot create rating due to application settings")
     }
 
-    const project = await await this._projects.findOneBy({ id: data.id });
+    const project = await this._projects.findOneBy({ id: rating.project.id });
+    if (!project) {
+      throw new ForbiddenError("Project not found");
+    }
     if (!project.allowRating) {
       // TODO test
       throw new ForbiddenError("Creating a rating for this project is not allowed")
     }
 
-    const team = await this._teams.findOneById(project.teamId)
-    if (team.users.inclues(user.id)) {
+    const team = await this._teams.findOneBy({ id: project.team.id })
+    if (!team) {
+      throw new ForbiddenError("Team not found");
+    }
+    if (team.users.includes(user.id)) {
       // TODO test
       throw new ForbiddenError("You can't rate your own project")
     }
