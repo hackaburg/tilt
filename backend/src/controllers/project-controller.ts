@@ -24,7 +24,6 @@ export class ProjectController {
     @Body() { data: projectDTO }: { data: ProjectDTO },
     @CurrentUser() user: User,
   ): Promise<ProjectDTO> {
-    // TODO ProjectUpdateDTO?
     const existing = await this._projects.getProjectByID(projectId);
 
     if (existing == null) {

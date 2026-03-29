@@ -47,7 +47,6 @@ export class CriteriaController {
     @Param("id") criteriaId: number,
     @Body() { data: criteriaDTO }: { data: CriteriaDTO },
   ): Promise<CriteriaDTO> {
-    // TODO There is a TeamUpdateDTO. CriteriaUpdateDTO?
     const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
     const updateCriteria = await this._ratings.updateCriteria(criteria);
     return convertBetweenEntityAndDTO(updateCriteria, CriteriaDTO);
