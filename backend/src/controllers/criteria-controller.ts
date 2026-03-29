@@ -2,7 +2,6 @@ import {
   Authorized,
   Delete,
   JsonController,
-  CurrentUser,
   Param,
   Put,
   Post,
@@ -10,19 +9,18 @@ import {
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
-import { RatingServiceToken, IRatingService } from "../services/rating-service";
+import { CriteriaServiceToken, ICriteriaService } from "../services/criteria-service";
 import {
   CriteriaDTO,
   SuccessResponseDTO,
   convertBetweenEntityAndDTO
 } from "./dto";
-import { User } from "../entities/user";
 import { Criteria } from "../entities/criteria";
 
 @JsonController("/criteria")
 export class CriteriaController {
   public constructor(
-    @Inject(RatingServiceToken) private readonly _ratings: IRatingService,
+    @Inject(CriteriaServiceToken) private readonly _criterias: ICriteriaService,
   ) {}
 
   /**
@@ -34,7 +32,7 @@ export class CriteriaController {
     @Body() { data: criteriaDTO }: { data: CriteriaDTO },
   ): Promise<CriteriaDTO> {
     const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
-    const createdCriteria = await this._ratings.createCriteria(criteria);
+    const createdCriteria = await this._criterias.createCriteria(criteria);
     return convertBetweenEntityAndDTO(createdCriteria, CriteriaDTO);
   }
 
@@ -48,7 +46,7 @@ export class CriteriaController {
     @Body() { data: criteriaDTO }: { data: CriteriaDTO },
   ): Promise<CriteriaDTO> {
     const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
-    const updateCriteria = await this._ratings.updateCriteria(criteria);
+    const updateCriteria = await this._criterias.updateCriteria(criteria);
     return convertBetweenEntityAndDTO(updateCriteria, CriteriaDTO);
   }
 
@@ -59,9 +57,8 @@ export class CriteriaController {
   @Authorized(UserRole.Root)
   public async deleteCriteria(
     @Param("id") criteriaId: number,
-    @CurrentUser() user: User,
   ): Promise<SuccessResponseDTO> {
-    await this._ratings.deleteCriteriaByID(criteriaId, user);
+    await this._criterias.deleteCriteriaByID(criteriaId);
     const response = new SuccessResponseDTO();
     response.success = true;
     return response;
