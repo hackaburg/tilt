@@ -1,6 +1,7 @@
 import {
   Authorized,
   Delete,
+  Get,
   JsonController,
   Param,
   Put,
@@ -24,6 +25,16 @@ export class CriteriaController {
   ) {}
 
   /**
+   * Get all criteria.
+   */
+  @Get("/")
+  @Authorized(UserRole.User)
+  public async getAllCriteria(): Promise<CriteriaDTO[]> {
+    const criterias = await this._criterias.getAllCriterias();
+    return criterias.map((c) => convertBetweenEntityAndDTO(c, CriteriaDTO));
+  }
+
+  /**
    * Create criteria.
    */
   @Post("/")
@@ -45,7 +56,7 @@ export class CriteriaController {
     @Param("id") criteriaId: number,
     @Body() { data: criteriaDTO }: { data: CriteriaDTO },
   ): Promise<CriteriaDTO> {
-    const criteria = convertBetweenEntityAndDTO(criteriaDTO, Criteria);
+    const criteria = convertBetweenEntityAndDTO({ ...criteriaDTO, id: criteriaId }, Criteria);
     const updateCriteria = await this._criterias.updateCriteria(criteria);
     return convertBetweenEntityAndDTO(updateCriteria, CriteriaDTO);
   }

@@ -13,5 +13,6 @@ export const MockRatingService = jest.fn(
       updateRating: jest.fn(),
       getRatingByID: jest.fn(),
       deleteRatingByID: jest.fn(),
+      getRatingResults: jest.fn(),
     }),
 );

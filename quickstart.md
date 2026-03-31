@@ -13,10 +13,13 @@ docker run --name frontend --network host -v $(pwd):/app -w /app node:alpine sh 
   -c "API_BASE_URL='http://localhost:3000/api' yarn frontend::start"
 ```
 
-Visit http://localhost:8080/
+1. Visit tilt http://localhost:8080/
+2. register yourself
+3. open email in maildev http://localhost:8082/
+4. copy verification link, replace port with tilt port (8080)
+5. open edited link in browser. Ignore "invalid token" error
 
 Edit code, frontend and backend restart automatically.
-
 
 # Quickstop
 

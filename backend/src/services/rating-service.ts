@@ -1,4 +1,4 @@
-import { ForbiddenError, NotFoundError } from "routing-controllers";
+import { BadRequestError, ForbiddenError, NotFoundError } from "routing-controllers";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -9,6 +9,19 @@ import { RatingDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
 import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
+import { Criteria } from "../entities/criteria";
+
+export interface CriteriaRatingResult {
+  criteria: Criteria;
+  averageRating: number;
+  ratingsCount: number;
+}
+
+export interface ProjectRatingResult {
+  project: Project;
+  criteriaResults: readonly CriteriaRatingResult[];
+  overallScore: number;
+}
 
 export interface IRatingService extends IService {
   /**
@@ -31,6 +44,10 @@ export interface IRatingService extends IService {
    * Delete single rating by id
    */
   deleteRatingByID(id: number, currentUser: User): Promise<void>;
+  /**
+   * Get aggregated rating results grouped by project and criteria
+   */
+  getRatingResults(): Promise<readonly ProjectRatingResult[]>;
 }
 
 /**
@@ -96,6 +113,19 @@ export class RatingService implements IRatingService {
    */
   public async createRating(rating: Rating, user: User): Promise<Rating> {
     await this.checkPermission(rating, user);
+
+    const existing = await this._ratings.findOne({
+      where: {
+        user: { id: user.id },
+        project: { id: rating.project.id },
+        critera: { id: rating.critera.id },
+      },
+    });
+
+    if (existing) {
+      throw new BadRequestError("You have already rated this project for this criteria");
+    }
+
     return this._ratings.save(rating);
   }
 
@@ -128,6 +158,58 @@ export class RatingService implements IRatingService {
     await this._ratings.delete(id);
 
     return Promise.resolve();
+  }
+
+  /**
+   * Gets aggregated rating results grouped by project and criteria.
+   */
+  public async getRatingResults(): Promise<readonly ProjectRatingResult[]> {
+    const allRatings = await this._ratings.find();
+
+    const byProject = new Map<number, Rating[]>();
+    for (const rating of allRatings) {
+      const projectId = rating.project.id;
+      if (!byProject.has(projectId)) {
+        byProject.set(projectId, []);
+      }
+      byProject.get(projectId)!.push(rating);
+    }
+
+    const results: ProjectRatingResult[] = [];
+    for (const [, projectRatings] of byProject) {
+      const project = projectRatings[0].project;
+
+      const byCriteria = new Map<number, Rating[]>();
+      for (const rating of projectRatings) {
+        const criteriaId = rating.critera.id;
+        if (!byCriteria.has(criteriaId)) {
+          byCriteria.set(criteriaId, []);
+        }
+        byCriteria.get(criteriaId)!.push(rating);
+      }
+
+      const criteriaResults: CriteriaRatingResult[] = [];
+      let totalScore = 0;
+      for (const [, criteriaRatings] of byCriteria) {
+        const criteria = criteriaRatings[0].critera;
+        const averageRating =
+          criteriaRatings.reduce((sum, r) => sum + r.rating, 0) / criteriaRatings.length;
+        totalScore += averageRating;
+        criteriaResults.push({
+          criteria,
+          averageRating,
+          ratingsCount: criteriaRatings.length,
+        });
+      }
+
+      results.push({
+        project,
+        criteriaResults,
+        overallScore: criteriaResults.length > 0 ? totalScore / criteriaResults.length : 0,
+      });
+    }
+
+    return results;
   }
 
   private async checkPermission(rating: Rating, user: User): Promise<void> {

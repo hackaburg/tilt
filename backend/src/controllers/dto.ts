@@ -612,3 +612,24 @@ export class RatingDTO {
   @Max(5)
   public rating!: number;
 }
+
+export class CriteriaResultDTO {
+  @Expose()
+  @Type(() => CriteriaDTO)
+  public criteria!: CriteriaDTO;
+  @Expose()
+  public averageRating!: number;
+  @Expose()
+  public ratingsCount!: number;
+}
+
+export class ProjectRatingResultDTO {
+  @Expose()
+  @Type(() => ProjectDTO)
+  public project!: ProjectDTO;
+  @Expose()
+  @Type(() => CriteriaResultDTO)
+  public criteriaResults!: CriteriaResultDTO[];
+  @Expose()
+  public overallScore!: number;
+}

@@ -45,10 +45,6 @@ export const Teams = () => {
         delete the team and remove users from the team. If you want to join a
         team you can send a request to join the team and the team owner can
         accept or reject the request.
-        <br></br>
-        <br></br>
-        Please be aware that this is the beta version of the team feature. If
-        you have any feedback or suggestions, please let us know.
         <a href="mailto:support@hackaburg.de">support@hackaburg.de</a>
       </Collapsible>
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>

@@ -2,6 +2,7 @@ import {
   Authorized,
   JsonController,
   CurrentUser,
+  Get,
   Post,
   Body
 } from "routing-controllers";
@@ -11,6 +12,7 @@ import { SettingsServiceToken, ISettingsService } from "../services/settings-ser
 import { RatingServiceToken, IRatingService } from "../services/rating-service";
 import {
   RatingDTO,
+  ProjectRatingResultDTO,
   convertBetweenEntityAndDTO
 } from "./dto";
 import { User } from "../entities/user";
@@ -24,13 +26,30 @@ export class RatingController {
   ) {}
 
   /**
+   * Get all ratings.
+   */
+  @Get("/")
+  @Authorized(UserRole.Root)
+  public async getAllRatings(): Promise<RatingDTO[]> {
+    const ratings = await this._ratings.getAllRatings();
+    return ratings.map((r) => convertBetweenEntityAndDTO(r, RatingDTO));
+  }
+
+  /**
+   * Get aggregated rating results grouped by project and criteria.
+   */
+  @Get("/results")
+  @Authorized(UserRole.Root)
+  public async getRatingResults(): Promise<ProjectRatingResultDTO[]> {
+    const results = await this._ratings.getRatingResults();
+    return results.map((r) => convertBetweenEntityAndDTO(r, ProjectRatingResultDTO));
+  }
+
+  /**
    * Rate a project
-   *
-   * TODO mvp: no update and delete, a created rating is a commitment to it.
-   *  If there is time, add an update mechanism though.
    */
   @Post("/rate")
-  @Authorized(UserRole.Root)
+  @Authorized(UserRole.User)
   public async createRating(
     @Body() { data: ratingDTO }: { data: RatingDTO },
     @CurrentUser() user: User,
@@ -39,6 +58,4 @@ export class RatingController {
     const createdRating = await this._ratings.createRating(rating, user);
     return convertBetweenEntityAndDTO(createdRating, RatingDTO);
   }
-
-  // TODO write test that all the root endpoints are not accessible by users
 }
