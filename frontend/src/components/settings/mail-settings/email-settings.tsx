@@ -1,15 +1,15 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import { EmailSettingsDTO } from "../../api/types/dto";
-import { useSettingsContext } from "../../contexts/settings-context";
-import { Code } from "../base/code";
-import { StyleableFlexContainer } from "../base/flex";
-import { Placeholder } from "../base/placeholder";
-import { Text } from "../base/text";
-import { TextInput } from "../base/text-input";
+import { EmailSettingsDTO } from "../../../api/types/dto";
+import { useSettingsContext } from "../../../contexts/settings-context";
+import { Code } from "../../base/code";
+import { StyleableFlexContainer } from "../../base/flex";
+import { Placeholder } from "../../base/placeholder";
+import { Text } from "../../base/text";
+import { TextInput } from "../../base/text-input";
 import { EmailTemplateEditor } from "./email-template-editor";
-import { SettingsSection } from "./settings-section";
+import { SettingsSection } from "../settings-section";
 
 const EmailTemplateEditorContainer = styled(StyleableFlexContainer)`
   padding-top: 1rem;

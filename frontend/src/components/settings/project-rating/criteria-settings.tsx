@@ -1,21 +1,22 @@
 import * as React from "react";
 import { useCallback } from "react";
-import type { FrontendSettingsDTO } from "../../api/types/dto";
-import { useSettingsContext } from "../../contexts/settings-context";
-import { Spacer } from "../base/flex";
-import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
-import { Text } from "../base/text";
-import { TextInput, TextInputType } from "../base/text-input";
-import { SettingsSection } from "./settings-section";
+import type { CriteriaSettingsDTO } from "../../../api/types/dto";
+import { useSettingsContext } from "../../../contexts/settings-context";
+import { Spacer } from "../../base/flex";
+import { FlexRowColumnContainer, FlexRowContainer } from "../../base/flex";
+import { Text } from "../../base/text";
+import { TextInput, TextInputType } from "../../base/text-input";
+import { SettingsSection } from "../settings-section";
 
 /**
- * A component to modify the frontend/appearance settings.
+ * A component to edit criteria for rating projects.
+ * TODO WIP
  */
-export const FrontendSettings = () => {
+export const CriteriaSettings = () => {
   const { settings, updateSettings } = useSettingsContext();
 
-  const updateFrontendSettings = useCallback(
-    (changes: Partial<FrontendSettingsDTO>) => {
+  const updateCriteriaSettings = useCallback(
+    (changes: Partial<CriteriaSettingsDTO>) => {
       updateSettings({
         ...settings,
         frontend: {
@@ -29,40 +30,39 @@ export const FrontendSettings = () => {
 
   const handleColorGradientStartChange = useCallback(
     (colorGradientStart: string) =>
-      updateFrontendSettings({ colorGradientStart }),
-    [updateFrontendSettings],
+      updateCriteriaSettings({ colorGradientStart }),
+    [updateCriteriaSettings],
   );
 
   const handleColorGradientEndChange = useCallback(
-    (colorGradientEnd: string) => updateFrontendSettings({ colorGradientEnd }),
-    [updateFrontendSettings],
+    (colorGradientEnd: string) => updateCriteriaSettings({ colorGradientEnd }),
+    [updateCriteriaSettings],
   );
 
   const handleColorLinkChange = useCallback(
-    (colorLink: string) => updateFrontendSettings({ colorLink }),
-    [updateFrontendSettings],
+    (colorLink: string) => updateCriteriaSettings({ colorLink }),
+    [updateCriteriaSettings],
   );
 
   const handleColorLinkHoverChange = useCallback(
-    (colorLinkHover: string) => updateFrontendSettings({ colorLinkHover }),
-    [updateFrontendSettings],
+    (colorLinkHover: string) => updateCriteriaSettings({ colorLinkHover }),
+    [updateCriteriaSettings],
   );
 
   const handleLoginSignupImageChange = useCallback(
-    (loginSignupImage: string) => updateFrontendSettings({ loginSignupImage }),
-    [updateFrontendSettings],
+    (loginSignupImage: string) => updateCriteriaSettings({ loginSignupImage }),
+    [updateCriteriaSettings],
   );
 
   const handleSidebarImageChange = useCallback(
-    (sidebarImage: string) => updateFrontendSettings({ sidebarImage }),
-    [updateFrontendSettings],
+    (sidebarImage: string) => updateCriteriaSettings({ sidebarImage }),
+    [updateCriteriaSettings],
   );
 
   return (
     <SettingsSection title="Appearance">
       <Text>
-        Adjust these settings to modify the appearance of tilt, using hex colors
-        and absolute image urls.
+        Add criteria
       </Text>
 
       <FlexRowContainer>

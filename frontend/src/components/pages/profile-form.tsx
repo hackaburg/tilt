@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, FormType } from "../forms/form";
+import { Form, FormType } from "../questions/form";
 
 /**
  * The profile form, d'uuh.

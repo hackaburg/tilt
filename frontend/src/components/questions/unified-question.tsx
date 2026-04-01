@@ -21,7 +21,7 @@ interface IQuestionProps {
   isDisabled?: boolean;
 }
 
-const Question = ({
+const QuestionTypeSwitch = ({
   question,
   value,
   onChange,
@@ -86,7 +86,7 @@ export const UnifiedQuestion = ({
   isDisabled,
 }: IQuestionProps) => (
   <FlexColumnContainer>
-    <Question
+    <QuestionTypeSwitch
       question={question}
       value={value}
       onChange={onChange}
