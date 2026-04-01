@@ -10,6 +10,7 @@ import { SettingsSection } from "../settings-section";
 
 /**
  * A component to edit criteria for rating projects.
+ * TODO WIP
  */
 export const CriteriaSettings = () => {
   const { settings, updateSettings } = useSettingsContext();
