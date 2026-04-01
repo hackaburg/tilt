@@ -12,9 +12,9 @@ import {
   Spacer,
   StyleableFlexContainer,
 } from "../base/flex";
-import { SortingButtons } from "../forms/sorting-buttons";
-import { UnifiedQuestion } from "../forms/unified-question";
-import { UnifiedQuestionEditor } from "../forms/unified-question-editor";
+import { SortingButtons } from "../questions/sorting-buttons";
+import { UnifiedQuestion } from "../questions/unified-question";
+import { UnifiedQuestionEditor } from "../questions/unified-question-editor";
 import { SimpleCard } from "../base/simple-card";
 
 const ButtonContainer = styled(StyleableFlexContainer)`
