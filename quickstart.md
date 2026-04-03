@@ -1,4 +1,6 @@
-# Quickstart
+# Docker Development
+
+## Start
 
 For development
 
@@ -28,7 +30,13 @@ docker exec backend yarn run backend::usermod test@test.test root
 
 Edit code, frontend and backend restart automatically.
 
-# Quickstop
+## Tests
+
+```sh
+docker exec backend yarn run backend::test
+```
+
+## Stop
 
 ```sh
 docker rm -f backend
