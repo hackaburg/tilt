@@ -73,7 +73,7 @@ export const EmailTemplateEditor = ({
             value={template.htmlTemplate}
             onChange={handleHtmlTemplateChange}
             placeholder="<html>"
-            rows={12}
+            rows={5}
           />
         </FlexRowColumnContainer>
         <Spacer />
@@ -85,7 +85,7 @@ export const EmailTemplateEditor = ({
             value={template.textTemplate}
             onChange={handleTextTemplateChange}
             placeholder="Hi there!"
-            rows={12}
+            rows={5}
           />
         </FlexRowColumnContainer>
       </FlexRowContainer>
