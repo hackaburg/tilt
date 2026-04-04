@@ -1,16 +1,16 @@
 import * as React from "react";
 import { useCallback } from "react";
-import type { ApplicationSettingsDTO } from "../../api/types/dto";
-import { useSettingsContext } from "../../contexts/settings-context";
-import { useDerivedState } from "../../hooks/use-derived-state";
-import { isValidDate } from "../../util";
-import { Collapsible } from "../base/collapsible";
-import { Spacer } from "../base/flex";
-import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
-import { Text } from "../base/text";
-import { TextInput, TextInputType } from "../base/text-input";
+import type { ApplicationSettingsDTO } from "../../../api/types/dto";
+import { useSettingsContext } from "../../../contexts/settings-context";
+import { useDerivedState } from "../../../hooks/use-derived-state";
+import { isValidDate } from "../../../util";
+import { Collapsible } from "../../base/collapsible";
+import { Spacer } from "../../base/flex";
+import { FlexRowColumnContainer, FlexRowContainer } from "../../base/flex";
+import { Text } from "../../base/text";
+import { TextInput, TextInputType } from "../../base/text-input";
 import { FormEditor } from "./form-editor";
-import { SettingsSection } from "./settings-section";
+import { SettingsSection } from "../settings-section";
 
 /**
  * Settings to configure the application users have to fill out.

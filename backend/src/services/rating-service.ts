@@ -1,0 +1,221 @@
+import { BadRequestError, ForbiddenError, NotFoundError } from "routing-controllers";
+import { Inject, Service, Token } from "typedi";
+import { Repository } from "typeorm";
+import { IService } from ".";
+import { DatabaseServiceToken, IDatabaseService } from "./database-service";
+import { ISettingsService, SettingsServiceToken } from "./settings-service";
+import { Rating } from "../entities/rating";
+import { RatingDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
+import { User } from "../entities/user";
+import { Team } from "../entities/team";
+import { Project } from "../entities/project";
+import { Criterion } from "../entities/criterion";
+
+export interface ProjectRatingResult {
+  project: Project;
+  criterionIdToAvg: Record<number, number>;
+}
+
+export interface IRatingService extends IService {
+  /**
+   * Get all ratings
+   */
+  getAllRatings(): Promise<readonly Rating[]>;
+  /**
+   * Create new rating
+   */
+  createRating(rating: Rating, user: User): Promise<Rating>;
+  /**
+   *  Update rating
+   */
+  updateRating(rating: Rating, user: User): Promise<Rating>;
+  /**
+   * Get rating by id
+   */
+  getRatingByID(id: number): Promise<RatingDTO | undefined>;
+  /**
+   * Delete single rating by id
+   */
+  deleteRatingByID(id: number, currentUser: User): Promise<void>;
+  /**
+   * Get all ratings for every project
+   */
+  getRatingResults(): Promise<readonly ProjectRatingResult[]>;
+}
+
+/**
+ * A token used to inject a concrete user service.
+ */
+export const RatingServiceToken = new Token<IRatingService>();
+
+/**
+ * A service to handle users.
+ */
+@Service(RatingServiceToken)
+export class RatingService implements IRatingService {
+  private _ratings!: Repository<Rating>;
+  private _projects!: Repository<Project>;
+  private _teams!: Repository<Team>;
+  private _users!: Repository<User>;
+
+  public constructor(
+    @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
+    @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
+  ) {}
+
+  /**
+   * Sets up the user service.
+   */
+  public async bootstrap(): Promise<void> {
+    this._ratings = this._database.getRepository(Rating);
+    this._projects = this._database.getRepository(Project);
+    this._teams = this._database.getRepository(Team);
+    this._users = this._database.getRepository(User);
+  }
+
+  /**
+   * Gets all ratings.
+   */
+  public async getAllRatings(): Promise<readonly Rating[]> {
+    return this._database.getRepository(Rating).find();
+  }
+
+  /**
+   * Updates a rating.
+   * @param rating The rating to update
+   */
+  public async updateRating(rating: Rating, user: User): Promise<Rating> {
+    const originRating = await this._ratings.findOneBy({ id: rating.id });
+
+    if (!originRating) {
+      throw new NotFoundError("Rating not found");
+    }
+
+    if (user.id !== originRating.user.id) {
+      throw new ForbiddenError("You can only update your own ratings");
+    }
+
+    await this.checkPermission(rating, user);
+
+    return this._ratings.save(rating);
+  }
+
+  /**
+   * Creates a rating.
+   * @param rating The rating to create
+   */
+  public async createRating(rating: Rating, user: User): Promise<Rating> {
+    await this.checkPermission(rating, user);
+
+    const existing = await this._ratings.findOne({
+      where: {
+        user: { id: user.id },
+        project: { id: rating.project.id },
+        criterion: { id: rating.criterion.id },
+      },
+    });
+
+    if (existing) {
+      throw new BadRequestError("You have already rated this project for this criterion");
+    }
+
+    return this._ratings.save(rating);
+  }
+
+  /**
+   * Gets a rating by its id.
+   * @param id The id of the rating
+   */
+  public async getRatingByID(id: number): Promise<RatingDTO | undefined> {
+    const rating = await this._ratings.findOneBy({ id });
+    return rating ? convertBetweenEntityAndDTO(rating, RatingDTO) : undefined;
+  }
+
+  /**
+   * Deletes a rating by its id.
+   * @param id The id of the rating
+   */
+  public async deleteRatingByID(id: number, currentUser: User): Promise<void> {
+    const rating = await this._ratings.findOneBy({ id });
+
+    if (!rating) {
+      throw new NotFoundError("Rating not found");
+    }
+
+    if (currentUser.id !== rating.user.id) {
+      throw new ForbiddenError("You can only delete your own ratings");
+    }
+
+    await this.checkPermission(rating, currentUser);
+
+    await this._ratings.delete(id);
+
+    return Promise.resolve();
+  }
+
+  /**
+   * Get the average ratings for each project
+   */
+  public async getRatingResults(): Promise<readonly ProjectRatingResult[]> {
+    const allProjects = await this._projects.find();
+    const allRatings = await this._ratings.find();
+
+    const result = [];
+
+    for (const project of allProjects) {
+      // Sum up
+      const criterionIdToSum: Record<number, number> = {}
+      const criterionIdToCount: Record<number, number> = {}
+      for (const rating of allRatings) {
+        if (rating.project.id !== project.id) {
+          continue;
+        }
+
+        const criterionId = rating.criterion.id;
+        if (criterionIdToSum[criterionId] === undefined) {
+          criterionIdToSum[criterionId] = 0;
+          criterionIdToCount[criterionId] = 0;
+        }
+
+        criterionIdToSum[criterionId] += rating.rating;
+        criterionIdToCount[criterionId] += 1;
+      }
+
+      // Calculate average
+      const criterionIdToAvg: Record<number, number> = {}
+      for (const criterionId in criterionIdToSum) {
+        criterionIdToAvg[criterionId] = criterionIdToSum[criterionId] / criterionIdToCount[criterionId];
+      }
+
+      result.push({
+        project,
+        criterionIdToAvg
+      });
+    }
+
+    return result;
+  }
+
+  private async checkPermission(rating: Rating, user: User): Promise<void> {
+    const settings = await this._settings.getSettings();
+    if (!settings.allowRating) {
+      throw new ForbiddenError("Rating is not allowed due to application settings")
+    }
+
+    const project = await this._projects.findOneBy({ id: rating.project.id });
+    if (!project) {
+      throw new NotFoundError("Project not found");
+    }
+    if (!project.allowRating) {
+      throw new ForbiddenError("Rating this project is not allowed")
+    }
+
+    const team = await this._teams.findOneBy({ id: project.team.id })
+    if (!team) {
+      throw new NotFoundError("Team not found");
+    }
+    if (team.users.includes(user.id)) {
+      throw new ForbiddenError("You can't rate your own project")
+    }
+  }
+}

@@ -17,6 +17,9 @@ import { MockTokenService } from "./mock/mock-token-service";
 import { MockUnixSignalService } from "./mock/mock-unix-signal-service";
 import { MockUserService } from "./mock/mock-user-service";
 import { MockTeamsService } from "./mock/mock-teams-service";
+import { MockCriterionService } from "./mock/mock-criterion-service";
+import { MockProjectService } from "./mock/mock-project-service";
+import { MockRatingService } from "./mock/mock-rating-service";
 
 describe("TiltService", () => {
   it("bootstraps all services", async () => {
@@ -32,6 +35,9 @@ describe("TiltService", () => {
     const database = addService(new MockDatabaseService());
     const users = addService(new MockUserService());
     const teams = addService(new MockTeamsService());
+    const criteria = addService(new MockCriterionService());
+    const project = addService(new MockProjectService());
+    const rating = addService(new MockRatingService());
     const http = addService(new MockHttpService());
     const tokens = addService(new MockTokenService());
     const settings = addService(new MockSettingsService());
@@ -57,6 +63,9 @@ describe("TiltService", () => {
       tokens.instance,
       users.instance,
       teams.instance,
+      criteria.instance,
+      project.instance,
+      rating.instance,
       settings.instance,
       questions.instance,
       application.instance,

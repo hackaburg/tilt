@@ -41,6 +41,9 @@ import {
 } from "./unix-signal-service";
 import { IUserService, UserServiceToken } from "./user-service";
 import { ITeamService, TeamServiceToken } from "./team-service";
+import { ICriterionService, CriterionServiceToken } from "./criterion-service";
+import { IProjectService, ProjectServiceToken } from "./project-service";
+import { IRatingService, RatingServiceToken } from "./rating-service";
 
 /**
  * The tilt service in a nutshell. Contains all services required to run tilt.
@@ -63,6 +66,9 @@ export class Tilt implements IService {
     @Inject(TokenServiceToken) tokens: ITokenService<any>,
     @Inject(UserServiceToken) users: IUserService,
     @Inject(TeamServiceToken) teams: ITeamService,
+    @Inject(CriterionServiceToken) criterion: ICriterionService,
+    @Inject(ProjectServiceToken) project: IProjectService,
+    @Inject(RatingServiceToken) rating: IRatingService,
     @Inject(SettingsServiceToken) settings: ISettingsService,
     @Inject(QuestionGraphServiceToken) questions: IQuestionGraphService,
     @Inject(ApplicationServiceToken) application: IApplicationService,
@@ -82,6 +88,9 @@ export class Tilt implements IService {
       tokens,
       users,
       teams,
+      criterion,
+      project,
+      rating,
       settings,
       questions,
       application,

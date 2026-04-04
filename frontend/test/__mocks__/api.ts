@@ -35,4 +35,13 @@ export const api: IMockedApi = {
   getAllTeams: jest.fn(),
   getTeamByID: jest.fn(),
   getAllUsers: jest.fn(),
+  getAllCriteria: jest.fn(),
+  createCriterion: jest.fn(),
+  updateCriterion: jest.fn(),
+  deleteCriterion: jest.fn(),
+  getAllProjects: jest.fn(),
+  updateProject: jest.fn(),
+  getAllRatings: jest.fn(),
+  getRatingResults: jest.fn(),
+  createRating: jest.fn(),
 };

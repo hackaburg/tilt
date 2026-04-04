@@ -103,6 +103,8 @@ export class ConfigurationService implements IConfigurationService {
 
     if (error) {
       // tslint:disable-next-line: no-console
+      // Make sure your cwd is the backend directory, which contains the .env file,
+      // and that .env.example has been copied to .env
       console.warn(`error loading .env configuration: ${error}`);
     }
   }

@@ -1,15 +1,15 @@
 import styled from "@emotion/styled";
 import { useCallback } from "react";
 import * as React from "react";
-import type { FormSettingsDTO, QuestionDTO } from "../../api/types/dto";
-import { QuestionType } from "../../api/types/enums";
-import { moveArrayItemDown, moveArrayItemUp } from "../../util";
-import { Button } from "../base/button";
-import { Elevated } from "../base/elevated";
-import { FlexColumnContainer, Spacer } from "../base/flex";
-import { FormFieldButton } from "../base/form-field-button";
-import { Muted } from "../base/muted";
-import { TextInput } from "../base/text-input";
+import type { FormSettingsDTO, QuestionDTO } from "../../../api/types/dto";
+import { QuestionType } from "../../../api/types/enums";
+import { moveArrayItemDown, moveArrayItemUp } from "../../../util";
+import { Button } from "../../base/button";
+import { Elevated } from "../../base/elevated";
+import { FlexColumnContainer, Spacer } from "../../base/flex";
+import { FormFieldButton } from "../../base/form-field-button";
+import { Muted } from "../../base/muted";
+import { TextInput } from "../../base/text-input";
 import { QuestionEditor } from "./question-editor";
 
 const FormEditorContainer = styled(Elevated)`

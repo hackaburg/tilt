@@ -7,6 +7,8 @@
 
 Yet another hackathon registration system.
 
+[quickstart.md](quickstart.md)
+
 ## Motivation
 
 Like many other hackathons, we previously used [Quill](https://github.com/techx/quill) for our application process, which worked really well for us in the past. Especially Quill's process was a blessing: an application consists of two steps, the profile creation and, once an attendee was admitted to the event, the spot confirmation. We attended different events that used different processes and found this to be easy for both the attendees and organizers.

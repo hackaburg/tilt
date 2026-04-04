@@ -30,7 +30,7 @@ interface IQuestionEditorProps {
   onQuestionChange: (question: QuestionDTO) => any;
 }
 
-const QuestionEditor = ({
+const QuestionEditorTypeSwitch = ({
   question,
   onQuestionChange,
 }: IQuestionEditorProps) => {
@@ -134,6 +134,12 @@ interface IUnifiedQuestionEditorProps {
 
 /**
  * A unified editor for all questions.
+ *
+ * Renders appropriate typed editor component based on configuration.type
+ * ├─ TextQuestionEditor
+ * ├─ NumberQuestionEditor
+ * ├─ ChoicesQuestionEditor
+ * └─ CountryQuestionEditor
  */
 export const UnifiedQuestionEditor = ({
   question,
@@ -297,7 +303,10 @@ export const UnifiedQuestionEditor = ({
         </FlexRowContainer>
       </Meta>
 
-      <QuestionEditor question={question} onQuestionChange={onQuestionChange} />
+      <QuestionEditorTypeSwitch
+        question={question}
+        onQuestionChange={onQuestionChange}
+      />
     </>
   );
 };

@@ -10,7 +10,9 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Max,
   MaxLength,
+  Min,
   MinLength,
   ValidateNested,
 } from "class-validator";
@@ -161,6 +163,9 @@ export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
   @ValidateNested()
   @Expose()
   public email!: EmailSettingsDTO;
+  @IsBoolean()
+  @Expose()
+  public allowRating!: boolean;
 }
 
 export abstract class QuestionConfigurationDTOBase {
@@ -560,4 +565,58 @@ export class TeamUpdateDTO {
   public teamImg!: string;
   @Expose()
   public description!: string;
+}
+
+export class CriterionDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+}
+
+export class ProjectDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  @Type(() => TeamDTO)
+  @ValidateNested()
+  public team!: TeamDTO;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+  @Expose()
+  public allowRating!: boolean;
+}
+
+export class RatingDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  @Type(() => UserDTO)
+  @ValidateNested()
+  public user!: UserDTO;
+  @Expose()
+  @Type(() => ProjectDTO)
+  @ValidateNested()
+  public project!: ProjectDTO;
+  @Expose()
+  @Type(() => CriterionDTO)
+  @ValidateNested()
+  public criteria!: CriterionDTO;
+  @Expose()
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  public rating!: number;
+}
+
+export class ProjectRatingResultDTO {
+  @Expose()
+  @Type(() => ProjectDTO)
+  public project!: ProjectDTO;
+  @Expose()
+  public criterionIdToAvg!: Record<number, number>;
 }

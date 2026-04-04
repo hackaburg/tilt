@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { useCallback } from "react";
-import type { EmailTemplateDTO } from "../../api/types/dto";
-import { Elevated } from "../base/elevated";
-import { Spacer } from "../base/flex";
-import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
-import { Subsubheading } from "../base/headings";
-import { TextInput, TextInputType } from "../base/text-input";
+import type { EmailTemplateDTO } from "../../../api/types/dto";
+import { Elevated } from "../../base/elevated";
+import { Spacer } from "../../base/flex";
+import { FlexRowColumnContainer, FlexRowContainer } from "../../base/flex";
+import { Subsubheading } from "../../base/headings";
+import { TextInput, TextInputType } from "../../base/text-input";
 
 const EmailTemplateLength = 65_536;
 
@@ -73,7 +73,7 @@ export const EmailTemplateEditor = ({
             value={template.htmlTemplate}
             onChange={handleHtmlTemplateChange}
             placeholder="<html>"
-            rows={12}
+            rows={5}
           />
         </FlexRowColumnContainer>
         <Spacer />
@@ -85,7 +85,7 @@ export const EmailTemplateEditor = ({
             value={template.textTemplate}
             onChange={handleTextTemplateChange}
             placeholder="Hi there!"
-            rows={12}
+            rows={5}
           />
         </FlexRowColumnContainer>
       </FlexRowContainer>

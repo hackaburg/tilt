@@ -49,6 +49,7 @@ export const TextInput = ({
   isDisabled = false,
   name,
   description,
+  rows = 3,
 }: ITextInputProps) => {
   const [isFocused, onFocus, onBlur] = useFocus(autoFocus);
   const fieldType = type || TextInputType.Text;
@@ -89,7 +90,7 @@ export const TextInput = ({
         focused={isFocused}
         {...fieldProps}
         multiline={type === TextInputType.Area}
-        rows={type === TextInputType.Area ? 3 : undefined}
+        rows={type === TextInputType.Area ? rows : undefined}
       />
     </div>
   );
