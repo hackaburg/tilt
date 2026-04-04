@@ -143,7 +143,7 @@ export const Sidebar = () => {
           <GrGroup />
           <span style={{ marginLeft: "1rem" }}>
             {" "}
-            Teams <b style={{ color: "#3fb28f", fontSize: "1rem" }}> - beta</b>
+            Teams
           </span>
         </SidebarMenuItem>
 

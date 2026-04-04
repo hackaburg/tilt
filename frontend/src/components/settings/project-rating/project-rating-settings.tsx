@@ -7,7 +7,7 @@ import { Subsubheading } from "../../base/headings";
 import { TextField, Switch, FormControlLabel, Stack, Button } from "@mui/material";
 import { api } from "../../../hooks/use-api";
 
-// TODO this is much easier and more maintainable if the save button is fine-grained
+// TODO Seems more maintainable to me if the save button is fine-grained
 //  and not global. Remove the global Save button and add one individually for
 //  each SettingsSection component for consistency.
 
@@ -22,7 +22,10 @@ const CriterionEditor = React.memo(({ criterion, onSave, onDelete }) => {
   const [description, setDescription] = useState(criterion.description);
 
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack
+      direction={{ sm: 'column', md: 'row' }}
+      spacing={{ xs: 1, sm: 2 }}
+    >
       <TextField
         value={title}
         onChange={(event) => setTitle(event.target.value)}
@@ -35,7 +38,7 @@ const CriterionEditor = React.memo(({ criterion, onSave, onDelete }) => {
         placeholder="Description"
         rows={1}
         sx={{ flex: 1 }}
-        />
+      />
         <Button
           fullWidth={false}
           variant="contained"
@@ -127,7 +130,7 @@ export const ProjectRatingSettings = () => {
             checked={settings?.application?.allowRatingProjects}
             onChange={onSwitchChange}
           />}
-          label="Allow users to rate projects"
+          label="Allow users to rate other projects"
         />
       </div>
       <div>
