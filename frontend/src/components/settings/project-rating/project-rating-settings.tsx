@@ -55,21 +55,20 @@ export const ProjectRatingSettings = () => {
     []
   );
 
-  // Adding a criteria first calls the POST endpoint, then fetches all crtieria from
-  // scratch. TODO clears changes when criterion is added
   const addCriterion = useCallback(async (): Promise<void> => {
-    await api.createCriterion({ title: "title", description: "description" });
-    setAllCriteria(await api.getAllCriteria());
+    const newCriterion = await api.createCriterion({
+      title: "title",
+      description: "description"
+    });
+    setAllCriteria([... allCriteria, newCriterion]);
   });
 
-  // Collect all changes in the react state first without talking to the backend
   const changeCriterion = useCallback((changedCriterion) => {
     setAllCriteria(allCriteria.map((criterion) => {
       return criterion.id === changedCriterion.id ? changedCriterion : criterion;
     }))
   });
 
-  // Send the react state to the backend
   const save = useCallback(async () => {
     for (const criterion of allCriteria) {
       await api.updateCriterion(criterion.id, criterion);
@@ -77,7 +76,7 @@ export const ProjectRatingSettings = () => {
   });
 
   const deleteCriterion = useCallback(async (deletedCriterion): Promise<void> => {
-    await api.deleteCriterion(criterion.id);
+    await api.deleteCriterion(deletedCriterion.id);
     setAllCriteria(allCriteria.filter((criterion) => {
       return criterion.id !== deletedCriterion.id
     }));
