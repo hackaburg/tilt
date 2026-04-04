@@ -16,75 +16,86 @@ import { api, useApi } from "../../../hooks/use-api";
 /**
  * Edit or delete a single criteria
  **/
-const CriterionEditor = ({ criteria }) => {
-  const { id, title, description } = criteria;
-
-  const handleCriterionChange = async (key, event): Promise<void> => {
-    await api.updateCriterion(
-      id,
-      { title, description, [key]: event.target.value }
-    );
-  };
-
-  const deleteCriterion = async (key, event): Promise<void> => {
-    await api.deleteCriterion(id);
-  };
-
+const CriterionEditor = React.memo(({ criterion, onChange, onDelete }) => {
+  // Use react.memo to avoid rerendering the component every time a character is typed
   return (
     <Stack direction="row" spacing={2}>
       <TextField
-        value={title}
-        onChange={(event) => handleCriterionChange("title", event)}
+        value={criterion.title}
+        onChange={(event) => onChange({ ...criterion, title: event.target.value })}
         placeholder="title"
         rows={1}
       />
       <TextField
-        value={description}
-        onChange={(event) => handleCriterionChange("description", event)}
+        value={criterion.description}
+        onChange={(event) => onChange({ ...criterion, description: event.target.value })}
         placeholder="Description"
         rows={1}
         sx={{ flex: 1 }}
       />
-      <Button variant="contained" onClick={deleteCriterion}>Delete</Button>
+      <Button variant="contained" onClick={() => onDelete(criterion) }>Delete</Button>
     </Stack>
   )
-}
+});
 
 /**
  * A component to edit criteria for rating projects.
  */
 export const ProjectRatingSettings = () => {
   // Load all criteria and render them
-  const [allCriterion, setAllCriterion] = React.useState([]);
-  api.getAllCriteria().then(async (): Promise<void> => {
-    setAllCriterion(await api.getAllCriteria())
-  })
+  const [allCriteria, setAllCriteria] = React.useState([]);
+
+  // Do this only on mount
+  React.useEffect(
+    () => {
+      api.getAllCriteria().then((criteria) => {
+        setAllCriteria(criteria)
+      })
+    },
+    []
+  );
 
   // Adding a criteria first calls the POST endpoint, then fetches all crtieria from
-  // scratch.
-  const addCriterion = async (): Promise<void> => {
-    await api.createCriterion({ title: "title", description: "description" })
-      .then(async (): Promise<void> => {
-        setAllCriterion(await api.getAllCriteria())
-      })
-  }
+  // scratch. TODO clears changes when criterion is added
+  const addCriterion = useCallback(async (): Promise<void> => {
+    await api.createCriterion({ title: "title", description: "description" });
+    setAllCriteria(await api.getAllCriteria());
+  });
 
-  // TODO save button instead of spamming the api on every character change
+  // Collect all changes in the react state first without talking to the backend
+  const changeCriterion = useCallback((changedCriterion) => {
+    setAllCriteria(allCriteria.map((criterion) => {
+      return criterion.id === changedCriterion.id ? changedCriterion : criterion;
+    }))
+  });
 
-  // TODO deleting criteria
+  // Send the react state to the backend
+  const save = useCallback(async () => {
+    for (const criterion of allCriteria) {
+      await api.updateCriterion(criterion.id, criterion);
+    }
+  });
+
+  const deleteCriterion = useCallback(async (deletedCriterion): Promise<void> => {
+    await api.deleteCriterion(criterion.id);
+    setAllCriteria(allCriteria.filter((criterion) => {
+      return criterion.id !== deletedCriterion.id
+    }));
+  });
 
   return (
     <SettingsSection title="Project Rating">
-      <div>
-        (These settings are automatically saved)
-      </div>
       <div>
         <FormControlLabel control={<Switch />} label="Allow users to rate projects" />
       </div>
       <div>
         <Subsubheading text="Edit Criteria" />
-        {allCriterion.map(criteria => [
-          <CriterionEditor criteria={criteria} />,
+        {allCriteria.map(criterion => [
+          <CriterionEditor
+            criterion={criterion}
+            onChange={changeCriterion}
+            onDelete={deleteCriterion}
+          />,
           <Spacer />
         ])}
       </div>
@@ -93,7 +104,7 @@ export const ProjectRatingSettings = () => {
           Add
           </Button>
           <Spacer />
-          <Button fullWidth={false} variant="contained" onClick={addCriterion}>
+          <Button fullWidth={false} variant="contained" onClick={save}>
           Save
           </Button>
       </div>
