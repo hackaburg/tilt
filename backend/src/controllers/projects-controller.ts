@@ -9,7 +9,7 @@ import { User } from "../entities/user";
 // TODO for every team, add a new project automatically with the correct teamId
 
 @JsonController("/projects")
-export class ProjectController {
+export class ProjectsController {
   public constructor(
     @Inject(ProjectServiceToken) private readonly _projects: IProjectService,
   ) {}

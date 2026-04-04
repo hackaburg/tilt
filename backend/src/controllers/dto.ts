@@ -567,7 +567,7 @@ export class TeamUpdateDTO {
   public description!: string;
 }
 
-export class CriteriaDTO {
+export class CriterionDTO {
   @Expose()
   public readonly id!: number;
   @Expose()
@@ -603,9 +603,9 @@ export class RatingDTO {
   @ValidateNested()
   public project!: ProjectDTO;
   @Expose()
-  @Type(() => CriteriaDTO)
+  @Type(() => CriterionDTO)
   @ValidateNested()
-  public critera!: CriteriaDTO;
+  public criteria!: CriterionDTO;
   @Expose()
   @IsInt()
   @Min(1)
@@ -613,23 +613,10 @@ export class RatingDTO {
   public rating!: number;
 }
 
-export class CriteriaResultDTO {
-  @Expose()
-  @Type(() => CriteriaDTO)
-  public criteria!: CriteriaDTO;
-  @Expose()
-  public averageRating!: number;
-  @Expose()
-  public ratingsCount!: number;
-}
-
 export class ProjectRatingResultDTO {
   @Expose()
   @Type(() => ProjectDTO)
   public project!: ProjectDTO;
   @Expose()
-  @Type(() => CriteriaResultDTO)
-  public criteriaResults!: CriteriaResultDTO[];
-  @Expose()
-  public overallScore!: number;
+  public criterionIdToAvg!: Record<number, number>;
 }

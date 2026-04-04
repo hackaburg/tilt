@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback } from "react";
-import type { CriteriaDTO } from "../../../api/types/dto";
+import type { CriterionDTO } from "../../../api/types/dto";
 import { useSettingsContext } from "../../../contexts/settings-context";
 import { Spacer } from "../../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../../base/flex";
@@ -16,32 +16,36 @@ import { api, useApi } from "../../../hooks/use-api";
 /**
  * Edit or delete a single criteria
  **/
-const CriteriaEditor = ({ criteria }) => {
+const CriterionEditor = ({ criteria }) => {
   const { id, title, description } = criteria;
 
-  const handleCriteriaChange = async (key, event): Promise<void> => {
-    await api.updateCriteria(
+  const handleCriterionChange = async (key, event): Promise<void> => {
+    await api.updateCriterion(
       id,
       { title, description, [key]: event.target.value }
     );
+  };
+
+  const deleteCriterion = async (key, event): Promise<void> => {
+    await api.deleteCriterion(id);
   };
 
   return (
     <Stack direction="row" spacing={2}>
       <TextField
         value={title}
-        onChange={(event) => handleCriteriaChange("title", event)}
+        onChange={(event) => handleCriterionChange("title", event)}
         placeholder="title"
         rows={1}
       />
       <TextField
         value={description}
-        onChange={(event) => handleCriteriaChange("description", event)}
+        onChange={(event) => handleCriterionChange("description", event)}
         placeholder="Description"
         rows={1}
         sx={{ flex: 1 }}
       />
-      <Button variant="contained">Delete</Button>
+      <Button variant="contained" onClick={deleteCriterion}>Delete</Button>
     </Stack>
   )
 }
@@ -51,17 +55,17 @@ const CriteriaEditor = ({ criteria }) => {
  */
 export const ProjectRatingSettings = () => {
   // Load all criteria and render them
-  const [allCriteria, setAllCriteria] = React.useState([]);
+  const [allCriterion, setAllCriterion] = React.useState([]);
   api.getAllCriteria().then(async (): Promise<void> => {
-    setAllCriteria(await api.getAllCriteria())
+    setAllCriterion(await api.getAllCriteria())
   })
 
   // Adding a criteria first calls the POST endpoint, then fetches all crtieria from
   // scratch.
-  const addCriteria = async (): Promise<void> => {
-    await api.createCriteria({ title: "title", description: "description" })
+  const addCriterion = async (): Promise<void> => {
+    await api.createCriterion({ title: "title", description: "description" })
       .then(async (): Promise<void> => {
-        setAllCriteria(await api.getAllCriteria())
+        setAllCriterion(await api.getAllCriteria())
       })
   }
 
@@ -79,15 +83,19 @@ export const ProjectRatingSettings = () => {
       </div>
       <div>
         <Subsubheading text="Edit Criteria" />
-        {allCriteria.map(criteria => [
-          <CriteriaEditor criteria={criteria} />,
+        {allCriterion.map(criteria => [
+          <CriterionEditor criteria={criteria} />,
           <Spacer />
         ])}
       </div>
       <div>
-        <Button fullWidth={false} variant="contained" onClick={addCriteria}>
+        <Button fullWidth={false} variant="contained" onClick={addCriterion}>
           Add
-        </Button>
+          </Button>
+          <Spacer />
+          <Button fullWidth={false} variant="contained" onClick={addCriterion}>
+          Save
+          </Button>
       </div>
     </SettingsSection>
   );

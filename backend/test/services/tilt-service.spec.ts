@@ -17,7 +17,7 @@ import { MockTokenService } from "./mock/mock-token-service";
 import { MockUnixSignalService } from "./mock/mock-unix-signal-service";
 import { MockUserService } from "./mock/mock-user-service";
 import { MockTeamsService } from "./mock/mock-teams-service";
-import { MockCriteriaService } from "./mock/mock-criteria-service";
+import { MockCriterionService } from "./mock/mock-criterion-service";
 import { MockProjectService } from "./mock/mock-project-service";
 import { MockRatingService } from "./mock/mock-rating-service";
 
@@ -35,7 +35,7 @@ describe("TiltService", () => {
     const database = addService(new MockDatabaseService());
     const users = addService(new MockUserService());
     const teams = addService(new MockTeamsService());
-    const criteria = addService(new MockCriteriaService());
+    const criteria = addService(new MockCriterionService());
     const project = addService(new MockProjectService());
     const rating = addService(new MockRatingService());
     const http = addService(new MockHttpService());

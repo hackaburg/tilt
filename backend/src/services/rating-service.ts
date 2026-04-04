@@ -9,18 +9,11 @@ import { RatingDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
 import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
-import { Criteria } from "../entities/criteria";
-
-export interface CriteriaRatingResult {
-  criteria: Criteria;
-  averageRating: number;
-  ratingsCount: number;
-}
+import { Criterion } from "../entities/criterion";
 
 export interface ProjectRatingResult {
   project: Project;
-  criteriaResults: readonly CriteriaRatingResult[];
-  overallScore: number;
+  criterionIdToAvg: Record<number, number>;
 }
 
 export interface IRatingService extends IService {
@@ -45,7 +38,7 @@ export interface IRatingService extends IService {
    */
   deleteRatingByID(id: number, currentUser: User): Promise<void>;
   /**
-   * Get aggregated rating results grouped by project and criteria
+   * Get all ratings for every project
    */
   getRatingResults(): Promise<readonly ProjectRatingResult[]>;
 }
@@ -67,7 +60,7 @@ export class RatingService implements IRatingService {
 
   public constructor(
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
-                     @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
+    @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
   ) {}
 
   /**
@@ -118,12 +111,12 @@ export class RatingService implements IRatingService {
       where: {
         user: { id: user.id },
         project: { id: rating.project.id },
-        critera: { id: rating.critera.id },
+        criterion: { id: rating.criterion.id },
       },
     });
 
     if (existing) {
-      throw new BadRequestError("You have already rated this project for this criteria");
+      throw new BadRequestError("You have already rated this project for this criterion");
     }
 
     return this._ratings.save(rating);
@@ -161,55 +154,48 @@ export class RatingService implements IRatingService {
   }
 
   /**
-   * Gets aggregated rating results grouped by project and criteria.
+   * Get the average ratings for each project
    */
   public async getRatingResults(): Promise<readonly ProjectRatingResult[]> {
-    const allRatings = await this._ratings.find();
+    const allProjects = await this._projects.find();
 
-    const byProject = new Map<number, Rating[]>();
-    for (const rating of allRatings) {
-      const projectId = rating.project.id;
-      if (!byProject.has(projectId)) {
-        byProject.set(projectId, []);
-      }
-      byProject.get(projectId)!.push(rating);
-    }
+    const result = [];
 
-    const results: ProjectRatingResult[] = [];
-    for (const [, projectRatings] of byProject) {
-      const project = projectRatings[0].project;
+    for (const project of allProjects) {
+      // Get all entities
+      const ratings = await this._ratings.find({
+        where: {
+          project: { id: project.id },
+        },
+      });
 
-      const byCriteria = new Map<number, Rating[]>();
-      for (const rating of projectRatings) {
-        const criteriaId = rating.critera.id;
-        if (!byCriteria.has(criteriaId)) {
-          byCriteria.set(criteriaId, []);
+      // Sum up
+      const criterionIdToSum: Record<number, number> = {}
+      const criterionIdToCount: Record<number, number> = {}
+      for (const rating of ratings) {
+        const criterionId = rating.criterion.id;
+        if (criterionIdToSum[criterionId] === undefined) {
+          criterionIdToSum[criterionId] = 0;
+          criterionIdToCount[criterionId] = 0;
         }
-        byCriteria.get(criteriaId)!.push(rating);
+
+        criterionIdToSum[criterionId] += rating.rating;
+        criterionIdToCount[criterionId] += 1;
       }
 
-      const criteriaResults: CriteriaRatingResult[] = [];
-      let totalScore = 0;
-      for (const [, criteriaRatings] of byCriteria) {
-        const criteria = criteriaRatings[0].critera;
-        const averageRating =
-          criteriaRatings.reduce((sum, r) => sum + r.rating, 0) / criteriaRatings.length;
-        totalScore += averageRating;
-        criteriaResults.push({
-          criteria,
-          averageRating,
-          ratingsCount: criteriaRatings.length,
-        });
+      // Calculate average
+      const criterionIdToAvg: Record<number, number> = {}
+      for (const criterionId in criterionIdToSum) {
+        criterionIdToAvg[criterionId] = criterionIdToSum[criterionId] / criterionIdToCount[criterionId];
       }
 
-      results.push({
+      result.push({
         project,
-        criteriaResults,
-        overallScore: criteriaResults.length > 0 ? totalScore / criteriaResults.length : 0,
+        criterionIdToAvg
       });
     }
 
-    return results;
+    return result;
   }
 
   private async checkPermission(rating: Rating, user: User): Promise<void> {
