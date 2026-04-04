@@ -91,6 +91,9 @@ export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
   @IsNumber()
   @Expose()
   public hoursToConfirm!: number;
+  @IsBoolean()
+  @Expose()
+  public allowRatingProjects!: boolean;
 }
 
 export class FrontendSettingsDTO implements DTO<FrontendSettings> {
@@ -163,9 +166,6 @@ export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
   @ValidateNested()
   @Expose()
   public email!: EmailSettingsDTO;
-  @IsBoolean()
-  @Expose()
-  public allowRating!: boolean;
 }
 
 export abstract class QuestionConfigurationDTOBase {

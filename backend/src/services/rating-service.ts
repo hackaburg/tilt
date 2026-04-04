@@ -198,7 +198,7 @@ export class RatingService implements IRatingService {
 
   private async checkPermission(rating: Rating, user: User): Promise<void> {
     const settings = await this._settings.getSettings();
-    if (!settings.allowRating) {
+    if (!settings.application.allowRatingProjects) {
       throw new ForbiddenError("Rating is not allowed due to application settings")
     }
 

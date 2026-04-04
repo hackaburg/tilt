@@ -70,7 +70,9 @@ describe("RatingService", () => {
       it("throws ForbiddenError when rating is globally disabled", async () => {
         expect.assertions(1);
 
-        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: false } as any);
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: false } } as any
+        );
 
         await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
           ForbiddenError,
@@ -80,7 +82,10 @@ describe("RatingService", () => {
       it("throws NotFoundError when project does not exist", async () => {
         expect.assertions(1);
 
-        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: true } } as any
+        );
+
         mockProjectsRepo.findOneBy.mockResolvedValue(null);
 
         await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
@@ -91,7 +96,10 @@ describe("RatingService", () => {
       it("throws ForbiddenError when project disallows rating", async () => {
         expect.assertions(1);
 
-        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: true } } as any
+        );
+
         mockProjectsRepo.findOneBy.mockResolvedValue(
           Object.assign(new Project(), { ...mockProject, allowRating: false }),
         );
@@ -104,7 +112,10 @@ describe("RatingService", () => {
       it("throws NotFoundError when team does not exist", async () => {
         expect.assertions(1);
 
-        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: true } } as any
+        );
+
         mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
         mockTeamsRepo.findOneBy.mockResolvedValue(null);
 
@@ -116,7 +127,10 @@ describe("RatingService", () => {
       it("throws ForbiddenError when user tries to rate their own project", async () => {
         expect.assertions(1);
 
-        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: true } } as any
+        );
+
         mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
         mockTeamsRepo.findOneBy.mockResolvedValue(
           Object.assign(new Team(), { ...mockTeam, users: [1, 2, 3] }),
@@ -130,7 +144,10 @@ describe("RatingService", () => {
       it("creates a rating when all permissions are satisfied", async () => {
         expect.assertions(2);
 
-        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: true } } as any
+        );
+
         mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
         mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
         mockRatingsRepo.findOne.mockResolvedValue(null);
@@ -146,7 +163,10 @@ describe("RatingService", () => {
       it("throws BadRequestError when user has already rated the same project and criteria", async () => {
         expect.assertions(1);
 
-        settingsService.mocks.getSettings.mockResolvedValue({ allowRating: true } as any);
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: true } } as any
+        );
+
         mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
         mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
         mockRatingsRepo.findOne.mockResolvedValue(mockRating);

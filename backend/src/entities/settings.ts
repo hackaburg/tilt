@@ -64,8 +64,6 @@ export class Settings {
   @Type(() => EmailSettings)
   @Column(() => EmailSettings)
   public email!: EmailSettings;
-  @Column({ default: false })
-  public allowRating!: boolean;
 }
 
 /**
