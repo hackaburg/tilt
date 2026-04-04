@@ -158,21 +158,19 @@ export class RatingService implements IRatingService {
    */
   public async getRatingResults(): Promise<readonly ProjectRatingResult[]> {
     const allProjects = await this._projects.find();
+    const allRatings = await this._ratings.find();
 
     const result = [];
 
     for (const project of allProjects) {
-      // Get all entities
-      const ratings = await this._ratings.find({
-        where: {
-          project: { id: project.id },
-        },
-      });
-
       // Sum up
       const criterionIdToSum: Record<number, number> = {}
       const criterionIdToCount: Record<number, number> = {}
-      for (const rating of ratings) {
+      for (const rating of allRatings) {
+        if (rating.project.id !== project.id) {
+          continue;
+        }
+
         const criterionId = rating.criterion.id;
         if (criterionIdToSum[criterionId] === undefined) {
           criterionIdToSum[criterionId] = 0;

@@ -160,21 +160,25 @@ describe("RatingService", () => {
 
   describe("getRatingResults", () => {
     it("aggregates ratings for two projects with two ratings each", async () => {
-      expect.assertions(3);
+      expect.assertions(5);
 
       const projectA = Object.assign(new Project(), { id: 1, team: mockTeam });
       const projectB = Object.assign(new Project(), { id: 2, team: mockTeam });
 
       mockProjectsRepo.find.mockResolvedValue([ projectA, projectB ])
 
-      const criteriaA = Object.assign(new Criterion(), { id: 1 });
-      const criteriaB = Object.assign(new Criterion(), { id: 2 });
+      const criterionA = Object.assign(new Criterion(), { id: 1 });
+      const criterionB = Object.assign(new Criterion(), { id: 2 });
 
       const ratingsFixture = [
-        Object.assign(new Rating(), { id: 1, project: projectA, criterion: criteriaA, rating: 2 }),
-        Object.assign(new Rating(), { id: 2, project: projectB, criterion: criteriaA, rating: 3 }),
-        Object.assign(new Rating(), { id: 3, project: projectA, criterion: criteriaB, rating: 1 }),
-        Object.assign(new Rating(), { id: 4, project: projectB, criterion: criteriaB, rating: 3 }),
+        // Project A
+        Object.assign(new Rating(), { id: 1, project: projectA, criterion: criterionA, rating: 2 }),
+        Object.assign(new Rating(), { id: 2, project: projectA, criterion: criterionA, rating: 3 }),
+        Object.assign(new Rating(), { id: 3, project: projectA, criterion: criterionB, rating: 1 }),
+        // Project B
+        Object.assign(new Rating(), { id: 4, project: projectB, criterion: criterionB, rating: 2 }),
+        Object.assign(new Rating(), { id: 5, project: projectB, criterion: criterionB, rating: 5 }),
+        Object.assign(new Rating(), { id: 6, project: projectB, criterion: criterionB, rating: 5 }),
       ];
 
       mockRatingsRepo.find.mockResolvedValue(ratingsFixture);
@@ -186,8 +190,14 @@ describe("RatingService", () => {
       const resultA = results.find((r) => r.project.id === projectA.id)!;
       expect(resultA).toBeDefined();
       expect(resultA.criterionIdToAvg).toEqual({
-        [criteriaA.id]: 2.5,
-        [criteriaB.id]: 2,
+        [criterionA.id]: 2.5,
+        [criterionB.id]: 1,
+      });
+
+      const resultB = results.find((r) => r.project.id === projectB.id)!;
+      expect(resultB).toBeDefined();
+      expect(resultB.criterionIdToAvg).toEqual({
+        [criterionB.id]: 4,
       });
     });
   });
