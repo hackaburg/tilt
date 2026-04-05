@@ -15,4 +15,6 @@ export class Project {
   public description!: string;
   @Column()
   public allowRating!: boolean;
+  @Column()
+  public image: string = "";
 }

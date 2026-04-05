@@ -150,6 +150,10 @@ export class ProjectService implements IProjectService {
    * Throw errors if the user is not allowed to modify/access the project.
    */
   private async checkPermission(project: Project, user: User): Promise<void> {
+    if (user.role === UserRole.Root) {
+      return
+    }
+
     const team = await this._teams.findOneBy({ id: project.team.id });
     if (!team || !team.users.includes(user.id.toString())) {
       // Tried to access a project belonging to a different team, forbidden

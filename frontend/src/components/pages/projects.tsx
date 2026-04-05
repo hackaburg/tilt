@@ -53,11 +53,12 @@ export const Projects = () => {
       </HeaderContainer>
 
       <Collapsible title="Rate Projects. Get more information.">
-        At the end of the event, we need you to rate other peoples projects based on
-        arious criteria, to declare a winner.
+        At the end of the event, other peoples projects will show up here, and we need
+        you to rate other peoples projects based on arious criteria, to declare a
+        winner.
       </Collapsible>
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>
-        {Array.from(Projects).map((Project: ProjectDTO, index) => (
+        {allProjects.map((Project: ProjectDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
             <Link
               to={`/edit-Project?id=${Project.id}`}
@@ -71,7 +72,7 @@ export const Projects = () => {
                 }}
               >
                 <img
-                  src={Project.ProjectImg}
+                  src={Project.image}
                   alt={Project.title}
                   style={{
                     width: "100%",
@@ -105,16 +106,6 @@ export const Projects = () => {
                   >
                     {Project.description}
                   </p>
-                  <div>
-                    <b>Project Size</b>
-                    <Chip
-                      icon={<GrGroup />}
-                      style={{ marginLeft: "0.5rem" }}
-                      label={Project.users!.length + " members"}
-                      variant="outlined"
-                      size="medium"
-                    />
-                  </div>
                 </div>
               </div>
             </Link>

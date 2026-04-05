@@ -1,49 +1,93 @@
+import { Repository } from "typeorm"
 import { NotFoundError } from "routing-controllers";
 import { Project } from "../../src/entities/project";
 import { Team } from "../../src/entities/team";
 import { User } from "../../src/entities/user";
+import { UserRole } from "../../src/entities/user-role";
 import { IDatabaseService } from "../../src/services/database-service";
 import { IProjectService, ProjectService } from "../../src/services/project-service";
 import { MockedService } from "./mock";
+import { TestDatabaseService } from "./mock/mock-database-service";
 
 describe("ProjectService", () => {
-  let mockProjectsRepo: any;
-  let mockTeamsRepo: any;
-  let mockUsersRepo: any;
-  let mockDatabase: IDatabaseService;
+  let service: IProjectService;
+  let database: TestDatabaseService;
   let projectService: IProjectService;
 
-  const mockUser = Object.assign(new User(), { id: 1, role: "user" });
-  const mockTeam = Object.assign(new Team(), { id: 10, users: ["1", "2"] });
-  const mockProject = Object.assign(new Project(), {
-    id: 100,
-    team: mockTeam,
-    title: "Original Title",
-    description: "Original Description",
-    allowRating: true,
+  let userRepo: Repository<User>;
+  let teamRepo: Repository<Team>;
+  let projectRepo: Repository<Project>;
+
+  let adminUser: User;
+  let regularUser: User;
+  let userWithoutTeam: User;
+  let mockProject: Project;
+  let mockTeam: Team;
+
+  beforeAll(async () => {
+    database = new TestDatabaseService();
+    await database.bootstrap();
   });
 
   beforeEach(async () => {
-    mockProjectsRepo = {
-      findOneBy: jest.fn(),
-      save: jest.fn(),
-      delete: jest.fn(),
-      find: jest.fn(),
-    };
-    mockTeamsRepo = { findOneBy: jest.fn() };
-    mockUsersRepo = { findOneBy: jest.fn() };
+    await database.nuke();
 
-    mockDatabase = {
-      bootstrap: jest.fn(),
-      getRepository: jest.fn().mockImplementation((entity: any) => {
-        if (entity === Project) return mockProjectsRepo;
-        if (entity === Team) return mockTeamsRepo;
-        if (entity === User) return mockUsersRepo;
-        return { find: jest.fn().mockResolvedValue([]) };
-      }),
-    } as any;
+    userRepo = database.getRepository(User);
+    teamRepo = database.getRepository(Team);
+    projectRepo = database.getRepository(Project);
 
-    projectService = new ProjectService(mockDatabase);
+    // Create admin user
+    adminUser = new User();
+    adminUser.firstName = "Admin";
+    adminUser.lastName = "User";
+    adminUser.email = "admin@test.com";
+    adminUser.password = "";
+    adminUser.role = UserRole.Root;
+    adminUser.verifyToken = "";
+    adminUser.tokenSecret = "";
+    adminUser.forgotPasswordToken = "";
+
+    // Create regular users
+    regularUser = new User();
+    regularUser.firstName = "Regular";
+    regularUser.lastName = "User";
+    regularUser.email = "user@test.com";
+    regularUser.password = "";
+    regularUser.role = UserRole.User;
+    regularUser.verifyToken = "";
+    regularUser.tokenSecret = "";
+    regularUser.forgotPasswordToken = "";
+
+    userWithoutTeam = new User();
+    userWithoutTeam.firstName = "Regular 2";
+    userWithoutTeam.lastName = "User 2";
+    userWithoutTeam.email = "user2@test.com";
+    userWithoutTeam.password = "";
+    userWithoutTeam.role = UserRole.User;
+    userWithoutTeam.verifyToken = "";
+    userWithoutTeam.tokenSecret = "";
+    userWithoutTeam.forgotPasswordToken = "";
+
+    [ adminUser, regularUser, userWithoutTeam ] = await userRepo.save(
+      [ adminUser, regularUser, userWithoutTeam ]
+    );
+
+    mockTeam = new Team();
+    mockTeam.title = "Team 1";
+    mockTeam.users = [ regularUser.id.toString() ];
+    mockTeam.teamImg = "";
+    mockTeam.description = "";
+    mockTeam.requests = [];
+    mockTeam = await teamRepo.save(mockTeam);
+
+    mockProject = new Project();
+    mockProject.team = mockTeam;
+    mockProject.title = "Original Title";
+    mockProject.description = "Original Description";
+    mockProject.allowRating = false;
+    mockProject = await projectRepo.save(mockProject);
+
+    projectService = new ProjectService(database);
     await projectService.bootstrap();
   });
 
@@ -51,47 +95,38 @@ describe("ProjectService", () => {
     describe("via updateProject", () => {
       it("allows update when user is in the project team", async () => {
         expect.assertions(1);
-
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
         const updatedProject = Object.assign(new Project(), { ...mockProject, title: "New Title" });
-        mockProjectsRepo.save.mockResolvedValue(updatedProject);
-
-        const result = await projectService.updateProject(mockProject, mockUser);
-
+        const result = await projectService.updateProject(updatedProject, regularUser);
         expect(result.title).toBe("New Title");
+      });
+
+      it("regular users cannot overwrite allowRating", async () => {
+        expect.assertions(1);
+        const updatedProject = Object.assign(new Project(), { ...mockProject, allowRating: true });
+        const result = await projectService.updateProject(updatedProject, regularUser);
+        expect(result.allowRating).toEqual(false);
+      });
+
+      it("admins can overwrite allowRating", async () => {
+        expect.assertions(1);
+        const updatedProject = Object.assign(new Project(), { ...mockProject, allowRating: true });
+        const result = await projectService.updateProject(updatedProject, adminUser);
+        expect(result.allowRating).toEqual(true);
       });
 
       it("throws NotFoundError when user is not in the project team", async () => {
         expect.assertions(1);
-
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(
-          Object.assign(new Team(), { ...mockTeam, users: ["2", "3"] }),
-        );
-
-        await expect(projectService.updateProject(mockProject, mockUser)).rejects.toThrow(
-          NotFoundError,
-        );
-      });
-
-      it("throws NotFoundError when team does not exist", async () => {
-        expect.assertions(1);
-
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(null);
-
-        await expect(projectService.updateProject(mockProject, mockUser)).rejects.toThrow(
+        const updatedProject = Object.assign(new Project(), { ...mockProject, title: "New Title" });
+        await expect(projectService.updateProject(updatedProject, userWithoutTeam)).rejects.toThrow(
           NotFoundError,
         );
       });
 
       it("throws NotFoundError when project does not exist", async () => {
         expect.assertions(1);
-
-        mockProjectsRepo.findOneBy.mockResolvedValue(null);
-
-        await expect(projectService.updateProject(mockProject, mockUser)).rejects.toThrow(
+        await projectRepo.delete(mockProject.id);
+        const updatedProject = Object.assign(new Project(), { ...mockProject, title: "New Title" });
+        await expect(projectService.updateProject(updatedProject, regularUser)).rejects.toThrow(
           NotFoundError,
         );
       });
