@@ -81,7 +81,7 @@ describe(ProjectService.name, () => {
 
   describe("getAllProjects", () => {
     it("gets all projects if the user is an admin", async () => {
-      expect.assertions(1);
+      expect.assertions(4);
 
       // Create teams with projects
       const team1 = new Team();
@@ -126,6 +126,9 @@ describe(ProjectService.name, () => {
       const allProjects = await service.getAllProjects(adminUser);
 
       expect(allProjects).toHaveLength(3);
+      expect(allProjects[0]).toEqual(project1);
+      expect(allProjects[1]).toEqual(project2);
+      expect(allProjects[2]).toEqual(project3);
     });
 
     it("gets no projects if the user is a regular user", async () => {
@@ -157,7 +160,7 @@ describe(ProjectService.name, () => {
     });
 
     it("regular user, part of two teams, gets 3 projects", async () => {
-      expect.assertions(1);
+      expect.assertions(4);
 
       // Create two teams with the regular user
       const team1 = new Team();
@@ -202,10 +205,13 @@ describe(ProjectService.name, () => {
       const allProjects = await service.getAllProjects(regularUser);
 
       expect(allProjects).toHaveLength(3);
+      expect(allProjects[0]).toEqual(project1);
+      expect(allProjects[1]).toEqual(project2);
+      expect(allProjects[2]).toEqual(project3);
     });
 
     it("regular user without team gets projects that can be rated", async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
       await allowRatingProjects(true)
 
@@ -239,6 +245,7 @@ describe(ProjectService.name, () => {
       const allProjects = await service.getAllProjects(regularUser);
 
       expect(allProjects).toHaveLength(1);
+      expect(allProjects[0]).toEqual(ratingProject);
     });
   });
 });
