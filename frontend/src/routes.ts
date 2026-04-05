@@ -23,6 +23,7 @@ export enum Routes {
   VerifyEmail = "/verify",
   Map = "/map",
   Challenges = "/challenges",
+  Projects = "/projects",
 }
 
 /**

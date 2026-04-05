@@ -8,6 +8,7 @@ import { StyleableFlexContainer } from "../../base/flex";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuUser } from "react-icons/lu";
+import { GoProjectTemplate } from "react-icons/go";
 import { BiLogOutCircle } from "react-icons/bi";
 import { FaHandHoldingHeart, FaRegCircleCheck } from "react-icons/fa6";
 import { IoStatsChartOutline } from "react-icons/io5";
@@ -145,6 +146,11 @@ export const Sidebar = () => {
             {" "}
             Teams
           </span>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem to={Routes.Projects}>
+          <GoProjectTemplate />
+          <span style={{ marginLeft: "1rem" }}> Projects</span>
         </SidebarMenuItem>
 
         {isElevatedUser && (
