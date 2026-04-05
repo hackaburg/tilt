@@ -7,15 +7,17 @@ import { Heading } from "../base/headings";
 import { Page } from "./page";
 import { api } from "../../hooks/use-api";
 
-console.log("alskdjfla", api)
-
 const HeaderContainer = styled(StyleableFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;
 
 /**
- * A settings dashboard to configure all parts of tilt.
+ * - Show all projects visible to the user (owned + rating allowed)
+ * - Let users rate them
+ * - Create and Delete projects
+ * - Offer menu to edit title and description of their own project
+ * - Admins can enable or disable rating for individual projects
  */
 export const Projects = () => {
   const [allProjects, setAllProjects] = useState([]);

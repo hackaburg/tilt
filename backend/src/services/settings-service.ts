@@ -115,6 +115,7 @@ export class SettingsService implements ISettingsService {
     applicationSettings.allowProfileFormFrom = new Date();
     applicationSettings.allowProfileFormUntil = new Date();
     applicationSettings.hoursToConfirm = 24;
+    applicationSettings.allowRatingProjects = false;
     return applicationSettings;
   }
 

@@ -7,6 +7,7 @@ import { Project } from "../entities/project";
 import { User } from "../entities/user";
 
 // TODO for every team, add a new project automatically with the correct teamId
+//  or maybe allow users to create projects after all, idk
 
 @JsonController("/projects")
 export class ProjectsController {
@@ -19,8 +20,10 @@ export class ProjectsController {
    */
   @Get("/")
   @Authorized(UserRole.User)
-  public async getAllProjects(): Promise<ProjectDTO[]> {
-    const projects = await this._projects.getAllProjects();
+  public async getAllProjects(
+    @CurrentUser() user: User,
+  ): Promise<ProjectDTO[]> {
+    const projects = await this._projects.getAllProjects(user);
     return projects.map((p) => convertBetweenEntityAndDTO(p, ProjectDTO));
   }
 

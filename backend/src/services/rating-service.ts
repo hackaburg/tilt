@@ -214,7 +214,7 @@ export class RatingService implements IRatingService {
     if (!team) {
       throw new NotFoundError("Team not found");
     }
-    if (team.users.includes(user.id)) {
+    if (team.users.includes(user.id.toString())) {
       throw new ForbiddenError("You can't rate your own project")
     }
   }

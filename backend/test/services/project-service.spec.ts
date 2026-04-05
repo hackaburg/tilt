@@ -14,7 +14,7 @@ describe("ProjectService", () => {
   let projectService: IProjectService;
 
   const mockUser = Object.assign(new User(), { id: 1, role: "user" });
-  const mockTeam = Object.assign(new Team(), { id: 10, users: [1, 2] });
+  const mockTeam = Object.assign(new Team(), { id: 10, users: ["1", "2"] });
   const mockProject = Object.assign(new Project(), {
     id: 100,
     team: mockTeam,
@@ -67,7 +67,7 @@ describe("ProjectService", () => {
 
         mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
         mockTeamsRepo.findOneBy.mockResolvedValue(
-          Object.assign(new Team(), { ...mockTeam, users: [2, 3] }),
+          Object.assign(new Team(), { ...mockTeam, users: ["2", "3"] }),
         );
 
         await expect(projectService.updateProject(mockProject, mockUser)).rejects.toThrow(

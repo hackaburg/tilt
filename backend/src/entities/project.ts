@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
 import { Longtext } from "./longtext";
 import { Team } from "./team";
 
@@ -6,7 +6,7 @@ import { Team } from "./team";
 export class Project {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
-  @OneToOne(() => Team, { eager: true })
+  @ManyToOne(() => Team, { eager: true })
   @JoinColumn()
   public team!: Team;
   @Column({ length: 1024 })

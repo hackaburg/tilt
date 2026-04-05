@@ -145,14 +145,15 @@ export class TeamService implements ITeamService {
       throw new Error("Please add at least one user to the team");
     }
 
-    if (team.users.length > 8) {
-      throw new Error("A team can have a maximum of 5 users");
+    const maxUsers = 8
+    if (team.users.length > maxUsers) {
+      throw new Error(`A team can have a maximum of ${maxUsers} users`);
     }
 
-    const user = team.users[0];
+    const userId = team.users[0];
     const allTeams = await this._database.getRepository(Team).find();
     const userTeams = allTeams.filter(
-      (t) => t.users[0].toString() === user.toString(),
+      (t) => t.users[0].toString() === userId.toString(),
     );
 
     if (userTeams.length >= 5) {
@@ -172,6 +173,7 @@ export class TeamService implements ITeamService {
       throw e;
     }
   }
+
   /**
    * Gets a team by its id.
    * @param id The id of the team
@@ -223,6 +225,9 @@ export class TeamService implements ITeamService {
       throw new Error(`no team with id ${teamId}`);
     }
 
+    // TODO team.users and team.requests are string arrays, instead of
+    //  arrays of user entities. Write tests, then use a many-to-many relationship
+    //  instead and don't use toString anymore.
     const requests = team.requests.map((id) => id.toString());
 
     if (requests.indexOf(user.id.toString()) > -1) {
@@ -231,7 +236,7 @@ export class TeamService implements ITeamService {
       );
     }
 
-    team.requests.push(user.id);
+    team.requests.push(user.id.toString());
     await this._teams.save(team);
     return Promise.resolve();
   }
@@ -282,7 +287,7 @@ export class TeamService implements ITeamService {
     team.requests = team.requests.filter(
       (id) => id.toString() !== userId.toString(),
     );
-    team.users.push(userId);
+    team.users.push(userId.toString());
     await this._teams.save(team);
     return Promise.resolve();
   }
