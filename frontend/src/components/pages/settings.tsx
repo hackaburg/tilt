@@ -5,7 +5,7 @@ import { Heading } from "../base/headings";
 import { ApplicationSettings } from "../settings/application/application-settings";
 import { EmailSettings } from "../settings/mail-settings/email-settings";
 import { FrontendSettings } from "../settings/appearance/frontend-settings";
-import { ProjectRatingSettings } from "../settings/project-rating/project-rating-settings";
+import { ProjectRatingSettings } from "../settings/project-rating/rating-criteria-settings";
 import { SettingsSaveButton } from "../settings/save-button";
 import { Page } from "./page";
 import { SimpleCard } from "../base/simple-card";

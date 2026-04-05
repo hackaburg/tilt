@@ -537,7 +537,7 @@ export class ApiClient {
     await this.delete<SystemControllerMethods["prune"]>("/system/prune");
   }
 
-  // Criterion
+  // Criteria
 
   /**
    * Gets all criteria.
