@@ -10,6 +10,7 @@ export class Team {
   // TODO many-to-many instead of simple-array (array of userId strings)
   @Column("simple-array")
   public users!: string[];
+  // TODO rename teamImg to image
   @Column()
   public teamImg!: string;
   @Longtext()

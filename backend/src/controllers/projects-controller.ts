@@ -6,9 +6,6 @@ import { ProjectDTO, convertBetweenEntityAndDTO } from "./dto";
 import { Project } from "../entities/project";
 import { User } from "../entities/user";
 
-// TODO for every team, add a new project automatically with the correct teamId
-//  or maybe allow users to create projects after all, idk
-
 @JsonController("/projects")
 export class ProjectsController {
   public constructor(
