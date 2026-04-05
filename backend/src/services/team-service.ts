@@ -3,6 +3,7 @@ import { Repository } from "typeorm";
 import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { Team } from "../entities/team";
+import { Project } from "../entities/project";
 import {
   TeamResponseDTO,
   convertBetweenEntityAndDTO,
@@ -59,6 +60,7 @@ export const TeamServiceToken = new Token<ITeamService>();
 export class TeamService implements ITeamService {
   private _teams!: Repository<Team>;
   private _users!: Repository<User>;
+  private _projects!: Repository<Project>;
 
   public constructor(
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
@@ -70,6 +72,7 @@ export class TeamService implements ITeamService {
   public async bootstrap(): Promise<void> {
     this._teams = this._database.getRepository(Team);
     this._users = this._database.getRepository(User);
+    this._projects = this._database.getRepository(Project);
   }
 
   /**
@@ -168,7 +171,17 @@ export class TeamService implements ITeamService {
           placeholder_img[Math.floor(Math.random() * placeholder_img.length)];
       }
       team.requests = [];
-      return this._teams.save(team);
+      const createdTeam = await this._teams.save(team);
+
+      // Every team gets one project by default
+      const project = new Project()
+      project.title = `${team.title}'s Project`;
+      project.description = "";
+      project.team = createdTeam;
+      project.allowRating = false;
+      await this._projects.save(project);
+
+      return createdTeam;
     } catch (e) {
       throw e;
     }
