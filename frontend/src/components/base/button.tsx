@@ -5,12 +5,11 @@ import { borderRadius, transitionDuration } from "../../config";
 import { variables } from "../../theme";
 import { Spinner } from "./spinner";
 
-const RegularButton = styled.button`
+const WideRegularButton = styled.button`
   position: relative;
 
   display: inline-block;
   padding: 0.75rem 2rem;
-  width: 100%;
 
   border: none;
   border-radius: ${borderRadius};
@@ -44,7 +43,7 @@ const RegularButton = styled.button`
     `}
 `;
 
-const PrimaryButton = styled(RegularButton)`
+const WidePrimaryButton = styled(WideRegularButton)`
   background: linear-gradient(
     to top right,
     ${variables.colorGradientStart},
@@ -69,7 +68,7 @@ interface IButtonProps {
 }
 
 /**
- * A clickable button.
+ * A clickable button at 100% width.
  */
 export const Button = ({
   children,
@@ -77,6 +76,7 @@ export const Button = ({
   disable = false,
   primary = false,
   loading = false,
+  wide = false,
   color,
 }: IButtonProps) => {
   const handleClick = useCallback(
@@ -88,10 +88,12 @@ export const Button = ({
     [loading, disable, onClick],
   );
 
-  const Component = primary ? PrimaryButton : RegularButton;
+  const Component = primary ? WidePrimaryButton : WideRegularButton;
+
+  const style = {}
 
   return (
-    <Component disabled={disable || loading} onClick={handleClick}>
+    <Component disabled={disable || loading} onClick={handleClick} style={style}>
       {children}
       {loading && (
         <SpinnerContainer>

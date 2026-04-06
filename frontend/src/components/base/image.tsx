@@ -16,3 +16,7 @@ interface IImageProps {
 export const Image = ({ src, label }: IImageProps) => (
   <Img src={src} alt={label} />
 );
+
+export const RoundedImage = styled.img`
+  border-radius: 5px;
+`;

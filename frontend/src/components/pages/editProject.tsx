@@ -100,7 +100,7 @@ export const EditProject = () => {
         <Heading text={`Edit Project - ${projectById?.title}`} />
 
         <NonGrowingFlexContainer>
-          <a style={{ width: "15rem", marginTop: "1rem" }}>
+          <a style={{ marginTop: "1rem" }}>
             {isTeamMember ? (
               <Button
                 loading={updateProjectInProgress}

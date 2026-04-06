@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer } from "../base/flex";
+import { NonGrowingFlexContainer, FlexRowContainer, Spacer } from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
+import { RoundedImage } from "../base/image";
 import { Divider } from "../base/divider";
 import { useApi } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
@@ -14,14 +15,10 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
   flex-direction: row;
 `;
 
-interface ViewTeamProps {
-  team: TeamDTO;
-}
-
 /**
  * A team view component.
  */
-export const ViewTeam = ({ team }: ViewTeamProps) => {
+export const ReadOnlyTeam = ({ team }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
   const params = new URLSearchParams(document.location.search);
@@ -41,14 +38,16 @@ export const ViewTeam = ({ team }: ViewTeamProps) => {
 
   function notInUserList() {
     return (
-      !team.users.some((u) => u.id === user?.id) &&
-      !team.requests.some((u) => u.id === user?.id)
+      !team?.users.some((u) => u.id === user?.id) &&
+      !team?.requests.some((u) => u.id === user?.id)
     );
   }
 
   React.useEffect(() => {
-    setIsTeamOwner(user?.id === Number(team?.users![0].id));
-    setIsTeamMember(team.users!.some((u) => u.id === user?.id));
+    if (team) {
+      setIsTeamOwner(user?.id === Number(team?.users![0].id));
+      setIsTeamMember(team.users!.some((u) => u.id === user?.id));
+    }
   }, [team, user?.id]);
 
   return (
@@ -61,17 +60,21 @@ export const ViewTeam = ({ team }: ViewTeamProps) => {
         <Subheading text={"You are part of this team"}></Subheading>
       )}
       <div style={{ marginTop: "2rem" }}>
-        <p>{team?.description}</p>
+        <FlexRowContainer>
         <div>
           {team?.teamImg !== "" ? (
-            <img src={team?.teamImg} style={{ width: "200px", height: "200px" }} />
+            <RoundedImage src={team?.teamImg} style={{ width: "200px", height: "200px" }} />
           ) : null}
-        </div>
-
+          </div>
+          <Spacer />
+          <p>{team?.description}</p>
+        </FlexRowContainer>
+        <Spacer />
         {!isTeamOwner && notInUserList() ? (
+          <div>
           <Button onClick={sendRequestToJoin} primary={true}>
-          Request to join
-          </Button>
+            Request to join
+          </Button></div>
         ) : null}
 
         <div style={{ width: "100%", marginTop: "1rem" }}>
@@ -86,7 +89,7 @@ export const ViewTeam = ({ team }: ViewTeamProps) => {
             Team Members
           </h3>
           <div style={{ marginTop: "1.5rem" }}>
-            {team.users.map((singleUser, index) => (
+            {team?.users.map((singleUser, index) => (
               <div key={index} style={{ display: "flex" }}>
                 {singleUser.name}
               </div>

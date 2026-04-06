@@ -4,6 +4,7 @@ import { NonGrowingFlexContainer, NonGrowingFlexContainer } from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
+import { RoundedImage } from "../base/image";
 import { TextInput, TextInputType } from "../base/text-input";
 import { api, useApi } from "../../hooks/use-api";
 import {
@@ -19,7 +20,7 @@ import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
-import { ViewTeam } from "./view-team";
+import { ReadOnlyTeam } from "./read-only-team";
 import { UserRole } from "../../api/types/enums";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
@@ -28,17 +29,41 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
 `;
 
 /**
+ * A gate component that checks if the current user is part of the team.
+ * Renders the editor if user is a member, the viewer otherwise.
+ */
+export const ViewTeam = () => {
+  const loginState = useLoginContext();
+  const { user } = loginState;
+
+  const [team, setTeam] = React.useState(null);
+  const params = new URLSearchParams(document.location.search);
+  const teamId = Number(params.get("id"))
+  React.useEffect(
+    () => { api.getTeamByID(teamId).then((team) => setTeam(team))},
+    []
+  );
+
+  const isTeamMember = React.useMemo(() => {
+    return team?.users?.some((u) => u.id === user?.id) ?? false;
+  }, [team, user?.id]);
+
+  const isAdmin = user?.role == UserRole.Root
+
+  return isTeamMember || isAdmin ? (
+    <EditTeam team={team} />
+  ) : (
+    <ReadOnlyTeam team={team}/>
+  );
+};
+
+/**
  * A settings dashboard to configure all parts of tilt.
  */
-export const EditTeam = () => {
+const EditTeam = ({ team }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
   const params = new URLSearchParams(document.location.search);
-
-  const { value: teamById } = useApi(
-    async (apiClient) => apiClient.getTeamByID(Number(params.get("id"))),
-    [],
-  );
 
   const [currentUserId, setCurrentUserId] = React.useState(0);
   const [isTeamOwner, setIsTeamOwner] = React.useState(false);
@@ -149,18 +174,18 @@ export const EditTeam = () => {
   }
 
   React.useEffect(() => {
-    if (teamById) {
+    if (team) {
       setCurrentUserId(Number(params.get("id")));
-      setId(teamById.id);
-      setTitle(teamById.title);
-      setDescription(teamById.description);
-      setTeamImg(teamById.teamImg);
-      setUsers(teamById.users!);
-      setRequest(teamById.requests!);
-      setIsTeamOwner(user?.id === Number(teamById?.users![0].id));
-      setIsTeamMember(teamById.users!.some((u) => u.id === user?.id));
+      setId(team.id);
+      setTitle(team.title);
+      setDescription(team.description);
+      setTeamImg(team.teamImg);
+      setUsers(team.users!);
+      setRequest(team.requests!);
+      setIsTeamOwner(user?.id === Number(team?.users![0].id));
+      setIsTeamMember(team.users!.some((u) => u.id === user?.id));
     }
-  }, [teamById]);
+  }, [team]);
 
   function notInUserList() {
     return (
@@ -169,18 +194,13 @@ export const EditTeam = () => {
     );
   }
 
-  if (!isTeamMember && user?.role != UserRole.Root) {
-    console.log("I love pain", teamById)
-    return teamById != null ? <ViewTeam team={teamById}/> : ""
-  }
-
   return (
     <Page>
       <HeaderContainer>
-        <Heading text={`Edit Team - ${teamById?.title}`} />
+        <Heading text={`Edit Team - ${team?.title}`} />
 
         <NonGrowingFlexContainer>
-          <a style={{ width: "15rem", marginTop: "1rem" }}>
+          <a style={{ marginTop: "1rem" }}>
             <Button
               loading={updateTeamInProgress}
               disable={updateTeamInProgress}
@@ -224,7 +244,7 @@ export const EditTeam = () => {
             type={TextInputType.Text}
           />
           {teamImg !== "" ? (
-            <img src={teamImg} style={{ width: "200px", height: "200px" }} />
+            <RoundedImage src={teamImg} style={{ width: "200px", height: "200px" }} />
           ) : null}
           {!isTeamOwner && notInUserList() ? (
             <Button onClick={sendRequestToJoin} primary={true}>
