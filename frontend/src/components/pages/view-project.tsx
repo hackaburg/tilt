@@ -21,6 +21,7 @@ import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
 import { UserRole } from "../../api/types/enums";
 import { TextField, Switch, FormControlLabel, Stack, Button } from "@mui/material";
+import { ReadOnlyProject } from "./read-only-project";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -28,17 +29,41 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
 `;
 
 /**
+ * A gate component that checks if the current user is part of the team.
+ * Renders the editor if user is a member, the viewer otherwise.
+ */
+export const ViewProject = () => {
+  const loginState = useLoginContext();
+  const { user } = loginState;
+
+  const [project, setProject] = React.useState(null);
+  const params = new URLSearchParams(document.location.search);
+  const projectId = Number(params.get("id"))
+  React.useEffect(
+    () => { api.getProjectByID(projectId).then((project) => setProject(project))},
+    []
+  );
+
+  const isTeamMember = React.useMemo(() => {
+    return project?.team?.users?.some((id) => id === user?.id.toString()) ?? false;
+  }, [project, user?.id]);
+
+  const isAdmin = user?.role == UserRole.Root
+
+  return isTeamMember || isAdmin ? (
+    <EditProject project={project} />
+  ) : (
+    <ReadOnlyProject project={project}/>
+  );
+};
+
+/**
  * A settings dashboard to configure all parts of tilt.
  */
-export const EditProject = () => {
+const EditProject = ({ project }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
   const params = new URLSearchParams(document.location.search);
-
-  const { value: projectById } = useApi(
-    async (apiClient) => apiClient.getProjectByID(Number(params.get("id"))),
-    [],
-  );
 
   const [isTeamMember, setIsTeamMember] = React.useState(false);
   const [id, setId] = React.useState(0);
@@ -84,20 +109,20 @@ export const EditProject = () => {
     Boolean(didUpdateProject) && !updateProjectInProgress && !updateProjectError;
 
   React.useEffect(() => {
-    if (projectById) {
-      setId(projectById.id);
-      setTitle(projectById.title);
-      setDescription(projectById.description);
-      setImage(projectById.image);
-      setAllowRating(projectById.allowRating);
-      setIsTeamMember(projectById.team.users.includes(user?.id.toString()));
+    if (project) {
+      setId(project.id);
+      setTitle(project.title);
+      setDescription(project.description);
+      setImage(project.image);
+      setAllowRating(project.allowRating);
+      setIsTeamMember(project.team.users.includes(user?.id.toString()));
     }
-  }, [projectById]);
+  }, [project]);
 
   return (
     <Page>
       <HeaderContainer>
-        <Heading text={`Edit Project - ${projectById?.title}`} />
+        <Heading text={`Edit Project - ${project?.title}`} />
 
         <NonGrowingFlexContainer>
           <a style={{ marginTop: "1rem" }}>

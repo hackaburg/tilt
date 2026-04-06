@@ -5,7 +5,7 @@ import { borderRadius, transitionDuration } from "../../config";
 import { variables } from "../../theme";
 import { Spinner } from "./spinner";
 
-const WideRegularButton = styled.button`
+const RegularButton = styled.button`
   position: relative;
 
   display: inline-block;
@@ -43,7 +43,7 @@ const WideRegularButton = styled.button`
     `}
 `;
 
-const WidePrimaryButton = styled(WideRegularButton)`
+const PrimaryButton = styled(RegularButton)`
   background: linear-gradient(
     to top right,
     ${variables.colorGradientStart},
@@ -78,6 +78,7 @@ export const Button = ({
   loading = false,
   wide = false,
   color,
+  href = null
 }: IButtonProps) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
@@ -88,12 +89,10 @@ export const Button = ({
     [loading, disable, onClick],
   );
 
-  const Component = primary ? WidePrimaryButton : WideRegularButton;
-
-  const style = {}
+  const Component = primary ? PrimaryButton : RegularButton;
 
   return (
-    <Component disabled={disable || loading} onClick={handleClick} style={style}>
+    <Component disabled={disable || loading} onClick={handleClick}>
       {children}
       {loading && (
         <SpinnerContainer>

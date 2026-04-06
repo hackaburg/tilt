@@ -63,7 +63,7 @@ export const Projects = () => {
         {allProjects.map((project: ProjectDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
             <Link
-              to={`/edit-project?id=${project.id}`}
+              to={`/project?id=${project.id}`}
               style={{ color: "black", textDecoration: "none" }}
             >
               <div

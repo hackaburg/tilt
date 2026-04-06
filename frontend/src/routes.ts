@@ -5,7 +5,7 @@ export enum Routes {
   Admission = "/admission",
   Teams = "/teams",
   CreateTeam = "/create-team",
-  ViewTeam = "/edit-team",
+  ViewTeam = "/team",
   ConfirmationForm = "/confirm",
   ConfirmationFormApply = "/apply/confirm",
   Login = "/login",
@@ -24,7 +24,7 @@ export enum Routes {
   Map = "/map",
   Challenges = "/challenges",
   Projects = "/projects",
-  EditProject = "/edit-project",
+  ViewProject = "/project",
 }
 
 /**
@@ -49,5 +49,5 @@ export const authenticatedRoutes = [
   Routes.Map,
   Routes.Challenges,
   Routes.Projects,
-  Routes.EditProject,
+  Routes.ViewProject,
 ];

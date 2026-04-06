@@ -30,7 +30,7 @@ import { Challenges } from "../pages/challenges";
 import { Teams } from "../pages/teams";
 import { CreateTeam } from "../pages/createTeam";
 import { ViewTeam } from "../pages/view-team";
-import { EditProject } from "../pages/view-project";
+import { ViewProject } from "../pages/view-project";
 import { Projects } from "../pages/projects";
 
 const SidebarSliderContainer = styled(NonGrowingFlexContainer)`
@@ -113,7 +113,7 @@ export const AuthenticatedRouter = () => {
               <Route path={Routes.ProfileForm} component={ProfileForm} />
               <Route path={Routes.Map} component={Map} />
               <Route path={Routes.Projects} component={Projects} />
-              <Route path={Routes.EditProject} component={EditProject} />
+              <Route path={Routes.ViewProject} component={ViewProject} />
               <Route path={Routes.Challenges} component={Challenges} />
               <Route
                 path={Routes.ConfirmationForm}

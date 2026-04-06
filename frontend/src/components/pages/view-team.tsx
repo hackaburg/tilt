@@ -22,6 +22,8 @@ import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
 import { ReadOnlyTeam } from "./read-only-team";
 import { UserRole } from "../../api/types/enums";
+import { Divider } from "../base/divider";
+import { PageHeader } from "../base/page-header";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -63,7 +65,6 @@ export const ViewTeam = () => {
 const EditTeam = ({ team }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
-  const params = new URLSearchParams(document.location.search);
 
   const [currentUserId, setCurrentUserId] = React.useState(0);
   const [isTeamOwner, setIsTeamOwner] = React.useState(false);
@@ -102,7 +103,7 @@ const EditTeam = ({ team }) => {
     forcePerformRequest: sendRequestToJoin,
   } = useApi(async (apiClient, wasTriggeredManually) => {
     if (wasTriggeredManually) {
-      await apiClient.requestToJoinTeam(Number(params.get("id")));
+      await apiClient.requestToJoinTeam(team.id);
       return true;
     }
     return false;
@@ -110,7 +111,7 @@ const EditTeam = ({ team }) => {
 
   async function acceptUserToTeam(userId: number) {
     await api.acceptUserToTeam(
-      Number(params.get("id")),
+      team.id,
       request.find((u) => u.id === userId)!.id,
     );
     history.go(0);
@@ -124,7 +125,7 @@ const EditTeam = ({ team }) => {
   } = useApi(async (apiClient, wasTriggeredManually) => {
     if (wasTriggeredManually) {
       if (confirm("Are you sure you want to delete this team?")) {
-        await apiClient.deleteTeam(Number(params.get("id")));
+        await apiClient.deleteTeam(team.id);
         return true;
       }
     }
@@ -175,7 +176,7 @@ const EditTeam = ({ team }) => {
 
   React.useEffect(() => {
     if (team) {
-      setCurrentUserId(Number(params.get("id")));
+      setCurrentUserId(team.id);
       setId(team.id);
       setTitle(team.title);
       setDescription(team.description);
@@ -196,23 +197,13 @@ const EditTeam = ({ team }) => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text={`Edit Team - ${team?.title}`} />
-
-        <NonGrowingFlexContainer>
-          <a style={{ marginTop: "1rem" }}>
-            <Button
-              loading={updateTeamInProgress}
-              disable={updateTeamInProgress}
-              onClick={sendSaveTeamRequest}
-              primary={true}
-            >
-              Save Changes
-            </Button>
-          </a>
-        </NonGrowingFlexContainer>
-      </HeaderContainer>
-      <Subheading text={"You are part of this team"}></Subheading>
+      <PageHeader
+        pageTitle={`Edit Team - ${team?.title}`}
+        buttonText="Save Changes"
+        buttonOnClick={sendSaveTeamRequest}
+        buttonLoading={updateTeamInProgress}
+        subTitle="You are part of this team"
+      />
       <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
         {updateTeamError && (
           <Message type="error">

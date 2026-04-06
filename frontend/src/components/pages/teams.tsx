@@ -13,11 +13,7 @@ import { GrGroup } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Collapsible } from "../base/collapsible";
 import { Divider } from "../base/divider";
-
-const HeaderContainer = styled(NonGrowingFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
+import { PageHeader } from "../base/page-header";
 
 /**
  * A settings dashboard to configure all parts of tilt.
@@ -29,29 +25,22 @@ export const Teams = () => {
 
   return (
     <Page>
-      <HeaderContainer style={{ "flex-direction": "column" }}>
-        <div style={{ display: "flex", "justify-content": "space-between" }}>
-          <Heading text="Teams" />
-          <a style={{ width: "15rem" }}>
-            <InternalLink to={Routes.CreateTeam}>
-              <Button primary={true}>Create New Team</Button>
-            </InternalLink>
-          </a>
-        </div>
-        <Divider />
-        <Collapsible title="Create or join a team">
-          You can create or join a team. You can
+      <PageHeader
+        pageTitle="Teams"
+        buttonText="Create New Team"
+        buttonHref={Routes.CreateTeam}
+        subTitle="Create or join a team"
+        collapsibleText="You can create or join a team. You can
           add other users to your team and remove them as well. The team owner can
           delete the team and remove users from the team. If you want to join a
           team you can send a request to join the team and the team owner can
-          accept or reject the request.
-        </Collapsible>
-      </HeaderContainer>
+          accept or reject the request."
+      />
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>
         {Array.from(teams).map((team: TeamDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
             <Link
-              to={`/edit-team?id=${team.id}`}
+              to={`/team?id=${team.id}`}
               style={{ color: "black", textDecoration: "none" }}
             >
               <div
