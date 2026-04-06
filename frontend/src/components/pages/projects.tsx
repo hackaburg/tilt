@@ -48,14 +48,17 @@ export const Projects = () => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text="Projects" />
+      <HeaderContainer style={{ "flex-direction": "column" }}>
+        <div style={{ display: "flex", "justify-content": "space-between" }}>
+          <Heading text="Projects" />
+        </div>
+        <Divider />
+        <Collapsible title="Rate Projects. Get more information.">
+          At the end of the event, other peoples projects will show up here, and we need
+          you to rate them based on arious criteria, to help decide the winning team.
+        </Collapsible>
       </HeaderContainer>
 
-      <Collapsible title="Rate Projects. Get more information.">
-        At the end of the event, other peoples projects will show up here, and we need
-        you to rate them based on arious criteria, to help decide the winning team.
-      </Collapsible>
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>
         {allProjects.map((project: ProjectDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
+import { NonGrowingFlexContainer, StyleableFlexContainer, FlexColumnContainer, FlexRowContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
@@ -12,6 +12,7 @@ import { TeamDTO } from "../../api/types/dto";
 import { GrGroup } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Collapsible } from "../base/collapsible";
+import { Divider } from "../base/divider";
 
 const HeaderContainer = styled(StyleableFlexContainer)`
   justify-content: space-between;
@@ -28,24 +29,24 @@ export const Teams = () => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text="Teams" />
-        <NonGrowingFlexContainer>
-          <a style={{ width: "15rem", marginTop: "1rem" }}>
+      <HeaderContainer style={{ "flex-direction": "column" }}>
+        <div style={{ display: "flex", "justify-content": "space-between" }}>
+          <Heading text="Teams" />
+          <a style={{ width: "15rem" }}>
             <InternalLink to={Routes.CreateTeam}>
               <Button primary={true}>Create New Team</Button>
             </InternalLink>
           </a>
-        </NonGrowingFlexContainer>
+        </div>
+        <Divider />
+        <Collapsible title="Create or join a team. Get more information.">
+          You can create or join a team. You can
+          add other users to your team and remove them as well. The team owner can
+          delete the team and remove users from the team. If you want to join a
+          team you can send a request to join the team and the team owner can
+          accept or reject the request.
+        </Collapsible>
       </HeaderContainer>
-
-      <Collapsible title="Create or join a team. Get more information.">
-        You can create or join a team. You can
-        add other users to your team and remove them as well. The team owner can
-        delete the team and remove users from the team. If you want to join a
-        team you can send a request to join the team and the team owner can
-        accept or reject the request.
-      </Collapsible>
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>
         {Array.from(teams).map((team: TeamDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
