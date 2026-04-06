@@ -19,6 +19,8 @@ import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
+import { ViewTeam } from "./view-team";
+import { UserRole } from "../../api/types/enums";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -167,8 +169,9 @@ export const EditTeam = () => {
     );
   }
 
-  if (!isTeamMember && !user?.role == UserRole.Root) {
-    return <ViewTeam />
+  if (!isTeamMember && user?.role != UserRole.Root) {
+    console.log("I love pain", teamById)
+    return teamById != null ? <ViewTeam team={teamById}/> : ""
   }
 
   return (

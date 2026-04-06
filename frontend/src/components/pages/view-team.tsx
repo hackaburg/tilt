@@ -4,31 +4,24 @@ import { NonGrowingFlexContainer } from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
+import { Divider } from "../base/divider";
 import { useApi } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
+import { TeamDTO } from "../../api/types/dto";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;
 
-interface Team {
-  id: number;
-  title: string;
-  description: string;
-  teamImg: string;
-  users: Array<{ id: number; name: string }>;
-  requests: Array<{ id: number; name: string }>;
-}
-
-interface EditTeamProps {
-  team: Team;
+interface ViewTeamProps {
+  team: TeamDTO;
 }
 
 /**
  * A team view component.
  */
-export const EditTeam = ({ team }: EditTeamProps) => {
+export const ViewTeam = ({ team }: ViewTeamProps) => {
   const loginState = useLoginContext();
   const { user } = loginState;
   const params = new URLSearchParams(document.location.search);
@@ -61,24 +54,25 @@ export const EditTeam = ({ team }: EditTeamProps) => {
   return (
     <Page>
       <HeaderContainer>
-        <Heading text={`${team?.title}`} />
+        <Heading text={team?.title} />
       </HeaderContainer>
+      <Divider />
       {!isTeamMember ? null : (
         <Subheading text={"You are part of this team"}></Subheading>
       )}
       <div style={{ marginTop: "2rem" }}>
-        <h3>{team?.title}</h3>
         <p>{team?.description}</p>
         <div>
           {team?.teamImg !== "" ? (
             <img src={team?.teamImg} style={{ width: "200px", height: "200px" }} />
           ) : null}
-          {!isTeamOwner && notInUserList() ? (
-            <Button onClick={sendRequestToJoin} primary={true}>
-              Request to join
-            </Button>
-          ) : null}
         </div>
+
+        {!isTeamOwner && notInUserList() ? (
+          <Button onClick={sendRequestToJoin} primary={true}>
+          Request to join
+          </Button>
+        ) : null}
 
         <div style={{ width: "100%", marginTop: "1rem" }}>
           <h3
@@ -94,7 +88,7 @@ export const EditTeam = ({ team }: EditTeamProps) => {
           <div style={{ marginTop: "1.5rem" }}>
             {team.users.map((singleUser, index) => (
               <div key={index} style={{ display: "flex" }}>
-                {singleUser}
+                {singleUser.name}
               </div>
             ))}
           </div>
