@@ -167,6 +167,10 @@ export const EditTeam = () => {
     );
   }
 
+  if (!isTeamMember && !user?.role == UserRole.Root) {
+    return <ViewTeam />
+  }
+
   return (
     <Page>
       <HeaderContainer>
@@ -174,22 +178,18 @@ export const EditTeam = () => {
 
         <NonGrowingFlexContainer>
           <a style={{ width: "15rem", marginTop: "1rem" }}>
-            {isTeamMember ? (
-              <Button
-                loading={updateTeamInProgress}
-                disable={updateTeamInProgress}
-                onClick={sendSaveTeamRequest}
-                primary={true}
-              >
-                Save Changes
-              </Button>
-            ) : null}
+            <Button
+              loading={updateTeamInProgress}
+              disable={updateTeamInProgress}
+              onClick={sendSaveTeamRequest}
+              primary={true}
+            >
+              Save Changes
+            </Button>
           </a>
         </NonGrowingFlexContainer>
       </HeaderContainer>
-      {!isTeamMember ? null : (
-        <Subheading text={"You are part of this team"}></Subheading>
-      )}
+      <Subheading text={"You are part of this team"}></Subheading>
       <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
         {updateTeamError && (
           <Message type="error">
@@ -204,7 +204,6 @@ export const EditTeam = () => {
           value={title}
           onChange={(value) => setTitle(value)}
           type={TextInputType.Text}
-          isDisabled={!isTeamMember}
         />
         <TextInput
           title="Team Description"
@@ -212,7 +211,6 @@ export const EditTeam = () => {
           value={description}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
-          isDisabled={!isTeamMember}
         />
         <div>
           <TextInput
@@ -221,7 +219,6 @@ export const EditTeam = () => {
             value={teamImg}
             onChange={(value) => setTeamImg(value)}
             type={TextInputType.Text}
-            isDisabled={!isTeamMember}
           />
           {teamImg !== "" ? (
             <img src={teamImg} style={{ width: "200px", height: "200px" }} />
