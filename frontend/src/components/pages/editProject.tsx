@@ -19,6 +19,8 @@ import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
+import { UserRole } from "../../api/types/enums";
+import { TextField, Switch, FormControlLabel, Stack, Button } from "@mui/material";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -43,6 +45,7 @@ export const EditProject = () => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [image, setImage] = React.useState("");
+  const [allowRating, setAllowRating] = React.useState(false);
 
   const {
     value: didUpdateProject,
@@ -52,24 +55,20 @@ export const EditProject = () => {
   } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        console.log("Update", {
-          title,
-          description,
-          image,
-        })
         await apiClient.updateProject(
           id,
           {
             title,
             description,
             image,
+            allowRating,
           }
         );
         return true;
       }
       return false;
     },
-    [id, title, description, image],
+    [id, title, description, image, allowRating],
   );
 
   const { value: allUsers } = useApi(
@@ -90,6 +89,7 @@ export const EditProject = () => {
       setTitle(projectById.title);
       setDescription(projectById.description);
       setImage(projectById.image);
+      setAllowRating(projectById.allowRating);
       setIsTeamMember(projectById.team.users.includes(user?.id.toString()));
     }
   }, [projectById]);
@@ -125,6 +125,15 @@ export const EditProject = () => {
         )}
       </div>
       <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
+        {user?.role === UserRole.Root && (
+          <FormControlLabel
+            control={<Switch
+              checked={allowRating}
+              onChange={(event) => setAllowRating(event.target.checked)}
+            />}
+            label="Allow users to rate this project"
+          />
+        )}
         <TextInput
           title="Project Title"
           placeholder="Your project name"
