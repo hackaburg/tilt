@@ -6,10 +6,11 @@ import { Page } from "./page";
 import { Button } from "../base/button";
 import { RoundedImage } from "../base/image";
 import { Divider } from "../base/divider";
-import { useApi } from "../../hooks/use-api";
+import { useApi, api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { TeamDTO } from "../../api/types/dto";
 import { PageHeader } from "../base/page-header";
+import { CriterionRating } from "./criterion";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -29,6 +30,31 @@ export const ReadOnlyProject = ({ project }) => {
   const [description, setDescription] = React.useState("");
   const [image, setImage] = React.useState("");
   const [allowRating, setAllowRating] = React.useState(false);
+  const [criteria, setCriteria] = React.useState([]);
+  const [allUsers, setAllUsers] = React.useState([]);
+
+  React.useEffect(() => {
+    if (project) {
+      setId(project.id);
+      setTitle(project.title);
+      setDescription(project.description);
+      setImage(project.image);
+      setAllowRating(project.allowRating);
+    }
+  }, [project]);
+
+  React.useEffect(
+    () => {
+      api.getAllUsers().then((allUsers) => {
+        setAllUsers(allUsers)
+      });
+
+      api.getAllCriteria().then((criteria) => {
+        setCriteria(criteria)
+      });
+    },
+    []
+  );
 
   const {
     value: didUpdateProject,
@@ -54,27 +80,12 @@ export const ReadOnlyProject = ({ project }) => {
     [id, title, description, image, allowRating],
   );
 
-  const { value: allUsers } = useApi(
-    async (apiClient) => apiClient.getAllUsers(),
-    [],
-  );
-
   const handleSubmit = React.useCallback((event: React.SyntheticEvent) => {
     event.preventDefault();
   }, []);
 
   const updateProjectDone =
     Boolean(didUpdateProject) && !updateProjectInProgress && !updateProjectError;
-
-  React.useEffect(() => {
-    if (project) {
-      setId(project.id);
-      setTitle(project.title);
-      setDescription(project.description);
-      setImage(project.image);
-      setAllowRating(project.allowRating);
-    }
-  }, [project]);
 
   return (
     <Page>
@@ -89,6 +100,15 @@ export const ReadOnlyProject = ({ project }) => {
           <Spacer />
           <p>{project?.description}</p>
         </FlexRowContainer>
+      </div>
+      <div>
+        <h2 style={{ "margin-top": "4rem" }}>Rate this Project</h2>
+        Hover the criterion for more information.
+        Rate criteria high, if you think the project did well in this regard.
+        {criteria.map(criterion => <CriterionRating
+          criterion={criterion}
+          project={project}
+        />)}
       </div>
     </Page>
   );

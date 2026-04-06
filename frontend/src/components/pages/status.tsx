@@ -98,7 +98,7 @@ export const Status = () => {
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between <b>01.03.205 - 31.04.2025</b>
+                , any time between <b>01.03.2026 - 31.04.2026</b>
               </Text>
             </>
           )}
@@ -145,14 +145,14 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 We will come back to you and send you a acceptance mail until{" "}
-                <b>01.05.2025</b>.
+                <b>01.05.2026</b>.
               </Text>
             </>
           )}
           {user?.confirmed && (
             <>
               <Text style={{ fontSize: "1.15rem" }}>
-                Congratulations! You got accepted for Hackaburg 2025. 🎉
+                Congratulations! You got accepted for Hackaburg 2026. 🎉
               </Text>
             </>
           )}
@@ -173,7 +173,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 If you got accepted, you need to confirm your spot until{" "}
-                <b>08.05.2025</b>
+                <b>08.05.2026</b>
                 {user?.admitted && (
                   <>
                     {" "}

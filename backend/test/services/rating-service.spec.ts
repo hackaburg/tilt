@@ -175,6 +175,28 @@ describe("RatingService", () => {
           BadRequestError,
         );
       });
+
+      it("is forbidden to impersonate other users", async () => {
+        expect.assertions(1);
+
+        settingsService.mocks.getSettings.mockResolvedValue(
+          { application: { allowRatingProjects: true } } as any
+        );
+
+        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
+        mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
+        mockRatingsRepo.findOne.mockResolvedValue(null);
+
+        mockRating.user = {
+          ...mockUser,
+          id: 1234
+        };
+
+        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+          ForbiddenError,
+        );
+      });
+
     });
   });
 

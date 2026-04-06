@@ -217,5 +217,9 @@ export class RatingService implements IRatingService {
     if (team.users.includes(user.id.toString())) {
       throw new ForbiddenError("You can't rate your own project")
     }
+
+    if (rating.user.id !== user.id) {
+      throw new ForbiddenError("You can't rate as a different user");
+    }
   }
 }

@@ -55,6 +55,11 @@ export class RatingController {
     @CurrentUser() user: User,
   ): Promise<RatingDTO> {
     const rating = convertBetweenEntityAndDTO(ratingDTO, Rating);
+
+    // Ensure ratings cannot be cast for other users,
+    // write the requesting user into it.
+    rating.user = user;
+
     const createdRating = await this._ratings.createRating(rating, user);
     return convertBetweenEntityAndDTO(createdRating, RatingDTO);
   }

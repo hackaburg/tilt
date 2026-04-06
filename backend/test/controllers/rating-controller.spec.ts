@@ -48,9 +48,9 @@ describe("RatingController", () => {
   describe("authorization", () => {
     let server: http.Server;
     let port: number;
-    let httpRatingService: MockedService<IRatingService>;
-    let httpSettingsService: MockedService<ISettingsService>;
-    let httpUserService: MockedService<IUserService>;
+    let ratingService: MockedService<IRatingService>;
+    let settingsService: MockedService<ISettingsService>;
+    let userService: MockedService<IUserService>;
 
     const rootUser = Object.assign(new User(), { id: 1, role: UserRole.Root });
     const regularUser = Object.assign(new User(), { id: 2, role: UserRole.User });
@@ -61,20 +61,20 @@ describe("RatingController", () => {
     };
 
     beforeAll(async () => {
-      httpRatingService = new MockRatingService();
-      httpSettingsService = new MockSettingsService();
-      httpUserService = new MockUserService();
+      ratingService = new MockRatingService();
+      settingsService = new MockSettingsService();
+      userService = new MockUserService();
 
-      httpUserService.mocks.findUserByLoginToken.mockImplementation(
+      userService.mocks.findUserByLoginToken.mockImplementation(
         async (token: string) => tokenMap[token] ?? null,
       );
 
-      const httpService = new HttpService(null as any, null as any, httpUserService.instance);
+      const httpService = new HttpService(null as any, null as any, userService.instance);
 
       useContainer({
         get(target: Function) {
           if (target === RatingController) {
-            return new RatingController(httpSettingsService.instance, httpRatingService.instance);
+            return new RatingController(settingsService.instance, ratingService.instance);
           }
           return new (target as any)();
         },
@@ -111,9 +111,9 @@ describe("RatingController", () => {
     });
 
     it("allows requests from User-role users", async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
-      httpRatingService.mocks.createRating.mockResolvedValue({} as any);
+      ratingService.mocks.createRating.mockResolvedValue({} as any);
 
       const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
         method: "POST",
@@ -121,17 +121,24 @@ describe("RatingController", () => {
           "Content-Type": "application/json",
           Authorization: "Bearer user-token",
         },
-        body: JSON.stringify({ data: {} }),
+        body: JSON.stringify({ data: { rating: 3, project: { id: 1 }, criterion: { id: 2 } } }),
       });
 
-      // Authorization passed; any status other than 403 is acceptable here
-      expect(response.status).not.toBe(403);
+      expect(response.status).toBe(200);
+      expect(ratingService.mocks.createRating).toHaveBeenCalledWith(
+        expect.objectContaining({
+          project: expect.objectContaining({ id: 1 }),
+          user: expect.objectContaining({ id: regularUser.id }),
+          criterion: expect.objectContaining({ id: 2 }),
+        }),
+        regularUser,
+      );
     });
 
     it("passes authorization for admin (Root) users", async () => {
       expect.assertions(1);
 
-      httpRatingService.mocks.createRating.mockResolvedValue({} as any);
+      ratingService.mocks.createRating.mockResolvedValue({} as any);
 
       const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
         method: "POST",
