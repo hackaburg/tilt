@@ -56,7 +56,7 @@ export const Projects = () => {
           here, and we need you to rate them based on arious criteria, to help decide
           the winning team."
       />
-      <Grid container spacing={3} style={{ marginTop: "2rem" }}>
+      <Grid container spacing={3}>
         {allProjects.map((project: ProjectDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
             <Link

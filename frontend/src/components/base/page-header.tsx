@@ -27,6 +27,7 @@ export const PageHeader = ({
   buttonDisable = false,
   subTitle = null,
   collapsibleText = null,
+  marginBottom = "2rem"
 }) => {
   const button = buttonText && (
     <Button
@@ -38,7 +39,7 @@ export const PageHeader = ({
   );
 
   return (
-    <HeaderContainer style={{ "flex-direction": "column" }}>
+    <HeaderContainer style={{ "flex-direction": "column", marginBottom }}>
       <div style={{ display: "flex", "justify-content": "space-between" }}>
         <Heading text={pageTitle} />
         {buttonText && (

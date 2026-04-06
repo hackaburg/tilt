@@ -69,6 +69,7 @@ export const Status = () => {
       <PageHeader
         pageTitle={`Welcome ${user?.firstName}`}
         subTitle="The status of our application and all links for Hackaburg 2026 can be found here."
+        marginBottom={0}
       />
       <SimpleCard>
         <ProgressStep

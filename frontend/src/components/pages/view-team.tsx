@@ -204,14 +204,14 @@ const EditTeam = ({ team }) => {
         buttonLoading={updateTeamInProgress}
         subTitle="You are part of this team"
       />
-      <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-        {updateTeamError && (
+      {updateTeamError && (
+        <div style={{ marginBottom: "1rem" }}>
           <Message type="error">
             <b>Update Team Error: </b> {updateTeamError.message}
           </Message>
-        )}
-      </div>
-      <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
+        </div>
+      )}
+      <form onSubmit={handleSubmit}>
         <TextInput
           title="Team Title"
           placeholder="Your team name"

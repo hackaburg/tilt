@@ -79,7 +79,7 @@ export const ReadOnlyProject = ({ project }) => {
   return (
     <Page>
       <PageHeader pageTitle={project?.title}/>
-      <div style={{ marginTop: "2rem" }}>
+      <div>
         <FlexRowContainer>
         <div>
           {project?.image !== "" ? (

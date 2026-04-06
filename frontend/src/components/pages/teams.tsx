@@ -36,7 +36,7 @@ export const Teams = () => {
           team you can send a request to join the team and the team owner can
           accept or reject the request."
       />
-      <Grid container spacing={3} style={{ marginTop: "2rem" }}>
+      <Grid container spacing={3}>
         {Array.from(teams).map((team: TeamDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
             <Link

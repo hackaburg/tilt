@@ -17,7 +17,8 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
 `;
 
 /**
- * A team view component.
+ * A team view component. This is only displayed, if the user is not part
+ * of the team.
  */
 export const ReadOnlyTeam = ({ team }) => {
   const loginState = useLoginContext();
@@ -54,7 +55,7 @@ export const ReadOnlyTeam = ({ team }) => {
   return (
     <Page>
       <PageHeader pageTitle={team?.title}/>
-      <div style={{ marginTop: "2rem" }}>
+      <div>
         <FlexRowContainer>
         <div>
           {team?.teamImg !== "" ? (

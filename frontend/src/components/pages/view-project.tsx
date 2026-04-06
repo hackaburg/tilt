@@ -23,6 +23,7 @@ import { UserRole } from "../../api/types/enums";
 import { TextField, Switch, FormControlLabel, Stack, Button } from "@mui/material";
 import { ReadOnlyProject } from "./read-only-project";
 import { PageHeader } from "../base/page-header";
+import { RoundedImage } from "../base/image";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -50,6 +51,10 @@ export const ViewProject = () => {
   }, [project, user?.id]);
 
   const isAdmin = user?.role == UserRole.Root
+
+  if (!project) {
+    return null
+  }
 
   return isTeamMember || isAdmin ? (
     <EditProject project={project} />
@@ -117,14 +122,14 @@ const EditProject = ({ project }) => {
         buttonLoading={updateProjectInProgress}
         subTitle="You are part of the team of this project"
       />
-      <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-        {updateProjectError && (
+      {updateProjectError && (
+        <div style={{ marginBottom: "1rem" }}>
           <Message type="error">
             <b>Update Project Error: </b> {updateProjectError.message}
           </Message>
-        )}
-      </div>
-      <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
+        </div>
+      )}
+      <form onSubmit={handleSubmit}>
         {user?.role === UserRole.Root && (
           <FormControlLabel
             control={<Switch
@@ -157,7 +162,7 @@ const EditProject = ({ project }) => {
             type={TextInputType.Text}
           />
           {image !== "" ? (
-            <img src={image} style={{ width: "200px", height: "200px" }} />
+            <RoundedImage src={image} style={{ width: "200px", height: "200px" }} />
           ) : null}
         </div>
       </form>
