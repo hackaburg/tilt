@@ -13,14 +13,19 @@ import {
 import { api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 
-export const CriterionRating = ({
+/**
+ * Component that allows users to submit and edit ratings for projects.
+ * Only for one criterion, use multiple of this to cover all of them.
+ */
+export const RatingForm = ({
+  rating,
   criterion,
   project,
 }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
 
-  const [rating, setRating] = useState<string>("3");
+  const [ratingValue, setRatingValue] = useState(rating.rating);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,13 +33,11 @@ export const CriterionRating = ({
     setIsSubmitting(true);
     setError(null);
 
-    console.log({ criterion, user, project })
-
     await api.createRating({
       criterion: {
-        Id: criterion.id
+        id: criterion.id
       },
-      rating: parseInt(rating),
+      rating: parseInt(ratingValue),
       user: {
         id: user.id
       },
@@ -42,7 +45,6 @@ export const CriterionRating = ({
         id: project.id
       },
     });
-    onRatingSubmitted?.();
 
     setIsSubmitting(false);
   };
@@ -70,8 +72,8 @@ export const CriterionRating = ({
         <FormControl component="fieldset">
           <RadioGroup
             row
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
+            value={ratingValue}
+            onChange={(e) => setRatingValue(e.target.value)}
           >
             {[1, 2, 3, 4, 5].map((value) => (
               <FormControlLabel

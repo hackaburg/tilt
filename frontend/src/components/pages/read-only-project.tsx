@@ -10,7 +10,7 @@ import { useApi, api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { TeamDTO } from "../../api/types/dto";
 import { PageHeader } from "../base/page-header";
-import { CriterionRating } from "./criterion";
+import { RatingForm } from "./rating-form";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -32,6 +32,7 @@ export const ReadOnlyProject = ({ project }) => {
   const [allowRating, setAllowRating] = React.useState(false);
   const [criteria, setCriteria] = React.useState([]);
   const [allUsers, setAllUsers] = React.useState([]);
+  const [ratings, setRatings] = React.useState([]);
 
   React.useEffect(() => {
     if (project) {
@@ -46,14 +47,20 @@ export const ReadOnlyProject = ({ project }) => {
   React.useEffect(
     () => {
       api.getAllUsers().then((allUsers) => {
-        setAllUsers(allUsers)
+        setAllUsers(allUsers);
       });
 
       api.getAllCriteria().then((criteria) => {
-        setCriteria(criteria)
+        setCriteria(criteria);
       });
+
+      if (project) {
+        api.getUsersRatingsForProject(project).then((ratings) => {
+          setRatings(ratings);
+        });
+      }
     },
-    []
+    [project]
   );
 
   const {
@@ -105,7 +112,8 @@ export const ReadOnlyProject = ({ project }) => {
         <h2 style={{ "margin-top": "4rem" }}>Rate this Project</h2>
         Hover the criterion for more information.
         Rate criteria high, if you think the project did well in this regard.
-        {criteria.map(criterion => <CriterionRating
+        {criteria.map(criterion => <RatingForm
+          rating={ratings.find(r => r.criterion.id == criterion.id)}
           criterion={criterion}
           project={project}
         />)}

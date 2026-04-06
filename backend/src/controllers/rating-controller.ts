@@ -4,7 +4,8 @@ import {
   CurrentUser,
   Get,
   Post,
-  Body
+  Body,
+  Param
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
@@ -26,13 +27,16 @@ export class RatingController {
   ) {}
 
   /**
-   * Get all ratings.
+   * Get aggregated rating results grouped by project and criteria.
    */
-  @Get("/")
-  @Authorized(UserRole.Root)
-  public async getAllRatings(): Promise<RatingDTO[]> {
-    const ratings = await this._ratings.getAllRatings();
-    return ratings.map((r) => convertBetweenEntityAndDTO(r, RatingDTO));
+  @Get("/by-project/:id")
+  @Authorized(UserRole.User)
+  public async getUsersRatingsForProject(
+    @Param("id") projectId: number,
+    @CurrentUser() user: User,
+  ): Promise<RatingDTO[]> {
+    const results = await this._ratings.getUsersRatingsForProject(projectId, user);
+    return results.map((r) => convertBetweenEntityAndDTO(r, RatingDTO));
   }
 
   /**
@@ -50,7 +54,7 @@ export class RatingController {
    */
   @Post("/rate")
   @Authorized(UserRole.User)
-  public async createRating(
+  public async rate(
     @Body() { data: ratingDTO }: { data: RatingDTO },
     @CurrentUser() user: User,
   ): Promise<RatingDTO> {
@@ -60,7 +64,7 @@ export class RatingController {
     // write the requesting user into it.
     rating.user = user;
 
-    const createdRating = await this._ratings.createRating(rating, user);
+    const createdRating = await this._ratings.upsertRating(rating, user);
     return convertBetweenEntityAndDTO(createdRating, RatingDTO);
   }
 }

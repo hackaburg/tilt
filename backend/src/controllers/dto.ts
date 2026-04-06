@@ -620,7 +620,7 @@ export class RatingDTO {
   @Expose()
   @Type(() => CriterionDTO)
   @ValidateNested()
-  public criteria!: CriterionDTO;
+  public criterion!: CriterionDTO;
   @Expose()
   @IsInt()
   @Min(1)
@@ -628,6 +628,8 @@ export class RatingDTO {
   public rating!: number;
 }
 
+// Do not send all ratings to the client,
+// because peoples opinion on the projects should be anonymous
 export class ProjectRatingResultDTO {
   @Expose()
   @Type(() => ProjectDTO)

@@ -10,6 +10,7 @@ import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
 import { Criterion } from "../entities/criterion";
+import { UserRole } from "../entities/user-role";
 
 export interface ProjectRatingResult {
   project: Project;
@@ -18,21 +19,18 @@ export interface ProjectRatingResult {
 
 export interface IRatingService extends IService {
   /**
-   * Get all ratings
+   * Get the ratings for a specific project, cast by a specific user.
+   * Users may only read their own created ratings.
    */
-  getAllRatings(): Promise<readonly Rating[]>;
+  getUsersRatingsForProject(projectId: number, user: User): Promise<readonly Rating[]>;
   /**
-   * Create new rating
+   *  Upsert a rating
    */
-  createRating(rating: Rating, user: User): Promise<Rating>;
-  /**
-   *  Update rating
-   */
-  updateRating(rating: Rating, user: User): Promise<Rating>;
+  upsertRating(rating: Rating, user: User): Promise<Rating>;
   /**
    * Get rating by id
    */
-  getRatingByID(id: number): Promise<RatingDTO | undefined>;
+  getRatingByID(id: number, user: User): Promise<RatingDTO | undefined>;
   /**
    * Delete single rating by id
    */
@@ -74,49 +72,48 @@ export class RatingService implements IRatingService {
   }
 
   /**
-   * Gets all ratings.
+   * Get the ratings for a specific project, cast by a specific user.
+   * Users may only read their own created ratings.
    */
-  public async getAllRatings(): Promise<readonly Rating[]> {
-    return this._database.getRepository(Rating).find();
+  public async getUsersRatingsForProject(projectId: number, user: User): Promise<readonly Rating[]> {
+    // TODO test
+    return this._database.getRepository(Rating).find({
+      where: {
+        project: {
+          id: projectId
+        },
+        user: {
+          id: user.id
+        }
+      }
+    });
   }
 
   /**
-   * Updates a rating.
-   * @param rating The rating to update
-   */
-  public async updateRating(rating: Rating, user: User): Promise<Rating> {
-    const originRating = await this._ratings.findOneBy({ id: rating.id });
-
-    if (!originRating) {
-      throw new NotFoundError("Rating not found");
-    }
-
-    if (user.id !== originRating.user.id) {
-      throw new ForbiddenError("You can only update your own ratings");
-    }
-
-    await this.checkPermission(rating, user);
-
-    return this._ratings.save(rating);
-  }
-
-  /**
-   * Creates a rating.
+   * Upsert a rating.
    * @param rating The rating to create
    */
-  public async createRating(rating: Rating, user: User): Promise<Rating> {
+  public async upsertRating(rating: Rating, user: User): Promise<Rating> {
     await this.checkPermission(rating, user);
 
-    const existing = await this._ratings.findOne({
-      where: {
-        user: { id: user.id },
-        project: { id: rating.project.id },
-        criterion: { id: rating.criterion.id },
+    const existingRating = await this._ratings.findOneBy({
+      user: {
+        id: user.id
       },
+      project: {
+        id: rating.project.id
+      },
+      criterion: {
+        id: rating.criterion.id
+      }
     });
 
-    if (existing) {
-      throw new BadRequestError("You have already rated this project for this criterion");
+    if (existingRating !== null) {
+      // Update
+      return this._ratings.save({
+        ...rating,
+        id: existingRating.id
+      });
     }
 
     return this._ratings.save(rating);
@@ -126,8 +123,17 @@ export class RatingService implements IRatingService {
    * Gets a rating by its id.
    * @param id The id of the rating
    */
-  public async getRatingByID(id: number): Promise<RatingDTO | undefined> {
+  public async getRatingByID(id: number, user: User): Promise<RatingDTO | undefined> {
     const rating = await this._ratings.findOneBy({ id });
+
+    if (!rating) {
+      throw new NotFoundError("Rating not found");
+    }
+
+    if (rating.user.id !== user.id && user.role !== UserRole.Root) {
+      throw new ForbiddenError()
+    }
+
     return rating ? convertBetweenEntityAndDTO(rating, RatingDTO) : undefined;
   }
 
@@ -196,6 +202,9 @@ export class RatingService implements IRatingService {
     return result;
   }
 
+  /**
+   * Check if the user is permitted to create/modify/delete this rating.
+   */
   private async checkPermission(rating: Rating, user: User): Promise<void> {
     const settings = await this._settings.getSettings();
     if (!settings.application.allowRatingProjects) {
@@ -207,7 +216,7 @@ export class RatingService implements IRatingService {
       throw new NotFoundError("Project not found");
     }
     if (!project.allowRating) {
-      throw new ForbiddenError("Rating this project is not allowed")
+      throw new ForbiddenError("Rating this project is not allowed");
     }
 
     const team = await this._teams.findOneBy({ id: project.team.id })
