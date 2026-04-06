@@ -9,6 +9,7 @@ import { Divider } from "../base/divider";
 import { useApi } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { TeamDTO } from "../../api/types/dto";
+import { PageHeader } from "../base/page-header";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -52,13 +53,7 @@ export const ReadOnlyTeam = ({ team }) => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text={team?.title} />
-      </HeaderContainer>
-      <Divider />
-      {!isTeamMember ? null : (
-        <Subheading text={"You are part of this team"}></Subheading>
-      )}
+      <PageHeader pageTitle={team?.title}/>
       <div style={{ marginTop: "2rem" }}>
         <FlexRowContainer>
         <div>

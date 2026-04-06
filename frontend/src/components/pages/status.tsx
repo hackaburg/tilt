@@ -19,6 +19,7 @@ import { Page } from "./page";
 import { Divider } from "../base/divider";
 import { SimpleCard } from "../base/simple-card";
 import { Grid } from "@mui/material";
+import { PageHeader } from "../base/page-header";
 
 /**
  * The start page every user sees after logging in.
@@ -65,13 +66,10 @@ export const Status = () => {
 
   return (
     <Page>
-      {user! && (
-        <>
-          <Heading text={`Welcome ${user?.firstName}`} />
-          <Divider />
-          <Subheading text="The status of our application and all links for Hackaburg 2025 can be found here." />
-        </>
-      )}
+      <PageHeader
+        pageTitle={`Welcome ${user?.firstName}`}
+        subTitle="The status of our application and all links for Hackaburg 2026 can be found here."
+      />
       <SimpleCard>
         <ProgressStep
           index={1}

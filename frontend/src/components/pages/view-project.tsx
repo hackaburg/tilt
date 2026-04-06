@@ -22,6 +22,7 @@ import { Message } from "../base/message";
 import { UserRole } from "../../api/types/enums";
 import { TextField, Switch, FormControlLabel, Stack, Button } from "@mui/material";
 import { ReadOnlyProject } from "./read-only-project";
+import { PageHeader } from "../base/page-header";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -58,19 +59,18 @@ export const ViewProject = () => {
 };
 
 /**
- * A settings dashboard to configure all parts of tilt.
+ * Team members may edit the project
  */
 const EditProject = ({ project }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
   const params = new URLSearchParams(document.location.search);
 
-  const [isTeamMember, setIsTeamMember] = React.useState(false);
-  const [id, setId] = React.useState(0);
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [image, setImage] = React.useState("");
-  const [allowRating, setAllowRating] = React.useState(false);
+  const [id, setId] = React.useState(project.id);
+  const [title, setTitle] = React.useState(project.title);
+  const [description, setDescription] = React.useState(project.description);
+  const [image, setImage] = React.useState(project.image);
+  const [allowRating, setAllowRating] = React.useState(project.allowRating);
 
   const {
     value: didUpdateProject,
@@ -108,40 +108,15 @@ const EditProject = ({ project }) => {
   const updateProjectDone =
     Boolean(didUpdateProject) && !updateProjectInProgress && !updateProjectError;
 
-  React.useEffect(() => {
-    if (project) {
-      setId(project.id);
-      setTitle(project.title);
-      setDescription(project.description);
-      setImage(project.image);
-      setAllowRating(project.allowRating);
-      setIsTeamMember(project.team.users.includes(user?.id.toString()));
-    }
-  }, [project]);
-
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text={`Edit Project - ${project?.title}`} />
-
-        <NonGrowingFlexContainer>
-          <a style={{ marginTop: "1rem" }}>
-            {isTeamMember ? (
-              <Button
-                loading={updateProjectInProgress}
-                disable={updateProjectInProgress}
-                onClick={sendSaveProjectRequest}
-                primary={true}
-              >
-                Save Changes
-              </Button>
-            ) : null}
-          </a>
-        </NonGrowingFlexContainer>
-      </HeaderContainer>
-      {!isTeamMember ? null : (
-        <Subheading text={"You are part of the team of this project"}></Subheading>
-      )}
+      <PageHeader
+        pageTitle={`Edit Project - ${project?.title}`}
+        buttonText="Save Changes"
+        buttonOnClick={sendSaveProjectRequest}
+        buttonLoading={updateProjectInProgress}
+        subTitle="You are part of the team of this project"
+      />
       <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
         {updateProjectError && (
           <Message type="error">
@@ -165,7 +140,6 @@ const EditProject = ({ project }) => {
           value={title}
           onChange={(value) => setTitle(value)}
           type={TextInputType.Text}
-          isDisabled={!isTeamMember}
         />
         <TextInput
           title="Project Description"
@@ -173,7 +147,6 @@ const EditProject = ({ project }) => {
           value={description}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
-          isDisabled={!isTeamMember}
         />
         <div>
           <TextInput
@@ -182,7 +155,6 @@ const EditProject = ({ project }) => {
             value={image}
             onChange={(value) => setImage(value)}
             type={TextInputType.Text}
-            isDisabled={!isTeamMember}
           />
           {image !== "" ? (
             <img src={image} style={{ width: "200px", height: "200px" }} />

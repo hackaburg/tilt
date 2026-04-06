@@ -9,6 +9,7 @@ import { Divider } from "../base/divider";
 import { useApi } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { TeamDTO } from "../../api/types/dto";
+import { PageHeader } from "../base/page-header";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -77,10 +78,7 @@ export const ReadOnlyProject = ({ project }) => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text={project?.title} />
-      </HeaderContainer>
-      <Divider />
+      <PageHeader pageTitle={project?.title}/>
       <div style={{ marginTop: "2rem" }}>
         <FlexRowContainer>
         <div>

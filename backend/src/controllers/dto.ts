@@ -593,6 +593,19 @@ export class ProjectDTO {
   public image!: string;
 }
 
+export class ProjectUpdateDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+  @Expose()
+  public allowRating!: boolean;
+  @Expose()
+  public image!: string;
+}
+
 export class RatingDTO {
   @Expose()
   public readonly id!: number;

@@ -15,6 +15,7 @@ import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { TeamDTO } from "../../api/types/dto";
 import { api } from "../../hooks/use-api";
+import { PageHeader } from "../base/page-header";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -48,17 +49,13 @@ export const Projects = () => {
 
   return (
     <Page>
-      <HeaderContainer style={{ "flex-direction": "column" }}>
-        <div style={{ display: "flex", "justify-content": "space-between" }}>
-          <Heading text="Projects" />
-        </div>
-        <Divider />
-        <Collapsible title="Rate Projects">
-          At the end of the event, other peoples projects will show up here, and we need
-          you to rate them based on arious criteria, to help decide the winning team.
-        </Collapsible>
-      </HeaderContainer>
-
+      <PageHeader
+        pageTitle="Projects"
+        subTitle="Rate Projects"
+        collapsibleText="At the end of the event, other peoples projects will show up
+          here, and we need you to rate them based on arious criteria, to help decide
+          the winning team."
+      />
       <Grid container spacing={3} style={{ marginTop: "2rem" }}>
         {allProjects.map((project: ProjectDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>

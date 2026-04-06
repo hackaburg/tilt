@@ -2,7 +2,7 @@ import { Authorized, Get, JsonController, NotFoundError, Put, Param, Body, Curre
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
 import { IProjectService, ProjectServiceToken } from "../services/project-service";
-import { ProjectDTO, convertBetweenEntityAndDTO } from "./dto";
+import { ProjectDTO, ProjectUpdateDTO, convertBetweenEntityAndDTO } from "./dto";
 import { Project } from "../entities/project";
 import { User } from "../entities/user";
 
@@ -49,7 +49,7 @@ export class ProjectsController {
   @Authorized(UserRole.User)
   public async updateProject(
     @Param("id") projectId: number,
-    @Body() { data: projectDTO }: { data: ProjectDTO },
+    @Body() { data: projectDTO }: { data: ProjectUpdateDTO },
     @CurrentUser() user: User,
   ): Promise<ProjectDTO> {
     const existing = await this._projects.getProjectByID(projectId);
@@ -58,7 +58,11 @@ export class ProjectsController {
       throw new NotFoundError();
     }
 
-    const project = convertBetweenEntityAndDTO(projectDTO, Project);
+    const project = convertBetweenEntityAndDTO({
+      ...projectDTO,
+      id: projectId,
+    }, Project);
+
     const updatedProject = await this._projects.updateProject(project, user);
     return convertBetweenEntityAndDTO(updatedProject, ProjectDTO);
   }

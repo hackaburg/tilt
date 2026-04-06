@@ -13,6 +13,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { Message } from "../base/message";
+import { PageHeader } from "../base/page-header";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
@@ -87,21 +88,12 @@ export const CreateTeam = () => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text="Create New Team" />
-        <NonGrowingFlexContainer>
-          <a style={{ width: "15rem", marginTop: "1rem" }}>
-            <Button
-              loading={createTeamInProgress}
-              disable={createTeamInProgress}
-              onClick={sendCreateTeamRequest}
-              primary={true}
-            >
-              Create
-            </Button>
-          </a>
-        </NonGrowingFlexContainer>
-      </HeaderContainer>
+      <PageHeader
+        pageTitle="Create New Team"
+        buttonText="Create"
+        buttonOnClick={sendCreateTeamRequest}
+        buttonLoading={createTeamInProgress}
+      />
       <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
         {createTeamError && (
           <Message type="error">

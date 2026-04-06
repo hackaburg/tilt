@@ -26,6 +26,7 @@ import { StringifiedUnifiedQuestion } from "./stringified-unified-question";
 import { SimpleCard } from "../base/simple-card";
 import { Divider } from "../base/divider";
 import { useNotificationContext } from "../../contexts/notification-context";
+import { PageHeader } from "../base/page-header";
 
 /**
  * An enum describing the type of form we want to render.
@@ -215,10 +216,14 @@ export const Form = ({ type }: IFormProps) => {
   return (
     <Page>
       <NonGrowingFlexContainer>
-        <Heading text={`Profile: ${user?.firstName} ${user?.lastName}`} />
-        <Divider />
-        <Subheading text="All important information about you - for us." />
-
+        <PageHeader
+          pageTitle={`Profile: ${user?.firstName} ${user?.lastName}`}
+          subTitle="All important information about you - for us."
+          buttonText="Save"
+          buttonLoading={isSubmitting}
+          buttonDisable={!isDirty || isFormDisabled}
+          buttonOnClick={handleSubmit}
+        />
         <SimpleCard>{questions}</SimpleCard>
         {!isFormDisabled && (
           <SubmitContainer>
@@ -242,17 +247,6 @@ export const Form = ({ type }: IFormProps) => {
                     </Muted>
                   </div>
                 )}
-
-                <Spacer />
-
-                <Button
-                  primary
-                  onClick={handleSubmit}
-                  loading={isSubmitting}
-                  disable={!isDirty || isFormDisabled}
-                >
-                  Please submit
-                </Button>
               </div>
             </VerticallyCenteredContainer>
           </SubmitContainer>

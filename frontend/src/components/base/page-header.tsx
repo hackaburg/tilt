@@ -13,10 +13,10 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
 `;
 
 /**
- * pageTitle           button (optional)
+ * pageTitle           button
  * ---
  * subTitle >
- *   collapsibleText (optional)
+ *   collapsibleText
  */
 export const PageHeader = ({
   pageTitle,
@@ -24,21 +24,23 @@ export const PageHeader = ({
   buttonHref = null,
   buttonOnClick = null,
   buttonLoading = false,
+  buttonDisable = false,
   subTitle = null,
   collapsibleText = null,
 }) => {
-  const button = (
+  const button = buttonText && (
     <Button
       primary={true}
       onClick={buttonOnClick}
       loading={buttonLoading}
-      disable={buttonLoading}
+      disable={buttonLoading || buttonDisable}
     >{buttonText}</Button>
-  )
+  );
+
   return (
     <HeaderContainer style={{ "flex-direction": "column" }}>
       <div style={{ display: "flex", "justify-content": "space-between" }}>
-        <Heading text="Teams" />
+        <Heading text={pageTitle} />
         {buttonText && (
           buttonHref ? (
             <InternalLink to={buttonHref}>{button}</InternalLink>

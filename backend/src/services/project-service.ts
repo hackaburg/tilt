@@ -155,7 +155,7 @@ export class ProjectService implements IProjectService {
       return
     }
 
-    const team = await this._teams.findOneBy({ id: project.team.id });
+    const team = project.team;
     if (!team || !team.users.includes(user.id.toString())) {
       // Tried to access a project belonging to a different team, forbidden
       throw new NotFoundError();
