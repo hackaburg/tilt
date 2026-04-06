@@ -97,9 +97,9 @@ export const LoginForm = () => {
               borderColor: "black",
               marginTop: "1rem",
             }}
+            href={Routes.RegisterForm}
           >
-            <a style={{ marginRight: "0.5rem" }}>New user? </a>
-            <InternalLink to={Routes.RegisterForm}>Register</InternalLink>
+            New user? Register
           </MuiButton>
         </ButtonContainer>
       </form>

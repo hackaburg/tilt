@@ -184,11 +184,6 @@ export const EditTeam = () => {
                 Save Changes
               </Button>
             ) : null}
-            {!isTeamOwner && notInUserList() ? (
-              <Button onClick={sendRequestToJoin} primary={true}>
-                Request to join team
-              </Button>
-            ) : null}
           </a>
         </NonGrowingFlexContainer>
       </HeaderContainer>
@@ -233,7 +228,7 @@ export const EditTeam = () => {
           ) : null}
           {!isTeamOwner && notInUserList() ? (
             <Button onClick={sendRequestToJoin} primary={true}>
-              Regenerate Animal Image
+              Request to join
             </Button>
           ) : null}
         </div>
