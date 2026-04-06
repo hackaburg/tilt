@@ -39,7 +39,7 @@ export const Teams = () => {
           </a>
         </div>
         <Divider />
-        <Collapsible title="Create or join a team. Get more information.">
+        <Collapsible title="Create or join a team">
           You can create or join a team. You can
           add other users to your team and remove them as well. The team owner can
           delete the team and remove users from the team. If you want to join a

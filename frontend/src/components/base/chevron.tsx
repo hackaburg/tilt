@@ -20,6 +20,7 @@ export const Chevron = ({
   color = "black",
   size = 20,
   rotation = 0,
+  style = {}
 }: IChevronProps) => {
   const boxWidth = 500;
   const boxHeight = 200;
@@ -31,6 +32,7 @@ export const Chevron = ({
       height={size}
       viewBox={`0 0 ${boxWidth} ${boxHeight}`}
       style={{
+        ...style,
         transform: `rotate(${rotation}deg)`,
       }}
     >

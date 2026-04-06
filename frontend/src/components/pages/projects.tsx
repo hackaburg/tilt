@@ -53,7 +53,7 @@ export const Projects = () => {
           <Heading text="Projects" />
         </div>
         <Divider />
-        <Collapsible title="Rate Projects. Get more information.">
+        <Collapsible title="Rate Projects">
           At the end of the event, other peoples projects will show up here, and we need
           you to rate them based on arious criteria, to help decide the winning team.
         </Collapsible>

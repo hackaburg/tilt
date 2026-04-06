@@ -18,7 +18,7 @@ const SpacerDiv = styled.div`
  */
 export const Spacer = () => <SpacerDiv />;
 
-const FlexColumnContainerDiv = styled.div`
+export const FlexColumnContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
