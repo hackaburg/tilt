@@ -589,6 +589,8 @@ export class ProjectDTO {
   public description!: string;
   @Expose()
   public allowRating!: boolean;
+  @Expose()
+  public image!: string;
 }
 
 export class RatingDTO {

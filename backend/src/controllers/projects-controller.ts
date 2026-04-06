@@ -25,9 +25,27 @@ export class ProjectsController {
   }
 
   /**
+   * Get project by id.
+   * @param id The id of the project
+   */
+  @Get("/:id")
+  @Authorized(UserRole.User)
+  public async getProjectByID(
+    @Param("id") id: number,
+  ): Promise<ProjectDTO> {
+    const project = await this._projects.getProjectByID(id);
+
+    if (project == null) {
+      throw new NotFoundError(`no project with id ${id}`);
+    }
+
+    return convertBetweenEntityAndDTO(project, ProjectDTO);
+  }
+
+  /**
    * Update a project (mvp: create one project per team)
    */
-  @Put("/project/:id")
+  @Put("/:id")
   @Authorized(UserRole.User)
   public async updateProject(
     @Param("id") projectId: number,

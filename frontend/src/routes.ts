@@ -24,6 +24,7 @@ export enum Routes {
   Map = "/map",
   Challenges = "/challenges",
   Projects = "/projects",
+  EditProject = "/edit-project",
 }
 
 /**
@@ -48,4 +49,5 @@ export const authenticatedRoutes = [
   Routes.Map,
   Routes.Challenges,
   Routes.Projects,
+  Routes.EditProject,
 ];

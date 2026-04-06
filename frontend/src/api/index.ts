@@ -589,6 +589,16 @@ export class ApiClient {
   // Projects
 
   /**
+   * Get Project by Id
+   * @return project by id
+   */
+  public async getProjectByID(id: number): Promise<TeamResponseDTO> {
+    return await this.get<ApplicationControllerMethods["getTeamByID"]>(
+      `/projects/${id}`,
+    );
+  }
+
+  /**
    * Gets all projects.
    */
   public async getAllProjects(): Promise<readonly ProjectDTO[]> {
@@ -611,7 +621,7 @@ export class ApiClient {
         { data: ProjectDTO },
         ProjectsControllerMethods["updateProject"]["returns"]
       >
-    >(`/projects/project/${id}`, project);
+    >(`/projects/${id}`, project);
   }
 
   // Ratings

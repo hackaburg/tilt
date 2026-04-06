@@ -102,6 +102,7 @@ export class ProjectService implements IProjectService {
 
     existing.title = project.title;
     existing.description = project.description;
+    existing.image = project.image;
 
     // Only admins may change allowRating
     if (user.role === UserRole.Root) {

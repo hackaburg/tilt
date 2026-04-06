@@ -39,11 +39,11 @@ export const EditTeam = () => {
   );
 
   const [currentUserId, setCurrentUserId] = React.useState(0);
-  const [editable, setEditable] = React.useState(false);
+  const [isTeamOwner, setIsTeamOwner] = React.useState(false);
   const [isTeamMember, setIsTeamMember] = React.useState(false);
   const [id, setId] = React.useState(0);
   const [title, setTitle] = React.useState("");
-  const [desciption, setDescription] = React.useState("");
+  const [description, setDescription] = React.useState("");
   const [teamImg, setTeamImg] = React.useState("");
   const [users, setUsers] = React.useState([] as UserListDto[]);
   const [request, setRequest] = React.useState([] as UserListDto[]);
@@ -59,7 +59,7 @@ export const EditTeam = () => {
         await apiClient.updateTeam(
           id,
           title,
-          desciption,
+          description,
           teamImg,
           users.map((u) => u.id),
         );
@@ -67,7 +67,7 @@ export const EditTeam = () => {
       }
       return false;
     },
-    [currentUserId, editable, id, title, desciption, teamImg, users, request],
+    [currentUserId, isTeamOwner, id, title, description, teamImg, users, request],
   );
 
   const {
@@ -155,7 +155,7 @@ export const EditTeam = () => {
       setTeamImg(teamById.teamImg);
       setUsers(teamById.users!);
       setRequest(teamById.requests!);
-      setEditable(user?.id === Number(teamById?.users![0].id));
+      setIsTeamOwner(user?.id === Number(teamById?.users![0].id));
       setIsTeamMember(teamById.users!.some((u) => u.id === user?.id));
     }
   }, [teamById]);
@@ -184,7 +184,7 @@ export const EditTeam = () => {
                 Save Changes
               </Button>
             ) : null}
-            {!editable && notInUserList() ? (
+            {!isTeamOwner && notInUserList() ? (
               <Button onClick={sendRequestToJoin} primary={true}>
                 Request to join team
               </Button>
@@ -214,7 +214,7 @@ export const EditTeam = () => {
         <TextInput
           title="Team Description"
           placeholder="Your team description (maybe also add the communication channel e.g. Discord, Signal, WhatsApp, etc. may add a link to the channel)"
-          value={desciption}
+          value={description}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
           isDisabled={!isTeamMember}
@@ -231,7 +231,7 @@ export const EditTeam = () => {
           {teamImg !== "" ? (
             <img src={teamImg} style={{ width: "200px", height: "200px" }} />
           ) : null}
-          {!editable && notInUserList() ? (
+          {!isTeamOwner && notInUserList() ? (
             <Button onClick={sendRequestToJoin} primary={true}>
               Regenerate Animal Image
             </Button>
@@ -255,10 +255,10 @@ export const EditTeam = () => {
                 <Autocomplete
                   freeSolo
                   style={{
-                    width: index === 0 || !editable ? "100%" : "90%",
+                    width: index === 0 || !isTeamOwner ? "100%" : "90%",
                     marginBottom: "1rem",
                   }}
-                  disabled={!editable}
+                  disabled={!isTeamOwner}
                   value={singleUser}
                   options={userList}
                   getOptionLabel={(option) =>
@@ -272,7 +272,7 @@ export const EditTeam = () => {
                           singleUser.id === currentUserId ? "#3fb28f" : "white",
                       }}
                       label={index === 0 ? "Team Owner" : "Users"}
-                      disabled={index === 0 || !editable}
+                      disabled={index === 0 || !isTeamOwner}
                     />
                   )}
                   renderOption={(props, option, _state, ownerState) => (
@@ -292,7 +292,7 @@ export const EditTeam = () => {
                   )}
                   onChange={(_e, v) => onChange(index, v as UserListDto)}
                 />
-                {index === 0 || !editable ? null : (
+                {index === 0 || !isTeamOwner ? null : (
                   <MdDeleteOutline
                     size={30}
                     style={{
@@ -311,7 +311,7 @@ export const EditTeam = () => {
             ))}
           </div>
 
-          {editable ? (
+          {isTeamOwner ? (
             <div>
               <div style={{ marginTop: "1rem", width: "10rem" }}>
                 <Button onClick={addMember} primary={true}>
@@ -350,7 +350,7 @@ export const EditTeam = () => {
                     marginTop: "0.5rem",
                   }}
                 >
-                  {!editable ? null : (
+                  {!isTeamOwner ? null : (
                     <Button
                       loading={updateTeamInProgress}
                       disable={updateTeamInProgress}
@@ -368,7 +368,7 @@ export const EditTeam = () => {
           </div>
         ) : null}
 
-        {editable ? (
+        {isTeamOwner ? (
           <div style={{ marginTop: "2rem" }}>
             <Card variant="outlined" style={{ background: "#ffcdd2" }}>
               <CardContent>

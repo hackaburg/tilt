@@ -202,7 +202,7 @@ export class TeamService implements ITeamService {
       const mappedUsers: any = [];
 
       teamResponse.users!.forEach((userId) => {
-        users.map((user) => {
+        users.forEach((user) => {
           if (user.id.toString() === userId.toString()) {
             mappedUsers.push({
               id: user.id,

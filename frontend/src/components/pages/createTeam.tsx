@@ -27,7 +27,7 @@ export const CreateTeam = () => {
   const { user } = loginState;
 
   const [title, setTitle] = React.useState("");
-  const [desciption, setDescription] = React.useState("");
+  const [description, setDescription] = React.useState("");
   const [teamImg, setTeamImg] = React.useState("");
   const [users, setUsers] = React.useState([
     { id: user?.id, name: user?.firstName + " " + user?.lastName },
@@ -43,7 +43,7 @@ export const CreateTeam = () => {
       if (wasTriggeredManually) {
         await api.createTeam(
           title,
-          desciption,
+          description,
           teamImg,
           users.map((u) => u.id),
         );
@@ -51,7 +51,7 @@ export const CreateTeam = () => {
       }
       return false;
     },
-    [title, desciption, teamImg, users],
+    [title, description, teamImg, users],
   );
 
   const { value: allUsers } = useApi(async (api) => api.getAllUsers(), []);
@@ -121,7 +121,7 @@ export const CreateTeam = () => {
         <TextInput
           title="Team Description"
           placeholder="Your team description (maybe also add the communication channel e.g. Discord, Signal, WhatsApp, etc. may add a link to the channel)"
-          value={desciption}
+          value={description}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
         />
