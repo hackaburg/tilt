@@ -29,8 +29,8 @@ import { Map } from "../pages/map";
 import { Challenges } from "../pages/challenges";
 import { Teams } from "../pages/teams";
 import { CreateTeam } from "../pages/createTeam";
-import { ViewTeam } from "../pages/editTeam";
-import { EditProject } from "../pages/editProject";
+import { ViewTeam } from "../pages/view-team";
+import { EditProject } from "../pages/view-project";
 import { Projects } from "../pages/projects";
 
 const SidebarSliderContainer = styled(NonGrowingFlexContainer)`
