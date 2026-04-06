@@ -10,10 +10,11 @@ import { isBetween, isConfirmationExpired, Nullable } from "../../util";
 import { Button } from "../base/button";
 import {
   FlexColumnContainer,
+  BigFlexRowColumnContainer,
   FlexRowColumnContainer,
   NonGrowingFlexContainer,
   Spacer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
   VerticallyCenteredContainer,
 } from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
@@ -34,7 +35,7 @@ export enum FormType {
   ConfirmationForm = "confirmation_form",
 }
 
-const SubmitContainer = styled(StyleableFlexContainer)`
+const SubmitContainer = styled(NonGrowingFlexContainer)`
   padding: 3rem 0;
 `;
 
@@ -222,13 +223,13 @@ export const Form = ({ type }: IFormProps) => {
         {!isFormDisabled && (
           <SubmitContainer>
             <VerticallyCenteredContainer>
-              <FlexRowColumnContainer isBig>
+              <BigFlexRowColumnContainer>
                 {submitError && (
                   <Message type="error">
                     <b>Error: </b> {submitError.message}
                   </Message>
                 )}
-              </FlexRowColumnContainer>
+              </BigFlexRowColumnContainer>
 
               <Spacer />
 

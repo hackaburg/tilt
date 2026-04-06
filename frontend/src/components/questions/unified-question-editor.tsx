@@ -12,7 +12,7 @@ import {
 import { QuestionType } from "../../api/types/enums";
 import { Nullable } from "../../util";
 import { Checkboxes } from "../base/checkbox";
-import { Spacer, StyleableFlexContainer } from "../base/flex";
+import { Spacer, NonGrowingFlexContainer } from "../base/flex";
 import { FlexRowColumnContainer, FlexRowContainer } from "../base/flex";
 import { SelectWrapper } from "../base/select";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -21,7 +21,7 @@ import { CountryQuestionEditor } from "./country-question-editor";
 import { NumberQuestionEditor } from "./number-question-editor";
 import { TextQuestionEditor } from "./text-question-editor";
 
-const Meta = styled(StyleableFlexContainer)`
+const Meta = styled(NonGrowingFlexContainer)`
   padding-bottom: 3rem;
 `;
 

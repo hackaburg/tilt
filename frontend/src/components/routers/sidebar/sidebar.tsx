@@ -4,7 +4,7 @@ import { UserRole } from "../../../api/types/enums";
 import { useLoginContext } from "../../../contexts/login-context";
 import { Routes } from "../../../routes";
 import { variables } from "../../../theme";
-import { StyleableFlexContainer } from "../../base/flex";
+import { NonGrowingFlexContainer } from "../../base/flex";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuUser } from "react-icons/lu";
@@ -23,7 +23,7 @@ import { Button } from "@mui/material";
 import { SimpleDialog } from "../../base/dialog";
 import { MdSupportAgent } from "react-icons/md";
 
-const BackgroundContainer = styled(StyleableFlexContainer)`
+const BackgroundContainer = styled(NonGrowingFlexContainer)`
   height: 100%;
   overflow-y: auto;
   background: linear-gradient(

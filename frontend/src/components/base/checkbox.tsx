@@ -4,13 +4,13 @@ import { useCallback } from "react";
 import { useUniqueID, useUniqueIDs } from "../../hooks/use-uniqe-id";
 import {
   FlexColumnContainer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
   VerticallyCenteredContainer,
 } from "./flex";
 import { FormField } from "./form-field";
 import { Checkbox } from "@mui/material";
 
-const ItemContainer = styled(StyleableFlexContainer)`
+const ItemContainer = styled(NonGrowingFlexContainer)`
   padding: 0;
 `;
 

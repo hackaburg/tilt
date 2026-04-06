@@ -13,7 +13,7 @@ import {
   FlexRowColumnContainer,
   FlexRowContainer,
   PageSizedContainer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "../base/flex";
 import { ConfirmationForm } from "../pages/confirmation-form";
 import { LazyAdmission } from "../pages/lazy-admission";
@@ -33,7 +33,7 @@ import { EditTeam } from "../pages/editTeam";
 import { EditProject } from "../pages/editProject";
 import { Projects } from "../pages/projects";
 
-const SidebarSliderContainer = styled(StyleableFlexContainer)`
+const SidebarSliderContainer = styled(NonGrowingFlexContainer)`
   position: fixed;
   left: 0;
   top: 0;
@@ -51,13 +51,13 @@ const SidebarSliderContainer = styled(StyleableFlexContainer)`
   }
 `;
 
-const ToggleContainer = styled(StyleableFlexContainer)`
+const ToggleContainer = styled(NonGrowingFlexContainer)`
   position: absolute;
   top: 1rem;
   right: -5rem;
 `;
 
-const ContentContainer = styled(StyleableFlexContainer)`
+const ContentContainer = styled(NonGrowingFlexContainer)`
   padding-left: ${sidebarWidth};
   transform: translateX(0%);
   transition-property: transform;

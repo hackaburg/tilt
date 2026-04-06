@@ -5,7 +5,7 @@ import { Chip, Grid } from "@mui/material";
 import { GrGroup } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Divider } from "../base/divider";
-import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
+import { NonGrowingFlexContainer, NonGrowingFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Button } from "../base/button";
 import { InternalLink } from "../base/link";
@@ -16,7 +16,7 @@ import { Routes } from "../../routes";
 import { TeamDTO } from "../../api/types/dto";
 import { api } from "../../hooks/use-api";
 
-const HeaderContainer = styled(StyleableFlexContainer)`
+const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;

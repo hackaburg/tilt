@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { StyleableFlexContainer } from "../base/flex";
+import { NonGrowingFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { ApplicationSettings } from "../settings/application/application-settings";
 import { EmailSettings } from "../settings/mail-settings/email-settings";
@@ -10,12 +10,12 @@ import { SettingsSaveButton } from "../settings/save-button";
 import { Page } from "./page";
 import { SimpleCard } from "../base/simple-card";
 
-const HeaderContainer = styled(StyleableFlexContainer)`
+const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;
 
-const ButtonContainer = styled(StyleableFlexContainer)`
+const ButtonContainer = styled(NonGrowingFlexContainer)`
   flex-basis: 0;
 `;
 

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
+import { NonGrowingFlexContainer, NonGrowingFlexContainer } from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
@@ -20,7 +20,7 @@ import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
 
-const HeaderContainer = styled(StyleableFlexContainer)`
+const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;

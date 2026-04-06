@@ -3,19 +3,19 @@ import * as React from "react";
 import {
   CenteredContainer,
   FlexColumnContainer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "./flex";
 
-const TitledNumberContainer = styled(StyleableFlexContainer)`
+const TitledNumberContainer = styled(NonGrowingFlexContainer)`
   padding: 1rem 0;
 `;
 
-const Big = styled(StyleableFlexContainer)`
+const Big = styled(NonGrowingFlexContainer)`
   font-size: 3rem;
   padding: 0.5rem 0;
 `;
 
-const Title = styled(StyleableFlexContainer)`
+const Title = styled(NonGrowingFlexContainer)`
   font-size: 1rem;
 `;
 

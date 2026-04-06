@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useToggle } from "../../hooks/use-toggle";
 import { Chevron } from "./chevron";
 import {
-  FlexColumnContainerDiv,
+  FlexColumnContainer,
   NonGrowingFlexContainer,
   Spacer,
   VerticallyCenteredContainer,
@@ -36,7 +36,7 @@ export const Collapsible = ({
   const handleOpen = useCallback(() => toggleIsOpen(), []);
 
   return (
-    <FlexColumnContainerDiv>
+    <FlexColumnContainer>
       <VerticallyCenteredContainer>
         <ExpandButton onClick={handleOpen}>
           <span style={{ "font-size": "1.25rem", "margin-right": "10px" }}>{title}</span>
@@ -45,11 +45,11 @@ export const Collapsible = ({
       </VerticallyCenteredContainer>
 
       {isOpen && (
-        <FlexColumnContainerDiv style={{ "padding-top": "5px" }}>
+        <FlexColumnContainer style={{ "padding-top": "5px" }}>
           {children}
           <Spacer />
-        </FlexColumnContainerDiv>
+        </FlexColumnContainer>
       )}
-    </FlexColumnContainerDiv>
+    </FlexColumnContainer>
   );
 };

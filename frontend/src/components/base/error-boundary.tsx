@@ -5,13 +5,13 @@ import { CopyableText } from "./copyable-text";
 import {
   CenteredContainer,
   PageSizedContainer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "./flex";
 import { Heading } from "./headings";
 import { ExternalLink } from "./link";
 import { Text } from "./text";
 
-const ErrorContainer = styled(StyleableFlexContainer)`
+const ErrorContainer = styled(NonGrowingFlexContainer)`
   width: 300px;
 `;
 

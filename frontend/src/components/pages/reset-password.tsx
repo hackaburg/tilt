@@ -3,7 +3,7 @@ import * as React from "react";
 import { useCallback, useState } from "react";
 import { useApi } from "../../hooks/use-api";
 import { Button } from "../base/button";
-import { FlexColumnContainer, StyleableFlexContainer } from "../base/flex";
+import { FlexColumnContainer, NonGrowingFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -11,7 +11,7 @@ import { Redirect, useLocation } from "react-router-dom";
 import { InternalLink } from "../base/link";
 import { Routes } from "../../routes";
 
-const ButtonContainer = styled(StyleableFlexContainer)`
+const ButtonContainer = styled(NonGrowingFlexContainer)`
   padding-top: 1rem;
 `;
 

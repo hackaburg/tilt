@@ -2,7 +2,7 @@ import { keyframes } from "@emotion/core";
 import styled from "@emotion/styled";
 import * as React from "react";
 import { shimmerBackgroundColor, shimmerColor } from "../../config";
-import { StyleableFlexContainer } from "./flex";
+import { NonGrowingFlexContainer } from "./flex";
 
 const ShimmerKeyframes = keyframes`
   from {
@@ -14,7 +14,7 @@ const ShimmerKeyframes = keyframes`
   }
 `;
 
-const PlaceholderContainer = styled(StyleableFlexContainer)`
+const PlaceholderContainer = styled(NonGrowingFlexContainer)`
   position: relative;
   display: block;
   width: 100%;

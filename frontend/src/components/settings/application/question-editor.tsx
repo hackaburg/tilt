@@ -10,14 +10,14 @@ import {
   FlexColumnContainer,
   FlexRowContainer,
   Spacer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "../../base/flex";
 import { SortingButtons } from "../../questions/sorting-buttons";
 import { UnifiedQuestion } from "../../questions/unified-question";
 import { UnifiedQuestionEditor } from "../../questions/unified-question-editor";
 import { SimpleCard } from "../../base/simple-card";
 
-const ButtonContainer = styled(StyleableFlexContainer)`
+const ButtonContainer = styled(NonGrowingFlexContainer)`
   align-self: flex-end;
 `;
 

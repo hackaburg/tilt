@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, StyleableFlexContainer, FlexColumnContainer, FlexRowContainer } from "../base/flex";
+import { NonGrowingFlexContainer, NonGrowingFlexContainer, FlexColumnContainer, FlexRowContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { Collapsible } from "../base/collapsible";
 import { Divider } from "../base/divider";
 
-const HeaderContainer = styled(StyleableFlexContainer)`
+const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;

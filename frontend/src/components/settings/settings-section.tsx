@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { StyleableFlexContainer } from "../base/flex";
+import { NonGrowingFlexContainer } from "../base/flex";
 import { Subheading } from "../base/headings";
 
-const Section = styled(StyleableFlexContainer)`
+const Section = styled(NonGrowingFlexContainer)`
   padding: 1rem 0;
 `;
 

@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { StyleableFlexContainer } from "./flex";
+import { NonGrowingFlexContainer } from "./flex";
 
-const FormFieldContainer = styled(StyleableFlexContainer)`
+const FormFieldContainer = styled(NonGrowingFlexContainer)`
   padding: 0.5rem 0;
 `;
 

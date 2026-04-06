@@ -23,7 +23,7 @@ import {
   FlexRowContainer,
   NonGrowingFlexContainer,
   Spacer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";
@@ -103,7 +103,7 @@ const ExpandedCell = styled.td`
   box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const QuestionaireContainer = styled(StyleableFlexContainer)`
+const QuestionaireContainer = styled(NonGrowingFlexContainer)`
   padding: 1rem;
 `;
 
