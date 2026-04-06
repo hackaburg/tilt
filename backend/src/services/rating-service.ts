@@ -108,7 +108,7 @@ export class RatingService implements IRatingService {
       }
     });
 
-    if (existingRating !== null) {
+    if (existingRating) {
       // Update
       return this._ratings.save({
         ...rating,

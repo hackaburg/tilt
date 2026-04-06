@@ -8,9 +8,8 @@ export const MockRatingService = jest.fn(
   () =>
     new MockedService<IRatingService>({
       bootstrap: jest.fn(),
-      getAllRatings: jest.fn(),
-      createRating: jest.fn(),
-      updateRating: jest.fn(),
+      getUsersRatingsForProject: jest.fn(),
+      upsertRating: jest.fn(),
       getRatingByID: jest.fn(),
       deleteRatingByID: jest.fn(),
       getRatingResults: jest.fn(),

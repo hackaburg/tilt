@@ -37,11 +37,11 @@ describe("RatingController", () => {
     const createdRating = new Rating();
     (createdRating as any).id = 1;
 
-    ratingService.mocks.createRating.mockResolvedValue(createdRating);
+    ratingService.mocks.upsertRating.mockResolvedValue(createdRating);
 
-    const result = await controller.createRating({ data: ratingDTO }, user);
+    const result = await controller.rate({ data: ratingDTO }, user);
 
-    expect(ratingService.mocks.createRating).toBeCalled();
+    expect(ratingService.mocks.upsertRating).toBeCalled();
     expect(result).toBeDefined();
   });
 
@@ -113,7 +113,7 @@ describe("RatingController", () => {
     it("allows requests from User-role users", async () => {
       expect.assertions(2);
 
-      ratingService.mocks.createRating.mockResolvedValue({} as any);
+      ratingService.mocks.upsertRating.mockResolvedValue({} as any);
 
       const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
         method: "POST",
@@ -125,7 +125,7 @@ describe("RatingController", () => {
       });
 
       expect(response.status).toBe(200);
-      expect(ratingService.mocks.createRating).toHaveBeenCalledWith(
+      expect(ratingService.mocks.upsertRating).toHaveBeenCalledWith(
         expect.objectContaining({
           project: expect.objectContaining({ id: 1 }),
           user: expect.objectContaining({ id: regularUser.id }),
@@ -138,7 +138,7 @@ describe("RatingController", () => {
     it("passes authorization for admin (Root) users", async () => {
       expect.assertions(1);
 
-      ratingService.mocks.createRating.mockResolvedValue({} as any);
+      ratingService.mocks.upsertRating.mockResolvedValue({} as any);
 
       const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
         method: "POST",

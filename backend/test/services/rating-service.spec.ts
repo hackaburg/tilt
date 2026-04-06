@@ -66,7 +66,7 @@ describe("RatingService", () => {
   });
 
   describe("checkPermission", () => {
-    describe("via createRating", () => {
+    describe("via upsertRating", () => {
       it("throws ForbiddenError when rating is globally disabled", async () => {
         expect.assertions(1);
 
@@ -74,7 +74,7 @@ describe("RatingService", () => {
           { application: { allowRatingProjects: false } } as any
         );
 
-        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
           ForbiddenError,
         );
       });
@@ -88,7 +88,7 @@ describe("RatingService", () => {
 
         mockProjectsRepo.findOneBy.mockResolvedValue(null);
 
-        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
           NotFoundError,
         );
       });
@@ -104,7 +104,15 @@ describe("RatingService", () => {
           Object.assign(new Project(), { ...mockProject, allowRating: false }),
         );
 
-        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+        // The backend should not be tricked by an allowRating: true in the payload
+        const payload = {
+          ...mockRating,
+          project: {
+            ...mockRating.project,
+            allowRating: true
+          }
+        }
+        await expect(ratingService.upsertRating(payload, mockUser)).rejects.toThrow(
           ForbiddenError,
         );
       });
@@ -119,7 +127,7 @@ describe("RatingService", () => {
         mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
         mockTeamsRepo.findOneBy.mockResolvedValue(null);
 
-        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
           NotFoundError,
         );
       });
@@ -136,7 +144,7 @@ describe("RatingService", () => {
           Object.assign(new Team(), { ...mockTeam, users: ["1", "2", "3"] }),
         );
 
-        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
           ForbiddenError,
         );
       });
@@ -154,26 +162,10 @@ describe("RatingService", () => {
         const savedRating = Object.assign(new Rating(), { ...mockRating, id: 42 });
         mockRatingsRepo.save.mockResolvedValue(savedRating);
 
-        const result = await ratingService.createRating(mockRating, mockUser);
+        const result = await ratingService.upsertRating(mockRating, mockUser);
 
         expect(result).toBe(savedRating);
         expect(mockRatingsRepo.save).toHaveBeenCalledWith(mockRating);
-      });
-
-      it("throws BadRequestError when user has already rated the same project and criteria", async () => {
-        expect.assertions(1);
-
-        settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: true } } as any
-        );
-
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
-        mockRatingsRepo.findOne.mockResolvedValue(mockRating);
-
-        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
-          BadRequestError,
-        );
       });
 
       it("is forbidden to impersonate other users", async () => {
@@ -192,7 +184,7 @@ describe("RatingService", () => {
           id: 1234
         };
 
-        await expect(ratingService.createRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
           ForbiddenError,
         );
       });

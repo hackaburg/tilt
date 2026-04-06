@@ -25,9 +25,15 @@ export const RatingForm = ({
   const loginState = useLoginContext();
   const { user } = loginState;
 
-  const [ratingValue, setRatingValue] = useState(rating.rating);
+  const [ratingValue, setRatingValue] = useState(rating?.rating);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (rating) {
+      setRatingValue(rating.rating);
+    }
+  }, [rating]);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
