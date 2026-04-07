@@ -90,6 +90,8 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
     event.preventDefault();
   }, []);
 
+  const isAdmin = user?.role == UserRole.Root;
+
   return (
     <Page>
       <PageHeader
@@ -97,7 +99,7 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
         buttonText="Save Changes"
         buttonOnClick={sendSaveProjectRequest}
         buttonLoading={updateProjectInProgress}
-        subTitle="You are part of the team of this project"
+        subTitle={isAdmin ? null : "You are part of the team of this project"}
       />
       {updateProjectError && (
         <div style={{ marginBottom: "1rem" }}>

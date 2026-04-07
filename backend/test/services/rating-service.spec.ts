@@ -58,6 +58,7 @@ describe("RatingService", () => {
     ratingUser.verifyToken = "";
     ratingUser.tokenSecret = "";
     ratingUser.forgotPasswordToken = "";
+    ratingUser.admitted = true;
 
     // A user who is a member of the project team
     teamMember = new User();
@@ -69,6 +70,7 @@ describe("RatingService", () => {
     teamMember.verifyToken = "";
     teamMember.tokenSecret = "";
     teamMember.forgotPasswordToken = "";
+    teamMember.admitted = true;
 
     [ratingUser, teamMember] = await userRepo.save([ratingUser, teamMember]);
 
@@ -98,6 +100,23 @@ describe("RatingService", () => {
 
   describe("checkPermission", () => {
     describe("via upsertRating", () => {
+      it("throws ForbiddenError if user is not admitted", async () => {
+        expect.assertions(1);
+
+        ratingUser.admitted = false;
+
+        const rating = Object.assign(new Rating(), {
+          project: mockProject,
+          user: ratingUser,
+          criterion: mockCriterion,
+          rating: 3,
+        });
+
+        await expect(
+          ratingService.upsertRating(rating, ratingUser),
+        ).rejects.toThrow(ForbiddenError);
+      });
+
       it("throws ForbiddenError when rating is globally disabled", async () => {
         expect.assertions(1);
 
