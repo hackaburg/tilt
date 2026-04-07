@@ -227,6 +227,12 @@ export class RatingService implements IRatingService {
    * Check if the user is permitted to create/modify/delete this rating.
    */
   private async checkPermission(rating: Rating, user: User): Promise<void> {
+    if (!user.admitted) {
+      throw new ForbiddenError(
+        "Only admitted users may rate projects",
+      );
+    }
+
     const settings = await this._settings.getSettings();
     if (!settings.application.allowRatingProjects) {
       throw new ForbiddenError(
