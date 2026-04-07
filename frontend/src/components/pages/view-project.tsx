@@ -91,7 +91,9 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
         buttonText="Save Changes"
         buttonOnClick={sendSaveProjectRequest}
         buttonLoading={updateProjectInProgress}
-        subTitle={isAdmin ? undefined : "You are part of the team of this project"}
+        subTitle={
+          isAdmin ? undefined : "You are part of the team of this project"
+        }
       />
       {updateProjectError && (
         <div style={{ marginBottom: "1rem" }}>

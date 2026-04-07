@@ -24,9 +24,7 @@ describe("RatingController", () => {
   beforeEach(() => {
     ratingService = new MockRatingService();
     settingsService = new MockSettingsService();
-    controller = new RatingController(
-      ratingService.instance,
-    );
+    controller = new RatingController(ratingService.instance);
   });
 
   it("creates a rating and delegates to the rating service", async () => {
@@ -83,9 +81,7 @@ describe("RatingController", () => {
       useContainer({
         get(target: Function) {
           if (target === RatingController) {
-            return new RatingController(
-              ratingService.instance,
-            );
+            return new RatingController(ratingService.instance);
           }
           return new (target as any)();
         },
