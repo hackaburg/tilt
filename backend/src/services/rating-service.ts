@@ -228,9 +228,7 @@ export class RatingService implements IRatingService {
    */
   private async checkPermission(rating: Rating, user: User): Promise<void> {
     if (!user.admitted) {
-      throw new ForbiddenError(
-        "Only admitted users may rate projects",
-      );
+      throw new ForbiddenError("Only admitted users may rate projects");
     }
 
     const settings = await this._settings.getSettings();

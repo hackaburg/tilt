@@ -103,7 +103,7 @@ describe("RatingService", () => {
       it("throws ForbiddenError if user is not admitted", async () => {
         expect.assertions(1);
 
-        ratingUser.admitted = false
+        ratingUser.admitted = false;
 
         const rating = Object.assign(new Rating(), {
           project: mockProject,
