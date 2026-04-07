@@ -5,13 +5,13 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Button,
   Alert,
   Typography,
   Tooltip,
 } from "@mui/material";
 import { api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
+import { Button } from "../base/button";
 
 /**
  * Component that allows users to submit and edit ratings for projects.
@@ -96,9 +96,9 @@ export const RatingForm = ({
           variant="contained"
           onClick={handleSubmit}
           disabled={isSubmitting}
-          sx={{ alignSelf: { xs: "stretch", sm: "auto" } }}
+          loading={isSubmitting}
         >
-          {isSubmitting ? "Submitting..." : "Submit"}
+          Submit
         </Button>
       </Stack>
 

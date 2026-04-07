@@ -628,12 +628,22 @@ export class RatingDTO {
   public rating!: number;
 }
 
+class CriterionAvgDTO {
+  @Expose()
+  @Type(() => CriterionDTO)
+  public criterion!: CriterionDTO;
+  @Expose()
+  public average!: number;
+}
+
 // Do not send all ratings to the client,
 // because peoples opinion on the projects should be anonymous
 export class ProjectRatingResultDTO {
   @Expose()
   @Type(() => ProjectDTO)
   public project!: ProjectDTO;
+  @IsArray()
+  @Type(() => CriterionAvgDTO)
   @Expose()
-  public criterionIdToAvg!: Record<number, number>;
+  public averagesPerCriterion!: CriterionAvgDTO[];
 }

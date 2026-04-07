@@ -5,17 +5,12 @@ import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import { Rating } from "../entities/rating";
-import { RatingDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
+import { RatingDTO, ProjectRatingResultDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
 import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
 import { Criterion } from "../entities/criterion";
 import { UserRole } from "../entities/user-role";
-
-export interface ProjectRatingResult {
-  project: Project;
-  criterionIdToAvg: Record<number, number>;
-}
 
 export interface IRatingService extends IService {
   /**
@@ -38,7 +33,7 @@ export interface IRatingService extends IService {
   /**
    * Get all ratings for every project
    */
-  getRatingResults(): Promise<readonly ProjectRatingResult[]>;
+  getRatingResults(): Promise<readonly ProjectRatingResultDTO[]>;
 }
 
 /**
@@ -162,17 +157,23 @@ export class RatingService implements IRatingService {
   /**
    * Get the average ratings for each project
    */
-  public async getRatingResults(): Promise<readonly ProjectRatingResult[]> {
+  public async getRatingResults(): Promise<readonly ProjectRatingResultDTO[]> {
     const allProjects = await this._projects.find();
     const allRatings = await this._ratings.find();
 
     const result = [];
 
+    const idToCriterion: Record<number, Criterion> = {};
+
     for (const project of allProjects) {
+      const averagesPerCriterion = [];
+
       // Sum up
       const criterionIdToSum: Record<number, number> = {}
       const criterionIdToCount: Record<number, number> = {}
       for (const rating of allRatings) {
+        idToCriterion[rating.criterion.id] = rating.criterion;
+
         if (rating.project.id !== project.id) {
           continue;
         }
@@ -190,12 +191,14 @@ export class RatingService implements IRatingService {
       // Calculate average
       const criterionIdToAvg: Record<number, number> = {}
       for (const criterionId in criterionIdToSum) {
-        criterionIdToAvg[criterionId] = criterionIdToSum[criterionId] / criterionIdToCount[criterionId];
+        const average = criterionIdToSum[criterionId] / criterionIdToCount[criterionId];
+        const criterion = idToCriterion[criterionId];
+        averagesPerCriterion.push({ criterion, average });
       }
 
       result.push({
         project,
-        criterionIdToAvg
+        averagesPerCriterion
       });
     }
 

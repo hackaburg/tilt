@@ -1,4 +1,13 @@
 import styled from "@emotion/styled";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Chip, Grid } from "@mui/material";
@@ -16,11 +25,86 @@ import { Routes } from "../../routes";
 import { TeamDTO } from "../../api/types/dto";
 import { api } from "../../hooks/use-api";
 import { PageHeader } from "../base/page-header";
+import { useLoginContext } from "../../contexts/login-context";
+import { UserRole } from "../../api/types/enums";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;
+
+const arraySum = (array) => {
+  return array.reduce((partialSum, a) => partialSum + a, 0);
+}
+
+/**
+ * A table displaying the average rating per criterion, and the total sum
+ * for each project.
+ */
+const RatingResults = () => {
+  const [ratingResults, setRatingResults] = useState([]);
+  const [criteria, setCriteria] = React.useState([]);
+
+  useEffect(
+    () => {
+      api.getRatingResults().then((stuff) => {
+        setRatingResults(stuff)
+      });
+
+      api.getAllCriteria().then((criteria) => {
+        setCriteria(criteria);
+      });
+    },
+    []
+  );
+
+  return (
+    <div style={{ marginTop: "2em"  }}>
+      <h2>Results</h2>
+      <p>(Only visible to admins)</p>
+      {
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Project</TableCell>
+                {criteria.map(criterion => (
+                  <TableCell key={criterion.id} align="center">
+                    {criterion.title}
+                  </TableCell>
+                ))}
+                <TableCell key="CriterionSum" align="center">
+                Sum
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {ratingResults.map(resultForProject => (
+                <TableRow key={resultForProject.project.id}>
+                  <TableCell>
+                    {resultForProject.project.title} #{resultForProject.project.id}
+                  </TableCell>
+                  {criteria.map(criterion => (
+                    <TableCell key={criterion.id} align="center">
+                      {
+                        resultForProject
+                          .averagesPerCriterion
+                          .find((a) => a.criterion.id == criterion.id)?.average
+                      }
+                    </TableCell>
+                  ))}
+                  <TableCell key="CriterionSum" align="center">
+                  {arraySum(resultForProject.averagesPerCriterion.map(({ average }) => average))}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      }
+    </div>
+  )
+}
 
 /**
  * - Show all projects visible to the user (owned + rating allowed)
@@ -32,6 +116,8 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
 export const Projects = () => {
   const [allProjects, setAllProjects] = useState([]);
   const [settings, setSettings] = useState({});
+  const loginState = useLoginContext();
+  const { user } = loginState;
 
   // Do this only on mount
   useEffect(
@@ -111,6 +197,9 @@ export const Projects = () => {
           </Grid>
         ))}
       </Grid>
+      {user.role === UserRole.Root && (
+        <RatingResults />
+      )}
     </Page>
   );
 };
