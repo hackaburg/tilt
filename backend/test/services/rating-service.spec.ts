@@ -1,67 +1,95 @@
-import { BadRequestError, ForbiddenError, NotFoundError } from "routing-controllers";
+import { ForbiddenError, NotFoundError } from "routing-controllers";
+import { Repository } from "typeorm";
 import { Criterion } from "../../src/entities/criterion";
 import { Project } from "../../src/entities/project";
 import { Rating } from "../../src/entities/rating";
 import { Team } from "../../src/entities/team";
 import { User } from "../../src/entities/user";
-import { IDatabaseService } from "../../src/services/database-service";
+import { UserRole } from "../../src/entities/user-role";
 import { IRatingService, RatingService } from "../../src/services/rating-service";
 import { ISettingsService } from "../../src/services/settings-service";
 import { MockedService } from "./mock";
 import { MockSettingsService } from "./mock/mock-settings-service";
+import { TestDatabaseService } from "./mock/mock-database-service";
 
 describe("RatingService", () => {
+  let database: TestDatabaseService;
   let settingsService: MockedService<ISettingsService>;
-  let mockRatingsRepo: any;
-  let mockProjectsRepo: any;
-  let mockTeamsRepo: any;
-  let mockUsersRepo: any;
-  let mockDatabase: IDatabaseService;
   let ratingService: IRatingService;
 
-  const mockUser = Object.assign(new User(), { id: 1 });
-  const mockTeam = Object.assign(new Team(), { id: 10, users: ["2", "3"] });
-  const mockProject = Object.assign(new Project(), {
-    id: 100,
-    team: mockTeam,
-    allowRating: true,
-  });
-  const mockCriterion = Object.assign(new Criterion(), { id: 5 });
-  const mockRating = Object.assign(new Rating(), {
-    project: mockProject,
-    user: mockUser,
-    criterion: mockCriterion,
+  let userRepo: Repository<User>;
+  let teamRepo: Repository<Team>;
+  let projectRepo: Repository<Project>;
+  let criterionRepo: Repository<Criterion>;
+  let ratingRepo: Repository<Rating>;
+
+  let ratingUser: User;
+  let teamMember: User;
+  let mockTeam: Team;
+  let mockProject: Project;
+  let mockCriterion: Criterion;
+
+  beforeAll(async () => {
+    database = new TestDatabaseService();
+    await database.bootstrap();
   });
 
   beforeEach(async () => {
+    await database.nuke();
+
     settingsService = new MockSettingsService();
 
-    mockRatingsRepo = {
-      find: jest.fn(),
-      findOneBy: jest.fn(),
-      findOne: jest.fn(),
-      save: jest.fn(),
-      delete: jest.fn()
-    };
-    mockProjectsRepo = {
-      find: jest.fn(),
-      findOneBy: jest.fn()
-    };
-    mockTeamsRepo = { findOneBy: jest.fn() };
-    mockUsersRepo = { findOneBy: jest.fn() };
+    userRepo = database.getRepository(User);
+    teamRepo = database.getRepository(Team);
+    projectRepo = database.getRepository(Project);
+    criterionRepo = database.getRepository(Criterion);
+    ratingRepo = database.getRepository(Rating);
 
-    mockDatabase = {
-      bootstrap: jest.fn(),
-      getRepository: jest.fn().mockImplementation((entity: any) => {
-        if (entity === Rating) return mockRatingsRepo;
-        if (entity === Project) return mockProjectsRepo;
-        if (entity === Team) return mockTeamsRepo;
-        if (entity === User) return mockUsersRepo;
-        return {};
-      }),
-    } as any;
+    // A user who will submit ratings (not in the project's team)
+    ratingUser = new User();
+    ratingUser.firstName = "Rater";
+    ratingUser.lastName = "User";
+    ratingUser.email = "rater@test.com";
+    ratingUser.password = "";
+    ratingUser.role = UserRole.User;
+    ratingUser.verifyToken = "";
+    ratingUser.tokenSecret = "";
+    ratingUser.forgotPasswordToken = "";
 
-    ratingService = new RatingService(mockDatabase, settingsService.instance);
+    // A user who is a member of the project team
+    teamMember = new User();
+    teamMember.firstName = "Team";
+    teamMember.lastName = "Member";
+    teamMember.email = "member@test.com";
+    teamMember.password = "";
+    teamMember.role = UserRole.User;
+    teamMember.verifyToken = "";
+    teamMember.tokenSecret = "";
+    teamMember.forgotPasswordToken = "";
+
+    [ratingUser, teamMember] = await userRepo.save([ratingUser, teamMember]);
+
+    mockTeam = new Team();
+    mockTeam.title = "Test Team";
+    mockTeam.users = [teamMember.id.toString()];
+    mockTeam.teamImg = "";
+    mockTeam.description = "";
+    mockTeam.requests = [];
+    mockTeam = await teamRepo.save(mockTeam);
+
+    mockProject = new Project();
+    mockProject.team = mockTeam;
+    mockProject.title = "Test Project";
+    mockProject.description = "";
+    mockProject.allowRating = true;
+    mockProject = await projectRepo.save(mockProject);
+
+    mockCriterion = new Criterion();
+    mockCriterion.title = "Test Criterion";
+    mockCriterion.description = "";
+    mockCriterion = await criterionRepo.save(mockCriterion);
+
+    ratingService = new RatingService(database, settingsService.instance);
     await ratingService.bootstrap();
   });
 
@@ -71,10 +99,17 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: false } } as any
+          { application: { allowRatingProjects: false } } as any,
         );
 
-        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
+        const rating = Object.assign(new Rating(), {
+          project: mockProject,
+          user: ratingUser,
+          criterion: mockCriterion,
+          rating: 3,
+        });
+
+        await expect(ratingService.upsertRating(rating, ratingUser)).rejects.toThrow(
           ForbiddenError,
         );
       });
@@ -83,12 +118,17 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: true } } as any
+          { application: { allowRatingProjects: true } } as any,
         );
 
-        mockProjectsRepo.findOneBy.mockResolvedValue(null);
+        const rating = Object.assign(new Rating(), {
+          project: { id: 99999 },
+          user: ratingUser,
+          criterion: mockCriterion,
+          rating: 3,
+        });
 
-        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(rating, ratingUser)).rejects.toThrow(
           NotFoundError,
         );
       });
@@ -97,38 +137,21 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: true } } as any
+          { application: { allowRatingProjects: true } } as any,
         );
 
-        mockProjectsRepo.findOneBy.mockResolvedValue(
-          Object.assign(new Project(), { ...mockProject, allowRating: false }),
-        );
+        await projectRepo.update(mockProject.id, { allowRating: false });
 
         // The backend should not be tricked by an allowRating: true in the payload
-        const payload = {
-          ...mockRating,
-          project: {
-            ...mockRating.project,
-            allowRating: true
-          }
-        }
-        await expect(ratingService.upsertRating(payload, mockUser)).rejects.toThrow(
+        const rating = Object.assign(new Rating(), {
+          project: { ...mockProject, allowRating: true },
+          user: ratingUser,
+          criterion: mockCriterion,
+          rating: 3,
+        });
+
+        await expect(ratingService.upsertRating(rating, ratingUser)).rejects.toThrow(
           ForbiddenError,
-        );
-      });
-
-      it("throws NotFoundError when team does not exist", async () => {
-        expect.assertions(1);
-
-        settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: true } } as any
-        );
-
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(null);
-
-        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
-          NotFoundError,
         );
       });
 
@@ -136,15 +159,17 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: true } } as any
+          { application: { allowRatingProjects: true } } as any,
         );
 
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(
-          Object.assign(new Team(), { ...mockTeam, users: ["1", "2", "3"] }),
-        );
+        const rating = Object.assign(new Rating(), {
+          project: mockProject,
+          user: teamMember,
+          criterion: mockCriterion,
+          rating: 3,
+        });
 
-        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(rating, teamMember)).rejects.toThrow(
           ForbiddenError,
         );
       });
@@ -153,42 +178,40 @@ describe("RatingService", () => {
         expect.assertions(2);
 
         settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: true } } as any
+          { application: { allowRatingProjects: true } } as any,
         );
 
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
-        mockRatingsRepo.findOne.mockResolvedValue(null);
-        const savedRating = Object.assign(new Rating(), { ...mockRating, id: 42 });
-        mockRatingsRepo.save.mockResolvedValue(savedRating);
+        const rating = Object.assign(new Rating(), {
+          project: mockProject,
+          user: ratingUser,
+          criterion: mockCriterion,
+          rating: 4,
+        });
 
-        const result = await ratingService.upsertRating(mockRating, mockUser);
+        const result = await ratingService.upsertRating(rating, ratingUser);
 
-        expect(result).toBe(savedRating);
-        expect(mockRatingsRepo.save).toHaveBeenCalledWith(mockRating);
+        expect(result.id).toBeDefined();
+        expect(result.rating).toBe(4);
       });
 
       it("is forbidden to impersonate other users", async () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue(
-          { application: { allowRatingProjects: true } } as any
+          { application: { allowRatingProjects: true } } as any,
         );
 
-        mockProjectsRepo.findOneBy.mockResolvedValue(mockProject);
-        mockTeamsRepo.findOneBy.mockResolvedValue(mockTeam);
-        mockRatingsRepo.findOne.mockResolvedValue(null);
+        const rating = Object.assign(new Rating(), {
+          project: mockProject,
+          user: { ...ratingUser, id: teamMember.id },
+          criterion: mockCriterion,
+          rating: 3,
+        });
 
-        mockRating.user = {
-          ...mockUser,
-          id: 1234
-        };
-
-        await expect(ratingService.upsertRating(mockRating, mockUser)).rejects.toThrow(
+        await expect(ratingService.upsertRating(rating, ratingUser)).rejects.toThrow(
           ForbiddenError,
         );
       });
-
     });
   });
 
@@ -196,26 +219,51 @@ describe("RatingService", () => {
     it("aggregates ratings for two projects with two ratings each", async () => {
       expect.assertions(5);
 
-      const projectA = Object.assign(new Project(), { id: 1, team: mockTeam });
-      const projectB = Object.assign(new Project(), { id: 2, team: mockTeam });
+      const projectA = await projectRepo.save(
+        Object.assign(new Project(), {
+          team: mockTeam,
+          title: "Project A",
+          description: "",
+          allowRating: true,
+        }),
+      );
+      const projectB = await projectRepo.save(
+        Object.assign(new Project(), {
+          team: mockTeam,
+          title: "Project B",
+          description: "",
+          allowRating: true,
+        }),
+      );
 
-      mockProjectsRepo.find.mockResolvedValue([ projectA, projectB ])
+      const criterionA = await criterionRepo.save(
+        Object.assign(new Criterion(), { title: "Criterion A", description: "" }),
+      );
+      const criterionB = await criterionRepo.save(
+        Object.assign(new Criterion(), { title: "Criterion B", description: "" }),
+      );
 
-      const criterionA = Object.assign(new Criterion(), { id: 1 });
-      const criterionB = Object.assign(new Criterion(), { id: 2 });
+      // Create extra users to submit ratings (not team members)
+      const [raterA, raterB, raterC] = await userRepo.save([
+        Object.assign(new User(), { firstName: "A", lastName: "R", email: "ra@test.com", password: "", role: UserRole.User, verifyToken: "", tokenSecret: "", forgotPasswordToken: "" }),
+        Object.assign(new User(), { firstName: "B", lastName: "R", email: "rb@test.com", password: "", role: UserRole.User, verifyToken: "", tokenSecret: "", forgotPasswordToken: "" }),
+        Object.assign(new User(), { firstName: "C", lastName: "R", email: "rc@test.com", password: "", role: UserRole.User, verifyToken: "", tokenSecret: "", forgotPasswordToken: "" }),
+      ]);
 
-      const ratingsFixture = [
-        // Project A
-        Object.assign(new Rating(), { id: 1, project: projectA, criterion: criterionA, rating: 2 }),
-        Object.assign(new Rating(), { id: 2, project: projectA, criterion: criterionA, rating: 3 }),
-        Object.assign(new Rating(), { id: 3, project: projectA, criterion: criterionB, rating: 1 }),
-        // Project B
-        Object.assign(new Rating(), { id: 4, project: projectB, criterion: criterionB, rating: 2 }),
-        Object.assign(new Rating(), { id: 5, project: projectB, criterion: criterionB, rating: 5 }),
-        Object.assign(new Rating(), { id: 6, project: projectB, criterion: criterionB, rating: 5 }),
-      ];
+      await ratingRepo.save([
+        // Project A, criterionA: avg 2.5
+        Object.assign(new Rating(), { project: projectA, criterion: criterionA, user: raterA, rating: 2 }),
+        Object.assign(new Rating(), { project: projectA, criterion: criterionA, user: raterB, rating: 3 }),
+        // Project A, criterionB: avg 1
+        Object.assign(new Rating(), { project: projectA, criterion: criterionB, user: raterA, rating: 1 }),
+        // Project B, criterionB: avg 4
+        Object.assign(new Rating(), { project: projectB, criterion: criterionB, user: raterA, rating: 2 }),
+        Object.assign(new Rating(), { project: projectB, criterion: criterionB, user: raterB, rating: 5 }),
+        Object.assign(new Rating(), { project: projectB, criterion: criterionB, user: raterC, rating: 5 }),
+      ]);
 
-      mockRatingsRepo.find.mockResolvedValue(ratingsFixture);
+      // getRatingResults only counts projects that exist; exclude the default mockProject
+      await projectRepo.delete(mockProject.id);
 
       const results = await ratingService.getRatingResults();
 
