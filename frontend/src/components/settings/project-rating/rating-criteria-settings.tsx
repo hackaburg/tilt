@@ -28,39 +28,41 @@ interface ICriterionEditorProps {
 /**
  * Edit or delete a single criteria
  **/
-const CriterionEditor = React.memo(({ criterion, onSave, onDelete }: ICriterionEditorProps) => {
-  // Use react.memo to avoid rerendering the component every time a character is typed
-  const [title, setTitle] = useState(criterion.title);
-  const [description, setDescription] = useState(criterion.description);
+const CriterionEditor = React.memo(
+  ({ criterion, onSave, onDelete }: ICriterionEditorProps) => {
+    // Use react.memo to avoid rerendering the component every time a character is typed
+    const [title, setTitle] = useState(criterion.title);
+    const [description, setDescription] = useState(criterion.description);
 
-  return (
-    <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
-      <TextField
-        value={title}
-        onChange={(event) => setTitle(event.target.value)}
-        placeholder="title"
-        rows={1}
-      />
-      <TextField
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-        placeholder="Description"
-        rows={1}
-        sx={{ flex: 1 }}
-      />
-      <Button
-        fullWidth={false}
-        variant="contained"
-        onClick={() => onSave({ ...criterion, title, description })}
-      >
-        Save
-      </Button>
-      <Button variant="contained" onClick={() => onDelete(criterion)}>
-        Delete
-      </Button>
-    </Stack>
-  );
-});
+    return (
+      <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
+        <TextField
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          placeholder="title"
+          rows={1}
+        />
+        <TextField
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          placeholder="Description"
+          rows={1}
+          sx={{ flex: 1 }}
+        />
+        <Button
+          fullWidth={false}
+          variant="contained"
+          onClick={() => onSave({ ...criterion, title, description })}
+        >
+          Save
+        </Button>
+        <Button variant="contained" onClick={() => onDelete(criterion)}>
+          Delete
+        </Button>
+      </Stack>
+    );
+  },
+);
 
 /**
  * A component to edit criteria for rating projects.

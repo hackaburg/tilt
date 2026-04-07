@@ -1,18 +1,11 @@
 import * as React from "react";
-import {
-  FlexRowContainer,
-  Spacer,
-} from "../base/flex";
+import { FlexRowContainer, Spacer } from "../base/flex";
 import { Page } from "./page";
 import { RoundedImage } from "../base/image";
 import { api } from "../../hooks/use-api";
 import { PageHeader } from "../base/page-header";
 import { RatingForm } from "./rating-form";
-import {
-  CriterionDTO,
-  RatingDTO,
-  ProjectDTO,
-} from "../../api/types/dto";
+import { CriterionDTO, RatingDTO, ProjectDTO } from "../../api/types/dto";
 
 /**
  * A settings dashboard to configure all parts of tilt.

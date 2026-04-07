@@ -25,7 +25,6 @@ describe("RatingController", () => {
     ratingService = new MockRatingService();
     settingsService = new MockSettingsService();
     controller = new RatingController(
-      settingsService.instance,
       ratingService.instance,
     );
   });
@@ -85,7 +84,6 @@ describe("RatingController", () => {
         get(target: Function) {
           if (target === RatingController) {
             return new RatingController(
-              settingsService.instance,
               ratingService.instance,
             );
           }

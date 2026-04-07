@@ -2,10 +2,7 @@ import * as React from "react";
 import { Page } from "./page";
 import { TextInput, TextInputType } from "../base/text-input";
 import { api, useApi } from "../../hooks/use-api";
-import {
-  Switch,
-  FormControlLabel,
-} from "@mui/material";
+import { Switch, FormControlLabel } from "@mui/material";
 import { useLoginContext } from "../../contexts/login-context";
 import { Message } from "../base/message";
 import { UserRole } from "../../api/types/enums";
@@ -79,11 +76,6 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
       return false;
     },
     [id, title, description, image, allowRating],
-  );
-
-  const { value: _allUsers } = useApi(
-    async (apiClient) => apiClient.getAllUsers(),
-    [],
   );
 
   const handleSubmit = React.useCallback((event: React.SyntheticEvent) => {

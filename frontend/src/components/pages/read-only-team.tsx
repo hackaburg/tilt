@@ -1,8 +1,5 @@
 import * as React from "react";
-import {
-  FlexRowContainer,
-  Spacer,
-} from "../base/flex";
+import { FlexRowContainer, Spacer } from "../base/flex";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { RoundedImage } from "../base/image";

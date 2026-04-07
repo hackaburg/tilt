@@ -1,4 +1,12 @@
-import { Authorized, JsonController, CurrentUser, Get, Post, Body, Param } from "routing-controllers";
+import {
+  Authorized,
+  JsonController,
+  CurrentUser,
+  Get,
+  Post,
+  Body,
+  Param,
+} from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
 import { RatingServiceToken, IRatingService } from "../services/rating-service";

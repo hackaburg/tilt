@@ -31,7 +31,9 @@ const arraySum = (array: number[]) => {
  * for each project.
  */
 const RatingResults = () => {
-  const [ratingResults, setRatingResults] = useState<ProjectRatingResultDTO[]>([]);
+  const [ratingResults, setRatingResults] = useState<ProjectRatingResultDTO[]>(
+    [],
+  );
   const [criteria, setCriteria] = React.useState<CriterionDTO[]>([]);
 
   useEffect(() => {

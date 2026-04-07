@@ -23,7 +23,11 @@ interface IRatingFormProps {
  * Component that allows users to submit and edit ratings for projects.
  * Only for one criterion, use multiple of this to cover all of them.
  */
-export const RatingForm = ({ rating, criterion, project }: IRatingFormProps) => {
+export const RatingForm = ({
+  rating,
+  criterion,
+  project,
+}: IRatingFormProps) => {
   const loginState = useLoginContext();
   const { user } = loginState;
 
