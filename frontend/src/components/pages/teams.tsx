@@ -1,23 +1,11 @@
-import styled from "@emotion/styled";
 import * as React from "react";
-import {
-  NonGrowingFlexContainer,
-  NonGrowingFlexContainer,
-  FlexColumnContainer,
-  FlexRowContainer,
-} from "../base/flex";
-import { Heading } from "../base/headings";
 import { Page } from "./page";
-import { Button } from "../base/button";
 import { Chip, Grid } from "@mui/material";
-import { InternalLink } from "../base/link";
 import { Routes } from "../../routes";
 import { useApi } from "../../hooks/use-api";
 import { TeamDTO } from "../../api/types/dto";
 import { GrGroup } from "react-icons/gr";
 import { Link } from "react-router-dom";
-import { Collapsible } from "../base/collapsible";
-import { Divider } from "../base/divider";
 import { PageHeader } from "../base/page-header";
 
 /**

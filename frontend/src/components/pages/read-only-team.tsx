@@ -1,36 +1,27 @@
-import styled from "@emotion/styled";
 import * as React from "react";
 import {
-  NonGrowingFlexContainer,
   FlexRowContainer,
   Spacer,
 } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { RoundedImage } from "../base/image";
-import { Divider } from "../base/divider";
 import { useApi } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
-import { TeamDTO } from "../../api/types/dto";
 import { PageHeader } from "../base/page-header";
-
-const HeaderContainer = styled(NonGrowingFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
+import { TeamResponseDTO } from "../../api/types/dto";
 
 /**
  * A team view component. This is only displayed, if the user is not part
  * of the team.
  */
-export const ReadOnlyTeam = ({ team }) => {
+export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
   const params = new URLSearchParams(document.location.search);
 
   const [isTeamOwner, setIsTeamOwner] = React.useState(false);
-  const [isTeamMember, setIsTeamMember] = React.useState(false);
+  const [, setIsTeamMember] = React.useState(false);
 
   const { forcePerformRequest: sendRequestToJoin } = useApi(
     async (apiClient, wasTriggeredManually) => {
@@ -45,15 +36,15 @@ export const ReadOnlyTeam = ({ team }) => {
 
   function notInUserList() {
     return (
-      !team?.users.some((u) => u.id === user?.id) &&
-      !team?.requests.some((u) => u.id === user?.id)
+      !team?.users?.some((u) => u.id === user?.id) &&
+      !team?.requests?.some((u) => u.id === user?.id)
     );
   }
 
   React.useEffect(() => {
     if (team) {
-      setIsTeamOwner(user?.id === Number(team?.users![0].id));
-      setIsTeamMember(team.users!.some((u) => u.id === user?.id));
+      setIsTeamOwner(user?.id === Number(team?.users?.[0]?.id));
+      setIsTeamMember(team.users?.some((u) => u.id === user?.id) ?? false);
     }
   }, [team, user?.id]);
 
@@ -94,7 +85,7 @@ export const ReadOnlyTeam = ({ team }) => {
             Team Members
           </h3>
           <div style={{ marginTop: "1.5rem" }}>
-            {team?.users.map((singleUser, index) => (
+            {team?.users?.map((singleUser, index) => (
               <div key={index} style={{ display: "flex" }}>
                 {singleUser.name}
               </div>

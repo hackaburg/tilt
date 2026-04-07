@@ -1,7 +1,4 @@
-import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, NonGrowingFlexContainer } from "../base/flex";
-import { Heading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -14,11 +11,6 @@ import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { Message } from "../base/message";
 import { PageHeader } from "../base/page-header";
-
-const HeaderContainer = styled(NonGrowingFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
 
 /**
  * A settings dashboard to configure all parts of tilt.

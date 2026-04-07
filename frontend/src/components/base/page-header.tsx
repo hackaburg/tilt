@@ -5,12 +5,25 @@ import { Heading, Subheading } from "../base/headings";
 import { Button } from "../base/button";
 import { InternalLink } from "../base/link";
 import { Collapsible } from "../base/collapsible";
+import { Routes } from "../../routes";
 import { Divider } from "../base/divider";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;
+
+interface IPageHeaderProps {
+  pageTitle: string;
+  buttonText?: string;
+  buttonHref?: Routes;
+  buttonOnClick?: () => any;
+  buttonLoading?: boolean;
+  buttonDisable?: boolean;
+  subTitle?: string;
+  collapsibleText?: string;
+  marginBottom?: string | number;
+}
 
 /**
  * pageTitle           button
@@ -20,15 +33,15 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
  */
 export const PageHeader = ({
   pageTitle,
-  buttonText = null,
-  buttonHref = null,
-  buttonOnClick = null,
+  buttonText,
+  buttonHref,
+  buttonOnClick,
   buttonLoading = false,
   buttonDisable = false,
-  subTitle = null,
-  collapsibleText = null,
+  subTitle,
+  collapsibleText,
   marginBottom = "2rem",
-}) => {
+}: IPageHeaderProps) => {
   const button = buttonText && (
     <Button
       primary={true}
@@ -41,8 +54,8 @@ export const PageHeader = ({
   );
 
   return (
-    <HeaderContainer style={{ "flex-direction": "column", marginBottom }}>
-      <div style={{ display: "flex", "justify-content": "space-between" }}>
+    <HeaderContainer style={{ flexDirection: "column", marginBottom }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Heading text={pageTitle} />
         {buttonText &&
           (buttonHref ? (
@@ -53,7 +66,7 @@ export const PageHeader = ({
       </div>
       <Divider />
       {collapsibleText ? (
-        <Collapsible title={subTitle}>{collapsibleText}</Collapsible>
+        <Collapsible title={subTitle ?? ""}>{collapsibleText}</Collapsible>
       ) : (
         subTitle && <Subheading text={subTitle} />
       )}

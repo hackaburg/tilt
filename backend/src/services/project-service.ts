@@ -47,7 +47,6 @@ export const ProjectServiceToken = new Token<IProjectService>();
 export class ProjectService implements IProjectService {
   private _projects!: Repository<Project>;
   private _teams!: Repository<Team>;
-  private _users!: Repository<User>;
   private _settings!: Repository<Settings>;
 
   public constructor(
@@ -60,7 +59,6 @@ export class ProjectService implements IProjectService {
   public async bootstrap(): Promise<void> {
     this._projects = this._database.getRepository(Project);
     this._teams = this._database.getRepository(Team);
-    this._users = this._database.getRepository(User);
     this._settings = this._database.getRepository(Settings);
   }
 

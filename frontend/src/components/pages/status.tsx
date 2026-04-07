@@ -11,7 +11,7 @@ import {
   NonGrowingFlexContainer,
   Spacer,
 } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
+import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";

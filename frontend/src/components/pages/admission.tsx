@@ -23,7 +23,6 @@ import {
   FlexRowContainer,
   NonGrowingFlexContainer,
   Spacer,
-  NonGrowingFlexContainer,
 } from "../base/flex";
 import { FormFieldButton } from "../base/form-field-button";
 import { Heading, Subheading } from "../base/headings";

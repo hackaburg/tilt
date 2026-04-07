@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
-import type { CriterionDTO } from "../../../api/types/dto";
+import type { CriterionDTO, SettingsDTO } from "../../../api/types/dto";
 import { Spacer } from "../../base/flex";
 import { SettingsSection } from "../settings-section";
 import { Subsubheading } from "../../base/headings";
@@ -19,10 +19,16 @@ import { api } from "../../../hooks/use-api";
 
 // TODO use our own button style
 
+interface ICriterionEditorProps {
+  criterion: CriterionDTO;
+  onSave: (criterion: CriterionDTO) => Promise<void>;
+  onDelete: (criterion: CriterionDTO) => Promise<void>;
+}
+
 /**
  * Edit or delete a single criteria
  **/
-const CriterionEditor = React.memo(({ criterion, onSave, onDelete }) => {
+const CriterionEditor = React.memo(({ criterion, onSave, onDelete }: ICriterionEditorProps) => {
   // Use react.memo to avoid rerendering the component every time a character is typed
   const [title, setTitle] = useState(criterion.title);
   const [description, setDescription] = useState(criterion.description);
@@ -61,13 +67,13 @@ const CriterionEditor = React.memo(({ criterion, onSave, onDelete }) => {
  */
 export const ProjectRatingSettings = () => {
   // Load all criteria and render them
-  const [allCriteria, setAllCriteria] = useState([]);
-  const [settings, setSettings] = useState({});
+  const [allCriteria, setAllCriteria] = useState<CriterionDTO[]>([]);
+  const [settings, setSettings] = useState<Partial<SettingsDTO>>({});
 
   // Do this only on mount
   useEffect(() => {
     api.getAllCriteria().then((criteria) => {
-      setAllCriteria(criteria);
+      setAllCriteria([...criteria]);
     });
 
     api.getSettings().then((settings) => {
@@ -78,7 +84,7 @@ export const ProjectRatingSettings = () => {
   useEffect(() => {
     // Only update if settings are loaded
     if (settings.application) {
-      api.updateSettings(settings);
+      api.updateSettings(settings as SettingsDTO);
     }
   }, [settings]);
 
@@ -86,12 +92,12 @@ export const ProjectRatingSettings = () => {
     const newCriterion = await api.createCriterion({
       title: "title",
       description: "description",
-    });
+    } as unknown as CriterionDTO);
     setAllCriteria((prev) => [...prev, newCriterion]);
-  });
+  }, []);
 
   const updateCriterion = useCallback(
-    async (changedCriterion): Promise<void> => {
+    async (changedCriterion: CriterionDTO): Promise<void> => {
       await api.updateCriterion(changedCriterion.id, changedCriterion);
       setAllCriteria((prev) =>
         prev.map((criterion) => {
@@ -101,10 +107,11 @@ export const ProjectRatingSettings = () => {
         }),
       );
     },
+    [],
   );
 
   const deleteCriterion = useCallback(
-    async (deletedCriterion): Promise<void> => {
+    async (deletedCriterion: CriterionDTO): Promise<void> => {
       await api.deleteCriterion(deletedCriterion.id);
       setAllCriteria((prev) =>
         prev.filter((criterion) => {
@@ -112,21 +119,25 @@ export const ProjectRatingSettings = () => {
         }),
       );
     },
+    [],
   );
 
-  const onSwitchChange = useCallback(async (event) => {
-    const value = event.target.checked;
-    setSettings((prev) => {
-      const changedSettings = {
-        ...prev,
-        application: {
-          ...prev.application,
-          allowRatingProjects: value,
-        },
-      };
-      return changedSettings;
-    });
-  });
+  const onSwitchChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.checked;
+      setSettings((prev) => {
+        const changedSettings = {
+          ...prev,
+          application: {
+            ...prev.application,
+            allowRatingProjects: value,
+          },
+        };
+        return changedSettings as Partial<SettingsDTO>;
+      });
+    },
+    [],
+  );
 
   return (
     <SettingsSection title="Project Rating">

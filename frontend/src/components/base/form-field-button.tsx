@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import { mediaBreakpoints } from "../../config";
 import {
-  FlexRowColumnContainer,
   BigFlexRowColumnContainer,
   FlexRowContainer,
   Spacer,

@@ -1,7 +1,5 @@
-import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, NonGrowingFlexContainer } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
+import { Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { RoundedImage } from "../base/image";
@@ -16,19 +14,13 @@ import {
   TextField,
 } from "@mui/material";
 import { MdDeleteOutline } from "react-icons/md";
-import { UserListDto } from "../../api/types/dto";
+import { UserListDto, TeamResponseDTO } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
 import { ReadOnlyTeam } from "./read-only-team";
 import { UserRole } from "../../api/types/enums";
-import { Divider } from "../base/divider";
 import { PageHeader } from "../base/page-header";
-
-const HeaderContainer = styled(NonGrowingFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
 
 /**
  * A gate component that checks if the current user is part of the team.
@@ -38,7 +30,7 @@ export const ViewTeam = () => {
   const loginState = useLoginContext();
   const { user } = loginState;
 
-  const [team, setTeam] = React.useState(null);
+  const [team, setTeam] = React.useState<TeamResponseDTO | null>(null);
   const params = new URLSearchParams(document.location.search);
   const teamId = Number(params.get("id"));
   React.useEffect(() => {
@@ -51,6 +43,10 @@ export const ViewTeam = () => {
 
   const isAdmin = user?.role == UserRole.Root;
 
+  if (!team) {
+    return null;
+  }
+
   return isTeamMember || isAdmin ? (
     <EditTeam team={team} />
   ) : (
@@ -61,13 +57,13 @@ export const ViewTeam = () => {
 /**
  * A settings dashboard to configure all parts of tilt.
  */
-const EditTeam = ({ team }) => {
+const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
 
   const [currentUserId, setCurrentUserId] = React.useState(0);
   const [isTeamOwner, setIsTeamOwner] = React.useState(false);
-  const [isTeamMember, setIsTeamMember] = React.useState(false);
+  const [, setIsTeamMember] = React.useState(false);
   const [id, setId] = React.useState(0);
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");

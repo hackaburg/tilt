@@ -592,8 +592,8 @@ export class ApiClient {
    * Get Project by Id
    * @return project by id
    */
-  public async getProjectByID(id: number): Promise<TeamResponseDTO> {
-    return await this.get<ApplicationControllerMethods["getTeamByID"]>(
+  public async getProjectByID(id: number): Promise<ProjectDTO> {
+    return await this.get<ProjectsControllerMethods["getProjectByID"]>(
       `/projects/${id}`,
     );
   }
@@ -630,7 +630,7 @@ export class ApiClient {
    * Gets all ratings.
    */
   public async getUsersRatingsForProject(
-    project,
+    project: ProjectDTO,
   ): Promise<readonly RatingDTO[]> {
     return await this.get<RatingControllerMethods["getUsersRatingsForProject"]>(
       `/ratings/by-project/${project.id}`,
@@ -651,7 +651,7 @@ export class ApiClient {
    * @param rating The rating to submit
    */
   public async createRating(rating: RatingDTO): Promise<RatingDTO> {
-    return await this.post<RatingControllerMethods["createRating"]>(
+    return await this.post<RatingControllerMethods["rate"]>(
       "/ratings/rate",
       rating,
     );
