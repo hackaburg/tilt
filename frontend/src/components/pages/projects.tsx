@@ -1,4 +1,5 @@
-import styled from "@emotion/styled";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -7,34 +8,22 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Grid,
 } from "@mui/material";
-import * as React from "react";
-import { useState, useEffect } from "react";
-import { Chip, Grid } from "@mui/material";
-import { GrGroup } from "react-icons/gr";
 import { Link } from "react-router-dom";
-import { Divider } from "../base/divider";
-import { NonGrowingFlexContainer, NonGrowingFlexContainer } from "../base/flex";
-import { Heading } from "../base/headings";
-import { Button } from "../base/button";
-import { InternalLink } from "../base/link";
-import { Collapsible } from "../base/collapsible";
 import { Page } from "./page";
-import { useApi } from "../../hooks/use-api";
-import { Routes } from "../../routes";
-import { TeamDTO } from "../../api/types/dto";
 import { api } from "../../hooks/use-api";
 import { PageHeader } from "../base/page-header";
 import { useLoginContext } from "../../contexts/login-context";
 import { UserRole } from "../../api/types/enums";
+import {
+  ProjectDTO,
+  CriterionDTO,
+  ProjectRatingResultDTO,
+} from "../../api/types/dto";
 
-const HeaderContainer = styled(NonGrowingFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
-
-const arraySum = (array) => {
-  return array.reduce((partialSum, a) => partialSum + a, 0);
+const arraySum = (array: number[]) => {
+  return array.reduce((partialSum: number, a: number) => partialSum + a, 0);
 };
 
 /**
@@ -42,16 +31,16 @@ const arraySum = (array) => {
  * for each project.
  */
 const RatingResults = () => {
-  const [ratingResults, setRatingResults] = useState([]);
-  const [criteria, setCriteria] = React.useState([]);
+  const [ratingResults, setRatingResults] = useState<ProjectRatingResultDTO[]>([]);
+  const [criteria, setCriteria] = React.useState<CriterionDTO[]>([]);
 
   useEffect(() => {
     api.getRatingResults().then((stuff) => {
-      setRatingResults(stuff);
+      setRatingResults([...stuff]);
     });
 
     api.getAllCriteria().then((criteria) => {
-      setCriteria(criteria);
+      setCriteria([...criteria]);
     });
   }, []);
 
@@ -116,19 +105,14 @@ const RatingResults = () => {
  * - Admins can enable or disable rating for individual projects
  */
 export const Projects = () => {
-  const [allProjects, setAllProjects] = useState([]);
-  const [settings, setSettings] = useState({});
+  const [allProjects, setAllProjects] = useState<ProjectDTO[]>([]);
   const loginState = useLoginContext();
   const { user } = loginState;
 
   // Do this only on mount
   useEffect(() => {
     api.getAllProjects().then((projects) => {
-      setAllProjects(projects);
-    });
-
-    api.getSettings().then((settings) => {
-      setSettings(settings);
+      setAllProjects([...projects]);
     });
   }, []);
 
@@ -196,7 +180,7 @@ export const Projects = () => {
           </Grid>
         ))}
       </Grid>
-      {user.role === UserRole.Root && <RatingResults />}
+      {user?.role === UserRole.Root && <RatingResults />}
     </Page>
   );
 };

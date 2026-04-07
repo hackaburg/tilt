@@ -12,22 +12,30 @@ import {
 import { api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { Button } from "../base/button";
+import { CriterionDTO, ProjectDTO, RatingDTO } from "../../api/types/dto";
+interface IRatingFormProps {
+  rating?: RatingDTO;
+  criterion: CriterionDTO;
+  project: ProjectDTO;
+}
 
 /**
  * Component that allows users to submit and edit ratings for projects.
  * Only for one criterion, use multiple of this to cover all of them.
  */
-export const RatingForm = ({ rating, criterion, project }) => {
+export const RatingForm = ({ rating, criterion, project }: IRatingFormProps) => {
   const loginState = useLoginContext();
   const { user } = loginState;
 
-  const [ratingValue, setRatingValue] = useState(rating?.rating);
+  const [ratingValue, setRatingValue] = useState<string | undefined>(
+    rating?.rating?.toString(),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   React.useEffect(() => {
     if (rating) {
-      setRatingValue(rating.rating);
+      setRatingValue(rating.rating.toString());
     }
   }, [rating]);
 
@@ -36,17 +44,11 @@ export const RatingForm = ({ rating, criterion, project }) => {
     setError(null);
 
     await api.createRating({
-      criterion: {
-        id: criterion.id,
-      },
-      rating: parseInt(ratingValue),
-      user: {
-        id: user.id,
-      },
-      project: {
-        id: project.id,
-      },
-    });
+      criterion: criterion,
+      rating: parseInt(ratingValue ?? "0"),
+      user: user!,
+      project: project,
+    } as unknown as RatingDTO);
 
     setIsSubmitting(false);
   };
@@ -55,7 +57,7 @@ export const RatingForm = ({ rating, criterion, project }) => {
     <div
       style={{
         border: "1px solid grey",
-        "border-radius": "5px",
+        borderRadius: "5px",
         padding: "10px",
         margin: "1rem auto",
       }}
@@ -90,9 +92,8 @@ export const RatingForm = ({ rating, criterion, project }) => {
         </FormControl>
 
         <Button
-          variant="contained"
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disable={isSubmitting}
           loading={isSubmitting}
         >
           Submit

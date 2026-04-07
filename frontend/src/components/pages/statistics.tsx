@@ -14,7 +14,6 @@ import {
   FlexRowColumnContainer,
   FlexRowContainer,
   NonGrowingFlexContainer,
-  NonGrowingFlexContainer,
 } from "../base/flex";
 import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";

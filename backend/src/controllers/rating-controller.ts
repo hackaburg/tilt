@@ -1,18 +1,6 @@
-import {
-  Authorized,
-  JsonController,
-  CurrentUser,
-  Get,
-  Post,
-  Body,
-  Param,
-} from "routing-controllers";
+import { Authorized, JsonController, CurrentUser, Get, Post, Body, Param } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
-import {
-  SettingsServiceToken,
-  ISettingsService,
-} from "../services/settings-service";
 import { RatingServiceToken, IRatingService } from "../services/rating-service";
 import {
   RatingDTO,
@@ -25,7 +13,6 @@ import { Rating } from "../entities/rating";
 @JsonController("/ratings")
 export class RatingController {
   public constructor(
-    @Inject(SettingsServiceToken) private readonly _settings: ISettingsService,
     @Inject(RatingServiceToken) private readonly _ratings: IRatingService,
   ) {}
 

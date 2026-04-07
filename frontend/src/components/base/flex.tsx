@@ -62,8 +62,8 @@ export const FlexRowColumnContainer = styled.div`
 /**
  * A column in a flex row.
  */
-export const BigFlexRowColumnContainer = (props = { children: [] }) => (
-  <FlexRowColumnContainer {...props} stlye={{ ...props.style, flexGrow: 2 }}>
+export const BigFlexRowColumnContainer = (props: { children?: React.ReactNode; style?: React.CSSProperties }) => (
+  <FlexRowColumnContainer {...props} style={{ ...props.style, flexGrow: 2 }}>
     {props.children}
   </FlexRowColumnContainer>
 );

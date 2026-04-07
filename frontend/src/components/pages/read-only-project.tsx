@@ -1,98 +1,37 @@
-import styled from "@emotion/styled";
 import * as React from "react";
 import {
-  NonGrowingFlexContainer,
   FlexRowContainer,
   Spacer,
 } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
-import { Button } from "../base/button";
 import { RoundedImage } from "../base/image";
-import { Divider } from "../base/divider";
-import { useApi, api } from "../../hooks/use-api";
-import { useLoginContext } from "../../contexts/login-context";
-import { TeamDTO } from "../../api/types/dto";
+import { api } from "../../hooks/use-api";
 import { PageHeader } from "../base/page-header";
 import { RatingForm } from "./rating-form";
-
-const HeaderContainer = styled(NonGrowingFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
+import {
+  CriterionDTO,
+  RatingDTO,
+  ProjectDTO,
+} from "../../api/types/dto";
 
 /**
  * A settings dashboard to configure all parts of tilt.
  */
-export const ReadOnlyProject = ({ project }) => {
-  const loginState = useLoginContext();
-  const { user } = loginState;
-  const params = new URLSearchParams(document.location.search);
-
-  const [id, setId] = React.useState(0);
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [image, setImage] = React.useState("");
-  const [allowRating, setAllowRating] = React.useState(false);
-  const [criteria, setCriteria] = React.useState([]);
-  const [allUsers, setAllUsers] = React.useState([]);
-  const [ratings, setRatings] = React.useState([]);
+export const ReadOnlyProject = ({ project }: { project: ProjectDTO }) => {
+  const [criteria, setCriteria] = React.useState<CriterionDTO[]>([]);
+  const [ratings, setRatings] = React.useState<RatingDTO[]>([]);
 
   React.useEffect(() => {
-    if (project) {
-      setId(project.id);
-      setTitle(project.title);
-      setDescription(project.description);
-      setImage(project.image);
-      setAllowRating(project.allowRating);
-    }
-  }, [project]);
-
-  React.useEffect(() => {
-    api.getAllUsers().then((allUsers) => {
-      setAllUsers(allUsers);
-    });
-
     api.getAllCriteria().then((criteria) => {
-      setCriteria(criteria);
+      setCriteria([...criteria]);
     });
 
     if (project) {
       api.getUsersRatingsForProject(project).then((ratings) => {
-        setRatings(ratings);
+        setRatings([...ratings]);
       });
     }
   }, [project]);
-
-  const {
-    value: didUpdateProject,
-    isFetching: updateProjectInProgress,
-    error: updateProjectError,
-    forcePerformRequest: sendSaveProjectRequest,
-  } = useApi(
-    async (apiClient, wasTriggeredManually) => {
-      if (wasTriggeredManually) {
-        await apiClient.updateProject(id, {
-          title,
-          description,
-          image,
-          allowRating,
-        });
-        return true;
-      }
-      return false;
-    },
-    [id, title, description, image, allowRating],
-  );
-
-  const handleSubmit = React.useCallback((event: React.SyntheticEvent) => {
-    event.preventDefault();
-  }, []);
-
-  const updateProjectDone =
-    Boolean(didUpdateProject) &&
-    !updateProjectInProgress &&
-    !updateProjectError;
 
   return (
     <Page>
@@ -112,7 +51,7 @@ export const ReadOnlyProject = ({ project }) => {
         </FlexRowContainer>
       </div>
       <div>
-        <h2 style={{ "margin-top": "4rem" }}>Rate this Project</h2>
+        <h2 style={{ marginTop: "4rem" }}>Rate this Project</h2>
         Hover the criterion for more information. Rate criteria high, if you
         think the project did well in this regard.
         {criteria.map((criterion) => (

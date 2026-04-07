@@ -1,5 +1,4 @@
 import {
-  BadRequestError,
   ForbiddenError,
   NotFoundError,
 } from "routing-controllers";
@@ -60,7 +59,6 @@ export class RatingService implements IRatingService {
   private _ratings!: Repository<Rating>;
   private _projects!: Repository<Project>;
   private _teams!: Repository<Team>;
-  private _users!: Repository<User>;
 
   public constructor(
     @Inject(DatabaseServiceToken) private readonly _database: IDatabaseService,
@@ -74,7 +72,6 @@ export class RatingService implements IRatingService {
     this._ratings = this._database.getRepository(Rating);
     this._projects = this._database.getRepository(Project);
     this._teams = this._database.getRepository(Team);
-    this._users = this._database.getRepository(User);
   }
 
   /**
@@ -206,7 +203,6 @@ export class RatingService implements IRatingService {
       }
 
       // Calculate average
-      const criterionIdToAvg: Record<number, number> = {};
       for (const criterionId in criterionIdToSum) {
         const average =
           criterionIdToSum[criterionId] / criterionIdToCount[criterionId];

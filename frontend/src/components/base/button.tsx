@@ -76,9 +76,7 @@ export const Button = ({
   disable = false,
   primary = false,
   loading = false,
-  wide = false,
   color,
-  href = null,
 }: IButtonProps) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {

@@ -11,6 +11,7 @@ interface IChevronProps {
   color?: string;
   size?: number;
   rotation?: number;
+  style?: React.CSSProperties;
 }
 
 /**
