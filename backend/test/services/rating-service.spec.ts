@@ -217,7 +217,7 @@ describe("RatingService", () => {
 
   describe("getRatingResults", () => {
     it("aggregates ratings for two projects with two ratings each", async () => {
-      expect.assertions(5);
+      expect.assertions(6);
 
       const projectA = await projectRepo.save(
         Object.assign(new Project(), {
@@ -271,16 +271,12 @@ describe("RatingService", () => {
 
       const resultA = results.find((r) => r.project.id === projectA.id)!;
       expect(resultA).toBeDefined();
-      expect(resultA.criterionIdToAvg).toEqual({
-        [criterionA.id]: 2.5,
-        [criterionB.id]: 1,
-      });
+      expect(resultA.averagesPerCriterion[0].average).toEqual(2.5)
+      expect(resultA.averagesPerCriterion[1].average).toEqual(1)
 
       const resultB = results.find((r) => r.project.id === projectB.id)!;
       expect(resultB).toBeDefined();
-      expect(resultB.criterionIdToAvg).toEqual({
-        [criterionB.id]: 4,
-      });
+      expect(resultB.averagesPerCriterion[0].average).toEqual(4);
     });
   });
 });
