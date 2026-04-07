@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, FlexRowContainer, Spacer } from "../base/flex";
+import {
+  NonGrowingFlexContainer,
+  FlexRowContainer,
+  Spacer,
+} from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
@@ -44,24 +48,21 @@ export const ReadOnlyProject = ({ project }) => {
     }
   }, [project]);
 
-  React.useEffect(
-    () => {
-      api.getAllUsers().then((allUsers) => {
-        setAllUsers(allUsers);
-      });
+  React.useEffect(() => {
+    api.getAllUsers().then((allUsers) => {
+      setAllUsers(allUsers);
+    });
 
-      api.getAllCriteria().then((criteria) => {
-        setCriteria(criteria);
-      });
+    api.getAllCriteria().then((criteria) => {
+      setCriteria(criteria);
+    });
 
-      if (project) {
-        api.getUsersRatingsForProject(project).then((ratings) => {
-          setRatings(ratings);
-        });
-      }
-    },
-    [project]
-  );
+    if (project) {
+      api.getUsersRatingsForProject(project).then((ratings) => {
+        setRatings(ratings);
+      });
+    }
+  }, [project]);
 
   const {
     value: didUpdateProject,
@@ -71,15 +72,12 @@ export const ReadOnlyProject = ({ project }) => {
   } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await apiClient.updateProject(
-          id,
-          {
-            title,
-            description,
-            image,
-            allowRating,
-          }
-        );
+        await apiClient.updateProject(id, {
+          title,
+          description,
+          image,
+          allowRating,
+        });
         return true;
       }
       return false;
@@ -92,17 +90,22 @@ export const ReadOnlyProject = ({ project }) => {
   }, []);
 
   const updateProjectDone =
-    Boolean(didUpdateProject) && !updateProjectInProgress && !updateProjectError;
+    Boolean(didUpdateProject) &&
+    !updateProjectInProgress &&
+    !updateProjectError;
 
   return (
     <Page>
-      <PageHeader pageTitle={project?.title}/>
+      <PageHeader pageTitle={project?.title} />
       <div>
         <FlexRowContainer>
-        <div>
-          {project?.image !== "" ? (
-            <RoundedImage src={project?.image} style={{ width: "200px", height: "200px" }} />
-          ) : null}
+          <div>
+            {project?.image !== "" ? (
+              <RoundedImage
+                src={project?.image}
+                style={{ width: "200px", height: "200px" }}
+              />
+            ) : null}
           </div>
           <Spacer />
           <p>{project?.description}</p>
@@ -110,13 +113,15 @@ export const ReadOnlyProject = ({ project }) => {
       </div>
       <div>
         <h2 style={{ "margin-top": "4rem" }}>Rate this Project</h2>
-        Hover the criterion for more information.
-        Rate criteria high, if you think the project did well in this regard.
-        {criteria.map(criterion => <RatingForm
-          rating={ratings.find(r => r.criterion.id == criterion.id)}
-          criterion={criterion}
-          project={project}
-        />)}
+        Hover the criterion for more information. Rate criteria high, if you
+        think the project did well in this regard.
+        {criteria.map((criterion) => (
+          <RatingForm
+            rating={ratings.find((r) => r.criterion.id == criterion.id)}
+            criterion={criterion}
+            project={project}
+          />
+        ))}
       </div>
     </Page>
   );

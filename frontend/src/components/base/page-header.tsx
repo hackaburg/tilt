@@ -27,7 +27,7 @@ export const PageHeader = ({
   buttonDisable = false,
   subTitle = null,
   collapsibleText = null,
-  marginBottom = "2rem"
+  marginBottom = "2rem",
 }) => {
   const button = buttonText && (
     <Button
@@ -35,27 +35,28 @@ export const PageHeader = ({
       onClick={buttonOnClick}
       loading={buttonLoading}
       disable={buttonLoading || buttonDisable}
-    >{buttonText}</Button>
+    >
+      {buttonText}
+    </Button>
   );
 
   return (
     <HeaderContainer style={{ "flex-direction": "column", marginBottom }}>
       <div style={{ display: "flex", "justify-content": "space-between" }}>
         <Heading text={pageTitle} />
-        {buttonText && (
-          buttonHref ? (
+        {buttonText &&
+          (buttonHref ? (
             <InternalLink to={buttonHref}>{button}</InternalLink>
           ) : (
             button
-          )
-        )}
+          ))}
       </div>
       <Divider />
       {collapsibleText ? (
-        <Collapsible title={subTitle}>
-          {collapsibleText}
-        </Collapsible>
-      ) : subTitle && <Subheading text={subTitle} />}
+        <Collapsible title={subTitle}>{collapsibleText}</Collapsible>
+      ) : (
+        subTitle && <Subheading text={subTitle} />
+      )}
     </HeaderContainer>
-  )
-}
+  );
+};

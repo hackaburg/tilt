@@ -1,11 +1,19 @@
-import { BadRequestError, ForbiddenError, NotFoundError } from "routing-controllers";
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+} from "routing-controllers";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import { Rating } from "../entities/rating";
-import { RatingDTO, ProjectRatingResultDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
+import {
+  RatingDTO,
+  ProjectRatingResultDTO,
+  convertBetweenEntityAndDTO,
+} from "../controllers/dto";
 import { User } from "../entities/user";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
@@ -17,7 +25,10 @@ export interface IRatingService extends IService {
    * Get the ratings for a specific project, cast by a specific user.
    * Users may only read their own created ratings.
    */
-  getUsersRatingsForProject(projectId: number, user: User): Promise<readonly Rating[]>;
+  getUsersRatingsForProject(
+    projectId: number,
+    user: User,
+  ): Promise<readonly Rating[]>;
   /**
    *  Upsert a rating
    */
@@ -70,17 +81,20 @@ export class RatingService implements IRatingService {
    * Get the ratings for a specific project, cast by a specific user.
    * Users may only read their own created ratings.
    */
-  public async getUsersRatingsForProject(projectId: number, user: User): Promise<readonly Rating[]> {
+  public async getUsersRatingsForProject(
+    projectId: number,
+    user: User,
+  ): Promise<readonly Rating[]> {
     // TODO test
     return this._database.getRepository(Rating).find({
       where: {
         project: {
-          id: projectId
+          id: projectId,
         },
         user: {
-          id: user.id
-        }
-      }
+          id: user.id,
+        },
+      },
     });
   }
 
@@ -93,21 +107,21 @@ export class RatingService implements IRatingService {
 
     const existingRating = await this._ratings.findOneBy({
       user: {
-        id: user.id
+        id: user.id,
       },
       project: {
-        id: rating.project.id
+        id: rating.project.id,
       },
       criterion: {
-        id: rating.criterion.id
-      }
+        id: rating.criterion.id,
+      },
     });
 
     if (existingRating) {
       // Update
       return this._ratings.save({
         ...rating,
-        id: existingRating.id
+        id: existingRating.id,
       });
     }
 
@@ -118,7 +132,10 @@ export class RatingService implements IRatingService {
    * Gets a rating by its id.
    * @param id The id of the rating
    */
-  public async getRatingByID(id: number, user: User): Promise<RatingDTO | undefined> {
+  public async getRatingByID(
+    id: number,
+    user: User,
+  ): Promise<RatingDTO | undefined> {
     const rating = await this._ratings.findOneBy({ id });
 
     if (!rating) {
@@ -126,7 +143,7 @@ export class RatingService implements IRatingService {
     }
 
     if (rating.user.id !== user.id && user.role !== UserRole.Root) {
-      throw new ForbiddenError()
+      throw new ForbiddenError();
     }
 
     return rating ? convertBetweenEntityAndDTO(rating, RatingDTO) : undefined;
@@ -169,8 +186,8 @@ export class RatingService implements IRatingService {
       const averagesPerCriterion = [];
 
       // Sum up
-      const criterionIdToSum: Record<number, number> = {}
-      const criterionIdToCount: Record<number, number> = {}
+      const criterionIdToSum: Record<number, number> = {};
+      const criterionIdToCount: Record<number, number> = {};
       for (const rating of allRatings) {
         idToCriterion[rating.criterion.id] = rating.criterion;
 
@@ -189,16 +206,17 @@ export class RatingService implements IRatingService {
       }
 
       // Calculate average
-      const criterionIdToAvg: Record<number, number> = {}
+      const criterionIdToAvg: Record<number, number> = {};
       for (const criterionId in criterionIdToSum) {
-        const average = criterionIdToSum[criterionId] / criterionIdToCount[criterionId];
+        const average =
+          criterionIdToSum[criterionId] / criterionIdToCount[criterionId];
         const criterion = idToCriterion[criterionId];
         averagesPerCriterion.push({ criterion, average });
       }
 
       result.push({
         project,
-        averagesPerCriterion
+        averagesPerCriterion,
       });
     }
 
@@ -211,7 +229,9 @@ export class RatingService implements IRatingService {
   private async checkPermission(rating: Rating, user: User): Promise<void> {
     const settings = await this._settings.getSettings();
     if (!settings.application.allowRatingProjects) {
-      throw new ForbiddenError("Rating is not allowed due to application settings")
+      throw new ForbiddenError(
+        "Rating is not allowed due to application settings",
+      );
     }
 
     const project = await this._projects.findOneBy({ id: rating.project.id });
@@ -222,12 +242,12 @@ export class RatingService implements IRatingService {
       throw new ForbiddenError("Rating this project is not allowed");
     }
 
-    const team = await this._teams.findOneBy({ id: project.team.id })
+    const team = await this._teams.findOneBy({ id: project.team.id });
     if (!team) {
       throw new NotFoundError("Team not found");
     }
     if (team.users.includes(user.id.toString())) {
-      throw new ForbiddenError("You can't rate your own project")
+      throw new ForbiddenError("You can't rate your own project");
     }
 
     if (rating.user.id !== user.id) {

@@ -7,7 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-} from '@mui/material';
+} from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Chip, Grid } from "@mui/material";
@@ -35,7 +35,7 @@ const HeaderContainer = styled(NonGrowingFlexContainer)`
 
 const arraySum = (array) => {
   return array.reduce((partialSum, a) => partialSum + a, 0);
-}
+};
 
 /**
  * A table displaying the average rating per criterion, and the total sum
@@ -45,21 +45,18 @@ const RatingResults = () => {
   const [ratingResults, setRatingResults] = useState([]);
   const [criteria, setCriteria] = React.useState([]);
 
-  useEffect(
-    () => {
-      api.getRatingResults().then((stuff) => {
-        setRatingResults(stuff)
-      });
+  useEffect(() => {
+    api.getRatingResults().then((stuff) => {
+      setRatingResults(stuff);
+    });
 
-      api.getAllCriteria().then((criteria) => {
-        setCriteria(criteria);
-      });
-    },
-    []
-  );
+    api.getAllCriteria().then((criteria) => {
+      setCriteria(criteria);
+    });
+  }, []);
 
   return (
-    <div style={{ marginTop: "2em"  }}>
+    <div style={{ marginTop: "2em" }}>
       <h2>Results</h2>
       <p>(Only visible to admins)</p>
       {
@@ -68,33 +65,38 @@ const RatingResults = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Project</TableCell>
-                {criteria.map(criterion => (
+                {criteria.map((criterion) => (
                   <TableCell key={criterion.id} align="center">
                     {criterion.title}
                   </TableCell>
                 ))}
                 <TableCell key="CriterionSum" align="center">
-                Sum
+                  Sum
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {ratingResults.map(resultForProject => (
+              {ratingResults.map((resultForProject) => (
                 <TableRow key={resultForProject.project.id}>
                   <TableCell>
-                    {resultForProject.project.title} #{resultForProject.project.id}
+                    {resultForProject.project.title} #
+                    {resultForProject.project.id}
                   </TableCell>
-                  {criteria.map(criterion => (
+                  {criteria.map((criterion) => (
                     <TableCell key={criterion.id} align="center">
                       {
-                        resultForProject
-                          .averagesPerCriterion
-                          .find((a) => a.criterion.id == criterion.id)?.average
+                        resultForProject.averagesPerCriterion.find(
+                          (a) => a.criterion.id == criterion.id,
+                        )?.average
                       }
                     </TableCell>
                   ))}
                   <TableCell key="CriterionSum" align="center">
-                  {arraySum(resultForProject.averagesPerCriterion.map(({ average }) => average))}
+                    {arraySum(
+                      resultForProject.averagesPerCriterion.map(
+                        ({ average }) => average,
+                      ),
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -103,8 +105,8 @@ const RatingResults = () => {
         </TableContainer>
       }
     </div>
-  )
-}
+  );
+};
 
 /**
  * - Show all projects visible to the user (owned + rating allowed)
@@ -120,18 +122,15 @@ export const Projects = () => {
   const { user } = loginState;
 
   // Do this only on mount
-  useEffect(
-    () => {
-      api.getAllProjects().then((projects) => {
-        setAllProjects(projects)
-      });
+  useEffect(() => {
+    api.getAllProjects().then((projects) => {
+      setAllProjects(projects);
+    });
 
-      api.getSettings().then((settings) => {
-        setSettings(settings)
-      });
-    },
-    []
-  );
+    api.getSettings().then((settings) => {
+      setSettings(settings);
+    });
+  }, []);
 
   return (
     <Page>
@@ -197,9 +196,7 @@ export const Projects = () => {
           </Grid>
         ))}
       </Grid>
-      {user.role === UserRole.Root && (
-        <RatingResults />
-      )}
+      {user.role === UserRole.Root && <RatingResults />}
     </Page>
   );
 };

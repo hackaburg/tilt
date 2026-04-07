@@ -39,8 +39,13 @@ export const Collapsible = ({
     <FlexColumnContainer>
       <VerticallyCenteredContainer>
         <ExpandButton onClick={handleOpen}>
-          <span style={{ "font-size": "1.25rem", "margin-right": "10px" }}>{title}</span>
-          <Chevron rotation={isOpen ? 0 : -90} style={{ "vertical-align": "center" }}/>
+          <span style={{ "font-size": "1.25rem", "margin-right": "10px" }}>
+            {title}
+          </span>
+          <Chevron
+            rotation={isOpen ? 0 : -90}
+            style={{ "vertical-align": "center" }}
+          />
         </ExpandButton>
       </VerticallyCenteredContainer>
 

@@ -34,24 +34,30 @@ describe("ProjectsController", () => {
       title: "foo-title",
       description: "foo-desc",
       allowRating: true,
-      image: "foo"
-    }
+      image: "foo",
+    };
 
     projectService.mocks.getProjectByID.mockResolvedValue({
       id: 3,
       title: "bar-title",
       description: "bar-desc",
       allowRating: true,
-      image: "bar"
+      image: "bar",
     });
 
     projectService.mocks.updateProject.mockResolvedValue(updateData);
 
-    const result = await controller.updateProject(3, { data: updateData }, user);
+    const result = await controller.updateProject(
+      3,
+      { data: updateData },
+      user,
+    );
 
     expect(result).toBeDefined();
     expect(result.title).toEqual("foo-title");
     expect(projectService.mocks.updateProject.mock.calls[0][0].id).toEqual(3);
-    expect(projectService.mocks.updateProject.mock.calls[0][0].title).toEqual("foo-title");
+    expect(projectService.mocks.updateProject.mock.calls[0][0].title).toEqual(
+      "foo-title",
+    );
   });
 });

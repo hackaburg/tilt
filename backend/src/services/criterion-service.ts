@@ -87,7 +87,9 @@ export class CriterionService implements ICriterionService {
    */
   public async getCriterionByID(id: number): Promise<CriterionDTO | undefined> {
     const criteria = await this._criteria.findOneBy({ id });
-    return criteria ? convertBetweenEntityAndDTO(criteria, CriterionDTO) : undefined;
+    return criteria
+      ? convertBetweenEntityAndDTO(criteria, CriterionDTO)
+      : undefined;
   }
 
   /**

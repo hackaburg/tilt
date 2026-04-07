@@ -68,23 +68,23 @@ export class ProjectService implements IProjectService {
    * Gets all projects that the user may see.
    */
   public async getAllProjects(user: User): Promise<readonly Project[]> {
-    const teams = await this._teams.find()
+    const teams = await this._teams.find();
     const teamIds = teams
-      .filter(team => team.users.includes(user.id.toString()))
-      .map(team => team.id);
+      .filter((team) => team.users.includes(user.id.toString()))
+      .map((team) => team.id);
 
     const [settings] = await this._settings.find();
     const allowRatingProjects = settings.application.allowRatingProjects;
     const isAdmin = user.role == UserRole.Root;
 
-    const projects = await this._projects.find()
-    return projects.filter(project => {
-        return (
-          isAdmin
-          || (project.allowRating && allowRatingProjects)
-          || teamIds.includes(project.team.id)
-        );
-      });
+    const projects = await this._projects.find();
+    return projects.filter((project) => {
+      return (
+        isAdmin ||
+        (project.allowRating && allowRatingProjects) ||
+        teamIds.includes(project.team.id)
+      );
+    });
   }
 
   /**
@@ -133,7 +133,10 @@ export class ProjectService implements IProjectService {
    * Deletes a project by its id.
    * @param id The id of the project
    */
-  public async deleteProjectByID(id: number, currentUserId: User): Promise<void> {
+  public async deleteProjectByID(
+    id: number,
+    currentUserId: User,
+  ): Promise<void> {
     const project = await this._projects.findOneBy({ id });
 
     if (!project) {
@@ -152,7 +155,7 @@ export class ProjectService implements IProjectService {
    */
   private async checkPermission(project: Project, user: User): Promise<void> {
     if (user.role === UserRole.Root) {
-      return
+      return;
     }
 
     const team = project.team;

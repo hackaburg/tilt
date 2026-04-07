@@ -148,7 +148,7 @@ export class TeamService implements ITeamService {
       throw new Error("Please add at least one user to the team");
     }
 
-    const maxUsers = 8
+    const maxUsers = 8;
     if (team.users.length > maxUsers) {
       throw new Error(`A team can have a maximum of ${maxUsers} users`);
     }
@@ -174,7 +174,7 @@ export class TeamService implements ITeamService {
       const createdTeam = await this._teams.save(team);
 
       // Every team gets one project by default
-      const project = new Project()
+      const project = new Project();
       project.title = `${team.title}'s Project`;
       project.description = "";
       project.team = createdTeam;

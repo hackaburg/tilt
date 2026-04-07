@@ -1,11 +1,14 @@
-import { Repository } from "typeorm"
+import { Repository } from "typeorm";
 import { NotFoundError } from "routing-controllers";
 import { Project } from "../../src/entities/project";
 import { Team } from "../../src/entities/team";
 import { User } from "../../src/entities/user";
 import { UserRole } from "../../src/entities/user-role";
 import { IDatabaseService } from "../../src/services/database-service";
-import { IProjectService, ProjectService } from "../../src/services/project-service";
+import {
+  IProjectService,
+  ProjectService,
+} from "../../src/services/project-service";
 import { MockedService } from "./mock";
 import { TestDatabaseService } from "./mock/mock-database-service";
 
@@ -68,13 +71,15 @@ describe("ProjectService", () => {
     userWithoutTeam.tokenSecret = "";
     userWithoutTeam.forgotPasswordToken = "";
 
-    [ adminUser, regularUser, userWithoutTeam ] = await userRepo.save(
-      [ adminUser, regularUser, userWithoutTeam ]
-    );
+    [adminUser, regularUser, userWithoutTeam] = await userRepo.save([
+      adminUser,
+      regularUser,
+      userWithoutTeam,
+    ]);
 
     mockTeam = new Team();
     mockTeam.title = "Team 1";
-    mockTeam.users = [ regularUser.id.toString() ];
+    mockTeam.users = [regularUser.id.toString()];
     mockTeam.teamImg = "";
     mockTeam.description = "";
     mockTeam.requests = [];
@@ -95,40 +100,64 @@ describe("ProjectService", () => {
     describe("via updateProject", () => {
       it("allows update when user is in the project team", async () => {
         expect.assertions(1);
-        const updatedProject = Object.assign(new Project(), { ...mockProject, title: "New Title" });
-        const result = await projectService.updateProject(updatedProject, regularUser);
+        const updatedProject = Object.assign(new Project(), {
+          ...mockProject,
+          title: "New Title",
+        });
+        const result = await projectService.updateProject(
+          updatedProject,
+          regularUser,
+        );
         expect(result.title).toBe("New Title");
       });
 
       it("regular users cannot overwrite allowRating", async () => {
         expect.assertions(1);
-        const updatedProject = Object.assign(new Project(), { ...mockProject, allowRating: true });
-        const result = await projectService.updateProject(updatedProject, regularUser);
+        const updatedProject = Object.assign(new Project(), {
+          ...mockProject,
+          allowRating: true,
+        });
+        const result = await projectService.updateProject(
+          updatedProject,
+          regularUser,
+        );
         expect(result.allowRating).toEqual(false);
       });
 
       it("admins can overwrite allowRating", async () => {
         expect.assertions(1);
-        const updatedProject = Object.assign(new Project(), { ...mockProject, allowRating: true });
-        const result = await projectService.updateProject(updatedProject, adminUser);
+        const updatedProject = Object.assign(new Project(), {
+          ...mockProject,
+          allowRating: true,
+        });
+        const result = await projectService.updateProject(
+          updatedProject,
+          adminUser,
+        );
         expect(result.allowRating).toEqual(true);
       });
 
       it("throws NotFoundError when user is not in the project team", async () => {
         expect.assertions(1);
-        const updatedProject = Object.assign(new Project(), { ...mockProject, title: "New Title" });
-        await expect(projectService.updateProject(updatedProject, userWithoutTeam)).rejects.toThrow(
-          NotFoundError,
-        );
+        const updatedProject = Object.assign(new Project(), {
+          ...mockProject,
+          title: "New Title",
+        });
+        await expect(
+          projectService.updateProject(updatedProject, userWithoutTeam),
+        ).rejects.toThrow(NotFoundError);
       });
 
       it("throws NotFoundError when project does not exist", async () => {
         expect.assertions(1);
         await projectRepo.delete(mockProject.id);
-        const updatedProject = Object.assign(new Project(), { ...mockProject, title: "New Title" });
-        await expect(projectService.updateProject(updatedProject, regularUser)).rejects.toThrow(
-          NotFoundError,
-        );
+        const updatedProject = Object.assign(new Project(), {
+          ...mockProject,
+          title: "New Title",
+        });
+        await expect(
+          projectService.updateProject(updatedProject, regularUser),
+        ).rejects.toThrow(NotFoundError);
       });
     });
   });

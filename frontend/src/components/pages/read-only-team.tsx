@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, FlexRowContainer, Spacer } from "../base/flex";
+import {
+  NonGrowingFlexContainer,
+  FlexRowContainer,
+  Spacer,
+} from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
@@ -28,15 +32,16 @@ export const ReadOnlyTeam = ({ team }) => {
   const [isTeamOwner, setIsTeamOwner] = React.useState(false);
   const [isTeamMember, setIsTeamMember] = React.useState(false);
 
-  const {
-    forcePerformRequest: sendRequestToJoin,
-  } = useApi(async (apiClient, wasTriggeredManually) => {
-    if (wasTriggeredManually) {
-      await apiClient.requestToJoinTeam(Number(params.get("id")));
-      return true;
-    }
-    return false;
-  }, []);
+  const { forcePerformRequest: sendRequestToJoin } = useApi(
+    async (apiClient, wasTriggeredManually) => {
+      if (wasTriggeredManually) {
+        await apiClient.requestToJoinTeam(Number(params.get("id")));
+        return true;
+      }
+      return false;
+    },
+    [],
+  );
 
   function notInUserList() {
     return (
@@ -54,13 +59,16 @@ export const ReadOnlyTeam = ({ team }) => {
 
   return (
     <Page>
-      <PageHeader pageTitle={team?.title}/>
+      <PageHeader pageTitle={team?.title} />
       <div>
         <FlexRowContainer>
-        <div>
-          {team?.teamImg !== "" ? (
-            <RoundedImage src={team?.teamImg} style={{ width: "200px", height: "200px" }} />
-          ) : null}
+          <div>
+            {team?.teamImg !== "" ? (
+              <RoundedImage
+                src={team?.teamImg}
+                style={{ width: "200px", height: "200px" }}
+              />
+            ) : null}
           </div>
           <Spacer />
           <p>{team?.description}</p>
@@ -68,9 +76,10 @@ export const ReadOnlyTeam = ({ team }) => {
         <Spacer />
         {!isTeamOwner && notInUserList() ? (
           <div>
-          <Button onClick={sendRequestToJoin} primary={true}>
-            Request to join
-          </Button></div>
+            <Button onClick={sendRequestToJoin} primary={true}>
+              Request to join
+            </Button>
+          </div>
         ) : null}
 
         <div style={{ width: "100%", marginTop: "1rem" }}>

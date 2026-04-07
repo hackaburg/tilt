@@ -629,9 +629,11 @@ export class ApiClient {
   /**
    * Gets all ratings.
    */
-  public async getUsersRatingsForProject(project): Promise<readonly RatingDTO[]> {
+  public async getUsersRatingsForProject(
+    project,
+  ): Promise<readonly RatingDTO[]> {
     return await this.get<RatingControllerMethods["getUsersRatingsForProject"]>(
-      `/ratings/by-project/${project.id}`
+      `/ratings/by-project/${project.id}`,
     );
   }
 

@@ -1,6 +1,11 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, NonGrowingFlexContainer, FlexColumnContainer, FlexRowContainer } from "../base/flex";
+import {
+  NonGrowingFlexContainer,
+  NonGrowingFlexContainer,
+  FlexColumnContainer,
+  FlexRowContainer,
+} from "../base/flex";
 import { Heading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";

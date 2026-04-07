@@ -17,7 +17,8 @@ import { FaLinkedin } from "react-icons/fa";
  */
 export interface SimpleDialogProps {
   open: boolean;
-  onClose: (value: true) => void;Button
+  onClose: (value: true) => void;
+  Button;
 }
 
 /**

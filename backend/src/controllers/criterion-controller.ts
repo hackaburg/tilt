@@ -6,22 +6,26 @@ import {
   Param,
   Put,
   Post,
-  Body
+  Body,
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
-import { CriterionServiceToken, ICriterionService } from "../services/criterion-service";
+import {
+  CriterionServiceToken,
+  ICriterionService,
+} from "../services/criterion-service";
 import {
   CriterionDTO,
   SuccessResponseDTO,
-  convertBetweenEntityAndDTO
+  convertBetweenEntityAndDTO,
 } from "./dto";
 import { Criterion } from "../entities/criterion";
 
 @JsonController("/criteria")
 export class CriterionController {
   public constructor(
-    @Inject(CriterionServiceToken) private readonly _criterion: ICriterionService,
+    @Inject(CriterionServiceToken)
+    private readonly _criterion: ICriterionService,
   ) {}
 
   /**
@@ -56,7 +60,10 @@ export class CriterionController {
     @Param("id") criterionId: number,
     @Body() { data: criterionDTO }: { data: CriterionDTO },
   ): Promise<CriterionDTO> {
-    const criterion = convertBetweenEntityAndDTO({ ...criterionDTO, id: criterionId }, Criterion);
+    const criterion = convertBetweenEntityAndDTO(
+      { ...criterionDTO, id: criterionId },
+      Criterion,
+    );
     const updateCriterion = await this._criterion.updateCriterion(criterion);
     return convertBetweenEntityAndDTO(updateCriterion, CriterionDTO);
   }

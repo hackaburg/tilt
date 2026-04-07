@@ -1,8 +1,24 @@
-import { Authorized, Get, JsonController, NotFoundError, Put, Param, Body, CurrentUser } from "routing-controllers";
+import {
+  Authorized,
+  Get,
+  JsonController,
+  NotFoundError,
+  Put,
+  Param,
+  Body,
+  CurrentUser,
+} from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
-import { IProjectService, ProjectServiceToken } from "../services/project-service";
-import { ProjectDTO, ProjectUpdateDTO, convertBetweenEntityAndDTO } from "./dto";
+import {
+  IProjectService,
+  ProjectServiceToken,
+} from "../services/project-service";
+import {
+  ProjectDTO,
+  ProjectUpdateDTO,
+  convertBetweenEntityAndDTO,
+} from "./dto";
 import { Project } from "../entities/project";
 import { User } from "../entities/user";
 
@@ -30,9 +46,7 @@ export class ProjectsController {
    */
   @Get("/:id")
   @Authorized(UserRole.User)
-  public async getProjectByID(
-    @Param("id") id: number,
-  ): Promise<ProjectDTO> {
+  public async getProjectByID(@Param("id") id: number): Promise<ProjectDTO> {
     const project = await this._projects.getProjectByID(id);
 
     if (project == null) {
@@ -58,10 +72,13 @@ export class ProjectsController {
       throw new NotFoundError();
     }
 
-    const project = convertBetweenEntityAndDTO({
-      ...projectDTO,
-      id: projectId,
-    }, Project);
+    const project = convertBetweenEntityAndDTO(
+      {
+        ...projectDTO,
+        id: projectId,
+      },
+      Project,
+    );
 
     const updatedProject = await this._projects.updateProject(project, user);
     return convertBetweenEntityAndDTO(updatedProject, ProjectDTO);

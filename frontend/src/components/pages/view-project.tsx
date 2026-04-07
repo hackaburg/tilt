@@ -20,7 +20,13 @@ import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
 import { Message } from "../base/message";
 import { UserRole } from "../../api/types/enums";
-import { TextField, Switch, FormControlLabel, Stack, Button } from "@mui/material";
+import {
+  TextField,
+  Switch,
+  FormControlLabel,
+  Stack,
+  Button,
+} from "@mui/material";
 import { ReadOnlyProject } from "./read-only-project";
 import { PageHeader } from "../base/page-header";
 import { RoundedImage } from "../base/image";
@@ -40,26 +46,27 @@ export const ViewProject = () => {
 
   const [project, setProject] = React.useState(null);
   const params = new URLSearchParams(document.location.search);
-  const projectId = Number(params.get("id"))
-  React.useEffect(
-    () => { api.getProjectByID(projectId).then((project) => setProject(project))},
-    []
-  );
+  const projectId = Number(params.get("id"));
+  React.useEffect(() => {
+    api.getProjectByID(projectId).then((project) => setProject(project));
+  }, []);
 
   const isTeamMember = React.useMemo(() => {
-    return project?.team?.users?.some((id) => id === user?.id.toString()) ?? false;
+    return (
+      project?.team?.users?.some((id) => id === user?.id.toString()) ?? false
+    );
   }, [project, user?.id]);
 
-  const isAdmin = user?.role == UserRole.Root
+  const isAdmin = user?.role == UserRole.Root;
 
   if (!project) {
-    return null
+    return null;
   }
 
   return isTeamMember || isAdmin ? (
     <EditProject project={project} />
   ) : (
-    <ReadOnlyProject project={project}/>
+    <ReadOnlyProject project={project} />
   );
 };
 
@@ -85,15 +92,12 @@ const EditProject = ({ project }) => {
   } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await apiClient.updateProject(
-          id,
-          {
-            title,
-            description,
-            image,
-            allowRating,
-          }
-        );
+        await apiClient.updateProject(id, {
+          title,
+          description,
+          image,
+          allowRating,
+        });
         return true;
       }
       return false;
@@ -111,7 +115,9 @@ const EditProject = ({ project }) => {
   }, []);
 
   const updateProjectDone =
-    Boolean(didUpdateProject) && !updateProjectInProgress && !updateProjectError;
+    Boolean(didUpdateProject) &&
+    !updateProjectInProgress &&
+    !updateProjectError;
 
   return (
     <Page>
@@ -132,10 +138,12 @@ const EditProject = ({ project }) => {
       <form onSubmit={handleSubmit}>
         {user?.role === UserRole.Root && (
           <FormControlLabel
-            control={<Switch
-              checked={allowRating}
-              onChange={(event) => setAllowRating(event.target.checked)}
-            />}
+            control={
+              <Switch
+                checked={allowRating}
+                onChange={(event) => setAllowRating(event.target.checked)}
+              />
+            }
             label="Allow users to rate this project"
           />
         )}
@@ -162,7 +170,10 @@ const EditProject = ({ project }) => {
             type={TextInputType.Text}
           />
           {image !== "" ? (
-            <RoundedImage src={image} style={{ width: "200px", height: "200px" }} />
+            <RoundedImage
+              src={image}
+              style={{ width: "200px", height: "200px" }}
+            />
           ) : null}
         </div>
       </form>

@@ -17,11 +17,7 @@ import { Button } from "../base/button";
  * Component that allows users to submit and edit ratings for projects.
  * Only for one criterion, use multiple of this to cover all of them.
  */
-export const RatingForm = ({
-  rating,
-  criterion,
-  project,
-}) => {
+export const RatingForm = ({ rating, criterion, project }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
 
@@ -41,14 +37,14 @@ export const RatingForm = ({
 
     await api.createRating({
       criterion: {
-        id: criterion.id
+        id: criterion.id,
       },
       rating: parseInt(ratingValue),
       user: {
-        id: user.id
+        id: user.id,
       },
       project: {
-        id: project.id
+        id: project.id,
       },
     });
 
@@ -58,9 +54,10 @@ export const RatingForm = ({
   return (
     <div
       style={{
-        border: "1px solid grey", "border-radius": "5px",
+        border: "1px solid grey",
+        "border-radius": "5px",
         padding: "10px",
-        margin: "1rem auto"
+        margin: "1rem auto",
       }}
     >
       <Stack

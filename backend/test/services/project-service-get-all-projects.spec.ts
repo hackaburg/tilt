@@ -53,13 +53,15 @@ describe(ProjectService.name, () => {
     await userRepo.save([adminUser, regularUser]);
 
     const settingsRepo = database.getRepository(Settings);
-    await settingsRepo.save([{
-      ...defaultSettings,
-      application: {
-        ...defaultSettings.application,
-        allowRatingProjects: false
-      }
-    }]);
+    await settingsRepo.save([
+      {
+        ...defaultSettings,
+        application: {
+          ...defaultSettings.application,
+          allowRatingProjects: false,
+        },
+      },
+    ]);
   });
 
   /**
@@ -70,14 +72,14 @@ describe(ProjectService.name, () => {
     const settingsRepo = database.getRepository(Settings);
     const settings = {
       application: {
-        allowRatingProjects: value
-      }
+        allowRatingProjects: value,
+      },
     };
 
     const [savedSettings] = await settingsRepo.find();
     const merged = settingsRepo.merge(savedSettings, settings);
     await settingsRepo.save(merged);
-  }
+  };
 
   describe("getAllProjects", () => {
     it("gets all projects if the user is an admin", async () => {
@@ -137,7 +139,7 @@ describe(ProjectService.name, () => {
       // Create a team and project that the regular user is not part of
       const team = new Team();
       team.title = "Other Team";
-      team.users = [];  // Regular user is not part of this team
+      team.users = []; // Regular user is not part of this team
       team.teamImg = "";
       team.description = "";
       team.requests = [];
@@ -213,7 +215,7 @@ describe(ProjectService.name, () => {
     it("regular user without team gets projects that can be rated", async () => {
       expect.assertions(2);
 
-      await allowRatingProjects(true)
+      await allowRatingProjects(true);
 
       // Create a team with no users
       const team = new Team();

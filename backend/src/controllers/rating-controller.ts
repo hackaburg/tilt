@@ -5,16 +5,19 @@ import {
   Get,
   Post,
   Body,
-  Param
+  Param,
 } from "routing-controllers";
 import { Inject } from "typedi";
 import { UserRole } from "../entities/user-role";
-import { SettingsServiceToken, ISettingsService } from "../services/settings-service";
+import {
+  SettingsServiceToken,
+  ISettingsService,
+} from "../services/settings-service";
 import { RatingServiceToken, IRatingService } from "../services/rating-service";
 import {
   RatingDTO,
   ProjectRatingResultDTO,
-  convertBetweenEntityAndDTO
+  convertBetweenEntityAndDTO,
 } from "./dto";
 import { User } from "../entities/user";
 import { Rating } from "../entities/rating";
@@ -35,7 +38,10 @@ export class RatingController {
     @Param("id") projectId: number,
     @CurrentUser() user: User,
   ): Promise<RatingDTO[]> {
-    const results = await this._ratings.getUsersRatingsForProject(projectId, user);
+    const results = await this._ratings.getUsersRatingsForProject(
+      projectId,
+      user,
+    );
     return results.map((r) => convertBetweenEntityAndDTO(r, RatingDTO));
   }
 
@@ -46,7 +52,9 @@ export class RatingController {
   @Authorized(UserRole.Root)
   public async getRatingResults(): Promise<ProjectRatingResultDTO[]> {
     const results = await this._ratings.getRatingResults();
-    return results.map((r) => convertBetweenEntityAndDTO(r, ProjectRatingResultDTO));
+    return results.map((r) =>
+      convertBetweenEntityAndDTO(r, ProjectRatingResultDTO),
+    );
   }
 
   /**

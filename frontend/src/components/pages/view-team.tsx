@@ -40,22 +40,21 @@ export const ViewTeam = () => {
 
   const [team, setTeam] = React.useState(null);
   const params = new URLSearchParams(document.location.search);
-  const teamId = Number(params.get("id"))
-  React.useEffect(
-    () => { api.getTeamByID(teamId).then((team) => setTeam(team))},
-    []
-  );
+  const teamId = Number(params.get("id"));
+  React.useEffect(() => {
+    api.getTeamByID(teamId).then((team) => setTeam(team));
+  }, []);
 
   const isTeamMember = React.useMemo(() => {
     return team?.users?.some((u) => u.id === user?.id) ?? false;
   }, [team, user?.id]);
 
-  const isAdmin = user?.role == UserRole.Root
+  const isAdmin = user?.role == UserRole.Root;
 
   return isTeamMember || isAdmin ? (
     <EditTeam team={team} />
   ) : (
-    <ReadOnlyTeam team={team}/>
+    <ReadOnlyTeam team={team} />
   );
 };
 
@@ -95,7 +94,16 @@ const EditTeam = ({ team }) => {
       }
       return false;
     },
-    [currentUserId, isTeamOwner, id, title, description, teamImg, users, request],
+    [
+      currentUserId,
+      isTeamOwner,
+      id,
+      title,
+      description,
+      teamImg,
+      users,
+      request,
+    ],
   );
 
   const {
@@ -235,7 +243,10 @@ const EditTeam = ({ team }) => {
             type={TextInputType.Text}
           />
           {teamImg !== "" ? (
-            <RoundedImage src={teamImg} style={{ width: "200px", height: "200px" }} />
+            <RoundedImage
+              src={teamImg}
+              style={{ width: "200px", height: "200px" }}
+            />
           ) : null}
           {!isTeamOwner && notInUserList() ? (
             <Button onClick={sendRequestToJoin} primary={true}>

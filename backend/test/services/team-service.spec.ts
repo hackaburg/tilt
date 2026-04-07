@@ -4,13 +4,16 @@ import { Team } from "../../src/entities/team";
 import { User } from "../../src/entities/user";
 import { IDatabaseService } from "../../src/services/database-service";
 import { TeamService, ITeamService } from "../../src/services/team-service";
-import { IProjectService, ProjectService } from "../../src/services/project-service";
+import {
+  IProjectService,
+  ProjectService,
+} from "../../src/services/project-service";
 import { MockedService } from "./mock";
 import { TestDatabaseService } from "./mock/mock-database-service";
 import { UserRole } from "../../src/entities/user-role";
 
 describe("TeamService", () => {
-  let teamService: ITeamService
+  let teamService: ITeamService;
   let database: TestDatabaseService;
 
   beforeAll(async () => {
@@ -24,8 +27,8 @@ describe("TeamService", () => {
     await teamService.bootstrap();
   });
 
-  describe('createTeam', () => {
-    it('creates a default project', async () => {
+  describe("createTeam", () => {
+    it("creates a default project", async () => {
       const projectRepo = database.getRepository(Project);
       const userRepo = database.getRepository(User);
       expect(await projectRepo.count()).toEqual(0);

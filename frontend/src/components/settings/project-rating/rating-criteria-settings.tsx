@@ -4,7 +4,13 @@ import type { CriterionDTO } from "../../../api/types/dto";
 import { Spacer } from "../../base/flex";
 import { SettingsSection } from "../settings-section";
 import { Subsubheading } from "../../base/headings";
-import { TextField, Switch, FormControlLabel, Stack, Button } from "@mui/material";
+import {
+  TextField,
+  Switch,
+  FormControlLabel,
+  Stack,
+  Button,
+} from "@mui/material";
 import { api } from "../../../hooks/use-api";
 
 // TODO Seems more maintainable to me if the save button is fine-grained
@@ -22,10 +28,7 @@ const CriterionEditor = React.memo(({ criterion, onSave, onDelete }) => {
   const [description, setDescription] = useState(criterion.description);
 
   return (
-    <Stack
-      direction={{ sm: 'column', md: 'row' }}
-      spacing={{ xs: 1, sm: 2 }}
-    >
+    <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
       <TextField
         value={title}
         onChange={(event) => setTitle(event.target.value)}
@@ -39,21 +42,18 @@ const CriterionEditor = React.memo(({ criterion, onSave, onDelete }) => {
         rows={1}
         sx={{ flex: 1 }}
       />
-        <Button
-          fullWidth={false}
-          variant="contained"
-          onClick={() => onSave({ ...criterion, title, description })}
-        >
-          Save
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => onDelete(criterion) }
-        >
-          Delete
-        </Button>
+      <Button
+        fullWidth={false}
+        variant="contained"
+        onClick={() => onSave({ ...criterion, title, description })}
+      >
+        Save
+      </Button>
+      <Button variant="contained" onClick={() => onDelete(criterion)}>
+        Delete
+      </Button>
     </Stack>
-  )
+  );
 });
 
 /**
@@ -65,18 +65,15 @@ export const ProjectRatingSettings = () => {
   const [settings, setSettings] = useState({});
 
   // Do this only on mount
-  useEffect(
-    () => {
-      api.getAllCriteria().then((criteria) => {
-        setAllCriteria(criteria)
-      });
+  useEffect(() => {
+    api.getAllCriteria().then((criteria) => {
+      setAllCriteria(criteria);
+    });
 
-      api.getSettings().then((settings) => {
-        setSettings(settings)
-      });
-    },
-    []
-  );
+    api.getSettings().then((settings) => {
+      setSettings(settings);
+    });
+  }, []);
 
   useEffect(() => {
     // Only update if settings are loaded
@@ -88,54 +85,65 @@ export const ProjectRatingSettings = () => {
   const addCriterion = useCallback(async (): Promise<void> => {
     const newCriterion = await api.createCriterion({
       title: "title",
-      description: "description"
+      description: "description",
     });
-    setAllCriteria(prev => [ ...prev, newCriterion ]);
+    setAllCriteria((prev) => [...prev, newCriterion]);
   });
 
-  const updateCriterion = useCallback(async (changedCriterion): Promise<void> => {
-    await api.updateCriterion(changedCriterion.id, changedCriterion);
-    setAllCriteria(prev => prev.map((criterion) => {
-      return criterion.id === changedCriterion.id ? changedCriterion : criterion;
-    }))
-  });
+  const updateCriterion = useCallback(
+    async (changedCriterion): Promise<void> => {
+      await api.updateCriterion(changedCriterion.id, changedCriterion);
+      setAllCriteria((prev) =>
+        prev.map((criterion) => {
+          return criterion.id === changedCriterion.id
+            ? changedCriterion
+            : criterion;
+        }),
+      );
+    },
+  );
 
-  const deleteCriterion = useCallback(async (deletedCriterion): Promise<void> => {
-    await api.deleteCriterion(deletedCriterion.id);
-    setAllCriteria(prev => prev.filter((criterion) => {
-      return criterion.id !== deletedCriterion.id
-    }));
-  });
+  const deleteCriterion = useCallback(
+    async (deletedCriterion): Promise<void> => {
+      await api.deleteCriterion(deletedCriterion.id);
+      setAllCriteria((prev) =>
+        prev.filter((criterion) => {
+          return criterion.id !== deletedCriterion.id;
+        }),
+      );
+    },
+  );
 
   const onSwitchChange = useCallback(async (event) => {
-    const value = event.target.checked
-    setSettings(prev => {
-        const changedSettings = {
-          ...prev,
-          application: {
-            ...prev.application,
-            allowRatingProjects: value,
-          }
-        }
-        return changedSettings
-      }
-    )
-  })
+    const value = event.target.checked;
+    setSettings((prev) => {
+      const changedSettings = {
+        ...prev,
+        application: {
+          ...prev.application,
+          allowRatingProjects: value,
+        },
+      };
+      return changedSettings;
+    });
+  });
 
   return (
     <SettingsSection title="Project Rating">
       <div>
         <FormControlLabel
-          control={<Switch
-            checked={settings?.application?.allowRatingProjects}
-            onChange={onSwitchChange}
-          />}
+          control={
+            <Switch
+              checked={settings?.application?.allowRatingProjects}
+              onChange={onSwitchChange}
+            />
+          }
           label="Allow users to rate other projects"
         />
       </div>
       <div>
         <Subsubheading text="Edit Criteria" />
-        {allCriteria.map(criterion => (
+        {allCriteria.map((criterion) => (
           <React.Fragment key={criterion.id}>
             <CriterionEditor
               criterion={criterion}
@@ -149,8 +157,8 @@ export const ProjectRatingSettings = () => {
       <div>
         <Button fullWidth={false} variant="contained" onClick={addCriterion}>
           Add
-          </Button>
-          <Spacer />
+        </Button>
+        <Spacer />
       </div>
     </SettingsSection>
   );

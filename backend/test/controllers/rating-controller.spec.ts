@@ -24,7 +24,10 @@ describe("RatingController", () => {
   beforeEach(() => {
     ratingService = new MockRatingService();
     settingsService = new MockSettingsService();
-    controller = new RatingController(settingsService.instance, ratingService.instance);
+    controller = new RatingController(
+      settingsService.instance,
+      ratingService.instance,
+    );
   });
 
   it("creates a rating and delegates to the rating service", async () => {
@@ -53,7 +56,10 @@ describe("RatingController", () => {
     let userService: MockedService<IUserService>;
 
     const rootUser = Object.assign(new User(), { id: 1, role: UserRole.Root });
-    const regularUser = Object.assign(new User(), { id: 2, role: UserRole.User });
+    const regularUser = Object.assign(new User(), {
+      id: 2,
+      role: UserRole.User,
+    });
 
     const tokenMap: Record<string, User> = {
       "root-token": rootUser,
@@ -69,12 +75,19 @@ describe("RatingController", () => {
         async (token: string) => tokenMap[token] ?? null,
       );
 
-      const httpService = new HttpService(null as any, null as any, userService.instance);
+      const httpService = new HttpService(
+        null as any,
+        null as any,
+        userService.instance,
+      );
 
       useContainer({
         get(target: Function) {
           if (target === RatingController) {
-            return new RatingController(settingsService.instance, ratingService.instance);
+            return new RatingController(
+              settingsService.instance,
+              ratingService.instance,
+            );
           }
           return new (target as any)();
         },
@@ -84,28 +97,32 @@ describe("RatingController", () => {
         controllers: [RatingController],
         routePrefix: "/api",
         currentUserChecker: (action) => httpService.getCurrentUser(action),
-        authorizationChecker: (action, roles) => httpService.isActionAuthorized(action, roles),
+        authorizationChecker: (action, roles) =>
+          httpService.isActionAuthorized(action, roles),
       });
 
       server = http.createServer(app);
-      await new Promise<void>(resolve => server.listen(0, () => resolve()));
+      await new Promise<void>((resolve) => server.listen(0, () => resolve()));
       port = (server.address() as any).port;
     });
 
     afterAll(async () => {
       await new Promise<void>((resolve, reject) =>
-        server.close(err => (err ? reject(err) : resolve())),
+        server.close((err) => (err ? reject(err) : resolve())),
       );
     });
 
     it("rejects unauthenticated requests with 403", async () => {
       expect.assertions(1);
 
-      const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: {} }),
-      });
+      const response = await fetch(
+        `http://localhost:${port}/api/ratings/rate`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: {} }),
+        },
+      );
 
       expect(response.status).toBe(403);
     });
@@ -115,14 +132,19 @@ describe("RatingController", () => {
 
       ratingService.mocks.upsertRating.mockResolvedValue({} as any);
 
-      const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer user-token",
+      const response = await fetch(
+        `http://localhost:${port}/api/ratings/rate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer user-token",
+          },
+          body: JSON.stringify({
+            data: { rating: 3, project: { id: 1 }, criterion: { id: 2 } },
+          }),
         },
-        body: JSON.stringify({ data: { rating: 3, project: { id: 1 }, criterion: { id: 2 } } }),
-      });
+      );
 
       expect(response.status).toBe(200);
       expect(ratingService.mocks.upsertRating).toHaveBeenCalledWith(
@@ -140,14 +162,17 @@ describe("RatingController", () => {
 
       ratingService.mocks.upsertRating.mockResolvedValue({} as any);
 
-      const response = await fetch(`http://localhost:${port}/api/ratings/rate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer root-token",
+      const response = await fetch(
+        `http://localhost:${port}/api/ratings/rate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer root-token",
+          },
+          body: JSON.stringify({ data: {} }),
         },
-        body: JSON.stringify({ data: {} }),
-      });
+      );
 
       // Authorization passed; any status other than 403 is acceptable here
       expect(response.status).not.toBe(403);
@@ -160,7 +185,7 @@ describe("RatingController", () => {
 
       const dto = plainToClass(RatingDTO, { rating: 0 });
       const errors = await validate(dto, { skipMissingProperties: true });
-      const ratingErrors = errors.filter(e => e.property === "rating");
+      const ratingErrors = errors.filter((e) => e.property === "rating");
 
       expect(ratingErrors.length).toBeGreaterThan(0);
     });
@@ -170,7 +195,7 @@ describe("RatingController", () => {
 
       const dto = plainToClass(RatingDTO, { rating: 6 });
       const errors = await validate(dto, { skipMissingProperties: true });
-      const ratingErrors = errors.filter(e => e.property === "rating");
+      const ratingErrors = errors.filter((e) => e.property === "rating");
 
       expect(ratingErrors.length).toBeGreaterThan(0);
     });
@@ -180,7 +205,7 @@ describe("RatingController", () => {
 
       const dto = plainToClass(RatingDTO, { rating: 1 });
       const errors = await validate(dto, { skipMissingProperties: true });
-      const ratingErrors = errors.filter(e => e.property === "rating");
+      const ratingErrors = errors.filter((e) => e.property === "rating");
 
       expect(ratingErrors).toHaveLength(0);
     });
@@ -190,7 +215,7 @@ describe("RatingController", () => {
 
       const dto = plainToClass(RatingDTO, { rating: 5 });
       const errors = await validate(dto, { skipMissingProperties: true });
-      const ratingErrors = errors.filter(e => e.property === "rating");
+      const ratingErrors = errors.filter((e) => e.property === "rating");
 
       expect(ratingErrors).toHaveLength(0);
     });

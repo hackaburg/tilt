@@ -142,10 +142,7 @@ export const Sidebar = () => {
 
         <SidebarMenuItem to={Routes.Teams}>
           <GrGroup />
-          <span style={{ marginLeft: "1rem" }}>
-            {" "}
-            Teams
-          </span>
+          <span style={{ marginLeft: "1rem" }}> Teams</span>
         </SidebarMenuItem>
 
         <SidebarMenuItem to={Routes.Projects}>
