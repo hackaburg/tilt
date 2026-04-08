@@ -260,9 +260,10 @@ export class ApplicationController {
   @Authorized(UserRole.User)
   public async createTeam(
     @Body() { data: teamDTO }: { data: TeamRequestDTO },
+    @CurrentUser() user: User,
   ): Promise<TeamDTO> {
     const team = convertBetweenEntityAndDTO(teamDTO, Team);
-    const createdTeam = await this._teams.createTeam(team);
+    const createdTeam = await this._teams.createTeam(team, user);
     return convertBetweenEntityAndDTO(createdTeam, TeamDTO);
   }
 

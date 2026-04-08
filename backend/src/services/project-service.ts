@@ -68,7 +68,7 @@ export class ProjectService implements IProjectService {
   public async getAllProjects(user: User): Promise<readonly Project[]> {
     const teams = await this._teams.find();
     const teamIds = teams
-      .filter((team) => team.users.includes(user.id.toString()))
+      .filter((team) => team.userIds().includes(user.id))
       .map((team) => team.id);
 
     const [settings] = await this._settings.find();
@@ -157,7 +157,7 @@ export class ProjectService implements IProjectService {
     }
 
     const team = project.team;
-    if (!team || !team.users.includes(user.id.toString())) {
+    if (!team || !team.userIds().includes(user.id)) {
       // Tried to access a project belonging to a different team, forbidden
       throw new NotFoundError();
     }

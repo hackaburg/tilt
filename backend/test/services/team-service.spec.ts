@@ -39,7 +39,7 @@ describe("TeamService", () => {
 
       const team = new Team();
       team.title = "Team 1";
-      team.users = [user.id.toString()];
+      team.users = [user];
       team.teamImg = "";
       team.description = "Team 1 description";
       team.requests = [];

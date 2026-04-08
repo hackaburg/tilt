@@ -519,7 +519,9 @@ export class TeamDTO {
   @Expose()
   public title!: string;
   @Expose()
-  public users?: string[];
+  @Type(() => UserDTO)
+  @ValidateNested()
+  public users!: UserDTO[];
   @Expose()
   public teamImg!: string;
   @Expose()
@@ -533,14 +535,14 @@ export class TeamResponseDTO {
   public title!: string;
   @Expose()
   @Type(() => UserResponseDto)
-  public users?: UserResponseDto[];
+  public users!: UserResponseDto[];
   @Expose()
   public teamImg!: string;
   @Expose()
   public description!: string;
   @Expose()
   @Type(() => UserResponseDto)
-  public requests?: UserResponseDto[];
+  public requests!: UserResponseDto[];
 }
 
 export class TeamRequestDTO {

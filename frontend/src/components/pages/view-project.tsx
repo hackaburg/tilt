@@ -28,7 +28,7 @@ export const ViewProject = () => {
 
   const isTeamMember = React.useMemo(() => {
     return (
-      project?.team?.users?.some((id) => id === user?.id.toString()) ?? false
+      project?.team?.users?.some((id) => id === user?.id) ?? false
     );
   }, [project, user?.id]);
 

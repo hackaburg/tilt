@@ -67,7 +67,7 @@ const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   const [id, setId] = React.useState(0);
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [teamImg, setTeamImg] = React.useState("");
+  const [image, setImage] = React.useState("");
   const [users, setUsers] = React.useState([] as UserListDto[]);
   const [request, setRequest] = React.useState([] as UserListDto[]);
 
@@ -83,23 +83,14 @@ const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
           id,
           title,
           description,
-          teamImg,
+          image,
           users.map((u) => u.id),
         );
         return true;
       }
       return false;
     },
-    [
-      currentUserId,
-      isTeamOwner,
-      id,
-      title,
-      description,
-      teamImg,
-      users,
-      request,
-    ],
+    [currentUserId, isTeamOwner, id, title, description, image, users, request],
   );
 
   const {
@@ -184,11 +175,11 @@ const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
       setId(team.id);
       setTitle(team.title);
       setDescription(team.description);
-      setTeamImg(team.teamImg);
+      setImage(team.teamImg);
       setUsers(team.users!);
       setRequest(team.requests!);
-      setIsTeamOwner(user?.id === Number(team?.users![0].id));
-      setIsTeamMember(team.users!.some((u) => u.id === user?.id));
+      setIsTeamOwner(team.users.length > 0 && user?.id === team.users![0].id);
+      setIsTeamMember(team.users.some((u) => u.id === user?.id));
     }
   }, [team]);
 
@@ -199,6 +190,8 @@ const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
     );
   }
 
+  const isAdmin = user?.role === UserRole.Root;
+
   return (
     <Page>
       <PageHeader
@@ -206,7 +199,7 @@ const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
         buttonText="Save Changes"
         buttonOnClick={sendSaveTeamRequest}
         buttonLoading={updateTeamInProgress}
-        subTitle="You are part of this team"
+        subTitle={isAdmin ? null : "You are part of this team"}
       />
       {updateTeamError && (
         <div style={{ marginBottom: "1rem" }}>
@@ -234,20 +227,15 @@ const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
           <TextInput
             title="Team Image (URL; imgsize: 200x300px)"
             placeholder="Your team image"
-            value={teamImg}
-            onChange={(value) => setTeamImg(value)}
+            value={image}
+            onChange={(value) => setImage(value)}
             type={TextInputType.Text}
           />
-          {teamImg !== "" ? (
+          {image !== "" ? (
             <RoundedImage
-              src={teamImg}
+              src={image}
               style={{ width: "200px", height: "200px" }}
             />
-          ) : null}
-          {!isTeamOwner && notInUserList() ? (
-            <Button onClick={sendRequestToJoin} primary={true}>
-              Request to join
-            </Button>
           ) : null}
         </div>
 

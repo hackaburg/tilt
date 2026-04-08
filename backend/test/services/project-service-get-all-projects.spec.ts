@@ -88,15 +88,15 @@ describe(ProjectService.name, () => {
       // Create teams with projects
       const team1 = new Team();
       team1.title = "Team 1";
-      team1.users = [regularUser.id.toString()];
-      team1.teamImg = "";
+      team1.users = [regularUser.id];
+      team1.image = "";
       team1.description = "";
       team1.requests = [];
 
       const team2 = new Team();
       team2.title = "Team 2";
-      team2.users = [regularUser.id.toString()];
-      team2.teamImg = "";
+      team2.users = [regularUser.id];
+      team2.image = "";
       team2.description = "";
       team2.requests = [];
 
@@ -167,15 +167,15 @@ describe(ProjectService.name, () => {
       // Create two teams with the regular user
       const team1 = new Team();
       team1.title = "Team 1";
-      team1.users = [regularUser.id.toString()];
-      team1.teamImg = "";
+      team1.users = [regularUser.id];
+      team1.image = "";
       team1.description = "";
       team1.requests = [];
 
       const team2 = new Team();
       team2.title = "Team 2";
-      team2.users = [regularUser.id.toString()];
-      team2.teamImg = "";
+      team2.users = [regularUser.id];
+      team2.image = "";
       team2.description = "";
       team2.requests = [];
 

@@ -7,6 +7,7 @@ import { useApi } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { PageHeader } from "../base/page-header";
 import { TeamResponseDTO } from "../../api/types/dto";
+import { useNotificationContext } from "../../contexts/notification-context";
 
 /**
  * A team view component. This is only displayed, if the user is not part
@@ -20,10 +21,13 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
   const [isTeamOwner, setIsTeamOwner] = React.useState(false);
   const [, setIsTeamMember] = React.useState(false);
 
+  const { showNotification } = useNotificationContext();
+
   const { forcePerformRequest: sendRequestToJoin } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
         await apiClient.requestToJoinTeam(Number(params.get("id")));
+        showNotification("Request sent");
         return true;
       }
       return false;
