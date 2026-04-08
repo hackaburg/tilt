@@ -6,7 +6,7 @@
   Hackathon Registration System
 </p>
 
-<p align="center"><a href="docs/docs">Documentation</a> - <a href="docs/docker-development.md">Docker Development Quickstart</a></p>
+<p align="center"><a href="docs/docs.md">Documentation</a> - <a href="docs/docker-development.md">Docker Development Quickstart</a></p>
 
 <p align="center">
   <a href="https://hub.docker.com/r/hackaburg/tilt">
