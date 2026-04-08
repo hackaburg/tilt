@@ -77,9 +77,7 @@ export const RatingForm = ({
           style={{ flex: 1, textAlign: "right" }}
           sx={{ cursor: "help" }}
         >
-          <Tooltip title={criterion.description}>
-            {criterion.title}
-          </Tooltip>
+          <Tooltip title={criterion.description}>{criterion.title}</Tooltip>
         </Typography>
         <FormControl component="fieldset">
           <RadioGroup
