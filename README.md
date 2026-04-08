@@ -1,16 +1,36 @@
 <p align="center"><img src="https://ratisbona-coding.org/_app/immutable/assets/hackaburg.5f0e95a3.svg" width=100/></p>
 
-# tilt
+<h1 align="center">tilt</h1>
 
-[![Docker Image Size (latest)](https://img.shields.io/docker/image-size/hackaburg/tilt/latest)](https://hub.docker.com/r/hackaburg/tilt)
-[![codecov](https://codecov.io/gh/hackaburg/tilt/branch/main/graph/badge.svg)](https://codecov.io/gh/hackaburg/tilt)
-[![David](https://img.shields.io/david/hackaburg/tilt)](https://github.com/hackaburg/tilt)
-[![GitHub license](https://img.shields.io/github/license/hackaburg/tilt.svg)](https://github.com/hackaburg/tilt/LICENSE)
+<p align="center">
+  Hackathon Registration System
+</p>
 
-Hackathon Registration System
+<p align="center"><a href="docs/docs">Documentation</a> - <a href="docs/docker-development.md">Docker Development Quickstart</a></p>
 
-- [Documentation](docs/docs.md)
-- [Docker Development Quickstart](docs/docker-development.md)
+<p align="center">
+  <a href="https://hub.docker.com/r/hackaburg/tilt">
+    <img alt="Docker Image Size (latest)" src="https://img.shields.io/docker/image-size/hackaburg/tilt/latest">
+  </a>
+
+  <a href="https://codecov.io/gh/hackaburg/tilt">
+    <img alt="codecov" src="https://codecov.io/gh/hackaburg/tilt/branch/main/graph/badge.svg">
+  </a>
+
+  <a href="https://github.com/hackaburg/tilt">
+    <img alt="David" src="https://img.shields.io/david/hackaburg/tilt">
+  </a>
+
+  <a href="https://github.com/hackaburg/tilt/blob/main/LICENSE">
+    <img alt="GitHub license" src="https://img.shields.io/github/license/hackaburg/tilt.svg">
+  </a>
+</p>
+
+<p align="center">
+  <img src="docs/screenshot-2.jpg" width="30%"/>
+  &#160;
+  <img src="docs/screenshot-1.jpg" width="30%"/>
+</p>
 
 Like many other hackathons, we previously used [Quill](https://github.com/techx/quill) for our application process, which worked really well for us in the past. Especially Quill's process was a blessing: an application consists of two steps, the profile creation and, once an attendee was admitted to the event, the spot confirmation. We attended different events that used different processes and found this to be easy for both the attendees and organizers.
 
