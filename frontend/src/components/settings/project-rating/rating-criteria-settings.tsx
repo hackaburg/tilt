@@ -4,20 +4,14 @@ import type { CriterionDTO, SettingsDTO } from "../../../api/types/dto";
 import { Spacer } from "../../base/flex";
 import { SettingsSection } from "../settings-section";
 import { Subsubheading } from "../../base/headings";
-import {
-  TextField,
-  Switch,
-  FormControlLabel,
-  Stack,
-  Button,
-} from "@mui/material";
+import { Button } from "../../base/button";
+import { TextField, Switch, FormControlLabel, Stack } from "@mui/material";
 import { api } from "../../../hooks/use-api";
+import { useNotificationContext } from "../../../contexts/notification-context";
 
 // TODO Seems more maintainable to me if the save button is fine-grained
 //  and not global. Remove the global Save button and add one individually for
 //  each SettingsSection component for consistency.
-
-// TODO use our own button style
 
 interface ICriterionEditorProps {
   criterion: CriterionDTO;
@@ -34,15 +28,29 @@ const CriterionEditor = React.memo(
     const [title, setTitle] = useState(criterion.title);
     const [description, setDescription] = useState(criterion.description);
 
+    const validateAndSave = (changedCriterion: CriterionDTO) => {
+      if (changedCriterion.title.length === 0) {
+        return;
+      }
+
+      if (changedCriterion.description.length === 0) {
+        return;
+      }
+
+      onSave(changedCriterion);
+    };
+
     return (
       <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
         <TextField
+          error={title.length === 0}
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder="title"
+          placeholder="Title"
           rows={1}
         />
         <TextField
+          error={description.length === 0}
           value={description}
           onChange={(event) => setDescription(event.target.value)}
           placeholder="Description"
@@ -50,15 +58,11 @@ const CriterionEditor = React.memo(
           sx={{ flex: 1 }}
         />
         <Button
-          fullWidth={false}
-          variant="contained"
-          onClick={() => onSave({ ...criterion, title, description })}
+          onClick={() => validateAndSave({ ...criterion, title, description })}
         >
           Save
         </Button>
-        <Button variant="contained" onClick={() => onDelete(criterion)}>
-          Delete
-        </Button>
+        <Button onClick={() => onDelete(criterion)}>Delete</Button>
       </Stack>
     );
   },
@@ -71,6 +75,8 @@ export const ProjectRatingSettings = () => {
   // Load all criteria and render them
   const [allCriteria, setAllCriteria] = useState<CriterionDTO[]>([]);
   const [settings, setSettings] = useState<Partial<SettingsDTO>>({});
+
+  const { showNotification } = useNotificationContext();
 
   // Do this only on mount
   useEffect(() => {
@@ -92,8 +98,8 @@ export const ProjectRatingSettings = () => {
 
   const addCriterion = useCallback(async (): Promise<void> => {
     const newCriterion = await api.createCriterion({
-      title: "title",
-      description: "description",
+      title: "",
+      description: "",
     } as unknown as CriterionDTO);
     setAllCriteria((prev) => [...prev, newCriterion]);
   }, []);
@@ -108,6 +114,8 @@ export const ProjectRatingSettings = () => {
             : criterion;
         }),
       );
+
+      showNotification("Saved criterion");
     },
     [],
   );
@@ -168,9 +176,7 @@ export const ProjectRatingSettings = () => {
         ))}
       </div>
       <div>
-        <Button fullWidth={false} variant="contained" onClick={addCriterion}>
-          Add
-        </Button>
+        <Button onClick={addCriterion}>Add</Button>
         <Spacer />
       </div>
     </SettingsSection>

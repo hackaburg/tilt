@@ -5,7 +5,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Alert,
   Typography,
   Tooltip,
 } from "@mui/material";
@@ -13,6 +12,8 @@ import { api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { Button } from "../base/button";
 import { CriterionDTO, ProjectDTO, RatingDTO } from "../../api/types/dto";
+import { useNotificationContext } from "../../contexts/notification-context";
+
 interface IRatingFormProps {
   rating?: RatingDTO;
   criterion: CriterionDTO;
@@ -31,30 +32,30 @@ export const RatingForm = ({
   const loginState = useLoginContext();
   const { user } = loginState;
 
-  const [ratingValue, setRatingValue] = useState<string | undefined>(
-    rating?.rating?.toString(),
-  );
+  const { showNotification } = useNotificationContext();
+
+  const [ratingValue, setRatingValue] = useState<number>(rating?.rating || 3);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   React.useEffect(() => {
     if (rating) {
-      setRatingValue(rating.rating.toString());
+      setRatingValue(rating.rating);
     }
   }, [rating]);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    setError(null);
 
     await api.createRating({
       criterion,
-      rating: parseInt(ratingValue ?? "0", 10),
+      rating: ratingValue,
       user: user!,
       project,
     } as unknown as RatingDTO);
 
     setIsSubmitting(false);
+
+    showNotification(`Submitted ${ratingValue} for "${criterion.title}"`);
   };
 
   return (
@@ -73,20 +74,22 @@ export const RatingForm = ({
         justifyContent="center"
       >
         <Tooltip title={criterion.description}>
-          <Typography variant="h6" sx={{ cursor: "help" }}>
+          <Typography
+            style={{ flex: 1, textAlign: "right" }}
+            sx={{ cursor: "help" }}
+          >
             {criterion.title}
           </Typography>
         </Tooltip>
-
         <FormControl component="fieldset">
           <RadioGroup
             row
-            value={ratingValue}
-            onChange={(e) => setRatingValue(e.target.value)}
+            value={ratingValue?.toString()}
+            onChange={(e) => setRatingValue(parseInt(e.target.value, 10))}
           >
             {[1, 2, 3, 4, 5].map((value) => (
               <FormControlLabel
-                key={value}
+                key={value.toString()}
                 value={value.toString()}
                 control={<Radio disabled={isSubmitting} />}
                 label={value.toString()}
@@ -94,17 +97,16 @@ export const RatingForm = ({
             ))}
           </RadioGroup>
         </FormControl>
-
-        <Button
-          onClick={handleSubmit}
-          disable={isSubmitting}
-          loading={isSubmitting}
-        >
-          Submit
-        </Button>
+        <div style={{ flex: 1 }}>
+          <Button
+            onClick={handleSubmit}
+            disable={isSubmitting}
+            loading={isSubmitting}
+          >
+            Submit
+          </Button>
+        </div>
       </Stack>
-
-      {error && <Alert severity="error">{error}</Alert>}
     </div>
   );
 };
