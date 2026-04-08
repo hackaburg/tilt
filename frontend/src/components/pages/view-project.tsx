@@ -23,7 +23,7 @@ export const ViewProject = () => {
   const params = new URLSearchParams(document.location.search);
   const projectId = Number(params.get("id"));
   React.useEffect(() => {
-    api.getProjectByID(projectId).then((project) => setProject(project));
+    api.getProjectByID(projectId).then((project_) => setProject(project_));
   }, []);
 
   const isTeamMember = React.useMemo(() => {
@@ -32,7 +32,7 @@ export const ViewProject = () => {
     );
   }, [project, user?.id]);
 
-  const isAdmin = user?.role == UserRole.Root;
+  const isAdmin = user?.role === UserRole.Root;
 
   if (!project) {
     return null;
@@ -82,7 +82,7 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
     event.preventDefault();
   }, []);
 
-  const isAdmin = user?.role == UserRole.Root;
+  const isAdmin = user?.role === UserRole.Root;
 
   return (
     <Page>

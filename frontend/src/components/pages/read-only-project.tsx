@@ -15,13 +15,13 @@ export const ReadOnlyProject = ({ project }: { project: ProjectDTO }) => {
   const [ratings, setRatings] = React.useState<RatingDTO[]>([]);
 
   React.useEffect(() => {
-    api.getAllCriteria().then((criteria) => {
-      setCriteria([...criteria]);
+    api.getAllCriteria().then((criteria_) => {
+      setCriteria([...criteria_]);
     });
 
     if (project) {
-      api.getUsersRatingsForProject(project).then((ratings) => {
-        setRatings([...ratings]);
+      api.getUsersRatingsForProject(project).then((ratings_) => {
+        setRatings([...ratings_]);
       });
     }
   }, [project]);
@@ -49,7 +49,7 @@ export const ReadOnlyProject = ({ project }: { project: ProjectDTO }) => {
         think the project did well in this regard.
         {criteria.map((criterion) => (
           <RatingForm
-            rating={ratings.find((r) => r.criterion.id == criterion.id)}
+            rating={ratings.find((r) => r.criterion.id === criterion.id)}
             criterion={criterion}
             project={project}
           />

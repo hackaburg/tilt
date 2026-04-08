@@ -34,14 +34,14 @@ export const ViewTeam = () => {
   const params = new URLSearchParams(document.location.search);
   const teamId = Number(params.get("id"));
   React.useEffect(() => {
-    api.getTeamByID(teamId).then((team) => setTeam(team));
+    api.getTeamByID(teamId).then((team_) => setTeam(team_));
   }, []);
 
   const isTeamMember = React.useMemo(() => {
     return team?.users?.some((u) => u.id === user?.id) ?? false;
   }, [team, user?.id]);
 
-  const isAdmin = user?.role == UserRole.Root;
+  const isAdmin = user?.role === UserRole.Root;
 
   if (!team) {
     return null;

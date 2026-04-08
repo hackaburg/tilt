@@ -48,10 +48,10 @@ export const RatingForm = ({
     setError(null);
 
     await api.createRating({
-      criterion: criterion,
-      rating: parseInt(ratingValue ?? "0"),
+      criterion,
+      rating: parseInt(ratingValue ?? "0", 10),
       user: user!,
-      project: project,
+      project,
     } as unknown as RatingDTO);
 
     setIsSubmitting(false);

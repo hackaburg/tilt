@@ -16,6 +16,9 @@ import { Project } from "../entities/project";
 import { Criterion } from "../entities/criterion";
 import { UserRole } from "../entities/user-role";
 
+/**
+ * A service to handle rating entities.
+ */
 export interface IRatingService extends IService {
   /**
    * Get the ratings for a specific project, cast by a specific user.
@@ -49,7 +52,7 @@ export interface IRatingService extends IService {
 export const RatingServiceToken = new Token<IRatingService>();
 
 /**
- * A service to handle users.
+ * A service to handle rating entities.
  */
 @Service(RatingServiceToken)
 export class RatingService implements IRatingService {
@@ -63,7 +66,7 @@ export class RatingService implements IRatingService {
   ) {}
 
   /**
-   * Sets up the user service.
+   * Sets up the rating service.
    */
   public async bootstrap(): Promise<void> {
     this._ratings = this._database.getRepository(Rating);
@@ -172,12 +175,12 @@ export class RatingService implements IRatingService {
     const allProjects = await this._projects.find();
     const allRatings = await this._ratings.find();
 
-    const result = [];
+    const result: ProjectRatingResultDTO[] = [];
 
     const idToCriterion: Record<number, Criterion> = {};
 
     for (const project of allProjects) {
-      const averagesPerCriterion = [];
+      const averagesPerCriterion: { criterion: Criterion, average: number }[] = [];
 
       // Sum up
       const criterionIdToSum: Record<number, number> = {};
@@ -200,12 +203,17 @@ export class RatingService implements IRatingService {
       }
 
       // Calculate average
-      for (const criterionId in criterionIdToSum) {
-        const average =
-          criterionIdToSum[criterionId] / criterionIdToCount[criterionId];
+      Object.keys(criterionIdToSum).map(Number).forEach(criterionId => {
+        const count = criterionIdToCount[criterionId]
+        if (count === 0) {
+          return
+        }
+
+        const sum = criterionIdToSum[criterionId]
+        const average = sum / count;
         const criterion = idToCriterion[criterionId];
         averagesPerCriterion.push({ criterion, average });
-      }
+      });
 
       result.push({
         project,

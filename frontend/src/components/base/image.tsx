@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import * as React from "react";
+import { borderRadius } from "../../config";
 
 const Img = styled.img`
   max-width: 100%;
@@ -17,6 +18,9 @@ export const Image = ({ src, label }: IImageProps) => (
   <Img src={src} alt={label} />
 );
 
+/**
+ * An image with rounded corners.
+ */
 export const RoundedImage = styled.img`
-  border-radius: 5px;
+  border-radius: ${borderRadius};
 `;

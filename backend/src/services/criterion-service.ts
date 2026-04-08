@@ -6,6 +6,9 @@ import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { CriterionDTO, convertBetweenEntityAndDTO } from "../controllers/dto";
 import { Criterion } from "../entities/criterion";
 
+/**
+ * A service to handle criteria.
+ */
 export interface ICriterionService extends IService {
   /**
    * Get all criteria

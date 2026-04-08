@@ -26,8 +26,8 @@ interface ICriterionEditorProps {
 }
 
 /**
- * Edit or delete a single criteria
- **/
+ * Edit or delete a single criteria.
+ */
 const CriterionEditor = React.memo(
   ({ criterion, onSave, onDelete }: ICriterionEditorProps) => {
     // Use react.memo to avoid rerendering the component every time a character is typed
@@ -78,8 +78,8 @@ export const ProjectRatingSettings = () => {
       setAllCriteria([...criteria]);
     });
 
-    api.getSettings().then((settings) => {
-      setSettings(settings);
+    api.getSettings().then((settings_) => {
+      setSettings(settings_);
     });
   }, []);
 

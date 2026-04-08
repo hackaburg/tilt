@@ -37,12 +37,12 @@ const RatingResults = () => {
   const [criteria, setCriteria] = React.useState<CriterionDTO[]>([]);
 
   useEffect(() => {
-    api.getRatingResults().then((stuff) => {
-      setRatingResults([...stuff]);
+    api.getRatingResults().then((ratingResults_) => {
+      setRatingResults([...ratingResults_]);
     });
 
-    api.getAllCriteria().then((criteria) => {
-      setCriteria([...criteria]);
+    api.getAllCriteria().then((criteria_) => {
+      setCriteria([...criteria_]);
     });
   }, []);
 
@@ -77,7 +77,7 @@ const RatingResults = () => {
                     <TableCell key={criterion.id} align="center">
                       {
                         resultForProject.averagesPerCriterion.find(
-                          (a) => a.criterion.id == criterion.id,
+                          (a) => a.criterion.id === criterion.id,
                         )?.average
                       }
                     </TableCell>
