@@ -7,7 +7,7 @@ import { Elevated } from "../base/elevated";
 import {
   CenteredContainer,
   PageSizedContainer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "../base/flex";
 import { LoginForm } from "../pages/login-form";
 import { RegisterForm } from "../pages/register-form";
@@ -19,7 +19,7 @@ import { variables } from "../../theme";
 import { Button } from "@mui/material";
 import { MdSupportAgent } from "react-icons/md";
 
-const BackgroundContainer = styled(StyleableFlexContainer)`
+const BackgroundContainer = styled(NonGrowingFlexContainer)`
   overflow-y: auto;
   background-repeat: repeat-x repeat-y;
   width: 100%;
@@ -73,7 +73,7 @@ export const UnauthenticatedRouter = () => {
                 style={{ color: "#3fb28f" }}
               >
                 {" "}
-                <b>Hackaburg 2025</b>
+                <b>Hackaburg 2026</b>
               </a>{" "}
             </p>
           </div>

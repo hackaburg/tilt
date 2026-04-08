@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { Divider } from "../base/divider";
-import { StyleableFlexContainer } from "../base/flex";
+import { NonGrowingFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Page } from "./page";
 
-const HeaderContainer = styled(StyleableFlexContainer)`
+const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
   flex-direction: row;
 `;

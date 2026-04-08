@@ -10,7 +10,9 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Max,
   MaxLength,
+  Min,
   MinLength,
   ValidateNested,
 } from "class-validator";
@@ -89,6 +91,9 @@ export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
   @IsNumber()
   @Expose()
   public hoursToConfirm!: number;
+  @IsBoolean()
+  @Expose()
+  public allowRatingProjects!: boolean;
 }
 
 export class FrontendSettingsDTO implements DTO<FrontendSettings> {
@@ -560,4 +565,85 @@ export class TeamUpdateDTO {
   public teamImg!: string;
   @Expose()
   public description!: string;
+}
+
+export class CriterionDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+}
+
+export class ProjectDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  @Type(() => TeamDTO)
+  @ValidateNested()
+  public team!: TeamDTO;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+  @Expose()
+  public allowRating!: boolean;
+  @Expose()
+  public image!: string;
+}
+
+export class ProjectUpdateDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  public title!: string;
+  @Expose()
+  public description!: string;
+  @Expose()
+  public allowRating!: boolean;
+  @Expose()
+  public image!: string;
+}
+
+export class RatingDTO {
+  @Expose()
+  public readonly id!: number;
+  @Expose()
+  @Type(() => UserDTO)
+  @ValidateNested()
+  public user!: UserDTO;
+  @Expose()
+  @Type(() => ProjectDTO)
+  @ValidateNested()
+  public project!: ProjectDTO;
+  @Expose()
+  @Type(() => CriterionDTO)
+  @ValidateNested()
+  public criterion!: CriterionDTO;
+  @Expose()
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  public rating!: number;
+}
+
+class CriterionAvgDTO {
+  @Expose()
+  @Type(() => CriterionDTO)
+  public criterion!: CriterionDTO;
+  @Expose()
+  public average!: number;
+}
+
+// Do not send all ratings to the client,
+// because peoples opinion on the projects should be anonymous
+export class ProjectRatingResultDTO {
+  @Expose()
+  @Type(() => ProjectDTO)
+  public project!: ProjectDTO;
+  @IsArray()
+  @Type(() => CriterionAvgDTO)
+  @Expose()
+  public averagesPerCriterion!: CriterionAvgDTO[];
 }

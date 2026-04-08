@@ -13,7 +13,7 @@ import {
   FlexRowColumnContainer,
   FlexRowContainer,
   PageSizedContainer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "../base/flex";
 import { ConfirmationForm } from "../pages/confirmation-form";
 import { LazyAdmission } from "../pages/lazy-admission";
@@ -29,9 +29,11 @@ import { Map } from "../pages/map";
 import { Challenges } from "../pages/challenges";
 import { Teams } from "../pages/teams";
 import { CreateTeam } from "../pages/createTeam";
-import { EditTeam } from "../pages/editTeam";
+import { ViewTeam } from "../pages/view-team";
+import { ViewProject } from "../pages/view-project";
+import { Projects } from "../pages/projects";
 
-const SidebarSliderContainer = styled(StyleableFlexContainer)`
+const SidebarSliderContainer = styled(NonGrowingFlexContainer)`
   position: fixed;
   left: 0;
   top: 0;
@@ -49,13 +51,13 @@ const SidebarSliderContainer = styled(StyleableFlexContainer)`
   }
 `;
 
-const ToggleContainer = styled(StyleableFlexContainer)`
+const ToggleContainer = styled(NonGrowingFlexContainer)`
   position: absolute;
   top: 1rem;
   right: -5rem;
 `;
 
-const ContentContainer = styled(StyleableFlexContainer)`
+const ContentContainer = styled(NonGrowingFlexContainer)`
   padding-left: ${sidebarWidth};
   transform: translateX(0%);
   transition-property: transform;
@@ -107,11 +109,11 @@ export const AuthenticatedRouter = () => {
               <Route path={Routes.Status} component={Status} />
               <Route path={Routes.Teams} component={Teams} />
               <Route path={Routes.CreateTeam} component={CreateTeam} />
-
-              <Route path={Routes.EditTeam} component={EditTeam} />
-
+              <Route path={Routes.ViewTeam} component={ViewTeam} />
               <Route path={Routes.ProfileForm} component={ProfileForm} />
               <Route path={Routes.Map} component={Map} />
+              <Route path={Routes.Projects} component={Projects} />
+              <Route path={Routes.ViewProject} component={ViewProject} />
               <Route path={Routes.Challenges} component={Challenges} />
               <Route
                 path={Routes.ConfirmationForm}

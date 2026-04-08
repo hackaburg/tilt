@@ -6,7 +6,7 @@
     "importHelpers": true,
     "module": "commonjs",
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "outDir": "dist/",
     "strict": true,
     "target": "ES2022",

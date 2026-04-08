@@ -11,7 +11,7 @@ import {
   NonGrowingFlexContainer,
   Spacer,
 } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
+import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
 import { ProgressStep, ProgressStepState } from "../base/progress-step";
 import { Text } from "../base/text";
@@ -19,6 +19,7 @@ import { Page } from "./page";
 import { Divider } from "../base/divider";
 import { SimpleCard } from "../base/simple-card";
 import { Grid } from "@mui/material";
+import { PageHeader } from "../base/page-header";
 
 /**
  * The start page every user sees after logging in.
@@ -65,13 +66,11 @@ export const Status = () => {
 
   return (
     <Page>
-      {user! && (
-        <>
-          <Heading text={`Welcome ${user?.firstName}`} />
-          <Divider />
-          <Subheading text="The status of our application and all links for Hackaburg 2025 can be found here." />
-        </>
-      )}
+      <PageHeader
+        pageTitle={`Welcome ${user?.firstName}`}
+        subTitle="The status of our application and all links for Hackaburg 2026 can be found here."
+        marginBottom={0}
+      />
       <SimpleCard>
         <ProgressStep
           index={1}
@@ -99,7 +98,7 @@ export const Status = () => {
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between <b>01.03.205 - 31.04.2025</b>
+                , any time between <b>01.03.2026 - 31.04.2026</b>
               </Text>
             </>
           )}
@@ -146,14 +145,14 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 We will come back to you and send you a acceptance mail until{" "}
-                <b>01.05.2025</b>.
+                <b>01.05.2026</b>.
               </Text>
             </>
           )}
           {user?.confirmed && (
             <>
               <Text style={{ fontSize: "1.15rem" }}>
-                Congratulations! You got accepted for Hackaburg 2025. 🎉
+                Congratulations! You got accepted for Hackaburg 2026. 🎉
               </Text>
             </>
           )}
@@ -174,7 +173,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 If you got accepted, you need to confirm your spot until{" "}
-                <b>08.05.2025</b>
+                <b>08.05.2026</b>
                 {user?.admitted && (
                   <>
                     {" "}

@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
 import * as React from "react";
-import { CenteredContainer, StyleableFlexContainer } from "../base/flex";
+import { CenteredContainer, NonGrowingFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Text } from "../base/text";
 import { Page } from "../pages/page";
 
-const Container = styled(StyleableFlexContainer)`
+const Container = styled(NonGrowingFlexContainer)`
   color: #555;
 `;
 

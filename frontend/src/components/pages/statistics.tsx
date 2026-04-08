@@ -14,7 +14,6 @@ import {
   FlexRowColumnContainer,
   FlexRowContainer,
   NonGrowingFlexContainer,
-  StyleableFlexContainer,
 } from "../base/flex";
 import { Heading } from "../base/headings";
 import { InternalLink } from "../base/link";
@@ -25,7 +24,7 @@ import { WorldMap } from "../base/worldmap";
 import { Page } from "./page";
 import { SimpleCard } from "../base/simple-card";
 
-const ChartContainer = styled(StyleableFlexContainer)`
+const ChartContainer = styled(NonGrowingFlexContainer)`
   width: min(300px, 100vw);
 `;
 

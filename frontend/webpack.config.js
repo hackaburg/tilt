@@ -80,7 +80,7 @@ module.exports = {
       template: "./src/index.html",
     }),
     new BundleAnalyzerPlugin({
-      analyzerMode: "static",
+      analyzerMode: isProduction ? "static" : "disabled",
       openAnalyzer: false,
       reportFilename: "../bundle/report.html",
     }),

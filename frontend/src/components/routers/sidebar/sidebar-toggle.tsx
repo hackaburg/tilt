@@ -3,15 +3,15 @@ import * as React from "react";
 import { borderRadius } from "../../../config";
 import { variables } from "../../../theme";
 import { Elevated } from "../../base/elevated";
-import { StyleableFlexContainer } from "../../base/flex";
+import { NonGrowingFlexContainer } from "../../base/flex";
 
-const Bar = styled(StyleableFlexContainer)`
+const Bar = styled(NonGrowingFlexContainer)`
   height: 3px;
   border-radius: ${borderRadius};
   background-color: ${variables.colorGradientEnd};
 `;
 
-const Spacer = styled(StyleableFlexContainer)`
+const Spacer = styled(NonGrowingFlexContainer)`
   height: 0.25rem;
 `;
 

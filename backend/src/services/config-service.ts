@@ -102,6 +102,8 @@ export class ConfigurationService implements IConfigurationService {
     const { error } = dotenv.config();
 
     if (error) {
+      // Make sure your cwd is the backend directory, which contains the .env file,
+      // and that .env.example has been copied to .env
       // tslint:disable-next-line: no-console
       console.warn(`error loading .env configuration: ${error}`);
     }

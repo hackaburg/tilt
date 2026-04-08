@@ -10,7 +10,6 @@ const RegularButton = styled.button`
 
   display: inline-block;
   padding: 0.75rem 2rem;
-  width: 100%;
 
   border: none;
   border-radius: ${borderRadius};
@@ -69,7 +68,7 @@ interface IButtonProps {
 }
 
 /**
- * A clickable button.
+ * A clickable button at 100% width.
  */
 export const Button = ({
   children,

@@ -18,7 +18,10 @@ const SpacerDiv = styled.div`
  */
 export const Spacer = () => <SpacerDiv />;
 
-const FlexColumnContainerDiv = styled.div`
+/**
+ * A flex column container.
+ */
+export const FlexColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -27,13 +30,9 @@ const FlexColumnContainerDiv = styled.div`
 `;
 
 /**
- * A flex column container.
+ * A flex row container.
  */
-export const FlexColumnContainer = ({ children }: IFlexContainerProps) => (
-  <FlexColumnContainerDiv>{children}</FlexColumnContainerDiv>
-);
-
-const FlexRowContainerDiv = styled.div`
+export const FlexRowContainer = styled.div`
   display: flex;
   flex-grow: 1;
   flex-shrink: 0;
@@ -45,13 +44,9 @@ const FlexRowContainerDiv = styled.div`
 `;
 
 /**
- * A flex row container.
+ * A column in a flex row.
  */
-export const FlexRowContainer = ({ children }: IFlexContainerProps) => (
-  <FlexRowContainerDiv>{children}</FlexRowContainerDiv>
-);
-
-const FlexRowColumnContainerDiv = styled.div`
+export const FlexRowColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -64,72 +59,37 @@ const FlexRowColumnContainerDiv = styled.div`
   }
 `;
 
-const bigStyle: React.CSSProperties = { flexGrow: 2 };
-const smallStyle: React.CSSProperties = { flexGrow: 1 };
-
-interface IFlexRowColumnContainerProps extends IFlexContainerProps {
-  isBig?: boolean;
-}
-
 /**
  * A column in a flex row.
  */
-export const FlexRowColumnContainer = ({
-  children,
-  isBig = false,
-}: IFlexRowColumnContainerProps) => (
-  <FlexRowColumnContainerDiv style={isBig ? bigStyle : smallStyle}>
-    {children}
-  </FlexRowColumnContainerDiv>
+export const BigFlexRowColumnContainer = (props: {
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <FlexRowColumnContainer {...props} style={{ ...props.style, flexGrow: 2 }}>
+    {props.children}
+  </FlexRowColumnContainer>
 );
 
-const NonGrowingFlexContainerDiv = styled.div`
+/**
+ * A flex container that doesn't grow to its parent's size.
+ */
+export const NonGrowingFlexContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
 `;
 
 /**
- * A flex container that doesn't grow to its parent's size.
+ * A vertically scrollable flex container.
  */
-export const NonGrowingFlexContainer = ({ children }: IFlexContainerProps) => (
-  <NonGrowingFlexContainerDiv>{children}</NonGrowingFlexContainerDiv>
-);
-
-interface IStyleableFlexContainerProps extends IFlexContainerProps {
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-/**
- * A styleable flex column container.
- */
-export const StyleableFlexContainer = ({
-  children,
-  className,
-  style,
-}: IStyleableFlexContainerProps) => (
-  <NonGrowingFlexContainerDiv className={className} style={style}>
-    {children}
-  </NonGrowingFlexContainerDiv>
-);
-
-const VerticalScrollFlexContainerDiv = styled.div`
+export const VerticalScrollFlexContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
   width: 100%;
   overflow-y: auto;
 `;
-
-/**
- * A vertically scrollable flex container.
- */
-export const VerticalScrollFlexContainer = ({
-  children,
-}: IFlexContainerProps) => (
-  <VerticalScrollFlexContainerDiv>{children}</VerticalScrollFlexContainerDiv>
-);
 
 const PageSizedContainerDiv = styled.div`
   display: flex;
@@ -145,7 +105,10 @@ export const PageSizedContainer = ({ children }: IFlexContainerProps) => (
   </PageSizedContainerDiv>
 );
 
-const CenteredContainerDiv = styled.div`
+/**
+ * A container fully centering its children.
+ */
+export const CenteredContainer = styled.div`
   display: flex;
   flex: 1 0 auto;
   justify-content: center;
@@ -154,23 +117,10 @@ const CenteredContainerDiv = styled.div`
 `;
 
 /**
- * A container fully centering its children.
+ * A container which vertically centers its children.
  */
-export const CenteredContainer = ({ children }: IFlexContainerProps) => (
-  <CenteredContainerDiv>{children}</CenteredContainerDiv>
-);
-
-const VerticallyCenteredContainerDiv = styled.div`
+export const VerticallyCenteredContainer = styled.div`
   display: flex;
   flex: 1 0 auto;
   align-items: center;
 `;
-
-/**
- * A container which vertically centers its children.
- */
-export const VerticallyCenteredContainer = ({
-  children,
-}: IFlexContainerProps) => (
-  <VerticallyCenteredContainerDiv>{children}</VerticallyCenteredContainerDiv>
-);

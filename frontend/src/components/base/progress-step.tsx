@@ -6,11 +6,11 @@ import {
   FlexRowColumnContainer,
   FlexRowContainer,
   Spacer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "./flex";
 import { mediaBreakpoints } from "../../config";
 
-const StepConnector = styled(StyleableFlexContainer)`
+const StepConnector = styled(NonGrowingFlexContainer)`
   position: relative;
 
   :after {
@@ -34,11 +34,11 @@ const StepConnector = styled(StyleableFlexContainer)`
   }
 `;
 
-const StepContainer = styled(StyleableFlexContainer)`
+const StepContainer = styled(NonGrowingFlexContainer)`
   position: relative;
 `;
 
-const StepIndex = styled(StyleableFlexContainer)`
+const StepIndex = styled(NonGrowingFlexContainer)`
   font-weight: bold;
   border-radius: 10rem;
   border: 1px dashed #333;

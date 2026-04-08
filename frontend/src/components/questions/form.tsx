@@ -7,24 +7,22 @@ import { useSettingsContext } from "../../contexts/settings-context";
 import { useApi } from "../../hooks/use-api";
 import { useDerivedState } from "../../hooks/use-derived-state";
 import { isBetween, isConfirmationExpired, Nullable } from "../../util";
-import { Button } from "../base/button";
 import {
   FlexColumnContainer,
-  FlexRowColumnContainer,
+  BigFlexRowColumnContainer,
   NonGrowingFlexContainer,
   Spacer,
-  StyleableFlexContainer,
   VerticallyCenteredContainer,
 } from "../base/flex";
-import { Heading, Subheading } from "../base/headings";
+import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { Muted } from "../base/muted";
 import { Placeholder } from "../base/placeholder";
 import { Page } from "../pages/page";
 import { StringifiedUnifiedQuestion } from "./stringified-unified-question";
 import { SimpleCard } from "../base/simple-card";
-import { Divider } from "../base/divider";
 import { useNotificationContext } from "../../contexts/notification-context";
+import { PageHeader } from "../base/page-header";
 
 /**
  * An enum describing the type of form we want to render.
@@ -34,7 +32,7 @@ export enum FormType {
   ConfirmationForm = "confirmation_form",
 }
 
-const SubmitContainer = styled(StyleableFlexContainer)`
+const SubmitContainer = styled(NonGrowingFlexContainer)`
   padding: 3rem 0;
 `;
 
@@ -214,21 +212,25 @@ export const Form = ({ type }: IFormProps) => {
   return (
     <Page>
       <NonGrowingFlexContainer>
-        <Heading text={`Profile: ${user?.firstName} ${user?.lastName}`} />
-        <Divider />
-        <Subheading text="All important information about you - for us." />
-
+        <PageHeader
+          pageTitle={`Profile: ${user?.firstName} ${user?.lastName}`}
+          subTitle="All important information about you - for us."
+          buttonText="Save"
+          buttonLoading={isSubmitting}
+          buttonDisable={!isDirty || isFormDisabled}
+          buttonOnClick={handleSubmit}
+        />
         <SimpleCard>{questions}</SimpleCard>
         {!isFormDisabled && (
           <SubmitContainer>
             <VerticallyCenteredContainer>
-              <FlexRowColumnContainer isBig>
+              <BigFlexRowColumnContainer>
                 {submitError && (
                   <Message type="error">
                     <b>Error: </b> {submitError.message}
                   </Message>
                 )}
-              </FlexRowColumnContainer>
+              </BigFlexRowColumnContainer>
 
               <Spacer />
 
@@ -241,17 +243,6 @@ export const Form = ({ type }: IFormProps) => {
                     </Muted>
                   </div>
                 )}
-
-                <Spacer />
-
-                <Button
-                  primary
-                  onClick={handleSubmit}
-                  loading={isSubmitting}
-                  disable={!isDirty || isFormDisabled}
-                >
-                  Please submit
-                </Button>
               </div>
             </VerticallyCenteredContainer>
           </SubmitContainer>

@@ -1,22 +1,12 @@
-import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
-import { Heading } from "../base/headings";
 import { Page } from "./page";
-import { Button } from "../base/button";
 import { Chip, Grid } from "@mui/material";
-import { InternalLink } from "../base/link";
 import { Routes } from "../../routes";
 import { useApi } from "../../hooks/use-api";
 import { TeamDTO } from "../../api/types/dto";
 import { GrGroup } from "react-icons/gr";
 import { Link } from "react-router-dom";
-import { Collapsible } from "../base/collapsible";
-
-const HeaderContainer = styled(StyleableFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
+import { PageHeader } from "../base/page-header";
 
 /**
  * A settings dashboard to configure all parts of tilt.
@@ -28,34 +18,22 @@ export const Teams = () => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text="Teams" />
-        <NonGrowingFlexContainer>
-          <a style={{ width: "15rem", marginTop: "1rem" }}>
-            <InternalLink to={Routes.CreateTeam}>
-              <Button primary={true}>Create New Team</Button>
-            </InternalLink>
-          </a>
-        </NonGrowingFlexContainer>
-      </HeaderContainer>
-
-      <Collapsible title="Create or join a team. Get more information.">
-        This is a new feature this year. You can create or join a team. You can
-        add other users to your team and remove them as well. The team owner can
-        delete the team and remove users from the team. If you want to join a
-        team you can send a request to join the team and the team owner can
-        accept or reject the request.
-        <br></br>
-        <br></br>
-        Please be aware that this is the beta version of the team feature. If
-        you have any feedback or suggestions, please let us know.
-        <a href="mailto:support@hackaburg.de">support@hackaburg.de</a>
-      </Collapsible>
-      <Grid container spacing={3} style={{ marginTop: "2rem" }}>
+      <PageHeader
+        pageTitle="Teams"
+        buttonText="Create New Team"
+        buttonHref={Routes.CreateTeam}
+        subTitle="Create or join a team"
+        collapsibleText="You can create or join a team. You can
+          add other users to your team and remove them as well. The team owner can
+          delete the team and remove users from the team. If you want to join a
+          team you can send a request to join the team and the team owner can
+          accept or reject the request."
+      />
+      <Grid container spacing={3}>
         {Array.from(teams).map((team: TeamDTO, index) => (
           <Grid item xs={12} md={6} lg={4} xl={3} key={index}>
             <Link
-              to={`/edit-team?id=${team.id}`}
+              to={`/team?id=${team.id}`}
               style={{ color: "black", textDecoration: "none" }}
             >
               <div

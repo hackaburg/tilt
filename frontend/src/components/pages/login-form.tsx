@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { useLoginContext } from "../../contexts/login-context";
 import { useApi } from "../../hooks/use-api";
 import { Button } from "../base/button";
-import { FlexColumnContainer, StyleableFlexContainer } from "../base/flex";
+import { FlexColumnContainer, NonGrowingFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -12,7 +12,7 @@ import { InternalLink } from "../base/link";
 import { Routes } from "../../routes";
 import MuiButton from "@mui/material/Button";
 
-const ButtonContainer = styled(StyleableFlexContainer)`
+const ButtonContainer = styled(NonGrowingFlexContainer)`
   padding-top: 1rem;
 `;
 
@@ -97,9 +97,9 @@ export const LoginForm = () => {
               borderColor: "black",
               marginTop: "1rem",
             }}
+            href={Routes.RegisterForm}
           >
-            <a style={{ marginRight: "0.5rem" }}>New user? </a>
-            <InternalLink to={Routes.RegisterForm}>Register</InternalLink>
+            New user? Register
           </MuiButton>
         </ButtonContainer>
       </form>

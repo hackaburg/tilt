@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import * as React from "react";
 import { borderRadius, transitionDuration } from "../../config";
-import { StyleableFlexContainer } from "./flex";
+import { NonGrowingFlexContainer } from "./flex";
 
-const NotificationContainer = styled(StyleableFlexContainer)`
+const NotificationContainer = styled(NonGrowingFlexContainer)`
   position: fixed;
   top: 1rem;
   right: -5rem;

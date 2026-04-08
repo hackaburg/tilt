@@ -2,13 +2,13 @@ import styled from "@emotion/styled";
 import * as React from "react";
 import { mediaBreakpoints } from "../../config";
 import {
-  FlexRowColumnContainer,
+  BigFlexRowColumnContainer,
   FlexRowContainer,
   Spacer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "./flex";
 
-const ButtonContainer = styled(StyleableFlexContainer)`
+const ButtonContainer = styled(NonGrowingFlexContainer)`
   padding-top: 2.6rem;
 
   @media screen and (max-width: ${mediaBreakpoints.tablet}) {
@@ -26,7 +26,7 @@ interface IFormFieldButtonProps {
  */
 export const FormFieldButton = ({ field, button }: IFormFieldButtonProps) => (
   <FlexRowContainer>
-    <FlexRowColumnContainer isBig>{field}</FlexRowColumnContainer>
+    <BigFlexRowColumnContainer>{field}</BigFlexRowColumnContainer>
 
     <Spacer />
 

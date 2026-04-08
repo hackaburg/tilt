@@ -4,10 +4,11 @@ import { UserRole } from "../../../api/types/enums";
 import { useLoginContext } from "../../../contexts/login-context";
 import { Routes } from "../../../routes";
 import { variables } from "../../../theme";
-import { StyleableFlexContainer } from "../../base/flex";
+import { NonGrowingFlexContainer } from "../../base/flex";
 import { SidebarMenu, SidebarMenuItem } from "./sidebar-menu";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuUser } from "react-icons/lu";
+import { GoProjectTemplate } from "react-icons/go";
 import { BiLogOutCircle } from "react-icons/bi";
 import { FaHandHoldingHeart, FaRegCircleCheck } from "react-icons/fa6";
 import { IoStatsChartOutline } from "react-icons/io5";
@@ -22,7 +23,7 @@ import { Button } from "@mui/material";
 import { SimpleDialog } from "../../base/dialog";
 import { MdSupportAgent } from "react-icons/md";
 
-const BackgroundContainer = styled(StyleableFlexContainer)`
+const BackgroundContainer = styled(NonGrowingFlexContainer)`
   height: 100%;
   overflow-y: auto;
   background: linear-gradient(
@@ -105,7 +106,7 @@ export const Sidebar = () => {
         <H1 style={{ color: "white" }}>HACKABURG</H1>
         <H2 style={{ color: "white" }}>CONTROL CENTER</H2>
         <p style={{ color: "white" }}>
-          All important information about <br></br>the <b>Hackaburg 2025</b>{" "}
+          All important information about <br></br>the <b>Hackaburg 2026</b>{" "}
           event
         </p>
       </div>
@@ -141,10 +142,12 @@ export const Sidebar = () => {
 
         <SidebarMenuItem to={Routes.Teams}>
           <GrGroup />
-          <span style={{ marginLeft: "1rem" }}>
-            {" "}
-            Teams <b style={{ color: "#3fb28f", fontSize: "1rem" }}> - beta</b>
-          </span>
+          <span style={{ marginLeft: "1rem" }}> Teams</span>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem to={Routes.Projects}>
+          <GoProjectTemplate />
+          <span style={{ marginLeft: "1rem" }}> Projects</span>
         </SidebarMenuItem>
 
         {isElevatedUser && (

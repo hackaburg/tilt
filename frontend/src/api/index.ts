@@ -6,10 +6,13 @@ import {
 import { Nullable } from "../util";
 import type {
   ApplicationController,
+  CriterionController,
   ExtractControllerMethods,
   IApiMethod,
   IApiRequest,
   IApiResponse,
+  ProjectsController,
+  RatingController,
   SettingsController,
   SystemController,
   UsersController,
@@ -17,8 +20,13 @@ import type {
 import type {
   AnswerDTO,
   ApplicationDTO,
+  CriterionDTO,
   FormDTO,
+  ProjectDTO,
+  ProjectRatingResultDTO,
+  RatingDTO,
   SettingsDTO,
+  SuccessResponseDTO,
   TeamDTO,
   TeamResponseDTO,
   UserDTO,
@@ -30,6 +38,9 @@ type UsersControllerMethods = ExtractControllerMethods<UsersController>;
 type ApplicationControllerMethods =
   ExtractControllerMethods<ApplicationController>;
 type SystemControllerMethods = ExtractControllerMethods<SystemController>;
+type CriterionControllerMethods = ExtractControllerMethods<CriterionController>;
+type ProjectsControllerMethods = ExtractControllerMethods<ProjectsController>;
+type RatingControllerMethods = ExtractControllerMethods<RatingController>;
 type ExtractData<T> = T extends { data: infer K } ? K : never;
 
 /**
@@ -524,5 +535,125 @@ export class ApiClient {
    */
   public async pruneSystem(): Promise<void> {
     await this.delete<SystemControllerMethods["prune"]>("/system/prune");
+  }
+
+  // Criteria
+
+  /**
+   * Gets all criteria.
+   */
+  public async getAllCriteria(): Promise<readonly CriterionDTO[]> {
+    return await this.get<CriterionControllerMethods["getAllCriteria"]>(
+      "/criteria",
+    );
+  }
+
+  /**
+   * Creates a new criterion.
+   * @param criteria The criterion to create
+   */
+  public async createCriterion(criterion: CriterionDTO): Promise<CriterionDTO> {
+    return await this.post<CriterionControllerMethods["createCriterion"]>(
+      "/criteria",
+      criterion,
+    );
+  }
+
+  /**
+   * Updates a criterion.
+   * @param id The id of the criterion to update
+   * @param criteria The updated criterion data
+   */
+  public async updateCriterion(
+    id: number,
+    criterion: CriterionDTO,
+  ): Promise<CriterionDTO> {
+    return await this.put<
+      IApiMethod<
+        { data: CriterionDTO },
+        CriterionControllerMethods["updateCriterion"]["returns"]
+      >
+    >(`/criteria/${id}`, criterion);
+  }
+
+  /**
+   * Deletes a criterion by id.
+   * @param id The id of the criterion to delete
+   */
+  public async deleteCriterion(id: number): Promise<SuccessResponseDTO> {
+    return await this.delete<CriterionControllerMethods["deleteCriterion"]>(
+      `/criteria/${id}`,
+    );
+  }
+
+  // Projects
+
+  /**
+   * Get Project by Id
+   * @return project by id
+   */
+  public async getProjectByID(id: number): Promise<ProjectDTO> {
+    return await this.get<ProjectsControllerMethods["getProjectByID"]>(
+      `/projects/${id}`,
+    );
+  }
+
+  /**
+   * Gets all projects.
+   */
+  public async getAllProjects(): Promise<readonly ProjectDTO[]> {
+    return await this.get<ProjectsControllerMethods["getAllProjects"]>(
+      "/projects",
+    );
+  }
+
+  /**
+   * Updates a project.
+   * @param id The id of the project to update
+   * @param project The updated project data
+   */
+  public async updateProject(
+    id: number,
+    project: ProjectDTO,
+  ): Promise<ProjectDTO> {
+    return await this.put<
+      IApiMethod<
+        { data: ProjectDTO },
+        ProjectsControllerMethods["updateProject"]["returns"]
+      >
+    >(`/projects/${id}`, project);
+  }
+
+  // Ratings
+
+  /**
+   * Gets all ratings.
+   */
+  public async getUsersRatingsForProject(
+    project: ProjectDTO,
+  ): Promise<readonly RatingDTO[]> {
+    return await this.get<RatingControllerMethods["getUsersRatingsForProject"]>(
+      `/ratings/by-project/${project.id}`,
+    );
+  }
+
+  /**
+   * Gets aggregated rating results grouped by project and criteria.
+   */
+  public async getRatingResults(): Promise<readonly ProjectRatingResultDTO[]> {
+    return await this.get<RatingControllerMethods["getRatingResults"]>(
+      "/ratings/results",
+    );
+  }
+
+  /**
+   * Submits a rating for a project.
+   * @param rating The rating to submit
+   */
+  public async createRating(rating: RatingDTO): Promise<RatingDTO> {
+    return await this.post<RatingControllerMethods["rate"]>(
+      "/ratings/rate",
+      rating,
+    );
   }
 }

@@ -5,13 +5,13 @@ import { Redirect } from "react-router";
 import { useApi } from "../../hooks/use-api";
 import { Routes } from "../../routes";
 import { Button } from "../base/button";
-import { FlexColumnContainer, StyleableFlexContainer } from "../base/flex";
+import { FlexColumnContainer, NonGrowingFlexContainer } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
 import { TextInput, TextInputType } from "../base/text-input";
 import { InternalLink } from "../base/link";
 
-const ButtonContainer = styled(StyleableFlexContainer)`
+const ButtonContainer = styled(NonGrowingFlexContainer)`
   padding-top: 1rem;
 `;
 

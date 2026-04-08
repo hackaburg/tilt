@@ -5,16 +5,15 @@ import { useToggle } from "../../hooks/use-toggle";
 import { Chevron } from "./chevron";
 import {
   FlexColumnContainer,
-  NonGrowingFlexContainer,
   Spacer,
   VerticallyCenteredContainer,
 } from "./flex";
-import { Subsubheading } from "./headings";
 
 const ExpandButton = styled.button`
   cursor: pointer;
   background-color: transparent;
   border: none;
+  padding: 0;
 `;
 
 interface ICollapsibleProps {
@@ -37,18 +36,19 @@ export const Collapsible = ({
   return (
     <FlexColumnContainer>
       <VerticallyCenteredContainer>
-        <NonGrowingFlexContainer>
-          <Subsubheading text={title} />
-        </NonGrowingFlexContainer>
-        <NonGrowingFlexContainer>
-          <ExpandButton onClick={handleOpen}>
-            <Chevron rotation={isOpen ? 0 : -90} />
-          </ExpandButton>
-        </NonGrowingFlexContainer>
+        <ExpandButton onClick={handleOpen}>
+          <span style={{ fontSize: "1.25rem", marginRight: "10px" }}>
+            {title}
+          </span>
+          <Chevron
+            rotation={isOpen ? 0 : -90}
+            style={{ verticalAlign: "center" }}
+          />
+        </ExpandButton>
       </VerticallyCenteredContainer>
 
       {isOpen && (
-        <FlexColumnContainer>
+        <FlexColumnContainer style={{ paddingTop: "5px" }}>
           {children}
           <Spacer />
         </FlexColumnContainer>

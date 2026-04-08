@@ -1,7 +1,4 @@
-import styled from "@emotion/styled";
 import * as React from "react";
-import { NonGrowingFlexContainer, StyleableFlexContainer } from "../base/flex";
-import { Heading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { TextInput, TextInputType } from "../base/text-input";
@@ -13,11 +10,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { Message } from "../base/message";
-
-const HeaderContainer = styled(StyleableFlexContainer)`
-  justify-content: space-between;
-  flex-direction: row;
-`;
+import { PageHeader } from "../base/page-header";
 
 /**
  * A settings dashboard to configure all parts of tilt.
@@ -27,7 +20,7 @@ export const CreateTeam = () => {
   const { user } = loginState;
 
   const [title, setTitle] = React.useState("");
-  const [desciption, setDescription] = React.useState("");
+  const [description, setDescription] = React.useState("");
   const [teamImg, setTeamImg] = React.useState("");
   const [users, setUsers] = React.useState([
     { id: user?.id, name: user?.firstName + " " + user?.lastName },
@@ -43,7 +36,7 @@ export const CreateTeam = () => {
       if (wasTriggeredManually) {
         await api.createTeam(
           title,
-          desciption,
+          description,
           teamImg,
           users.map((u) => u.id),
         );
@@ -51,7 +44,7 @@ export const CreateTeam = () => {
       }
       return false;
     },
-    [title, desciption, teamImg, users],
+    [title, description, teamImg, users],
   );
 
   const { value: allUsers } = useApi(async (api) => api.getAllUsers(), []);
@@ -87,21 +80,12 @@ export const CreateTeam = () => {
 
   return (
     <Page>
-      <HeaderContainer>
-        <Heading text="Create New Team" />
-        <NonGrowingFlexContainer>
-          <a style={{ width: "15rem", marginTop: "1rem" }}>
-            <Button
-              loading={createTeamInProgress}
-              disable={createTeamInProgress}
-              onClick={sendCreateTeamRequest}
-              primary={true}
-            >
-              Create
-            </Button>
-          </a>
-        </NonGrowingFlexContainer>
-      </HeaderContainer>
+      <PageHeader
+        pageTitle="Create New Team"
+        buttonText="Create"
+        buttonOnClick={sendCreateTeamRequest}
+        buttonLoading={createTeamInProgress}
+      />
       <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
         {createTeamError && (
           <Message type="error">
@@ -121,7 +105,7 @@ export const CreateTeam = () => {
         <TextInput
           title="Team Description"
           placeholder="Your team description (maybe also add the communication channel e.g. Discord, Signal, WhatsApp, etc. may add a link to the channel)"
-          value={desciption}
+          value={description}
           onChange={(value) => setDescription(value)}
           type={TextInputType.Area}
         />

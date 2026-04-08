@@ -6,7 +6,7 @@ import { Button } from "../base/button";
 import {
   FlexColumnContainer,
   Spacer,
-  StyleableFlexContainer,
+  NonGrowingFlexContainer,
 } from "../base/flex";
 import { Heading } from "../base/headings";
 import { Message } from "../base/message";
@@ -14,7 +14,7 @@ import { TextInput, TextInputType } from "../base/text-input";
 import { InternalLink } from "../base/link";
 import { Routes } from "../../routes";
 
-const ButtonContainer = styled(StyleableFlexContainer)`
+const ButtonContainer = styled(NonGrowingFlexContainer)`
   padding-top: 1rem;
 `;
 

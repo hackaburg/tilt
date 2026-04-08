@@ -1,8 +1,8 @@
 import * as React from "react";
-import { FlexColumnContainer, Spacer, StyleableFlexContainer } from "./flex";
+import { FlexColumnContainer, Spacer, NonGrowingFlexContainer } from "./flex";
 import styled from "@emotion/styled";
 
-const Border = styled(StyleableFlexContainer)`
+const Border = styled(NonGrowingFlexContainer)`
   border-top: 1px dashed #ccc;
 `;
 /**
