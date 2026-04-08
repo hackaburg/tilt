@@ -11,10 +11,10 @@ module.exports = {
   entry: "./src/index.tsx",
 
   output: {
-    filename: isProduction ? "[name].[contenthash].js" : "[name].[fullhash].js",
+    filename: isProduction ? "[name].[contenthash].js" : "[name].[hash].js",
     chunkFilename: isProduction
       ? "[name].[contenthash].js"
-      : "[name].[fullhash].js",
+      : "[name].[hash].js",
     path: __dirname + "/dist",
   },
 

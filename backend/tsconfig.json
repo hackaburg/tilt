@@ -5,7 +5,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "module": "commonjs",
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": false,
     "outDir": "dist/",
     "strict": true,
