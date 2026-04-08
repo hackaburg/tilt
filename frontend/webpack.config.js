@@ -11,10 +11,10 @@ module.exports = {
   entry: "./src/index.tsx",
 
   output: {
-    filename: isProduction ? "[name].[contenthash].js" : "[name].[hash].js",
+    filename: isProduction ? "[name].[contenthash].js" : "[name].[fullhash].js",
     chunkFilename: isProduction
       ? "[name].[contenthash].js"
-      : "[name].[hash].js",
+      : "[name].[fullhash].js",
     path: __dirname + "/dist",
   },
 
@@ -80,7 +80,7 @@ module.exports = {
       template: "./src/index.html",
     }),
     new BundleAnalyzerPlugin({
-      analyzerMode: "static",
+      analyzerMode: isProduction ? "static" : "disabled",
       openAnalyzer: false,
       reportFilename: "../bundle/report.html",
     }),

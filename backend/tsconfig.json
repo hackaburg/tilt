@@ -10,8 +10,7 @@
     "outDir": "dist/",
     "strict": true,
     "target": "ES2022",
-    "skipLibCheck": true,
-    "types": ["jest"]
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts",
