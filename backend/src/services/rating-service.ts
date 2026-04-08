@@ -180,7 +180,8 @@ export class RatingService implements IRatingService {
     const idToCriterion: Record<number, Criterion> = {};
 
     for (const project of allProjects) {
-      const averagesPerCriterion: { criterion: Criterion, average: number }[] = [];
+      const averagesPerCriterion: { criterion: Criterion; average: number }[] =
+        [];
 
       // Sum up
       const criterionIdToSum: Record<number, number> = {};
@@ -203,17 +204,19 @@ export class RatingService implements IRatingService {
       }
 
       // Calculate average
-      Object.keys(criterionIdToSum).map(Number).forEach(criterionId => {
-        const count = criterionIdToCount[criterionId]
-        if (count === 0) {
-          return
-        }
+      Object.keys(criterionIdToSum)
+        .map(Number)
+        .forEach((criterionId) => {
+          const count = criterionIdToCount[criterionId];
+          if (count === 0) {
+            return;
+          }
 
-        const sum = criterionIdToSum[criterionId]
-        const average = sum / count;
-        const criterion = idToCriterion[criterionId];
-        averagesPerCriterion.push({ criterion, average });
-      });
+          const sum = criterionIdToSum[criterionId];
+          const average = sum / count;
+          const criterion = idToCriterion[criterionId];
+          averagesPerCriterion.push({ criterion, average });
+        });
 
       result.push({
         project,
