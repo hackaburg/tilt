@@ -10,6 +10,7 @@ import { ReadOnlyProject } from "./read-only-project";
 import { PageHeader } from "../base/page-header";
 import { RoundedImage } from "../base/image";
 import { ProjectDTO } from "../../api/types/dto";
+import { useNotificationContext } from "../../contexts/notification-context";
 
 /**
  * A gate component that checks if the current user is part of the team.
@@ -52,6 +53,8 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
 
+  const { showNotification } = useNotificationContext();
+
   const [id] = React.useState(project.id);
   const [title, setTitle] = React.useState(project.title);
   const [description, setDescription] = React.useState(project.description);
@@ -71,6 +74,7 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
           image,
           allowRating,
         } as unknown as ProjectDTO);
+        showNotification("Saved");
         return true;
       }
       return false;

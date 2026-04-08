@@ -1,3 +1,5 @@
+<p align="center"><img src="https://ratisbona-coding.org/_app/immutable/assets/hackaburg.5f0e95a3.svg" width=100/></p>
+
 # tilt
 
 [![Docker Image Size (latest)](https://img.shields.io/docker/image-size/hackaburg/tilt/latest)](https://hub.docker.com/r/hackaburg/tilt)

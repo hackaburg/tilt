@@ -21,6 +21,7 @@ import { Message } from "../base/message";
 import { ReadOnlyTeam } from "./read-only-team";
 import { UserRole } from "../../api/types/enums";
 import { PageHeader } from "../base/page-header";
+import { useNotificationContext } from "../../contexts/notification-context";
 
 /**
  * A gate component that checks if the current user is part of the team.
@@ -29,6 +30,8 @@ import { PageHeader } from "../base/page-header";
 export const ViewTeam = () => {
   const loginState = useLoginContext();
   const { user } = loginState;
+
+  const { showNotification } = useNotificationContext();
 
   const [team, setTeam] = React.useState<TeamResponseDTO | null>(null);
   const params = new URLSearchParams(document.location.search);
@@ -86,6 +89,7 @@ const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
           image,
           users.map((u) => u.id),
         );
+        showNotification("Saved");
         return true;
       }
       return false;
