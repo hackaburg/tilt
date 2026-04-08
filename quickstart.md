@@ -2,8 +2,6 @@
 
 ## Start
 
-For development
-
 ```sh
 # prep
 cp backend/.env.example backend/.env
