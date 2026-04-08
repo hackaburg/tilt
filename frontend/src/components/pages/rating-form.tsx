@@ -5,7 +5,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Typography,
   Tooltip,
 } from "@mui/material";
 import { api } from "../../hooks/use-api";
@@ -73,12 +72,13 @@ export const RatingForm = ({
         alignItems={{ xs: "flex-start", sm: "center" }}
         justifyContent="center"
       >
-        <Typography
-          style={{ flex: 1, textAlign: "right" }}
-          sx={{ cursor: "help" }}
-        >
-          <Tooltip title={criterion.description}>{criterion.title}</Tooltip>
-        </Typography>
+        <div style={{ flex: 1, textAlign: "right" }}>
+          <Tooltip title={criterion.description}>
+            <span style={{ fontSize: "1.25rem" }}>
+              {criterion.title}
+            </span>
+          </Tooltip>
+        </div>
         <FormControl component="fieldset">
           <RadioGroup
             row
