@@ -74,9 +74,7 @@ export const RatingForm = ({
       >
         <div style={{ flex: 1, textAlign: "right" }}>
           <Tooltip title={criterion.description}>
-            <span style={{ fontSize: "1.25rem" }}>
-              {criterion.title}
-            </span>
+            <span style={{ fontSize: "1.25rem" }}>{criterion.title}</span>
           </Tooltip>
         </div>
         <FormControl component="fieldset">

@@ -45,8 +45,8 @@ export const ReadOnlyProject = ({ project }: { project: ProjectDTO }) => {
       </div>
       <div>
         <h2 style={{ marginTop: "4rem" }}>Rate this Project</h2>
-        Hover criteria for more information. Rate a criterion high, if you
-        think the project did well in this regard.
+        Hover criteria for more information. Rate a criterion high, if you think
+        the project did well in this regard.
         {criteria.map((criterion) => (
           <RatingForm
             rating={ratings.find((r) => r.criterion.id === criterion.id)}
