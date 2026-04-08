@@ -73,14 +73,14 @@ export const RatingForm = ({
         alignItems={{ xs: "flex-start", sm: "center" }}
         justifyContent="center"
       >
-        <Tooltip title={criterion.description}>
-          <Typography
-            style={{ flex: 1, textAlign: "right" }}
-            sx={{ cursor: "help" }}
-          >
+        <Typography
+          style={{ flex: 1, textAlign: "right" }}
+          sx={{ cursor: "help" }}
+        >
+          <Tooltip title={criterion.description}>
             {criterion.title}
-          </Typography>
-        </Tooltip>
+          </Tooltip>
+        </Typography>
         <FormControl component="fieldset">
           <RadioGroup
             row
