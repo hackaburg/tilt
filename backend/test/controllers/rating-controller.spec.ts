@@ -9,21 +9,18 @@ import { User } from "../../src/entities/user";
 import { UserRole } from "../../src/entities/user-role";
 import { HttpService } from "../../src/services/http-service";
 import { IRatingService } from "../../src/services/rating-service";
-import { ISettingsService } from "../../src/services/settings-service";
 import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
 import { MockRatingService } from "../services/mock/mock-rating-service";
-import { MockSettingsService } from "../services/mock/mock-settings-service";
 import { MockUserService } from "../services/mock/mock-user-service";
 
 describe("RatingController", () => {
   let ratingService: MockedService<IRatingService>;
-  let settingsService: MockedService<ISettingsService>;
+  let userService: MockedService<IUserService>;
   let controller: RatingController;
 
   beforeEach(() => {
     ratingService = new MockRatingService();
-    settingsService = new MockSettingsService();
     controller = new RatingController(ratingService.instance);
   });
 
@@ -48,9 +45,6 @@ describe("RatingController", () => {
   describe("authorization", () => {
     let server: http.Server;
     let port: number;
-    let ratingService: MockedService<IRatingService>;
-    let settingsService: MockedService<ISettingsService>;
-    let userService: MockedService<IUserService>;
 
     const rootUser = Object.assign(new User(), { id: 1, role: UserRole.Root });
     const regularUser = Object.assign(new User(), {
@@ -65,7 +59,6 @@ describe("RatingController", () => {
 
     beforeAll(async () => {
       ratingService = new MockRatingService();
-      settingsService = new MockSettingsService();
       userService = new MockUserService();
 
       userService.mocks.findUserByLoginToken.mockImplementation(

@@ -1,18 +1,8 @@
-import * as http from "http";
-import { createExpressServer, useContainer } from "routing-controllers";
-import { validate } from "class-validator";
-import { plainToClass } from "class-transformer";
 import { ProjectsController } from "../../src/controllers/projects-controller";
-import { ProjectDTO, ProjectUpdateDTO } from "../../src/controllers/dto";
-import { Project } from "../../src/entities/project";
 import { User } from "../../src/entities/user";
-import { UserRole } from "../../src/entities/user-role";
-import { HttpService } from "../../src/services/http-service";
 import { IProjectService } from "../../src/services/project-service";
-import { IUserService } from "../../src/services/user-service";
 import { MockedService } from "../services/mock";
 import { MockProjectService } from "../services/mock/mock-project-service";
-import { MockUserService } from "../services/mock/mock-user-service";
 
 describe("ProjectsController", () => {
   let projectService: MockedService<IProjectService>;

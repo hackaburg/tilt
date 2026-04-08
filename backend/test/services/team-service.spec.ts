@@ -1,14 +1,7 @@
-import { NotFoundError } from "routing-controllers";
 import { Project } from "../../src/entities/project";
 import { Team } from "../../src/entities/team";
 import { User } from "../../src/entities/user";
-import { IDatabaseService } from "../../src/services/database-service";
 import { TeamService, ITeamService } from "../../src/services/team-service";
-import {
-  IProjectService,
-  ProjectService,
-} from "../../src/services/project-service";
-import { MockedService } from "./mock";
 import { TestDatabaseService } from "./mock/mock-database-service";
 import { UserRole } from "../../src/entities/user-role";
 
