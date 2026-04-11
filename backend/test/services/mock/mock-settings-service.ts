@@ -25,7 +25,11 @@ export const defaultSettings = {
     },
     allowProfileFormFrom: new Date(),
     allowProfileFormUntil: new Date(),
+    acceptanceDeadline: new Date(),
+    confirmSpotUntil: new Date(),
     hoursToConfirm: 24,
+  },
+  project: {
     allowRatingProjects: false,
   },
   frontend: {

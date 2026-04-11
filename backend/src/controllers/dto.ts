@@ -34,6 +34,7 @@ import {
   EmailTemplateSize,
   FrontendSettings,
   Settings,
+  ProjectSettings,
 } from "../entities/settings";
 import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
@@ -91,6 +92,17 @@ export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
   @IsNumber()
   @Expose()
   public hoursToConfirm!: number;
+  @Type(() => Date)
+  @IsDate()
+  @Expose()
+  public acceptanceDeadline!: Date;
+  @Type(() => Date)
+  @IsDate()
+  @Expose()
+  public confirmSpotUntil!: Date;
+}
+
+export class ProjectSettingsDTO implements DTO<ProjectSettings> {
   @IsBoolean()
   @Expose()
   public allowRatingProjects!: boolean;
@@ -166,6 +178,10 @@ export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
   @ValidateNested()
   @Expose()
   public email!: EmailSettingsDTO;
+  @Type(() => ProjectSettingsDTO)
+  @ValidateNested()
+  @Expose()
+  public project!: ProjectSettingsDTO;
 }
 
 export abstract class QuestionConfigurationDTOBase {

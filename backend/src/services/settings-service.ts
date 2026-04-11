@@ -9,6 +9,7 @@ import {
   EmailTemplate,
   FrontendSettings,
   Settings,
+  ProjectSettings,
 } from "../entities/settings";
 import {
   ConfigurationServiceToken,
@@ -102,6 +103,7 @@ export class SettingsService implements ISettingsService {
     settings.application = this.getDefaultApplicationSettings();
     settings.frontend = this.getDefaultFrontendSettings();
     settings.email = this.getDefaultEmailSettings();
+    settings.project = this.getDefaultProjectSettings();
     return settings;
   }
 
@@ -115,8 +117,18 @@ export class SettingsService implements ISettingsService {
     applicationSettings.allowProfileFormFrom = new Date();
     applicationSettings.allowProfileFormUntil = new Date();
     applicationSettings.hoursToConfirm = 24;
-    applicationSettings.allowRatingProjects = false;
+    applicationSettings.acceptanceDeadline = new Date();
+    applicationSettings.confirmSpotUntil = new Date();
     return applicationSettings;
+  }
+
+  /**
+   * Creates a project settings object with default values.
+   */
+  private getDefaultProjectSettings(): ProjectSettings {
+    const projectSettings = new ProjectSettings();
+    projectSettings.allowRatingProjects = false;
+    return projectSettings;
   }
 
   /**

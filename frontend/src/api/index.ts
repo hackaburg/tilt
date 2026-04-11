@@ -182,6 +182,12 @@ export class ApiClient {
         allowProfileFormUntil: this.reviveDate(
           settings.application.allowProfileFormUntil,
         ),
+        acceptanceDeadline: this.reviveDate(
+          settings.application.acceptanceDeadline,
+        ),
+        confirmSpotUntil: this.reviveDate(
+          settings.application.confirmSpotUntil,
+        ),
       },
     };
   }

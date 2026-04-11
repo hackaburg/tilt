@@ -91,7 +91,7 @@ export const ProjectRatingSettings = () => {
 
   useEffect(() => {
     // Only update if settings are loaded
-    if (settings.application) {
+    if (settings.project) {
       api.updateSettings(settings as SettingsDTO);
     }
   }, [settings]);
@@ -138,8 +138,8 @@ export const ProjectRatingSettings = () => {
       setSettings((prev) => {
         const changedSettings = {
           ...prev,
-          application: {
-            ...prev.application,
+          project: {
+            ...prev.project,
             allowRatingProjects: value,
           },
         };
@@ -155,7 +155,7 @@ export const ProjectRatingSettings = () => {
         <FormControlLabel
           control={
             <Switch
-              checked={settings?.application?.allowRatingProjects}
+              checked={Boolean(settings?.project?.allowRatingProjects)}
               onChange={onSwitchChange}
             />
           }

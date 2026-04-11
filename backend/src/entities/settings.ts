@@ -48,6 +48,11 @@ export class EmailSettings {
   public forgotPasswordEmail!: EmailTemplate;
 }
 
+export class ProjectSettings {
+  @Column({ default: false })
+  public allowRatingProjects!: boolean;
+}
+
 @Entity()
 export class Settings {
   @PrimaryGeneratedColumn()
@@ -64,6 +69,9 @@ export class Settings {
   @Type(() => EmailSettings)
   @Column(() => EmailSettings)
   public email!: EmailSettings;
+  @Type(() => ProjectSettings)
+  @Column(() => ProjectSettings)
+  public project!: ProjectSettings;
 }
 
 /**

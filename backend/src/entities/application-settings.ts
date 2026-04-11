@@ -11,6 +11,9 @@ import { FormSettings } from "./form-settings";
 // TODO all other settings are part of the settings table, whereas ApplicationSettings
 //  is a separate table. Move into settings table just like EmailSettings.
 
+/**
+ * Application as in "Peoples application for the event"
+ */
 @Entity()
 export class ApplicationSettings {
   @PrimaryGeneratedColumn()
@@ -29,6 +32,8 @@ export class ApplicationSettings {
   public allowProfileFormUntil!: Date;
   @Column()
   public hoursToConfirm!: number;
-  @Column({ default: false })
-  public allowRatingProjects!: boolean;
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
+  public acceptanceDeadline!: Date;
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
+  public confirmSpotUntil!: Date;
 }

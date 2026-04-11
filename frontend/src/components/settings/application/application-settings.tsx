@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import * as React from "react";
 import { useCallback } from "react";
 import type { ApplicationSettingsDTO } from "../../../api/types/dto";
@@ -40,30 +41,24 @@ export const ApplicationSettings = () => {
     [settings],
   );
 
-  const handleAllowProfileFormFromChange = useCallback(
-    (value: string) => {
-      setAllowProfileFormFrom(value);
-      const date = new Date(value);
-
-      if (!isValidDate(date)) {
-        return;
-      }
-
-      updateApplicationSettings({
-        allowProfileFormFrom: date,
-      });
-    },
-    [updateApplicationSettings],
-  );
-
   const [allowProfileFormUntil, setAllowProfileFormUntil] = useDerivedState(
     () => settings.application.allowProfileFormUntil.toISOString(),
     [settings],
   );
 
-  const handleAllowProfileFormUntilChange = useCallback(
-    (value: string) => {
-      setAllowProfileFormUntil(value);
+  const [acceptanceDeadline, setAcceptanceDeadline] = useDerivedState(
+    () => settings.application.acceptanceDeadline.toISOString(),
+    [settings],
+  );
+
+  const [confirmSpotUntil, setConfirmSpotUntil] = useDerivedState(
+    () => settings.application.confirmSpotUntil.toISOString(),
+    [settings],
+  );
+
+  const handleDateChange = useCallback(
+    (value: string, setter: Dispatch<SetStateAction<string>>, key: string) => {
+      setter(value);
       const date = new Date(value);
 
       if (!isValidDate(date)) {
@@ -71,7 +66,7 @@ export const ApplicationSettings = () => {
       }
 
       updateApplicationSettings({
-        allowProfileFormUntil: date,
+        [key]: date,
       });
     },
     [updateApplicationSettings],
@@ -112,11 +107,18 @@ export const ApplicationSettings = () => {
             placeholder="keep it fair, e.g. 240 for 10 days"
           />
         </FlexRowColumnContainer>
-        <Spacer />
+      </FlexRowContainer>
+      <FlexRowContainer>
         <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormFrom}
-            onChange={handleAllowProfileFormFromChange}
+            onChange={(value) =>
+              handleDateChange(
+                value,
+                setAllowProfileFormFrom,
+                "allowProfileFormFrom",
+              )
+            }
             title="Open registration on"
             placeholder="1970-01-01 00:00:00"
           />
@@ -125,8 +127,41 @@ export const ApplicationSettings = () => {
         <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormUntil}
-            onChange={handleAllowProfileFormUntilChange}
+            onChange={(value) =>
+              handleDateChange(
+                value,
+                setAllowProfileFormUntil,
+                "allowProfileFormUntil",
+              )
+            }
             title="Close registration on"
+            placeholder="1970-01-01 00:00:00"
+          />
+        </FlexRowColumnContainer>
+      </FlexRowContainer>
+      <FlexRowContainer>
+        <FlexRowColumnContainer>
+          <TextInput
+            value={acceptanceDeadline}
+            onChange={(value) =>
+              handleDateChange(
+                value,
+                setAcceptanceDeadline,
+                "acceptanceDeadline",
+              )
+            }
+            title="When we will accept people"
+            placeholder="1970-01-01 00:00:00"
+          />
+        </FlexRowColumnContainer>
+        <Spacer />
+        <FlexRowColumnContainer>
+          <TextInput
+            value={confirmSpotUntil}
+            onChange={(value) =>
+              handleDateChange(value, setConfirmSpotUntil, "confirmSpotUntil")
+            }
+            title="Until when accepted people need to confirm their spot"
             placeholder="1970-01-01 00:00:00"
           />
         </FlexRowColumnContainer>
