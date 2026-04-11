@@ -72,7 +72,7 @@ export class ProjectService implements IProjectService {
       return (
         isAdmin ||
         (project.allowRating && allowRatingProjects) ||
-        project.team.id == user.team?.id
+        project.team.id === user.team?.id
       );
     });
   }

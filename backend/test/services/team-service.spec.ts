@@ -35,7 +35,7 @@ describe("TeamService", () => {
       user.verifyToken = "";
       user.tokenSecret = "";
       user.forgotPasswordToken = "";
-      user.team = null;  // The team will be assigned in createTeam
+      user.team = null; // The team will be assigned in createTeam
       user.teamRequest = null;
       await userRepo.save(user);
 

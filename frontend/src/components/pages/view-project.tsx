@@ -27,11 +27,7 @@ export const ViewProject = () => {
     api.getProjectByID(projectId).then((project_) => setProject(project_));
   }, []);
 
-  const isTeamMember = React.useMemo(() => {
-    return (
-      project?.team?.users?.some((id) => id === user?.id) ?? false
-    );
-  }, [project, user?.id]);
+  const isTeamMember = project?.team?.id === user?.id;
 
   const isAdmin = user?.role === UserRole.Root;
 
