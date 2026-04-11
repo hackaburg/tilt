@@ -30,10 +30,6 @@ export class ApplicationSettings {
   @Column()
   public hoursToConfirm!: number;
   @Column()
-  public fillProfileFormFrom!: Date;
-  @Column()
-  public fillProfileFormUntil!: Date;
-  @Column()
   public acceptanceDeadline!: Date;
   @Column()
   public confirmSpotUntil!: Date;

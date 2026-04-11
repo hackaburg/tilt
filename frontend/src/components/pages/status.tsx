@@ -29,14 +29,22 @@ export const Status = () => {
   const { user, updateUser } = useLoginContext();
 
   const confirmationDays = Math.floor(settings.application.hoursToConfirm / 24);
-  const fillProfileFormFrom = dateToString(
-    settings.application.fillProfileFormFrom,
+
+  const allowProfileFormFrom = dateToString(
+    settings.application.allowProfileFormFrom,
   );
-  const fillProfileFormTo = dateToString(settings.application.fillProfileFormTo);
+  const allowProfileFormUntil = dateToString(
+    settings.application.allowProfileFormUntil,
+  );
   const acceptanceDeadline = dateToString(
     settings.application.acceptanceDeadline,
   );
-  const confirmSpotUntil = dateToString(settings.application.confirmSpotUntil);
+  const confirmSpotUntil = dateToString(
+    settings.application.confirmSpotUntil,
+  );
+
+  console.log(settings.application);
+
   const isExpired = user == null ? false : isConfirmationExpired(user);
   const isNotAttending = isExpired || user?.declined;
   const deadline = user?.confirmationExpiresAt;
@@ -106,7 +114,7 @@ export const Status = () => {
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between <b>{fillProfileFormFrom} - {fillProfileFormUntil}</b>
+                , any time between <b>{allowProfileFormFrom} - {allowProfileFormUntil}</b>
               </Text>
             </>
           )}

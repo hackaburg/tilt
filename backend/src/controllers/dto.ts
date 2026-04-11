@@ -95,14 +95,6 @@ export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
   @Type(() => Date)
   @IsDate()
   @Expose()
-  public fillProfileFormFrom!: Date;
-  @Type(() => Date)
-  @IsDate()
-  @Expose()
-  public fillProfileFormUntil!: Date;
-  @Type(() => Date)
-  @IsDate()
-  @Expose()
   public acceptanceDeadline!: Date;
   @Type(() => Date)
   @IsDate()
@@ -186,6 +178,10 @@ export class SettingsDTO implements DTO<Omit<Settings, "updatedAt">> {
   @ValidateNested()
   @Expose()
   public email!: EmailSettingsDTO;
+  @Type(() => ProjectSettingsDTO)
+  @ValidateNested()
+  @Expose()
+  public project!: ProjectSettingsDTO;
 }
 
 export abstract class QuestionConfigurationDTOBase {

@@ -16,7 +16,11 @@ export const sleep = (ms: number) =>
  * Formats a date "YYYY-MM-DD on HH:mm:ss" style.
  * @param date The date to format
  */
-export const dateToString = (date: Date) => {
+export const dateToString = (date: Date | null) => {
+  if (date == null) {
+    return "?"
+  }
+
   return date.toLocaleString("default", {
     year: "numeric",
     month: "long",
