@@ -407,6 +407,10 @@ export class UserDetailsRepsonseDTO {
   public email!: string;
   @Expose()
   public role!: UserRole;
+  @Expose()
+  public teamRequest!: TeamDTO | null;
+  @Expose()
+  public team!: TeamDTO | null;
 }
 
 export class UserDTO {
@@ -455,6 +459,9 @@ export class UserTokenResponseDTO {
   @Expose()
   public token!: string;
   @Expose()
+  // TODO restore?
+  @Type(() => UserDTO)
+  @ValidateNested()
   public user!: UserDTO;
 }
 
@@ -543,6 +550,10 @@ export class TeamDTO {
   @ValidateNested()
   public users!: UserDTO[];
   @Expose()
+  @Type(() => UserDTO)
+  @ValidateNested()
+  public requests!: UserDTO[];
+  @Expose()
   public teamImg!: string;
   @Expose()
   public description!: string;
@@ -554,12 +565,12 @@ export class TeamResponseDTO {
   @Expose()
   public title!: string;
   @Expose()
-  @Type(() => UserResponseDto)
-  public users!: UserResponseDto[];
-  @Expose()
   public teamImg!: string;
   @Expose()
   public description!: string;
+  @Expose()
+  @Type(() => UserResponseDto)
+  public users!: UserResponseDto[];
   @Expose()
   @Type(() => UserResponseDto)
   public requests!: UserResponseDto[];

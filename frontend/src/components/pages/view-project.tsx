@@ -29,6 +29,8 @@ export const ViewProject = () => {
 
   const isTeamMember = project?.team?.id === user?.id;
 
+  console.log("isteammember", project, user)
+
   const isAdmin = user?.role === UserRole.Root;
 
   if (!project) {
@@ -44,6 +46,7 @@ export const ViewProject = () => {
 
 /**
  * Team members may edit the project
+ * TODO move into separate file
  */
 const EditProject = ({ project }: { project: ProjectDTO }) => {
   const loginState = useLoginContext();

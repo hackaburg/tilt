@@ -18,7 +18,7 @@ import {
   IHaveibeenpwnedService,
   PasswordReuseError,
 } from "./haveibeenpwned-service";
-import { UserDetailsRepsonseDTO, UserListDto } from "../controllers/dto";
+import { UserListDto } from "../controllers/dto";
 
 /**
  * An interface describing user handling.
@@ -51,7 +51,7 @@ export interface IUserService extends IService {
   /**
    * Gets a user by their mail.
    */
-  getUser(userEmail: string): Promise<UserDetailsRepsonseDTO>;
+  getUser(userEmail: string): Promise<User>;
 
   /**
    * Get all users only name and id
@@ -247,20 +247,12 @@ export class UserService implements IUserService {
   /**
    * Get user details
    */
-  public async getUser(userEmail: string): Promise<UserDetailsRepsonseDTO> {
-    const user = await this._users.findOneOrFail({
+  public async getUser(userEmail: string): Promise<User> {
+    return await this._users.findOneOrFail({
       where: {
         email: userEmail,
       },
     });
-
-    const response = new UserDetailsRepsonseDTO();
-    response.email = user.email;
-    response.firstName = user.firstName;
-    response.lastName = user.lastName;
-    response.role = user.role;
-
-    return response;
   }
 
   /**
