@@ -155,7 +155,7 @@ export const ProjectProjectSettings = () => {
         <FormControlLabel
           control={
             <Switch
-              checked={settings?.project?.allowRatingProjects}
+              checked={Boolean(settings?.project?.allowRatingProjects)}
               onChange={onSwitchChange}
             />
           }

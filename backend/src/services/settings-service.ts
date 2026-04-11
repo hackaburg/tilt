@@ -123,7 +123,7 @@ export class SettingsService implements ISettingsService {
   }
 
   /**
-   * Creates an application settings object with default values.
+   * Creates a project settings object with default values.
    */
   private getDefaultProjectSettings(): ProjectSettings {
     const projectSettings = new ProjectSettings();
