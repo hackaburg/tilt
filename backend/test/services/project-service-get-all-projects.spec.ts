@@ -56,8 +56,8 @@ describe(ProjectService.name, () => {
     await settingsRepo.save([
       {
         ...defaultSettings,
-        application: {
-          ...defaultSettings.application,
+        project: {
+          ...defaultSettings.project,
           allowRatingProjects: false,
         },
       },
@@ -71,7 +71,7 @@ describe(ProjectService.name, () => {
   const allowRatingProjects = async (value: boolean): Promise<void> => {
     const settingsRepo = database.getRepository(Settings);
     const settings = {
-      application: {
+      project: {
         allowRatingProjects: value,
       },
     };

@@ -121,7 +121,7 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue({
-          application: { allowRatingProjects: false },
+          project: { allowRatingProjects: false },
         } as any);
 
         const rating = Object.assign(new Rating(), {
@@ -140,7 +140,7 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue({
-          application: { allowRatingProjects: true },
+          project: { allowRatingProjects: true },
         } as any);
 
         const rating = Object.assign(new Rating(), {
@@ -159,7 +159,7 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue({
-          application: { allowRatingProjects: true },
+          project: { allowRatingProjects: true },
         } as any);
 
         await projectRepo.update(mockProject.id, { allowRating: false });
@@ -181,7 +181,7 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue({
-          application: { allowRatingProjects: true },
+          project: { allowRatingProjects: true },
         } as any);
 
         const rating = Object.assign(new Rating(), {
@@ -200,7 +200,7 @@ describe("RatingService", () => {
         expect.assertions(2);
 
         settingsService.mocks.getSettings.mockResolvedValue({
-          application: { allowRatingProjects: true },
+          project: { allowRatingProjects: true },
         } as any);
 
         const rating = Object.assign(new Rating(), {
@@ -220,7 +220,7 @@ describe("RatingService", () => {
         expect.assertions(1);
 
         settingsService.mocks.getSettings.mockResolvedValue({
-          application: { allowRatingProjects: true },
+          project: { allowRatingProjects: true },
         } as any);
 
         const rating = Object.assign(new Rating(), {
