@@ -71,7 +71,7 @@ const CriterionEditor = React.memo(
 /**
  * A component to edit criteria for rating projects.
  */
-export const ProjectProjectSettings = () => {
+export const ProjectRatingSettings = () => {
   // Load all criteria and render them
   const [allCriteria, setAllCriteria] = useState<CriterionDTO[]>([]);
   const [settings, setSettings] = useState<Partial<SettingsDTO>>({});
