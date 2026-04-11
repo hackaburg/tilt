@@ -39,11 +39,7 @@ export const Status = () => {
   const acceptanceDeadline = dateToString(
     settings.application.acceptanceDeadline,
   );
-  const confirmSpotUntil = dateToString(
-    settings.application.confirmSpotUntil,
-  );
-
-  console.log(settings.application);
+  const confirmSpotUntil = dateToString(settings.application.confirmSpotUntil);
 
   const isExpired = user == null ? false : isConfirmationExpired(user);
   const isNotAttending = isExpired || user?.declined;
@@ -114,7 +110,10 @@ export const Status = () => {
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between <b>{allowProfileFormFrom} - {allowProfileFormUntil}</b>
+                , any time between{" "}
+                <b>
+                  {allowProfileFormFrom} - {allowProfileFormUntil}
+                </b>
               </Text>
             </>
           )}

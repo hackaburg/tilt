@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import * as React from "react";
 import { useCallback } from "react";
 import type { ApplicationSettingsDTO } from "../../../api/types/dto";
@@ -56,7 +57,7 @@ export const ApplicationSettings = () => {
   );
 
   const handleDateChange = useCallback(
-    (value: string, setter, key: string) => {
+    (value: string, setter: Dispatch<SetStateAction<string>>, key: string) => {
       setter(value);
       const date = new Date(value);
 
@@ -111,11 +112,13 @@ export const ApplicationSettings = () => {
         <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormFrom}
-            onChange={(value) => handleDateChange(
-              value,
-              setAllowProfileFormFrom,
-              "allowProfileFormFrom"
-            )}
+            onChange={(value) =>
+              handleDateChange(
+                value,
+                setAllowProfileFormFrom,
+                "allowProfileFormFrom",
+              )
+            }
             title="Open registration on"
             placeholder="1970-01-01 00:00:00"
           />
@@ -124,11 +127,13 @@ export const ApplicationSettings = () => {
         <FlexRowColumnContainer>
           <TextInput
             value={allowProfileFormUntil}
-            onChange={(value) => handleDateChange(
-              value,
-              setAllowProfileFormUntil,
-              "allowProfileFormUntil"
-            )}
+            onChange={(value) =>
+              handleDateChange(
+                value,
+                setAllowProfileFormUntil,
+                "allowProfileFormUntil",
+              )
+            }
             title="Close registration on"
             placeholder="1970-01-01 00:00:00"
           />
@@ -138,11 +143,13 @@ export const ApplicationSettings = () => {
         <FlexRowColumnContainer>
           <TextInput
             value={acceptanceDeadline}
-            onChange={(value) => handleDateChange(
-              value,
-              setAcceptanceDeadline,
-              "acceptanceDeadline"
-            )}
+            onChange={(value) =>
+              handleDateChange(
+                value,
+                setAcceptanceDeadline,
+                "acceptanceDeadline",
+              )
+            }
             title="When we will accept people"
             placeholder="1970-01-01 00:00:00"
           />
@@ -151,11 +158,9 @@ export const ApplicationSettings = () => {
         <FlexRowColumnContainer>
           <TextInput
             value={confirmSpotUntil}
-            onChange={(value) => handleDateChange(
-              value,
-              setConfirmSpotUntil,
-              "confirmSpotUntil"
-            )}
+            onChange={(value) =>
+              handleDateChange(value, setConfirmSpotUntil, "confirmSpotUntil")
+            }
             title="Until when accepted people need to confirm their spot"
             placeholder="1970-01-01 00:00:00"
           />

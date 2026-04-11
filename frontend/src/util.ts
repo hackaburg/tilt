@@ -18,7 +18,7 @@ export const sleep = (ms: number) =>
  */
 export const dateToString = (date: Date | null) => {
   if (date == null) {
-    return "?"
+    return "?";
   }
 
   return date.toLocaleString("default", {

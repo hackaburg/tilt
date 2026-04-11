@@ -237,9 +237,7 @@ export class RatingService implements IRatingService {
 
     const settings = await this._settings.getSettings();
     if (!settings.project.allowRatingProjects) {
-      throw new ForbiddenError(
-        "Rating is not allowed due to settings",
-      );
+      throw new ForbiddenError("Rating is not allowed due to settings");
     }
 
     const project = await this._projects.findOneBy({ id: rating.project.id });
