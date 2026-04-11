@@ -9,6 +9,7 @@ import {
   EmailTemplate,
   FrontendSettings,
   Settings,
+  ProjectSettings,
 } from "../entities/settings";
 import {
   ConfigurationServiceToken,
@@ -102,6 +103,7 @@ export class SettingsService implements ISettingsService {
     settings.application = this.getDefaultApplicationSettings();
     settings.frontend = this.getDefaultFrontendSettings();
     settings.email = this.getDefaultEmailSettings();
+    settings.project = this.getDefaultProjectSettings();
     return settings;
   }
 

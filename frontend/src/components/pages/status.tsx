@@ -30,7 +30,7 @@ export const Status = () => {
 
   const confirmationDays = Math.floor(settings.application.hoursToConfirm / 24);
   const fillProfileFormFrom = settings.application.fillProfileFormFrom;
-  const fillProfileFormTo = settings.application.fillProfileFormTo;
+  const fillProfileFormUntil = settings.application.fillProfileFormUntil;
   const acceptanceDeadline = settings.application.acceptanceDeadline;
   const confirmSpotUntil = settings.application.confirmSpotUntil;
   const isExpired = user == null ? false : isConfirmationExpired(user);
@@ -102,7 +102,7 @@ export const Status = () => {
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between <b>{fillProfileFormFrom} - {fillProfileFormTo}</b>
+                , any time between <b>{fillProfileFormFrom} - {fillProfileFormUntil}</b>
               </Text>
             </>
           )}

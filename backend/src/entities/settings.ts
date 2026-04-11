@@ -71,7 +71,7 @@ export class Settings {
   public email!: EmailSettings;
   @Type(() => ProjectSettings)
   @Column(() => ProjectSettings)
-  public rating!: ProjectSettings;
+  public project!: ProjectSettings;
 }
 
 /**
