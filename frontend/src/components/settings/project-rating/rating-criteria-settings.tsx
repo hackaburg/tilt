@@ -91,7 +91,7 @@ export const ProjectProjectSettings = () => {
 
   useEffect(() => {
     // Only update if settings are loaded
-    if (settings.rating) {
+    if (settings.project) {
       api.updateSettings(settings as SettingsDTO);
     }
   }, [settings]);
@@ -138,8 +138,8 @@ export const ProjectProjectSettings = () => {
       setSettings((prev) => {
         const changedSettings = {
           ...prev,
-          rating: {
-            ...prev.rating,
+          project: {
+            ...prev.project,
             allowRatingProjects: value,
           },
         };
