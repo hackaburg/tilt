@@ -47,8 +47,8 @@ export class User {
   public declined!: boolean;
   @Column({ default: false })
   public checkedIn!: boolean;
-  @ManyToOne(() => Team, (team) => team.requests, { nullable: true })
+  @ManyToOne(() => Team, (team) => team.requests, { nullable: true, eager: true })
   public teamRequest: Team | null = null;
-  @ManyToOne(() => Team, (team) => team.users, { nullable: true })
+  @ManyToOne(() => Team, (team) => team.users, { nullable: true, eager: true })
   public team: Team | null = null;
 }

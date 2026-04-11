@@ -201,7 +201,8 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
             }}
             id="demo-multiple-name-label"
           >
-            Team Members (can only be changed by the team owner)
+            Team Members TODO show users + users who requested and button to accept them
+            TODO button to leave team
           </InputLabel>
           <div style={{ marginTop: "1.5rem" }}>
             {users.map((singleUser, index) => (

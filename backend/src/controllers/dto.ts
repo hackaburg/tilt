@@ -446,9 +446,9 @@ export class UserDTO {
   @Expose()
   public profileSubmitted!: boolean;
   @Expose()
-  public teamRequest: TeamDTO | null = null;
+  public teamRequest!: TeamDTO | null;
   @Expose()
-  public team: TeamDTO | null = null;
+  public team!: TeamDTO | null;
 }
 
 export class UserTokenResponseDTO {
