@@ -445,6 +445,10 @@ export class UserDTO {
   public checkedIn!: boolean;
   @Expose()
   public profileSubmitted!: boolean;
+  @Expose()
+  public teamRequest: TeamDTO | null = null;
+  @Expose()
+  public team: TeamDTO | null = null;
 }
 
 export class UserTokenResponseDTO {

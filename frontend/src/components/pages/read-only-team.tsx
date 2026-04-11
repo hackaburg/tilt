@@ -35,12 +35,10 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
     [],
   );
 
-  function notInUserList() {
-    return (
-      !team?.users?.some((u) => u.id === user?.id) &&
-      !team?.requests?.some((u) => u.id === user?.id)
-    );
-  }
+  const notInTeam = (
+    user?.team?.id !== team?.id
+    || user?.teamRequest?.id !== team?.id
+  );
 
   React.useEffect(() => {
     if (team) {
@@ -66,7 +64,7 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
           <p>{team?.description}</p>
         </FlexRowContainer>
         <Spacer />
-        {!isTeamOwner && notInUserList() ? (
+        {!isTeamOwner && notInTeam ? (
           <div>
             <Button onClick={sendRequestToJoin} primary={true}>
               Request to join

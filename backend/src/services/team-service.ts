@@ -162,26 +162,26 @@ export class TeamService implements ITeamService {
       throw new Error("You are already part of a team");
     }
 
-    try {
-      if (team.teamImg === "") {
-        team.teamImg =
-          placeholder_img[Math.floor(Math.random() * placeholder_img.length)];
-      }
-
-      const createdTeam = await this._teams.save(team);
-
-      // Every team gets one project by default
-      const project = new Project();
-      project.title = `${team.title}'s Project`;
-      project.description = "";
-      project.team = createdTeam;
-      project.allowRating = false;
-      await this._projects.save(project);
-
-      return createdTeam;
-    } catch (e) {
-      throw e;
+    if (team.teamImg === "") {
+      team.teamImg =
+        placeholder_img[Math.floor(Math.random() * placeholder_img.length)];
     }
+
+    const createdTeam = await this._teams.save(team);
+
+    // TODO test
+    user.team = createdTeam;
+    await this._users.save(user);
+
+    // Every team gets one project by default
+    const project = new Project();
+    project.title = `${team.title}'s Project`;
+    project.description = "";
+    project.team = createdTeam;
+    project.allowRating = false;
+    await this._projects.save(project);
+
+    return createdTeam;
   }
 
   /**

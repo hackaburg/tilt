@@ -5,7 +5,7 @@ import { TextInput, TextInputType } from "../base/text-input";
 import { useApi } from "../../hooks/use-api";
 import { Redirect } from "react-router";
 import { Routes } from "../../routes";
-import { Autocomplete, Box, InputLabel, TextField } from "@mui/material";
+import { Autocomplete, Box, InputLabel, TextField, Alert } from "@mui/material";
 import { MdDeleteOutline } from "react-icons/md";
 import { UserListDto } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
@@ -22,9 +22,6 @@ export const CreateTeam = () => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [teamImg, setTeamImg] = React.useState("");
-  const [users, setUsers] = React.useState([
-    { id: user?.id, name: user?.firstName + " " + user?.lastName },
-  ] as UserListDto[]);
 
   const {
     value: didCreateTeam,
@@ -38,18 +35,13 @@ export const CreateTeam = () => {
           title,
           description,
           teamImg,
-          users.map((u) => u.id),
         );
         return true;
       }
       return false;
     },
-    [title, description, teamImg, users],
+    [title, description, teamImg],
   );
-
-  const { value: allUsers } = useApi(async (api) => api.getAllUsers(), []);
-
-  const userList = allUsers ?? [];
 
   const handleSubmit = React.useCallback((event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -62,20 +54,13 @@ export const CreateTeam = () => {
     return <Redirect to={Routes.Teams} />;
   }
 
-  function addMember() {
-    setUsers([...users, { id: 0, name: "" }]);
-  }
-
-  function onChange(index: number, value: UserListDto) {
-    setUsers((u) => {
-      const newUsers = [...u];
-      newUsers[index] = value;
-      return newUsers;
-    });
-  }
-
-  function alreadyInList(singleUser: UserListDto) {
-    return users.some((u) => u.id === singleUser.id);
+  if (user.team != null) {
+    return (
+      <Page>
+        <PageHeader pageTitle="Create New Team"/>
+        <Alert severity="error">You are already in a team</Alert>
+      </Page>
+    );
   }
 
   return (
@@ -116,80 +101,6 @@ export const CreateTeam = () => {
           onChange={(value) => setTeamImg(value)}
           type={TextInputType.Text}
         />
-        <div style={{ width: "100%" }}>
-          <InputLabel
-            style={{
-              fontWeight: "bold",
-              color: "black",
-              marginBottom: "0.5rem",
-            }}
-            id="demo-multiple-name-label"
-          >
-            Select Team Members
-          </InputLabel>
-          {users.map((singleUser, index) => (
-            <div key={index} style={{ display: "flex" }}>
-              <Autocomplete
-                freeSolo
-                style={{
-                  width: index === 0 ? "100%" : "90%",
-                  marginBottom: "1rem",
-                }}
-                id="combo-box-demo"
-                value={singleUser}
-                options={userList}
-                disabled={index === 0}
-                getOptionLabel={(option) =>
-                  typeof option === "string" ? option : option.name
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={index === 0 ? "Team Owner" : "Users"}
-                    disabled={index === 0}
-                  />
-                )}
-                renderOption={(props, option, _state, ownerState) => (
-                  <Box
-                    sx={{
-                      borderRadius: "8px",
-                      margin: "5px",
-                      padding: "5px",
-                    }}
-                    component="li"
-                    {...props}
-                    aria-disabled={alreadyInList(option)}
-                  >
-                    {ownerState.getOptionLabel(option)}{" "}
-                    {alreadyInList(option) ? " - already a member" : ""}
-                  </Box>
-                )}
-                onChange={(_e, v) => onChange(index, v as UserListDto)}
-              />
-              {index === 0 ? null : (
-                <MdDeleteOutline
-                  size={30}
-                  style={{
-                    marginLeft: "2rem",
-                    marginTop: "0.75rem",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    const newUsers = [...users];
-                    newUsers.splice(index, 1);
-                    setUsers(newUsers);
-                  }}
-                />
-              )}
-            </div>
-          ))}
-
-          <div style={{ marginTop: "1rem", width: "10rem" }}>
-            <Button onClick={addMember} primary={true}>
-              Add member
-            </Button>
-          </div>
-        </div>
       </form>
     </Page>
   );
