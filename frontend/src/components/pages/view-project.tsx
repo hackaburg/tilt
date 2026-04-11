@@ -27,9 +27,8 @@ export const ViewProject = () => {
     api.getProjectByID(projectId).then((project_) => setProject(project_));
   }, []);
 
-  const isTeamMember = project?.team?.id === user?.id;
-
-  console.log("isteammember", project, user)
+  const isTeamMember = project?.team?.id === user?.team?.id;
+  // TODO test that the refreshToken and login endpoints respond with user.team.id
 
   const isAdmin = user?.role === UserRole.Root;
 

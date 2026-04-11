@@ -450,8 +450,12 @@ export class UserDTO {
   @Expose()
   public profileSubmitted!: boolean;
   @Expose()
+  @Type(() => TeamDTO)
+  @ValidateNested()
   public teamRequest!: TeamDTO | null;
   @Expose()
+  @Type(() => TeamDTO)
+  @ValidateNested()
   public team!: TeamDTO | null;
 }
 
@@ -459,7 +463,6 @@ export class UserTokenResponseDTO {
   @Expose()
   public token!: string;
   @Expose()
-  // TODO restore?
   @Type(() => UserDTO)
   @ValidateNested()
   public user!: UserDTO;
