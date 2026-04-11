@@ -72,7 +72,7 @@ export class ProjectService implements IProjectService {
       .map((team) => team.id);
 
     const [settings] = await this._settings.find();
-    const allowRatingProjects = settings.application.allowRatingProjects;
+    const allowRatingProjects = settings.project.allowRatingProjects;
     const isAdmin = user.role === UserRole.Root;
 
     const projects = await this._projects.find();

@@ -91,6 +91,9 @@ export class ApplicationSettingsDTO implements DTO<ApplicationSettings> {
   @IsNumber()
   @Expose()
   public hoursToConfirm!: number;
+}
+
+export class ProjectSettingsDTO implements DTO<ProjectSettings> {
   @IsBoolean()
   @Expose()
   public allowRatingProjects!: boolean;

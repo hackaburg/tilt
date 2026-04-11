@@ -71,7 +71,7 @@ const CriterionEditor = React.memo(
 /**
  * A component to edit criteria for rating projects.
  */
-export const ProjectRatingSettings = () => {
+export const ProjectProjectSettings = () => {
   // Load all criteria and render them
   const [allCriteria, setAllCriteria] = useState<CriterionDTO[]>([]);
   const [settings, setSettings] = useState<Partial<SettingsDTO>>({});
@@ -91,7 +91,7 @@ export const ProjectRatingSettings = () => {
 
   useEffect(() => {
     // Only update if settings are loaded
-    if (settings.application) {
+    if (settings.rating) {
       api.updateSettings(settings as SettingsDTO);
     }
   }, [settings]);
@@ -138,8 +138,8 @@ export const ProjectRatingSettings = () => {
       setSettings((prev) => {
         const changedSettings = {
           ...prev,
-          application: {
-            ...prev.application,
+          rating: {
+            ...prev.rating,
             allowRatingProjects: value,
           },
         };
@@ -155,7 +155,7 @@ export const ProjectRatingSettings = () => {
         <FormControlLabel
           control={
             <Switch
-              checked={settings?.application?.allowRatingProjects}
+              checked={settings?.project?.allowRatingProjects}
               onChange={onSwitchChange}
             />
           }

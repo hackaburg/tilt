@@ -29,6 +29,12 @@ export class ApplicationSettings {
   public allowProfileFormUntil!: Date;
   @Column()
   public hoursToConfirm!: number;
-  @Column({ default: false })
-  public allowRatingProjects!: boolean;
+  @Column()
+  public fillProfileFormFrom: Date;
+  @Column()
+  public fillProfileFormTo: Date;
+  @Column()
+  public acceptanceDeadline: Date;
+  @Column()
+  public confirmSpotUntil: Date;
 }

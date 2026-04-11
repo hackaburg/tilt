@@ -29,6 +29,10 @@ export const Status = () => {
   const { user, updateUser } = useLoginContext();
 
   const confirmationDays = Math.floor(settings.application.hoursToConfirm / 24);
+  const fillProfileFormFrom = settings.application.fillProfileFormFrom;
+  const fillProfileFormTo = settings.application.fillProfileFormTo;
+  const acceptanceDeadline = settings.application.acceptanceDeadline;
+  const confirmSpotUntil = settings.application.confirmSpotUntil;
   const isExpired = user == null ? false : isConfirmationExpired(user);
   const isNotAttending = isExpired || user?.declined;
   const deadline = user?.confirmationExpiresAt;
@@ -98,7 +102,7 @@ export const Status = () => {
                 <InternalLink to={Routes.ProfileForm}>
                   profile form
                 </InternalLink>
-                , any time between <b>01.03.2026 - 31.04.2026</b>
+                , any time between <b>{fillProfileFormFrom} - {fillProfileFormTo}</b>
               </Text>
             </>
           )}
@@ -145,7 +149,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 We will come back to you and send you a acceptance mail until{" "}
-                <b>01.05.2026</b>.
+                <b>{acceptanceDeadline}</b>.
               </Text>
             </>
           )}
@@ -173,7 +177,7 @@ export const Status = () => {
             <>
               <Text style={{ fontSize: "1.15rem" }}>
                 If you got accepted, you need to confirm your spot until{" "}
-                <b>08.05.2026</b>
+                <b>{confirmSpotUntil}</b>
                 {user?.admitted && (
                   <>
                     {" "}

@@ -236,9 +236,9 @@ export class RatingService implements IRatingService {
     }
 
     const settings = await this._settings.getSettings();
-    if (!settings.application.allowRatingProjects) {
+    if (!settings.project.allowRatingProjects) {
       throw new ForbiddenError(
-        "Rating is not allowed due to application settings",
+        "Rating is not allowed due to settings",
       );
     }
 
