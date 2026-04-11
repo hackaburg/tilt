@@ -26,9 +26,6 @@ export class Team {
       return [];
     }
 
-    // TODO does this work?
-    console.log("### users", this.users);
-
     return this.users.map(({ id }) => id);
   }
 
@@ -39,9 +36,6 @@ export class Team {
     if (!this.requests) {
       return [];
     }
-
-    // TODO does this work?
-    console.log("### requests", this.requests);
 
     return this.requests.map(({ id }) => id);
   }

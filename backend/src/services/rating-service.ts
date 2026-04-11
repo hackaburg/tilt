@@ -264,7 +264,14 @@ export class RatingService implements IRatingService {
       throw new ForbiddenError("Rating this project is not allowed");
     }
 
-    const team = await this._teams.findOneBy({ id: project.team.id });
+    const team = await this._teams.findOne(
+      {
+        where: {
+          id: project.team.id
+        },
+        relations: [ "users", "requests" ]
+      },
+    );
     if (!team) {
       throw new NotFoundError("Team not found");
     }

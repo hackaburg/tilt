@@ -99,10 +99,6 @@ export class TeamService implements ITeamService {
       throw new Error("Team description cannot be empty");
     }
 
-    if (team.users.length === 0) {
-      throw new Error("Please add at least one user to the team");
-    }
-
     const originalTeam = await this._teams.findOne({
       where: { id: team.id },
       relations: ["users", "requests"],
@@ -156,15 +152,6 @@ export class TeamService implements ITeamService {
       throw new Error("Team description cannot be empty");
     }
 
-    if (team.users.length === 0) {
-      throw new Error("Please add at least one user to the team");
-    }
-
-    const maxUsers = 8;
-    if (team.users.length > maxUsers) {
-      throw new Error(`A team can have a maximum of ${maxUsers} users`);
-    }
-
     // TODO leaving team should make someone else owner
     // TODO order of team.users not guaranteed anymore I guess,
     //  - add owner and edit all usages of users[0].
@@ -180,7 +167,7 @@ export class TeamService implements ITeamService {
         team.teamImg =
           placeholder_img[Math.floor(Math.random() * placeholder_img.length)];
       }
-      team.requests = [];
+
       const createdTeam = await this._teams.save(team);
 
       // Every team gets one project by default

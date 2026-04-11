@@ -35,16 +35,15 @@ describe("TeamService", () => {
       user.verifyToken = "";
       user.tokenSecret = "";
       user.forgotPasswordToken = "";
+      user.team = null;  // The team will be assigned in createTeam
+      user.teamRequest = null;
       await userRepo.save(user);
 
       const team = new Team();
       team.title = "Team 1";
-      team.users = [user];
       team.teamImg = "";
       team.description = "Team 1 description";
-      team.requests = [];
-
-      await teamService.createTeam(team);
+      await teamService.createTeam(team, user);
 
       const projects = await projectRepo.find();
       expect(projects).toHaveLength(1);

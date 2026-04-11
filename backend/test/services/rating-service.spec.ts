@@ -29,6 +29,7 @@ describe("RatingService", () => {
   let ratingUser: User;
   let teamMember: User;
   let mockTeam: Team;
+  let mockTeam2: Team;
   let mockProject: Project;
   let mockCriterion: Criterion;
 
@@ -48,6 +49,18 @@ describe("RatingService", () => {
     criterionRepo = database.getRepository(Criterion);
     ratingRepo = database.getRepository(Rating);
 
+    mockTeam = new Team();
+    mockTeam.title = "Test Team";
+    mockTeam.teamImg = "";
+    mockTeam.description = "";
+    mockTeam = await teamRepo.save(mockTeam);
+
+    mockTeam2 = new Team();
+    mockTeam2.title = "Test Team 2";
+    mockTeam2.teamImg = "";
+    mockTeam2.description = "";
+    mockTeam2 = await teamRepo.save(mockTeam2);
+
     // A user who will submit ratings (not in the project's team)
     ratingUser = new User();
     ratingUser.firstName = "Rater";
@@ -59,6 +72,7 @@ describe("RatingService", () => {
     ratingUser.tokenSecret = "";
     ratingUser.forgotPasswordToken = "";
     ratingUser.admitted = true;
+    ratingUser.team = mockTeam2;
 
     // A user who is a member of the project team
     teamMember = new User();
@@ -71,16 +85,10 @@ describe("RatingService", () => {
     teamMember.tokenSecret = "";
     teamMember.forgotPasswordToken = "";
     teamMember.admitted = true;
+    teamMember.team = mockTeam;
+    teamMember.teamRequest = null;
 
     [ratingUser, teamMember] = await userRepo.save([ratingUser, teamMember]);
-
-    mockTeam = new Team();
-    mockTeam.title = "Test Team";
-    mockTeam.users = [teamMember.id.toString()];
-    mockTeam.teamImg = "";
-    mockTeam.description = "";
-    mockTeam.requests = [];
-    mockTeam = await teamRepo.save(mockTeam);
 
     mockProject = new Project();
     mockProject.team = mockTeam;
