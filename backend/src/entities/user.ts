@@ -4,8 +4,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from "typeorm";
 import { UserRole } from "./user-role";
+import { Team } from "./team";
 
 @Entity()
 export class User {
@@ -45,4 +47,8 @@ export class User {
   public declined!: boolean;
   @Column({ default: false })
   public checkedIn!: boolean;
+  @ManyToOne(() => Team, (team) => team.requests, { nullable: true, eager: true })
+  public teamRequest: Team | null = null;
+  @ManyToOne(() => Team, (team) => team.users, { nullable: true, eager: true })
+  public team: Team | null = null;
 }

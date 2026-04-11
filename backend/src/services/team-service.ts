@@ -1,3 +1,4 @@
+import { NotFoundError } from "routing-controllers";
 import { Inject, Service, Token } from "typedi";
 import { Repository } from "typeorm";
 import { IService } from ".";
@@ -9,6 +10,7 @@ import {
   convertBetweenEntityAndDTO,
 } from "../controllers/dto";
 import { User } from "../entities/user";
+import { hasSameElements } from "../utils/has-same-elements";
 
 /**
  * An interface describing user handling.
@@ -21,7 +23,7 @@ export interface ITeamService extends IService {
   /**
    * Create new team
    */
-  createTeam(team: Team): Promise<Team>;
+  createTeam(team: Team, user: User): Promise<Team>;
   /**
    *  Update team
    */
@@ -79,7 +81,9 @@ export class TeamService implements ITeamService {
    * Gets all teams.
    */
   public async getAllTeams(): Promise<readonly Team[]> {
-    return this._database.getRepository(Team).find();
+    return this._database.getRepository(Team).find({
+      relations: ["users", "requests"],
+    });
   }
 
   /**
@@ -95,22 +99,26 @@ export class TeamService implements ITeamService {
       throw new Error("Team description cannot be empty");
     }
 
-    if (team.users.length === 0) {
-      throw new Error("Please add at least one user to the team");
+    const originalTeam = await this._teams.findOne({
+      where: { id: team.id },
+      relations: ["users", "requests"],
+    });
+
+    if (!originalTeam) {
+      throw new NotFoundError();
     }
 
-    const originTeam = await this._teams.findOneBy({ id: team.id });
-    const originTeamUsers = originTeam?.users.map((id) => id.toString());
+    const originalTeamUserIds = originalTeam?.userIds();
 
-    if (!originTeamUsers!.includes(user.id.toString())) {
+    if (!originalTeamUserIds!.includes(user.id)) {
       throw new Error("You are not a member of this team");
     }
 
-    if (originTeam?.users.join() !== team.users.join()) {
-      if (originTeam!.users[0].toString() !== user.id.toString()) {
+    if (!hasSameElements(originalTeam.userIds(), team.userIds())) {
+      const isAdmin = originalTeam!.userIds()[0] !== user.id;
+      if (isAdmin) {
         throw new Error("You are not the owner of this team");
       }
-      return this._teams.save(team);
     }
 
     return this._teams.save(team);
@@ -120,7 +128,7 @@ export class TeamService implements ITeamService {
    * Creates a team.
    * @param team The team to create
    */
-  public async createTeam(team: Team): Promise<Team> {
+  public async createTeam(team: Team, user: User): Promise<Team> {
     const placeholder_img = [
       "https://i.imgur.com/CWwOYnr.png",
       "https://i.imgur.com/ZpFOtqy.png",
@@ -144,47 +152,36 @@ export class TeamService implements ITeamService {
       throw new Error("Team description cannot be empty");
     }
 
-    if (team.users.length === 0) {
-      throw new Error("Please add at least one user to the team");
+    // TODO leaving team should make someone else owner
+    // TODO order of team.users not guaranteed anymore I guess,
+    //  - add owner and edit all usages of users[0].
+    //  - a team owner also has to be part of the team, I suppose
+    //  - you can only own one team, just like you can only be part of one team
+
+    if (user.team) {
+      throw new Error("You are already part of a team");
     }
 
-    const maxUsers = 8;
-    if (team.users.length > maxUsers) {
-      throw new Error(`A team can have a maximum of ${maxUsers} users`);
+    if (team.teamImg === "") {
+      team.teamImg =
+        placeholder_img[Math.floor(Math.random() * placeholder_img.length)];
     }
 
-    const userId = team.users[0];
-    const allTeams = await this._database.getRepository(Team).find();
-    const userTeams = allTeams.filter(
-      (t) => t.users[0].toString() === userId.toString(),
-    );
+    const createdTeam = await this._teams.save(team);
 
-    if (userTeams.length >= 5) {
-      throw new Error(
-        "You already have created 5 teams. Please delete one first.",
-      );
-    }
+    // TODO test
+    user.team = createdTeam;
+    await this._users.save(user);
 
-    try {
-      if (team.teamImg === "") {
-        team.teamImg =
-          placeholder_img[Math.floor(Math.random() * placeholder_img.length)];
-      }
-      team.requests = [];
-      const createdTeam = await this._teams.save(team);
+    // Every team gets one project by default
+    const project = new Project();
+    project.title = `${team.title}'s Project`;
+    project.description = "";
+    project.team = createdTeam;
+    project.allowRating = false;
+    await this._projects.save(project);
 
-      // Every team gets one project by default
-      const project = new Project();
-      project.title = `${team.title}'s Project`;
-      project.description = "";
-      project.team = createdTeam;
-      project.allowRating = false;
-      await this._projects.save(project);
-
-      return createdTeam;
-    } catch (e) {
-      throw e;
-    }
+    return createdTeam;
   }
 
   /**
@@ -192,38 +189,16 @@ export class TeamService implements ITeamService {
    * @param id The id of the team
    */
   public async getTeamByID(id: number): Promise<TeamResponseDTO | undefined> {
-    const team = await this._teams.findOneBy({ id });
+    const team = await this._teams.findOne({
+      where: { id },
+      relations: ["users", "requests"],
+    });
 
     if (team == null) {
       return undefined;
-    } else {
-      const teamResponse = convertBetweenEntityAndDTO(team, TeamResponseDTO);
-      const users = await this._users.findByIds(team?.users!);
-      const mappedUsers: any = [];
-
-      teamResponse.users!.forEach((userId) => {
-        users.forEach((user) => {
-          if (user.id.toString() === userId.toString()) {
-            mappedUsers.push({
-              id: user.id,
-              name: `${user.firstName} ${user.lastName[0]}. #${user.id}`,
-            });
-          }
-        });
-      });
-
-      teamResponse.users = mappedUsers;
-
-      const userRequests = await this._users.findByIds(team?.requests!);
-      teamResponse.requests = userRequests.map((user) => {
-        return {
-          id: user.id,
-          name: `${user.firstName} ${user.lastName[0]}. #${user.id}`,
-        };
-      });
-
-      return teamResponse;
     }
+
+    return convertBetweenEntityAndDTO(team, TeamResponseDTO);
   }
 
   /**
@@ -238,19 +213,19 @@ export class TeamService implements ITeamService {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    // TODO team.users and team.requests are string arrays, instead of
-    //  arrays of user entities. Write tests, then use a many-to-many relationship
-    //  instead and don't use toString anymore.
-    const requests = team.requests.map((id) => id.toString());
+    const requests = team.requestUserIds();
 
-    if (requests.indexOf(user.id.toString()) > -1) {
+    if (requests.includes(user.id)) {
       throw new Error(
         `user ${user.id} already requested to join team ${teamId}`,
       );
     }
 
-    team.requests.push(user.id.toString());
-    await this._teams.save(team);
+    await this._users.save({
+      ...user,
+      teamRequest: team,
+    });
+
     return Promise.resolve();
   }
 
@@ -259,9 +234,13 @@ export class TeamService implements ITeamService {
    * @param id The id of the team
    */
   public async deleteTeamByID(id: number, currentUserId: User): Promise<void> {
-    const team = await this._teams.findOneBy({ id });
+    const team = await this._teams.findOne({
+      where: { id },
+      relations: ["users", "requests"],
+    });
 
-    if (team?.users[0].toString() !== currentUserId.id.toString()) {
+    // TODO ownerid
+    if (team?.users[0].id !== currentUserId.id) {
       throw new Error("You are not the owner of this team");
     }
 
@@ -279,29 +258,27 @@ export class TeamService implements ITeamService {
   public async acceptUserToTeam(
     teamId: number,
     userId: number,
-    user: User,
+    owner: User,
   ): Promise<void> {
-    const team = await this._teams.findOneBy({ id: teamId });
+    const team = await this._teams.findOne({
+      where: { id: teamId },
+      relations: ["users", "requests"],
+    });
 
     if (team == null) {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    if (team?.users[0].toString() !== user.id.toString()) {
+    if (team?.users[0].id !== owner.id) {
       throw new Error("You are not the owner of this team");
     }
 
-    const requests = team.requests.map((id) => id.toString());
-
-    if (requests.indexOf(userId.toString()) === -1) {
+    if (!team.requestUserIds().includes(userId)) {
       throw new Error(`user ${userId} did not request to join team ${teamId}`);
     }
 
-    team.requests = team.requests.filter(
-      (id) => id.toString() !== userId.toString(),
-    );
-    team.users.push(userId.toString());
-    await this._teams.save(team);
+    await this._users.update({ id: userId }, { team, teamRequest: null });
+
     return Promise.resolve();
   }
 }

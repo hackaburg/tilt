@@ -7,6 +7,7 @@ import { ISettingsService, SettingsServiceToken } from "./settings-service";
 import { Rating } from "../entities/rating";
 import {
   RatingDTO,
+  ProjectDTO,
   ProjectRatingResultDTO,
   convertBetweenEntityAndDTO,
 } from "../controllers/dto";
@@ -219,7 +220,7 @@ export class RatingService implements IRatingService {
         });
 
       result.push({
-        project,
+        project: convertBetweenEntityAndDTO(project, ProjectDTO),
         averagesPerCriterion,
       });
     }
@@ -235,6 +236,21 @@ export class RatingService implements IRatingService {
       throw new ForbiddenError("Only admitted users may rate projects");
     }
 
+    // TODO only users in a team are allowed to vote. Prevent them from
+    //  leaving their team to vote for themselves. However, they could leave
+    //  their team and create a new one. So they need to be in a team that has
+    //  been created before the rating started. I don't track the timestamp yet...
+    //  Prevent teams from changing once rating starts is the best bet. Use the
+    //  existing switch and prevent changes, add some text to the settings page that
+    //  this is the case to avoid confusion. Still, people could join a second team
+    //  before voting starts, in order to vote for their own project. I don't think
+    //  it is possible to avoid this situation. It needs to be prohibited via the
+    //  rules and it needs a way to check if this happened, but the ratings are
+    //  anonymous. HOORAY. Or we allow people to rate their own project after all.
+    if (user.team == null) {
+      throw new ForbiddenError("You need to be part of a team to vote");
+    }
+
     const settings = await this._settings.getSettings();
     if (!settings.project.allowRatingProjects) {
       throw new ForbiddenError("Rating is not allowed due to settings");
@@ -248,11 +264,16 @@ export class RatingService implements IRatingService {
       throw new ForbiddenError("Rating this project is not allowed");
     }
 
-    const team = await this._teams.findOneBy({ id: project.team.id });
+    const team = await this._teams.findOne({
+      where: {
+        id: project.team.id,
+      },
+      relations: ["users", "requests"],
+    });
     if (!team) {
       throw new NotFoundError("Team not found");
     }
-    if (team.users.includes(user.id.toString())) {
+    if (team.userIds().includes(user.id)) {
       throw new ForbiddenError("You can't rate your own project");
     }
 

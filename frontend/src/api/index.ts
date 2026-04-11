@@ -253,13 +253,11 @@ export class ApiClient {
     title: string,
     description: string,
     teamImg: string,
-    users: number[],
   ): Promise<void> {
     await this.post<ApplicationControllerMethods["createTeam"]>(
       "/application/team",
       {
         title,
-        users,
         teamImg,
         description,
       },

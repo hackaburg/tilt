@@ -26,15 +26,17 @@ export const ReadOnlyProject = ({ project }: { project: ProjectDTO }) => {
     }
   }, [project]);
 
+  const image = project?.image || project?.team.teamImg;
+
   return (
     <Page>
       <PageHeader pageTitle={project?.title} />
       <div>
         <FlexRowContainer>
           <div>
-            {project?.image !== "" ? (
+            {image !== "" ? (
               <RoundedImage
-                src={project?.image}
+                src={image}
                 style={{ width: "200px", height: "200px" }}
               />
             ) : null}

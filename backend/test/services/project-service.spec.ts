@@ -36,7 +36,13 @@ describe("ProjectService", () => {
     teamRepo = database.getRepository(Team);
     projectRepo = database.getRepository(Project);
 
-    // Create admin user
+    mockTeam = new Team();
+    mockTeam.title = "Team 1";
+    mockTeam.teamImg = "";
+    mockTeam.description = "";
+    mockTeam.requests = [];
+    mockTeam = await teamRepo.save(mockTeam);
+
     adminUser = new User();
     adminUser.firstName = "Admin";
     adminUser.lastName = "User";
@@ -47,7 +53,6 @@ describe("ProjectService", () => {
     adminUser.tokenSecret = "";
     adminUser.forgotPasswordToken = "";
 
-    // Create regular users
     regularUser = new User();
     regularUser.firstName = "Regular";
     regularUser.lastName = "User";
@@ -57,6 +62,8 @@ describe("ProjectService", () => {
     regularUser.verifyToken = "";
     regularUser.tokenSecret = "";
     regularUser.forgotPasswordToken = "";
+    regularUser.team = mockTeam;
+    regularUser.teamRequest = null;
 
     userWithoutTeam = new User();
     userWithoutTeam.firstName = "Regular 2";
@@ -67,20 +74,14 @@ describe("ProjectService", () => {
     userWithoutTeam.verifyToken = "";
     userWithoutTeam.tokenSecret = "";
     userWithoutTeam.forgotPasswordToken = "";
+    userWithoutTeam.team = null;
+    userWithoutTeam.teamRequest = null;
 
     [adminUser, regularUser, userWithoutTeam] = await userRepo.save([
       adminUser,
       regularUser,
       userWithoutTeam,
     ]);
-
-    mockTeam = new Team();
-    mockTeam.title = "Team 1";
-    mockTeam.users = [regularUser.id.toString()];
-    mockTeam.teamImg = "";
-    mockTeam.description = "";
-    mockTeam.requests = [];
-    mockTeam = await teamRepo.save(mockTeam);
 
     mockProject = new Project();
     mockProject.team = mockTeam;

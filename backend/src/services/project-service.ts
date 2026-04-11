@@ -5,7 +5,6 @@ import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { Project } from "../entities/project";
 import { Settings } from "../entities/settings";
-import { Team } from "../entities/team";
 import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
 
@@ -46,7 +45,6 @@ export const ProjectServiceToken = new Token<IProjectService>();
 @Service(ProjectServiceToken)
 export class ProjectService implements IProjectService {
   private _projects!: Repository<Project>;
-  private _teams!: Repository<Team>;
   private _settings!: Repository<Settings>;
 
   public constructor(
@@ -58,7 +56,6 @@ export class ProjectService implements IProjectService {
    */
   public async bootstrap(): Promise<void> {
     this._projects = this._database.getRepository(Project);
-    this._teams = this._database.getRepository(Team);
     this._settings = this._database.getRepository(Settings);
   }
 
@@ -66,11 +63,6 @@ export class ProjectService implements IProjectService {
    * Gets all projects that the user may see.
    */
   public async getAllProjects(user: User): Promise<readonly Project[]> {
-    const teams = await this._teams.find();
-    const teamIds = teams
-      .filter((team) => team.users.includes(user.id.toString()))
-      .map((team) => team.id);
-
     const [settings] = await this._settings.find();
     const allowRatingProjects = settings.project.allowRatingProjects;
     const isAdmin = user.role === UserRole.Root;
@@ -80,7 +72,7 @@ export class ProjectService implements IProjectService {
       return (
         isAdmin ||
         (project.allowRating && allowRatingProjects) ||
-        teamIds.includes(project.team.id)
+        project.team.id === user.team?.id
       );
     });
   }
@@ -98,6 +90,7 @@ export class ProjectService implements IProjectService {
 
     await this.checkPermission(existing, user);
 
+    // Only allow updating these fields:
     existing.title = project.title;
     existing.description = project.description;
     existing.image = project.image;
@@ -157,7 +150,7 @@ export class ProjectService implements IProjectService {
     }
 
     const team = project.team;
-    if (!team || !team.users.includes(user.id.toString())) {
+    if (!team || user.team?.id !== team.id) {
       // Tried to access a project belonging to a different team, forbidden
       throw new NotFoundError();
     }
