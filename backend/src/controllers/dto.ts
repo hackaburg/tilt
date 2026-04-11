@@ -569,8 +569,6 @@ export class TeamRequestDTO {
   @Expose()
   public title!: string;
   @Expose()
-  public users?: number[];
-  @Expose()
   public teamImg!: string;
   @Expose()
   public description!: string;

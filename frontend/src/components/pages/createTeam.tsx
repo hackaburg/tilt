@@ -1,13 +1,10 @@
 import * as React from "react";
 import { Page } from "./page";
-import { Button } from "../base/button";
 import { TextInput, TextInputType } from "../base/text-input";
 import { useApi } from "../../hooks/use-api";
 import { Redirect } from "react-router";
 import { Routes } from "../../routes";
-import { Autocomplete, Box, InputLabel, TextField, Alert } from "@mui/material";
-import { MdDeleteOutline } from "react-icons/md";
-import { UserListDto } from "../../api/types/dto";
+import { Alert } from "@mui/material";
 import { useLoginContext } from "../../contexts/login-context";
 import { Message } from "../base/message";
 import { PageHeader } from "../base/page-header";
@@ -31,11 +28,7 @@ export const CreateTeam = () => {
   } = useApi(
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await api.createTeam(
-          title,
-          description,
-          teamImg,
-        );
+        await api.createTeam(title, description, teamImg);
         return true;
       }
       return false;
@@ -49,15 +42,14 @@ export const CreateTeam = () => {
 
   const createTeamDone =
     Boolean(didCreateTeam) && !createTeamInProgress && !createTeamError;
-
   if (createTeamDone) {
     return <Redirect to={Routes.Teams} />;
   }
 
-  if (user.team != null) {
+  if (user?.team != null) {
     return (
       <Page>
-        <PageHeader pageTitle="Create New Team"/>
+        <PageHeader pageTitle="Create New Team" />
         <Alert severity="error">You are already in a team</Alert>
       </Page>
     );

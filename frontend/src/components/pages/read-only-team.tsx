@@ -35,10 +35,8 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
     [],
   );
 
-  const notInTeam = (
-    user?.team?.id !== team?.id
-    || user?.teamRequest?.id !== team?.id
-  );
+  const notInTeam =
+    user?.team?.id !== team?.id || user?.teamRequest?.id !== team?.id;
 
   React.useEffect(() => {
     if (team) {
