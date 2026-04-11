@@ -29,10 +29,14 @@ export const Status = () => {
   const { user, updateUser } = useLoginContext();
 
   const confirmationDays = Math.floor(settings.application.hoursToConfirm / 24);
-  const fillProfileFormFrom = settings.application.fillProfileFormFrom;
-  const fillProfileFormUntil = settings.application.fillProfileFormUntil;
-  const acceptanceDeadline = settings.application.acceptanceDeadline;
-  const confirmSpotUntil = settings.application.confirmSpotUntil;
+  const fillProfileFormFrom = dateToString(
+    settings.application.fillProfileFormFrom,
+  );
+  const fillProfileFormTo = dateToString(settings.application.fillProfileFormTo);
+  const acceptanceDeadline = dateToString(
+    settings.application.acceptanceDeadline,
+  );
+  const confirmSpotUntil = dateToString(settings.application.confirmSpotUntil);
   const isExpired = user == null ? false : isConfirmationExpired(user);
   const isNotAttending = isExpired || user?.declined;
   const deadline = user?.confirmationExpiresAt;

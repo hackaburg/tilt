@@ -138,8 +138,8 @@ export const ProjectProjectSettings = () => {
       setSettings((prev) => {
         const changedSettings = {
           ...prev,
-          rating: {
-            ...prev.rating,
+          project: {
+            ...prev.project,
             allowRatingProjects: value,
           },
         };
