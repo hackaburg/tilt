@@ -32,8 +32,8 @@ export class ApplicationSettings {
   public allowProfileFormUntil!: Date;
   @Column()
   public hoursToConfirm!: number;
-  @Column({ default: new Date() })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   public acceptanceDeadline!: Date;
-  @Column({ default: new Date() })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   public confirmSpotUntil!: Date;
 }
