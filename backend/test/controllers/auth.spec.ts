@@ -1,6 +1,8 @@
 import { hash } from "bcrypt";
 import * as http from "http";
 import * as dotenv from "dotenv";
+import * as path from 'path';
+
 import { createExpressServer, useContainer } from "routing-controllers";
 import { RatingController } from "../../src/controllers/rating-controller";
 import { UsersController } from "../../src/controllers/users-controller";
@@ -20,7 +22,7 @@ import { MockLoggerService } from "../services/mock/mock-logger-service";
 import { MockHaveibeenpwnedService } from "../services/mock/mock-haveibeenpwned-service";
 import { Repository } from "typeorm";
 import { TestDatabaseService } from "../services/mock/mock-database-service";
-import * as path from 'path';
+import { ResponseInterceptor } from "../../src/interceptors/response-interceptor";
 
 /*
  * These tests just check that UserRoles and stuff work as expected.
@@ -73,7 +75,7 @@ describe("Auth", () => {
       lastName: "rootLast",
       email: "root@root.root",
       password: await hash(password, 10),
-      tokenSecret: "secret_token_key_abc123",
+      tokenSecret: "root_secret_token_key_abc123",
       verifyToken: "",
       forgotPasswordToken: "forgot_password_token_def456",
       initialProfileFormSubmittedAt: new Date("2026-02-01"),
@@ -94,7 +96,7 @@ describe("Auth", () => {
       lastName: "regularLast",
       email: "regular@regular.regular",
       password: await hash(password, 10),
-      tokenSecret: "secret_token_key_abc123",
+      tokenSecret: "regular_secret_token_key_abc123",
       verifyToken: "",
       forgotPasswordToken: "forgot_password_token_def456",
       initialProfileFormSubmittedAt: new Date("2026-02-01"),
@@ -166,6 +168,7 @@ describe("Auth", () => {
       currentUserChecker: (action) => httpService.getCurrentUser(action),
       authorizationChecker: (action, roles) =>
         httpService.isActionAuthorized(action, roles),
+      interceptors: [ResponseInterceptor]
     });
 
     server = http.createServer(app);
@@ -215,7 +218,9 @@ describe("Auth", () => {
         user: expect.objectContaining({ id: regularUser.id }),
         criterion: expect.objectContaining({ id: 2 }),
       }),
-      regularUser,
+      expect.objectContaining({
+        id: regularUser.id
+      })
     );
   });
 
@@ -246,8 +251,7 @@ describe("Auth", () => {
         }),
         headers: { "Content-Type": "application/json" },
       });
-      const data = await response.json();
-      console.dir(data, { depth: null })
+      const { data } = await response.json();
       expect(data.user).toHaveProperty("id");
       expect(data.user).toHaveProperty("firstName");
       expect(data.user).toHaveProperty("lastName");
@@ -265,7 +269,7 @@ describe("Auth", () => {
           Authorization: `Bearer ${rootToken}`,
         },
       });
-      const data = await response.json();
+      const { data } = await response.json();
       expect(data.user).toHaveProperty("id");
       expect(data.user).toHaveProperty("firstName");
       expect(data.user).toHaveProperty("lastName");
@@ -283,8 +287,8 @@ describe("Auth", () => {
           Authorization: `Bearer ${rootToken}`,
         },
       });
-      const data = await response.json();
-      console.dir(data, { depth: null })
+      const { data } = await response.json();
+
       expect(data.length).toEqual(2);
       const ids = data.map((user: any) => user.id)
       expect(ids).toContain(rootUser.id)
