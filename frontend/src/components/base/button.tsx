@@ -67,6 +67,7 @@ interface IButtonProps {
   primary?: boolean;
   loading?: boolean;
   color?: string;
+  style?: Record<string, any>;
 }
 
 /**
@@ -79,6 +80,7 @@ export const Button = ({
   primary = false,
   loading = false,
   color,
+  style = {},
 }: IButtonProps) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
@@ -92,7 +94,11 @@ export const Button = ({
   const Component = primary ? PrimaryButton : RegularButton;
 
   return (
-    <Component disabled={disable || loading} onClick={handleClick}>
+    <Component
+      style={style}
+      disabled={disable || loading}
+      onClick={handleClick}
+    >
       {children}
       {loading && (
         <SpinnerContainer>

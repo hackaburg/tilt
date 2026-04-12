@@ -37,31 +37,76 @@ const TeamMemberRequest = ({
   );
 };
 
-const TeamMember = ({ team, user, updateTeamInProgress, onSetOwner, onRemove }) => {
+// TODO types
+const TeamMember = ({
+  team,
+  user,
+  updateTeamInProgress,
+  onSetOwner,
+  onRemove,
+}) => {
+  const { user: loginStateUser } = useLoginContext();
+  const loggedInAsAdmin = loginStateUser?.role === UserRole.Root;
+  const loggedInAsOwner = loginStateUser?.id === team.owner?.id;
+  const editAllowed = loggedInAsAdmin || loggedInAsOwner;
+
+  const memberIsOwner = team.owner?.id === user.id;
+  const thisIsYou = user.id === loginStateUser?.id;
+
+  if (!editAllowed) {
+    return `${user.firstName} ${memberIsOwner ? "(Owner)" : ""}`;
+  }
+
   return (
-    <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
-      <TextField label={user.firstName} disabled style={{ width: "90%" }} />
-      <Button
-        loading={updateTeamInProgress}
-        disable={updateTeamInProgress}
-        onClick={() => {
-          onRemove(user);
-        }}
-        primary={true}
+    <div
+      style={{
+        border: "1px solid grey",
+        borderRadius: "5px",
+        padding: "10px",
+        margin: "1rem auto",
+      }}
+    >
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={1}
+        alignItems={{ xs: "flex-start", sm: "center" }}
+        justifyContent="center"
       >
-        Remove
-      </Button>
-      <Button
-        loading={updateTeamInProgress}
-        disable={updateTeamInProgress || team.owner?.id === user.id}
-        onClick={() => {
-          onSetOwner(user);
-        }}
-        primary={true}
-      >
-        Make Owner
-      </Button>
-    </Stack>
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <span style={{ fontSize: "1.25rem" }}>
+            {user.firstName}
+            {thisIsYou && " (This is you)"}
+          </span>
+        </div>
+        <Button
+          loading={updateTeamInProgress}
+          disable={updateTeamInProgress || !editAllowed}
+          onClick={() => {
+            onRemove(user);
+          }}
+          primary
+        >
+          Remove
+        </Button>
+        {memberIsOwner ? (
+          <Button disable style={{ minWidth: "150px" }}>
+            Owner
+          </Button>
+        ) : (
+          <Button
+            loading={updateTeamInProgress}
+            disable={updateTeamInProgress || !editAllowed}
+            onClick={() => {
+              onSetOwner(user);
+            }}
+            primary
+            style={{ minWidth: "150px" }}
+          >
+            Make Owner
+          </Button>
+        )}
+      </Stack>
+    </div>
   );
 };
 
@@ -90,16 +135,16 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await apiClient.updateTeam({ id, title, description, image });
+        await apiClient.updateTeam({ id, title, description, teamImg: image });
         showNotification("Saved");
         return true;
       }
       return false;
     },
-    [ currentUserId, isTeamOwner, id, title, description, image ],
+    [currentUserId, isTeamOwner, id, title, description, image],
   );
 
-  const acceptUserToTeam = async (userToAccept) => {
+  const acceptUserToTeam = async (userToAccept: UserListDto) => {
     await api.acceptUserToTeam(team.id, userToAccept.id);
     // TODO tell parent to reload team instead of history.go(0)
     history.go(0);
@@ -217,8 +262,6 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
 
         <div style={{ width: "100%", marginTop: "4rem" }}>
           <h1>Team Members</h1>
-          TODO show users + users who requested and button to accept them TODO
-          button to leave team (here and in read-only)
           <div style={{ marginTop: "1.5rem" }}>
             {team.users.map((teamMember) => (
               <React.Fragment key={teamMember.id}>
@@ -245,6 +288,18 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
                 </React.Fragment>
               ))}
           </div>
+          {user && user.team?.id === team.id && (
+            <Button
+              loading={updateTeamInProgress}
+              disable={updateTeamInProgress}
+              onClick={() => {
+                removeUserFromTeam(user);
+              }}
+              primary
+            >
+              Leave Team
+            </Button>
+          )}
         </div>
         {isTeamOwner || isAdmin ? (
           <div style={{ marginTop: "4rem" }}>

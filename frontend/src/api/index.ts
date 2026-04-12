@@ -323,10 +323,7 @@ export class ApiClient {
    * @param teamId The team's id
    * @param userId The user's id
    */
-  public async setOwner(
-    teamId: number,
-    userId: number,
-  ): Promise<void> {
+  public async setOwner(teamId: number, userId: number): Promise<void> {
     await this.put<ApplicationControllerMethods["setOwner"]>(
       `/application/team/${teamId}/owner/${userId}`,
       {} as never,

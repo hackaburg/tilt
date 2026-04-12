@@ -46,4 +46,5 @@ export const api: IMockedApi = {
   getRatingResults: jest.fn(),
   createRating: jest.fn(),
   getUsersRatingsForProject: jest.fn(),
+  setOwner: jest.fn(),
 };

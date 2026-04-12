@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+} from "typeorm";
 import { Longtext } from "./longtext";
 import { User } from "./user";
 
@@ -13,7 +20,10 @@ export class Team {
   public teamImg!: string;
   @Longtext()
   public description!: string;
-  // The owner also has to have their user.team property set to this team
+  // The owner also has to have their user.team property set to this team.
+  // Beware that this is not eagerly loaded, because it will throw recursion depth
+  // errors due to user.team being eagerly loaded already. Add it to "relations"
+  // when doing database queries instead.
   @OneToOne(() => User)
   @JoinColumn()
   public owner!: User;

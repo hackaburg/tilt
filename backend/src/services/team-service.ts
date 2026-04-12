@@ -59,11 +59,7 @@ export interface ITeamService extends IService {
   /**
    * Set the owner of a team
    */
-  setOwner(
-    teamId: number,
-    userId: number,
-    requestedBy: User,
-  ): Promise<void>;
+  setOwner(teamId: number, userId: number, requestedBy: User): Promise<void>;
 }
 
 /**
@@ -98,7 +94,7 @@ export class TeamService implements ITeamService {
    */
   public async getAllTeams(): Promise<readonly Team[]> {
     return this._database.getRepository(Team).find({
-      relations: ["users", "requests"],
+      relations: ["users", "requests", "owner"],
     });
   }
 
@@ -117,7 +113,7 @@ export class TeamService implements ITeamService {
 
     const originalTeam = await this._teams.findOne({
       where: { id: team.id },
-      relations: ["users", "requests"],
+      relations: ["users", "requests", "owner"],
     });
 
     if (!originalTeam) {
@@ -132,7 +128,7 @@ export class TeamService implements ITeamService {
 
     if (team.owner?.id !== originalTeam.owner?.id) {
       // TODO test
-      throw new Error("Use the special http endpoint to change the owner")
+      throw new Error("Use the special http endpoint to change the owner");
     }
 
     return this._teams.save(team);
@@ -207,7 +203,7 @@ export class TeamService implements ITeamService {
   public async getTeamByID(id: number): Promise<TeamResponseDTO | undefined> {
     const team = await this._teams.findOne({
       where: { id },
-      relations: ["users", "requests"],
+      relations: ["users", "requests", "owner"],
     });
 
     if (team == null) {
@@ -252,7 +248,7 @@ export class TeamService implements ITeamService {
   public async deleteTeamByID(id: number, currentUserId: User): Promise<void> {
     const team = await this._teams.findOne({
       where: { id },
-      relations: ["users", "requests"],
+      relations: ["users", "requests", "owner"],
     });
 
     if (team?.owner.id !== currentUserId.id) {
@@ -277,7 +273,7 @@ export class TeamService implements ITeamService {
   ): Promise<void> {
     const team = await this._teams.findOne({
       where: { id: teamId },
-      relations: ["users", "requests"],
+      relations: ["users", "requests", "owner"],
     });
 
     if (team == null) {
@@ -310,14 +306,16 @@ export class TeamService implements ITeamService {
   ): Promise<void> {
     const team = await this._teams.findOne({
       where: { id: teamId },
-      relations: ["users", "requests"],
+      relations: ["users", "requests", "owner"],
     });
 
     if (team == null) {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    if (team.owner?.id !== requestedBy.id && userId !== requestedBy.id) {
+    const isOwner = team.owner?.id === requestedBy.id;
+    const isAdmin = requestedBy.role === UserRole.Root;
+    if (!isOwner && !isAdmin && userId !== requestedBy.id) {
       // TODO test removing oneself should work
       throw new Error("Only the owner may remove other users from a team");
     }
@@ -347,7 +345,7 @@ export class TeamService implements ITeamService {
   ): Promise<void> {
     const team = await this._teams.findOne({
       where: { id: teamId },
-      relations: ["users", "requests"],
+      relations: ["users", "requests", "owner"],
     });
 
     if (team == null) {
