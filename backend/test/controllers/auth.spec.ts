@@ -69,7 +69,7 @@ describe("Auth", () => {
     } as any);
 
     const app = createExpressServer({
-      controllers: [RatingController],
+      controllers: [RatingController, UsersController],
       routePrefix: "/api",
       currentUserChecker: (action) => httpService.getCurrentUser(action),
       authorizationChecker: (action, roles) =>
@@ -147,13 +147,16 @@ describe("Auth", () => {
 
   describe("user controller", () => {
     it("/login should not expose sensitive data", async () => {
-      const response = await fetch(`${baseUrl}/user/login`, {
+      const response = await fetch(`${baseUrl}/api/user/login`, {
         method: "POST",
-        body: JSON.stringify({ username: "test", password: "test" }),
+        body: JSON.stringify({ data: { email: "test", password: "test" } }),
         headers: { "Content-Type": "application/json" },
       });
-      console.log(await response.text());
       const data = await response.json();
+      console.log(data)
+      expect(data).toHaveProperty("id")
+      expect(data).toHaveProperty("firstName")
+      expect(data).toHaveProperty("lastName")
       expect(data).not.toHaveProperty("password");
       expect(data).not.toHaveProperty("tokenSecret");
       expect(data).not.toHaveProperty("verifyToken");
@@ -161,9 +164,12 @@ describe("Auth", () => {
     });
 
     it("/refreshtoken should not expose sensitive data", async () => {
-      const response = await fetch(`${baseUrl}/user/refreshtoken`, {
+      const response = await fetch(`${baseUrl}/api/user/refreshtoken`, {
         method: "POST",
-        headers: { Authorization: "Bearer your_jwt_token" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer root-token",
+        },
       });
       const data = await response.json();
       expect(data).not.toHaveProperty("tokenSecret");
@@ -172,12 +178,19 @@ describe("Auth", () => {
     });
 
     it("/list should not expose sensitive data", async () => {
-      const response = await fetch(`${baseUrl}/user/list`, {
+      const response = await fetch(`${baseUrl}/api/user/list`, {
         method: "GET",
-        headers: { Authorization: "Bearer your_jwt_token" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer root-token",
+        },
       });
       const data = await response.json();
-      for (const user of data) {
+      console.log(data)
+      for (const user of data.data) {
+        expect(user).toHaveProperty("id")
+        expect(user).toHaveProperty("firstName")
+        expect(user).toHaveProperty("lastName")
         expect(user).not.toHaveProperty("password");
         expect(user).not.toHaveProperty("tokenSecret");
         expect(user).not.toHaveProperty("verifyToken");
