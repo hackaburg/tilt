@@ -109,6 +109,95 @@ describe("RatingService", () => {
     await ratingService.bootstrap();
   });
 
+  describe("getUsersRatingsForProject", () => {
+    it("returns ratings for the specified project and user", async () => {
+      expect.assertions(2);
+
+      settingsService.mocks.getSettings.mockResolvedValue({
+        project: { allowRatingProjects: true },
+      } as any);
+
+      const rating = Object.assign(new Rating(), {
+        project: mockProject,
+        user: ratingUser,
+        criterion: mockCriterion,
+        rating: 4,
+      });
+      await ratingService.upsertRating(rating, ratingUser);
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(1);
+      expect(results[0].rating).toBe(4);
+    });
+
+    it("returns an empty list when no ratings exist for the project", async () => {
+      expect.assertions(1);
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(0);
+    });
+
+    it("does not return ratings belonging to other users", async () => {
+      expect.assertions(1);
+
+      await ratingRepo.save(
+        Object.assign(new Rating(), {
+          project: mockProject,
+          user: teamMember,
+          criterion: mockCriterion,
+          rating: 3,
+        }),
+      );
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(0);
+    });
+
+    it("does not return ratings for other projects", async () => {
+      expect.assertions(1);
+
+      settingsService.mocks.getSettings.mockResolvedValue({
+        project: { allowRatingProjects: true },
+      } as any);
+
+      const otherProject = await projectRepo.save(
+        Object.assign(new Project(), {
+          team: mockTeam,
+          title: "Other Project",
+          description: "",
+          allowRating: true,
+        }),
+      );
+
+      const rating = Object.assign(new Rating(), {
+        project: otherProject,
+        user: ratingUser,
+        criterion: mockCriterion,
+        rating: 3,
+      });
+      await ratingService.upsertRating(rating, ratingUser);
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(0);
+    });
+  });
+
   describe("checkPermission", () => {
     describe("via upsertRating", () => {
       it("throws ForbiddenError if user is not admitted", async () => {
