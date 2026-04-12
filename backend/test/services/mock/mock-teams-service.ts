@@ -16,5 +16,6 @@ export const MockTeamsService = jest.fn(
       updateTeam: jest.fn(),
       acceptUserToTeam: jest.fn(),
       removeUserFromTeam: jest.fn(),
+      setOwner: jest.fn(),
     }),
 );
