@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import * as http from "http";
 import * as dotenv from "dotenv";
-import * as path from 'path';
+import * as path from "path";
 
 import { createExpressServer, useContainer } from "routing-controllers";
 import { RatingController } from "../../src/controllers/rating-controller";
@@ -11,7 +11,10 @@ import { UserRole } from "../../src/entities/user-role";
 import { HttpService } from "../../src/services/http-service";
 import { IRatingService } from "../../src/services/rating-service";
 import { TokenService, ITokenService } from "../../src/services/token-service";
-import { ConfigurationService, IConfigurationService } from "../../src/services/config-service";
+import {
+  ConfigurationService,
+  IConfigurationService,
+} from "../../src/services/config-service";
 import { UserService, IUserService } from "../../src/services/user-service";
 import { IApplicationService } from "../../src/services/application-service";
 import { MockedService } from "../services/mock";
@@ -108,7 +111,7 @@ describe("Auth", () => {
       checkedIn: true,
     });
 
-    dotenv.config({ path: path.resolve(__dirname, '../../.env.example') });
+    dotenv.config({ path: path.resolve(__dirname, "../../.env.example") });
 
     database = new TestDatabaseService();
     await database.bootstrap();
@@ -132,8 +135,8 @@ describe("Auth", () => {
     await configurationService.bootstrap();
     await userService.bootstrap();
 
-    rootToken = tokenService.sign({ secret: rootUser.tokenSecret })
-    regularUserToken = tokenService.sign({ secret: regularUser.tokenSecret })
+    rootToken = tokenService.sign({ secret: rootUser.tokenSecret });
+    regularUserToken = tokenService.sign({ secret: regularUser.tokenSecret });
 
     // jest
     //   .spyOn(userService, 'findUserWithCredentials')
@@ -141,11 +144,7 @@ describe("Auth", () => {
     //     return emailMap[email]
     //   });
 
-    const httpService = new HttpService(
-      null as any,
-      null as any,
-      userService,
-    );
+    const httpService = new HttpService(null as any, null as any, userService);
 
     useContainer({
       get(target: Function) {
@@ -153,10 +152,7 @@ describe("Auth", () => {
           return new RatingController(ratingService.instance);
         }
         if (target === UsersController) {
-          return new UsersController(
-            userService,
-            applicationService.instance,
-          );
+          return new UsersController(userService, applicationService.instance);
         }
         return new (target as any)();
       },
@@ -168,7 +164,7 @@ describe("Auth", () => {
       currentUserChecker: (action) => httpService.getCurrentUser(action),
       authorizationChecker: (action, roles) =>
         httpService.isActionAuthorized(action, roles),
-      interceptors: [ResponseInterceptor]
+      interceptors: [ResponseInterceptor],
     });
 
     server = http.createServer(app);
@@ -219,8 +215,8 @@ describe("Auth", () => {
         criterion: expect.objectContaining({ id: 2 }),
       }),
       expect.objectContaining({
-        id: regularUser.id
-      })
+        id: regularUser.id,
+      }),
     );
   });
 
@@ -290,9 +286,9 @@ describe("Auth", () => {
       const { data } = await response.json();
 
       expect(data.length).toEqual(2);
-      const ids = data.map((user: any) => user.id)
-      expect(ids).toContain(rootUser.id)
-      expect(ids).toContain(regularUser.id)
+      const ids = data.map((user: any) => user.id);
+      expect(ids).toContain(rootUser.id);
+      expect(ids).toContain(regularUser.id);
 
       for (const user of data) {
         expect(user).toHaveProperty("id");
