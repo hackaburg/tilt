@@ -14,6 +14,9 @@ import { ISettingsService } from "../../src/services/settings-service";
 import { MockedService } from "./mock";
 import { MockSettingsService } from "./mock/mock-settings-service";
 import { TestDatabaseService } from "./mock/mock-database-service";
+import { validate } from "class-validator";
+import { plainToClass } from "class-transformer";
+import { RatingDTO } from "../../src/controllers/dto";
 
 describe("RatingService", () => {
   let database: TestDatabaseService;
@@ -370,6 +373,48 @@ describe("RatingService", () => {
       const resultB = results.find((r) => r.project.id === projectB.id)!;
       expect(resultB).toBeDefined();
       expect(resultB.averagesPerCriterion[0].average).toEqual(4);
+    });
+  });
+
+  describe("rating value validation", () => {
+    it("rejects a rating of 0", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 0 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors.length).toBeGreaterThan(0);
+    });
+
+    it("rejects a rating of 6", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 6 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors.length).toBeGreaterThan(0);
+    });
+
+    it("accepts a rating of 1", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 1 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors).toHaveLength(0);
+    });
+
+    it("accepts a rating of 5", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 5 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors).toHaveLength(0);
     });
   });
 });

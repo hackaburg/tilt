@@ -12,7 +12,11 @@ interface StackWithBorderProps {
  * with multiple of this on top of each other, like a table.
  * Maybe these components should use tables instead, idk. It looks nice.
  */
-export const StackWithBorder = ({ text, children, tooltip }: StackWithBorderProps) => {
+export const StackWithBorder = ({
+  text,
+  children,
+  tooltip,
+}: StackWithBorderProps) => {
   return (
     <div
       style={{
