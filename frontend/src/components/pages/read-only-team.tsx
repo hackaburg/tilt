@@ -62,29 +62,20 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
           <p>{team?.description}</p>
         </FlexRowContainer>
         <Spacer />
-        {!isTeamOwner && notInTeam ? (
-          <div>
-            <Button onClick={sendRequestToJoin} primary={true}>
-              Request to join
-            </Button>
-          </div>
-        ) : null}
-
-        <div style={{ width: "100%", marginTop: "1rem" }}>
-          <h3
-            style={{
-              fontWeight: "bold",
-              color: "black",
-              marginBottom: "0.5rem",
-            }}
-            id="demo-multiple-name-label"
-          >
-            Team Members
-          </h3>
+        <div style={{ width: "100%", marginTop: "4rem" }}>
+          <h2>Team Members</h2>
+          {!isTeamOwner && notInTeam ? (
+            <div>
+              <Button onClick={sendRequestToJoin} primary={true}>
+                Request to join
+              </Button>
+            </div>
+          ) : null}
           <div style={{ marginTop: "1.5rem" }}>
             {team?.users?.map((singleUser, index) => (
               <div key={index} style={{ display: "flex" }}>
-                {singleUser.firstName}
+                {singleUser.firstName}{" "}
+                {singleUser.id === team.owner?.id && " (Owner)"}
               </div>
             ))}
           </div>
