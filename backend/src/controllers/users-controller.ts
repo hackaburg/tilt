@@ -148,6 +148,7 @@ export class UsersController {
     const response = new UserTokenResponseDTO();
     response.token = this._users.generateLoginToken(user);
     response.user = convertBetweenEntityAndDTO(user, UserDTO);
+    // TODO test password not in the response
     return response;
   }
 
@@ -163,7 +164,7 @@ export class UsersController {
     const response = new UserTokenResponseDTO();
     response.token = this._users.generateLoginToken(user);
     response.user = convertBetweenEntityAndDTO(user, UserDTO);
-    console.log("????", response.user.team)
+    // TODO test password not in the response
     return response;
   }
 

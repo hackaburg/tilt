@@ -411,6 +411,7 @@ export const Admission = () => {
         checkedIn,
       } = user;
 
+      // TODO teams is undefined
       const teamNumber = teams.length;
       const teamNames = teams;
 

@@ -38,7 +38,15 @@ export interface ITeamService extends IService {
   acceptUserToTeam(
     teamId: number,
     userId: number,
-    currentUserId: User,
+    requestedBy: User,
+  ): Promise<void>;
+  /**
+   * Remove user from team
+   */
+  removeUserFromTeam(
+    teamId: number,
+    userId: number,
+    requestedBy: User,
   ): Promise<void>;
   /**
    * Delete single team by id
@@ -258,7 +266,7 @@ export class TeamService implements ITeamService {
   public async acceptUserToTeam(
     teamId: number,
     userId: number,
-    owner: User,
+    requestedBy: User,
   ): Promise<void> {
     const team = await this._teams.findOne({
       where: { id: teamId },
@@ -269,7 +277,9 @@ export class TeamService implements ITeamService {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    if (team?.users[0].id !== owner.id) {
+    // TODO ownerId
+    console.log(team)
+    if (team?.users[0].id !== requestedBy.id) {
       throw new Error("You are not the owner of this team");
     }
 
@@ -278,6 +288,37 @@ export class TeamService implements ITeamService {
     }
 
     await this._users.update({ id: userId }, { team, teamRequest: null });
+
+    return Promise.resolve();
+  }
+
+  /**
+   * Remove a user from a team
+   */
+  public async removeUserFromTeam(
+    teamId: number,
+    userId: number,
+    requestedBy: User,
+  ): Promise<void> {
+    const team = await this._teams.findOne({
+      where: { id: teamId },
+      relations: ["users", "requests"],
+    });
+
+    if (team == null) {
+      throw new Error(`no team with id ${teamId}`);
+    }
+
+    // TODO ownerId
+    if (team?.users[0].id !== requestedBy.id) {
+      throw new Error("You are not the owner of this team");
+    }
+
+    if (!team.userIds().includes(userId)) {
+      throw new Error(`user ${userId} is not part of the team ${teamId}`);
+    }
+
+    await this._users.update({ id: userId }, { team: null, teamRequest: null });
 
     return Promise.resolve();
   }

@@ -316,6 +316,24 @@ export class ApplicationController {
   }
 
   /**
+   * Remove a user from a team.
+   * @param teamId The id of the team
+   * @param userId The id of the user
+   */
+  @Delete("/team/:teamId/members/:userId")
+  @Authorized(UserRole.User)
+  public async removeUserFromTeam(
+    @Param("teamId") teamId: number,
+    @Param("userId") userId: number,
+    @CurrentUser() user: User,
+  ): Promise<SuccessResponseDTO> {
+    await this._teams.removeUserFromTeam(teamId, userId, user);
+    const response = new SuccessResponseDTO();
+    response.success = true;
+    return response;
+  }
+
+  /**
    * Get team by id.
    * @param id The id of the team
    */

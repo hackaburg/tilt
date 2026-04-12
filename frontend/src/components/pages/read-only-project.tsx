@@ -6,11 +6,14 @@ import { api } from "../../hooks/use-api";
 import { PageHeader } from "../base/page-header";
 import { RatingForm } from "./rating-form";
 import { CriterionDTO, RatingDTO, ProjectDTO } from "../../api/types/dto";
+import { useLoginContext } from "../../contexts/login-context";
 
 /**
  * A settings dashboard to configure all parts of tilt.
  */
 export const ReadOnlyProject = ({ project }: { project: ProjectDTO }) => {
+  const { user } = useLoginContext();
+
   const [criteria, setCriteria] = React.useState<CriterionDTO[]>([]);
   const [ratings, setRatings] = React.useState<RatingDTO[]>([]);
 
@@ -45,18 +48,20 @@ export const ReadOnlyProject = ({ project }: { project: ProjectDTO }) => {
           <p>{project?.description}</p>
         </FlexRowContainer>
       </div>
-      <div>
-        <h2 style={{ marginTop: "4rem" }}>Rate this Project</h2>
-        Hover criteria for more information. Rate a criterion high, if you think
-        the project did well in this regard.
-        {criteria.map((criterion) => (
-          <RatingForm
-            rating={ratings.find((r) => r.criterion.id === criterion.id)}
-            criterion={criterion}
-            project={project}
-          />
-        ))}
-      </div>
+      {user.admitted && (
+        <div>
+          <h2 style={{ marginTop: "4rem" }}>Rate this Project</h2>
+          Hover criteria for more information. Rate a criterion high, if you think
+          the project did well in this regard.
+          {criteria.map((criterion) => (
+            <RatingForm
+              rating={ratings.find((r) => r.criterion.id === criterion.id)}
+              criterion={criterion}
+              project={project}
+            />
+          ))}
+        </div>
+      )}
     </Page>
   );
 };

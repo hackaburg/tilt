@@ -17,7 +17,9 @@ const RegularButton = styled.button`
 
   font-size: 0.8rem;
   font-weight: bold;
+  white-space: nowrap;
   text-transform: uppercase;
+
   cursor: pointer;
 
   background: #333;

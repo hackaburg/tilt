@@ -316,6 +316,18 @@ export class ApiClient {
   }
 
   /**
+   * Remove a user from a team.
+   * @param teamId The team's id
+   * @param userId The user's id
+   */
+  public async removeUserFromTeam(teamId: number, userId: number): Promise<void> {
+    await this.delete<ApplicationControllerMethods["acceptUserToTeam"]>(
+      `/application/team/${teamId}/members/${userId}`,
+      {} as never,
+    );
+  }
+
+  /**
    * Delete a team by id
    * @param id The team's id
    */
