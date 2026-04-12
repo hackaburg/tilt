@@ -554,6 +554,9 @@ export class TeamDTO {
   public title!: string;
   @Expose()
   @Type(() => UserDTO)
+  public owner!: UserDTO;
+  @Expose()
+  @Type(() => UserDTO)
   @ValidateNested()
   public users!: UserDTO[];
   @Expose()
@@ -575,6 +578,9 @@ export class TeamResponseDTO {
   public teamImg!: string;
   @Expose()
   public description!: string;
+  @Expose()
+  @Type(() => UserResponseDto)
+  public owner!: UserResponseDto;
   @Expose()
   @Type(() => UserResponseDto)
   public users!: UserResponseDto[];

@@ -266,26 +266,16 @@ export class ApiClient {
 
   /**
    * Update new team
-   * @param id The team's id
-   * @param title The team's title
-   * @param description The team's description
-   * @param teamImg The team's image
-   * @param users The team's users
+   * @param tean,id The team's id
+   * @param team.title The team's title
+   * @param team.description The team's description
+   * @param team.teamImg The team's image
+   * @param team.owner The team's owner
    */
-  public async updateTeam(
-    id: number,
-    title: string,
-    description: string,
-    teamImg: string,
-  ): Promise<void> {
+  public async updateTeam(team: TeamDTO): Promise<void> {
     await this.put<ApplicationControllerMethods["updateTeam"]>(
       "/application/team",
-      {
-        id,
-        title,
-        teamImg,
-        description,
-      },
+      team,
     );
   }
 
@@ -322,8 +312,23 @@ export class ApiClient {
     teamId: number,
     userId: number,
   ): Promise<void> {
-    await this.delete<ApplicationControllerMethods["acceptUserToTeam"]>(
+    await this.delete<ApplicationControllerMethods["removeUserFromTeam"]>(
       `/application/team/${teamId}/members/${userId}`,
+      {} as never,
+    );
+  }
+
+  /**
+   * Set the owner of a team.
+   * @param teamId The team's id
+   * @param userId The user's id
+   */
+  public async setOwner(
+    teamId: number,
+    userId: number,
+  ): Promise<void> {
+    await this.put<ApplicationControllerMethods["setOwner"]>(
+      `/application/team/${teamId}/owner/${userId}`,
       {} as never,
     );
   }

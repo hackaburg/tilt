@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import { Longtext } from "./longtext";
 import { User } from "./user";
 
@@ -13,6 +13,10 @@ export class Team {
   public teamImg!: string;
   @Longtext()
   public description!: string;
+  // The owner also has to have their user.team property set to this team
+  @OneToOne(() => User)
+  @JoinColumn()
+  public owner!: User;
   @OneToMany(() => User, (user) => user.teamRequest)
   public requests!: User[];
   @OneToMany(() => User, (user) => user.team)

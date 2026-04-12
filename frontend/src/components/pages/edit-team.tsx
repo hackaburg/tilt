@@ -37,7 +37,7 @@ const TeamMemberRequest = ({
   );
 };
 
-const TeamMember = ({ user, updateTeamInProgress, onRemove }) => {
+const TeamMember = ({ team, user, updateTeamInProgress, onSetOwner, onRemove }) => {
   return (
     <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
       <TextField label={user.firstName} disabled style={{ width: "90%" }} />
@@ -50,6 +50,16 @@ const TeamMember = ({ user, updateTeamInProgress, onRemove }) => {
         primary={true}
       >
         Remove
+      </Button>
+      <Button
+        loading={updateTeamInProgress}
+        disable={updateTeamInProgress || team.owner?.id === user.id}
+        onClick={() => {
+          onSetOwner(user);
+        }}
+        primary={true}
+      >
+        Make Owner
       </Button>
     </Stack>
   );
@@ -71,8 +81,6 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [image, setImage] = React.useState("");
-  const [users, setUsers] = React.useState([] as UserListDto[]);
-  const [requests, setRequests] = React.useState([] as UserListDto[]);
 
   const {
     value: didUpdateTeam,
@@ -82,22 +90,13 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await apiClient.updateTeam(id, title, description, image);
+        await apiClient.updateTeam({ id, title, description, image });
         showNotification("Saved");
         return true;
       }
       return false;
     },
-    [
-      currentUserId,
-      isTeamOwner,
-      id,
-      title,
-      description,
-      image,
-      users,
-      requests,
-    ],
+    [ currentUserId, isTeamOwner, id, title, description, image ],
   );
 
   const acceptUserToTeam = async (userToAccept) => {
@@ -112,6 +111,13 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
     // TODO tell parent to reload team
     history.go(0);
     showNotification("Removed user");
+  };
+
+  const onSetOwner = async (newOwner: UserListDto) => {
+    await api.setOwner(team.id, newOwner.id);
+    // TODO tell parent to reload team
+    history.go(0);
+    showNotification("Changed owner");
   };
 
   const {
@@ -155,8 +161,6 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
       setTitle(team.title);
       setDescription(team.description);
       setImage(team.teamImg);
-      setUsers(team.users!);
-      setRequests(team.requests!);
       setIsTeamOwner(team.users.length > 0 && user?.id === team.users![0].id);
       setIsTeamMember(team.users.some((u) => u.id === user?.id));
     }
@@ -219,9 +223,11 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
             {team.users.map((teamMember) => (
               <React.Fragment key={teamMember.id}>
                 <TeamMember
+                  team={team}
                   user={teamMember}
                   onRemove={removeUserFromTeam}
                   updateTeamInProgress={updateTeamInProgress}
+                  onSetOwner={onSetOwner}
                 />
                 <Spacer />
               </React.Fragment>
@@ -241,7 +247,7 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
           </div>
         </div>
         {isTeamOwner || isAdmin ? (
-          <div style={{ marginTop: "2rem" }}>
+          <div style={{ marginTop: "4rem" }}>
             <Card variant="outlined" style={{ background: "#ffcdd2" }}>
               <CardContent>
                 <Subheading text={"Danger Zone"} />

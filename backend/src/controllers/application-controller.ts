@@ -334,6 +334,24 @@ export class ApplicationController {
   }
 
   /**
+   * Set the owner of a team
+   * @param teamId The id of the team
+   * @param userId The id of the new owner
+   */
+  @Put("/team/:teamId/owner/:userId")
+  @Authorized(UserRole.User)
+  public async setOwner(
+    @Param("teamId") teamId: number,
+    @Param("userId") userId: number,
+    @CurrentUser() user: User,
+  ): Promise<SuccessResponseDTO> {
+    await this._teams.setOwner(teamId, userId, user);
+    const response = new SuccessResponseDTO();
+    response.success = true;
+    return response;
+  }
+
+  /**
    * Get team by id.
    * @param id The id of the team
    */

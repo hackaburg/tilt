@@ -5,12 +5,12 @@ import { IService } from ".";
 import { DatabaseServiceToken, IDatabaseService } from "./database-service";
 import { Team } from "../entities/team";
 import { Project } from "../entities/project";
+import { UserRole } from "../entities/user-role";
 import {
   TeamResponseDTO,
   convertBetweenEntityAndDTO,
 } from "../controllers/dto";
 import { User } from "../entities/user";
-import { hasSameElements } from "../utils/has-same-elements";
 
 /**
  * An interface describing user handling.
@@ -56,6 +56,14 @@ export interface ITeamService extends IService {
    * Request to join a team
    */
   requestToJoinTeam(teamId: number, user: User): Promise<void>;
+  /**
+   * Set the owner of a team
+   */
+  setOwner(
+    teamId: number,
+    userId: number,
+    requestedBy: User,
+  ): Promise<void>;
 }
 
 /**
@@ -122,11 +130,9 @@ export class TeamService implements ITeamService {
       throw new Error("You are not a member of this team");
     }
 
-    if (!hasSameElements(originalTeam.userIds(), team.userIds())) {
-      const isAdmin = originalTeam!.userIds()[0] !== user.id;
-      if (isAdmin) {
-        throw new Error("You are not the owner of this team");
-      }
+    if (team.owner?.id !== originalTeam.owner?.id) {
+      // TODO test
+      throw new Error("Use the special http endpoint to change the owner")
     }
 
     return this._teams.save(team);
@@ -135,6 +141,7 @@ export class TeamService implements ITeamService {
   /**
    * Creates a team.
    * @param team The team to create
+   * @param user The user who wants to create a team
    */
   public async createTeam(team: Team, user: User): Promise<Team> {
     const placeholder_img = [
@@ -162,8 +169,6 @@ export class TeamService implements ITeamService {
 
     // TODO leaving team should make someone else owner
     // TODO order of team.users not guaranteed anymore I guess,
-    //  - add owner and edit all usages of users[0].
-    //  - a team owner also has to be part of the team, I suppose
     //  - you can only own one team, just like you can only be part of one team
 
     if (user.team) {
@@ -171,9 +176,12 @@ export class TeamService implements ITeamService {
     }
 
     if (team.teamImg === "") {
-      team.teamImg =
-        placeholder_img[Math.floor(Math.random() * placeholder_img.length)];
+      const randomIndex = Math.floor(Math.random() * placeholder_img.length);
+      team.teamImg = placeholder_img[randomIndex];
     }
+
+    // TODO test
+    team.owner = user;
 
     const createdTeam = await this._teams.save(team);
 
@@ -247,8 +255,7 @@ export class TeamService implements ITeamService {
       relations: ["users", "requests"],
     });
 
-    // TODO ownerid
-    if (team?.users[0].id !== currentUserId.id) {
+    if (team?.owner.id !== currentUserId.id) {
       throw new Error("You are not the owner of this team");
     }
 
@@ -277,8 +284,10 @@ export class TeamService implements ITeamService {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    // TODO ownerId
-    if (team?.users[0].id !== requestedBy.id) {
+    const isAdmin = requestedBy.role === UserRole.Root;
+    const isOwner = team.owner?.id === requestedBy.id;
+    if (!isAdmin && !isOwner) {
+      // TODO test only admins or owners may accept requests
       throw new Error("You are not the owner of this team");
     }
 
@@ -308,16 +317,63 @@ export class TeamService implements ITeamService {
       throw new Error(`no team with id ${teamId}`);
     }
 
-    // TODO ownerId
-    if (team?.users[0].id !== requestedBy.id) {
-      throw new Error("You are not the owner of this team");
+    if (team.owner?.id !== requestedBy.id && userId !== requestedBy.id) {
+      // TODO test removing oneself should work
+      throw new Error("Only the owner may remove other users from a team");
+    }
+
+    if (team.owner?.id === userId) {
+      // TODO test
+      throw new Error("Make someone else owner of the team first");
     }
 
     if (!team.userIds().includes(userId)) {
       throw new Error(`user ${userId} is not part of the team ${teamId}`);
     }
 
+    // TODO test success
     await this._users.update({ id: userId }, { team: null, teamRequest: null });
+
+    return Promise.resolve();
+  }
+
+  /**
+   * Set the owner of a team
+   */
+  public async setOwner(
+    teamId: number,
+    userId: number,
+    requestedBy: User,
+  ): Promise<void> {
+    const team = await this._teams.findOne({
+      where: { id: teamId },
+      relations: ["users", "requests"],
+    });
+
+    if (team == null) {
+      throw new Error(`No team with id ${teamId}`);
+    }
+
+    const isAdmin = requestedBy.role === UserRole.Root;
+    const isOwner = team.owner?.id === requestedBy.id;
+    if (!isAdmin && !isOwner) {
+      // TODO test
+      throw new Error("Only the owner may change the owner");
+    }
+
+    if (!team.userIds().includes(userId)) {
+      // TODO test
+      throw new Error(`User ${userId} is not part of the team ${teamId}`);
+    }
+
+    const newOwner = await this._users.findOneBy({ id: userId });
+
+    if (newOwner == null) {
+      throw new Error(`User ${userId} not found`);
+    }
+
+    // TODO test success
+    await this._teams.update({ id: teamId }, { owner: newOwner });
 
     return Promise.resolve();
   }
