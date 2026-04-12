@@ -142,7 +142,7 @@ export class UsersController {
     const user = await this._users.findUserWithCredentials(email, password);
 
     if (!user) {
-      throw new BadRequestError("invalid email or password");
+      throw new BadRequestError("invalid email or Password");
     }
 
     const response = new UserTokenResponseDTO();

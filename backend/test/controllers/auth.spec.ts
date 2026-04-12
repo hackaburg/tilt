@@ -30,10 +30,46 @@ describe("Auth", () => {
   let port: number;
   let baseUrl: string;
 
-  const rootUser = Object.assign(new User(), { id: 1, role: UserRole.Root });
+  const rootUser = Object.assign(new User(), {
+    id: 1,
+    role: UserRole.Root,
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-04-12"),
+    firstName: "rootFirst",
+    lastName: "rootLast",
+    email: "root@root.rot",
+    password: "hashed_password_here",
+    tokenSecret: "secret_token_key_abc123",
+    verifyToken: "verify_token_xyz789",
+    forgotPasswordToken: "forgot_password_token_def456",
+    initialProfileFormSubmittedAt: new Date("2026-02-01"),
+    confirmationExpiresAt: new Date("2026-05-01"),
+    profileSubmitted: true,
+    admitted: true,
+    confirmed: true,
+    declined: false,
+    checkedIn: true,
+  });
+
   const regularUser = Object.assign(new User(), {
     id: 2,
     role: UserRole.User,
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-04-12"),
+    firstName: "regularFirst",
+    lastName: "regularLast",
+    email: "regular@regular.regular",
+    password: "hashed_password_here",
+    tokenSecret: "secret_token_key_abc123",
+    verifyToken: "verify_token_xyz789",
+    forgotPasswordToken: "forgot_password_token_def456",
+    initialProfileFormSubmittedAt: new Date("2026-02-01"),
+    confirmationExpiresAt: new Date("2026-05-01"),
+    profileSubmitted: true,
+    admitted: true,
+    confirmed: true,
+    declined: false,
+    checkedIn: true,
   });
 
   const tokenMap: Record<string, User> = {
@@ -50,6 +86,10 @@ describe("Auth", () => {
       async (token: string) => tokenMap[token] ?? null,
     );
 
+    userService.mocks.getAllUsers.mockResolvedValue([rootUser, regularUser]);
+
+    userService.mocks.findUserWithCredentials.mockResolvedValue(rootUser);
+
     const httpService = new HttpService(
       null as any,
       null as any,
@@ -62,7 +102,10 @@ describe("Auth", () => {
           return new RatingController(ratingService.instance);
         }
         if (target === UsersController) {
-          return new UsersController(userService.instance, applicationService.instance);
+          return new UsersController(
+            userService.instance,
+            applicationService.instance,
+          );
         }
         return new (target as any)();
       },
@@ -149,32 +192,37 @@ describe("Auth", () => {
     it("/login should not expose sensitive data", async () => {
       const response = await fetch(`${baseUrl}/api/user/login`, {
         method: "POST",
-        body: JSON.stringify({ data: { email: "test", password: "test" } }),
+        body: JSON.stringify({
+          data: { email: "test@test.test", password: "test1234" },
+        }),
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      console.log(data)
-      expect(data).toHaveProperty("id")
-      expect(data).toHaveProperty("firstName")
-      expect(data).toHaveProperty("lastName")
-      expect(data).not.toHaveProperty("password");
-      expect(data).not.toHaveProperty("tokenSecret");
-      expect(data).not.toHaveProperty("verifyToken");
-      expect(data).not.toHaveProperty("forgotPasswordToken");
+      expect(data.user).toHaveProperty("id");
+      expect(data.user).toHaveProperty("firstName");
+      expect(data.user).toHaveProperty("lastName");
+      expect(data.user).not.toHaveProperty("password");
+      expect(data.user).not.toHaveProperty("tokenSecret");
+      expect(data.user).not.toHaveProperty("verifyToken");
+      expect(data.user).not.toHaveProperty("forgotPasswordToken");
     });
 
     it("/refreshtoken should not expose sensitive data", async () => {
       const response = await fetch(`${baseUrl}/api/user/refreshtoken`, {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer root-token",
         },
       });
       const data = await response.json();
-      expect(data).not.toHaveProperty("tokenSecret");
-      expect(data).not.toHaveProperty("verifyToken");
-      expect(data).not.toHaveProperty("forgotPasswordToken");
+      expect(data.user).toHaveProperty("id");
+      expect(data.user).toHaveProperty("firstName");
+      expect(data.user).toHaveProperty("lastName");
+      expect(data.user).not.toHaveProperty("password");
+      expect(data.user).not.toHaveProperty("tokenSecret");
+      expect(data.user).not.toHaveProperty("verifyToken");
+      expect(data.user).not.toHaveProperty("forgotPasswordToken");
     });
 
     it("/list should not expose sensitive data", async () => {
@@ -186,11 +234,10 @@ describe("Auth", () => {
         },
       });
       const data = await response.json();
-      console.log(data)
-      for (const user of data.data) {
-        expect(user).toHaveProperty("id")
-        expect(user).toHaveProperty("firstName")
-        expect(user).toHaveProperty("lastName")
+      for (const user of data) {
+        expect(user).toHaveProperty("id");
+        expect(user).toHaveProperty("firstName");
+        expect(user).toHaveProperty("lastName");
         expect(user).not.toHaveProperty("password");
         expect(user).not.toHaveProperty("tokenSecret");
         expect(user).not.toHaveProperty("verifyToken");
