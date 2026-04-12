@@ -59,7 +59,8 @@ type ClassDeclaration<T> = new (...args: any[]) => T;
 export const convertBetweenEntityAndDTO = <TOutput>(
   input: any,
   outputClass: ClassDeclaration<TOutput>,
-): TOutput => plainToClass(outputClass, [input])[0];
+  options: { excludeExtraneousValues?: boolean } = {},
+): TOutput => plainToClass(outputClass, [input], { excludeExtraneousValues: options.excludeExtraneousValues ?? false })[0];
 
 export class FormSettingsDTO implements DTO<FormSettings> {
   @IsString()
