@@ -250,6 +250,7 @@ export class ApplicationController {
   @Authorized(UserRole.User)
   public async getAllTeams(): Promise<readonly TeamDTO[]> {
     const teams = await this._teams.getAllTeams();
+    // TODO test member emails not exposed
     return teams.map((team) => convertBetweenEntityAndDTO(team, TeamDTO));
   }
 

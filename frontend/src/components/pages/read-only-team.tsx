@@ -35,15 +35,17 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
     [],
   );
 
-  const notInTeam =
-    user?.team?.id !== team?.id || user?.teamRequest?.id !== team?.id;
-
   React.useEffect(() => {
     if (team) {
       setIsTeamOwner(user?.id === Number(team?.users?.[0]?.id));
       setIsTeamMember(team.users?.some((u) => u.id === user?.id) ?? false);
     }
   }, [team, user?.id]);
+
+  // When leaving a team, the parent component will reload team, and be more
+  // up to date than user.
+  const inTeam = team?.users.some(({ id }) => id === user?.id);
+  const hasRequested = team?.requests.some(({ id }) => id === user?.id);
 
   return (
     <Page>
@@ -64,7 +66,7 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
         <Spacer />
         <div style={{ width: "100%", marginTop: "4rem" }}>
           <h2>Team Members</h2>
-          {!isTeamOwner && notInTeam ? (
+          {!isTeamOwner && !inTeam && !hasRequested ? (
             <div>
               <Button onClick={sendRequestToJoin} primary={true}>
                 Request to join

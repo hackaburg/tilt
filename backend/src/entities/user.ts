@@ -50,8 +50,13 @@ export class User {
   @ManyToOne(() => Team, (team) => team.requests, {
     nullable: true,
     eager: true,
+    onDelete: "SET NULL",
   })
   public teamRequest: Team | null = null;
-  @ManyToOne(() => Team, (team) => team.users, { nullable: true, eager: true })
+  @ManyToOne(() => Team, (team) => team.users, {
+    nullable: true,
+    eager: true,
+    onDelete: "SET NULL",
+  })
   public team: Team | null = null;
 }

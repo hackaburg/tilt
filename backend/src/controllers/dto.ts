@@ -531,8 +531,6 @@ export class ApplicationDTO {
   @Type(() => UserDTO)
   public user!: UserDTO;
   @Expose()
-  public teams!: string[];
-  @Expose()
   @Type(() => AnswerDTO)
   public answers!: AnswerDTO[];
 }
@@ -553,16 +551,16 @@ export class TeamDTO {
   @Expose()
   public title!: string;
   @Expose()
-  @Type(() => UserDTO)
-  public owner!: UserDTO;
+  @Type(() => UserResponseDto)
+  public owner!: UserResponseDto;
   @Expose()
-  @Type(() => UserDTO)
+  @Type(() => UserResponseDto)
   @ValidateNested()
-  public users!: UserDTO[];
+  public users!: UserResponseDto[];
   @Expose()
-  @Type(() => UserDTO)
+  @Type(() => UserResponseDto)
   @ValidateNested()
-  public requests!: UserDTO[];
+  public requests!: UserResponseDto[];
   @Expose()
   public teamImg!: string;
   @Expose()
@@ -652,9 +650,9 @@ export class RatingDTO {
   @Expose()
   public readonly id!: number;
   @Expose()
-  @Type(() => UserDTO)
+  @Type(() => UserResponseDto)
   @ValidateNested()
-  public user!: UserDTO;
+  public user!: UserResponseDto;
   @Expose()
   @Type(() => ProjectDTO)
   @ValidateNested()

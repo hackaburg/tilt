@@ -51,7 +51,7 @@ export interface ITeamService extends IService {
   /**
    * Delete single team by id
    */
-  deleteTeamByID(id: number, currentUserId: User): Promise<void>;
+  deleteTeamByID(id: number, currentUser: User): Promise<void>;
   /**
    * Request to join a team
    */
@@ -126,12 +126,12 @@ export class TeamService implements ITeamService {
       throw new Error("You are not a member of this team");
     }
 
-    if (team.owner?.id !== originalTeam.owner?.id) {
-      // TODO test
-      throw new Error("Use the special http endpoint to change the owner");
-    }
-
-    return this._teams.save(team);
+    return this._teams.save({
+      ...originalTeam,
+      ...team,
+      // Use the dedicated http endpoint to change ownership
+      owner: originalTeam.owner,
+    });
   }
 
   /**
@@ -219,7 +219,10 @@ export class TeamService implements ITeamService {
    * @param user The user requesting to join
    */
   public async requestToJoinTeam(teamId: number, user: User): Promise<void> {
-    const team = await this._teams.findOneBy({ id: teamId });
+    const team = await this._teams.findOne({
+      where: { id: teamId },
+      relations: ["users", "requests", "owner"],
+    });
 
     if (team == null) {
       throw new Error(`no team with id ${teamId}`);
@@ -245,13 +248,16 @@ export class TeamService implements ITeamService {
    * Deletes a team by its id.
    * @param id The id of the team
    */
-  public async deleteTeamByID(id: number, currentUserId: User): Promise<void> {
+  public async deleteTeamByID(id: number, currentUser: User): Promise<void> {
     const team = await this._teams.findOne({
       where: { id },
       relations: ["users", "requests", "owner"],
     });
 
-    if (team?.owner.id !== currentUserId.id) {
+    if (
+      currentUser.role !== UserRole.Root &&
+      team?.owner?.id !== currentUser.id
+    ) {
       throw new Error("You are not the owner of this team");
     }
 

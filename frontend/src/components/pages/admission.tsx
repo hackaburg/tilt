@@ -6,7 +6,6 @@ import { AnswerDTO, ApplicationDTO } from "../../api/types/dto";
 import { QuestionType } from "../../api/types/enums";
 import { debounceDuration } from "../../config";
 import { useSettingsContext } from "../../contexts/settings-context";
-import { isNameQuestion, isTeamQuestion } from "../../heuristics";
 import { performApiRequest, useApi } from "../../hooks/use-api";
 import { useIsResponsive } from "../../hooks/use-is-responsive";
 import {
@@ -278,9 +277,6 @@ export const Admission = () => {
     });
   }, [debouncedQuery, applicationsSortedByDate, applicationsByUserID]);
 
-  const probableNameQuestion = questions.find(isNameQuestion);
-  const probableTeamQuestion = questions.find(isTeamQuestion);
-
   const [selectedRowIDs, setSelectedRowIDs] = useState<readonly number[]>([]);
   const headerCheckboxRef = useRef<Nullable<HTMLInputElement>>(null);
 
@@ -303,66 +299,6 @@ export const Admission = () => {
   } = useApi(
     async (api, wasForced) => {
       if (wasForced) {
-        if (probableTeamQuestion != null) {
-          const teams = new Set<string>();
-
-          for (const id of selectedRowIDs) {
-            const { answersByQuestionID } = applicationsByUserID[id];
-            const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
-
-            if (teamAnswer === null) {
-              continue;
-            }
-
-            teams.add(teamAnswer);
-          }
-
-          let firstSeenPartialTeam: Nullable<string> = null;
-          let missingPartialTeamMemberEmails = "";
-          for (const { user } of applicationsSortedByDate) {
-            const { answersByQuestionID } = applicationsByUserID[user.id];
-            const teamAnswer = answersByQuestionID[probableTeamQuestion.id!];
-
-            if (teamAnswer == null) {
-              continue;
-            }
-
-            const isSelectedTeam = teams.has(teamAnswer);
-            const isNotSelected = !selectedRowIDs.includes(user.id);
-            const isNotYetAdmitted = !user.admitted;
-            const isMemberOfFirstPartialTeam =
-              firstSeenPartialTeam == null ||
-              firstSeenPartialTeam === teamAnswer;
-
-            if (
-              isSelectedTeam &&
-              isNotSelected &&
-              isNotYetAdmitted &&
-              isMemberOfFirstPartialTeam
-            ) {
-              firstSeenPartialTeam = teamAnswer;
-              missingPartialTeamMemberEmails += `- ${user.email}\n`;
-            }
-          }
-
-          if (firstSeenPartialTeam != null) {
-            const choice = prompt(
-              `You're about to admit the team '${firstSeenPartialTeam}', but you missed some team members:\n\n` +
-                `${missingPartialTeamMemberEmails}\n` +
-                `Type 'show' (without quotes) to view the missing team members, or type 'ignore' (without quotes) to continue partially admitting this team.`,
-            );
-
-            if (choice == null) {
-              return;
-            }
-
-            if (choice !== "ignore") {
-              setQuery(firstSeenPartialTeam);
-              return;
-            }
-          }
-        }
-
         const applicationList = selectedRowIDs
           .map((id) => `- ${applicationsByUserID[id].email}`)
           .join("\n");
@@ -385,7 +321,6 @@ export const Admission = () => {
     [
       selectedRowIDs,
       reloadApplications,
-      probableTeamQuestion,
       applicationsByUserID,
       applicationsSortedByDate,
     ],
@@ -398,7 +333,7 @@ export const Admission = () => {
 
   const isResponsive = useIsResponsive();
   const tableRows = useMemo(() => {
-    return visibleApplications.map(({ user, teams }, userIndex) => {
+    return visibleApplications.map(({ user }, userIndex) => {
       const {
         id,
         email,
@@ -410,10 +345,6 @@ export const Admission = () => {
         declined,
         checkedIn,
       } = user;
-
-      // TODO teams is undefined
-      const teamNumber = teams.length;
-      const teamNames = teams;
 
       const name = user.firstName + " " + user.lastName;
 
@@ -543,6 +474,10 @@ export const Admission = () => {
         RowComponent = AdmittedRow;
       }
 
+      const teamIdentifier = user.team
+        ? `${user.team?.title} #${user.team?.id}`
+        : "";
+
       const cityIndex = questions.find((q) => q.title === "City")?.id!;
       const countryIndex = questions.find((q) => q.title === "Country")?.id!;
       const genderIndex = questions.find((q) => q.title === "Gender")?.id!;
@@ -560,7 +495,7 @@ export const Admission = () => {
             <TableCell onClick={handleExpandRow}>{userIndex + 1}</TableCell>
             <TableCell onClick={handleExpandRow}>{email}</TableCell>
             <TableCell onClick={handleExpandRow}>{name}</TableCell>
-            <TableCell onClick={handleExpandRow}>{teamNumber}</TableCell>
+            <TableCell onClick={handleExpandRow}>{teamIdentifier}</TableCell>
             <TableCell onClick={handleExpandRow}>
               {answersByQuestionID[genderIndex] === "Male" ? (
                 <div>
@@ -603,10 +538,8 @@ export const Admission = () => {
 
                   <FlexRowContainer>
                     <FlexRowColumnContainer>
-                      <Subheading text="Teams" />
-                      {teamNames.map((teamName, index) => (
-                        <li key={index}>{teamName}</li>
-                      ))}
+                      <Subheading text="Team" />
+                      {teamIdentifier}
                     </FlexRowColumnContainer>
                   </FlexRowContainer>
 
@@ -672,7 +605,6 @@ export const Admission = () => {
   }, [
     isResponsive,
     visibleApplications,
-    probableNameQuestion,
     selectedRowIDs,
     expandedRowIDs,
     applicationsByUserID,
@@ -822,7 +754,7 @@ export const Admission = () => {
                   <TableHeaderCell>Index</TableHeaderCell>
                   <TableHeaderCell>E-mail</TableHeaderCell>
                   <TableHeaderCell>Firstname / Lastname</TableHeaderCell>
-                  <TableHeaderCell>Teams</TableHeaderCell>
+                  <TableHeaderCell>Team</TableHeaderCell>
                   <TableHeaderCell>Gender</TableHeaderCell>
                   <TableHeaderCell>Created At</TableHeaderCell>
                   <TableHeaderCell>City/Location</TableHeaderCell>

@@ -135,10 +135,11 @@ export const EditTeam = ({
   const [description, setDescription] = React.useState("");
   const [image, setImage] = React.useState("");
 
+  const history = useHistory();
+
   const isTeamOwner = team.owner?.id === user?.id;
 
   const {
-    value: didUpdateTeam,
     isFetching: updateTeamInProgress,
     error: updateTeamError,
     forcePerformRequest: sendSaveTeamRequest,
@@ -152,11 +153,12 @@ export const EditTeam = ({
           teamImg: image,
         });
         showNotification("Saved");
+        onChange();
         return true;
       }
       return false;
     },
-    [team, title, description],
+    [team, title, description, image, showNotification],
   );
 
   const acceptUserToTeam = async (userToAccept: UserListDto) => {
@@ -177,38 +179,21 @@ export const EditTeam = ({
     onChange();
   };
 
-  const {
-    value: didDelete,
-    isFetching: deleteInProgress,
-    error: deleteError,
-    forcePerformRequest: deleteTeam,
-  } = useApi(async (apiClient, wasTriggeredManually) => {
-    if (wasTriggeredManually) {
-      if (confirm("Are you sure you want to delete this team?")) {
-        await apiClient.deleteTeam(team.id);
-        return true;
+  const { isFetching: deleteInProgress, forcePerformRequest: deleteTeam } =
+    useApi(async (apiClient, wasTriggeredManually) => {
+      if (wasTriggeredManually) {
+        if (confirm("Are you sure you want to delete this team?")) {
+          await apiClient.deleteTeam(team.id);
+          history.push("/teams");
+          return true;
+        }
       }
-    }
-    return false;
-  }, []);
+      return false;
+    }, []);
 
   const handleSubmit = React.useCallback((event: React.SyntheticEvent) => {
     event.preventDefault();
   }, []);
-
-  const updateTeamDone =
-    Boolean(didUpdateTeam) && !updateTeamInProgress && !updateTeamError;
-
-  const didDeleteDone = Boolean(didDelete) && !deleteInProgress && !deleteError;
-
-  if (updateTeamDone) {
-    onChange();
-  }
-
-  if (didDeleteDone) {
-    const history = useHistory();
-    history.push("/teams");
-  }
 
   React.useEffect(() => {
     if (team) {

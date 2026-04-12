@@ -12,7 +12,7 @@ import { Team } from "./team";
 export class Project {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
-  @ManyToOne(() => Team, { eager: true })
+  @ManyToOne(() => Team, { eager: true, onDelete: "SET NULL" })
   @JoinColumn()
   public team!: Team;
   @Column({ length: 1024 })

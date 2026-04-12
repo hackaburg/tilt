@@ -267,11 +267,7 @@ export class ApiClient {
 
   /**
    * Update new team
-   * @param tean,id The team's id
-   * @param team.title The team's title
-   * @param team.description The team's description
-   * @param team.teamImg The team's image
-   * @param team.owner The team's owner
+   * @param team containing id, title, description and teamImg
    */
   public async updateTeam(team: TeamUpdateDTO): Promise<void> {
     await this.put<ApplicationControllerMethods["updateTeam"]>(
