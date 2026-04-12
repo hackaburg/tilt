@@ -180,12 +180,10 @@ export class TeamService implements ITeamService {
       team.teamImg = placeholder_img[randomIndex];
     }
 
-    // TODO test
     team.owner = user;
 
     const createdTeam = await this._teams.save(team);
 
-    // TODO test
     user.team = createdTeam;
     await this._users.save(user);
 
@@ -293,7 +291,6 @@ export class TeamService implements ITeamService {
     const isAdmin = requestedBy.role === UserRole.Root;
     const isOwner = team.owner?.id === requestedBy.id;
     if (!isAdmin && !isOwner) {
-      // TODO test only admins or owners may accept requests
       throw new Error("You are not the owner of this team");
     }
 
@@ -326,12 +323,10 @@ export class TeamService implements ITeamService {
     const isOwner = team.owner?.id === requestedBy.id;
     const isAdmin = requestedBy.role === UserRole.Root;
     if (!isOwner && !isAdmin && userId !== requestedBy.id) {
-      // TODO test removing oneself should work
       throw new Error("Only the owner may remove other users from a team");
     }
 
     if (team.owner?.id === userId) {
-      // TODO test
       throw new Error("Make someone else owner of the team first");
     }
 
@@ -339,7 +334,6 @@ export class TeamService implements ITeamService {
       throw new Error(`user ${userId} is not part of the team ${teamId}`);
     }
 
-    // TODO test success
     await this._users.update({ id: userId }, { team: null, teamRequest: null });
 
     return Promise.resolve();
@@ -365,12 +359,10 @@ export class TeamService implements ITeamService {
     const isAdmin = requestedBy.role === UserRole.Root;
     const isOwner = team.owner?.id === requestedBy.id;
     if (!isAdmin && !isOwner) {
-      // TODO test
       throw new Error("Only the owner may change the owner");
     }
 
     if (!team.userIds().includes(userId)) {
-      // TODO test
       throw new Error(`User ${userId} is not part of the team ${teamId}`);
     }
 
@@ -380,7 +372,6 @@ export class TeamService implements ITeamService {
       throw new Error(`User ${userId} not found`);
     }
 
-    // TODO test success
     await this._teams.update({ id: teamId }, { owner: newOwner });
 
     return Promise.resolve();

@@ -83,7 +83,6 @@ export class RatingService implements IRatingService {
     projectId: number,
     user: User,
   ): Promise<readonly Rating[]> {
-    // TODO test
     return this._database.getRepository(Rating).find({
       where: {
         project: {
