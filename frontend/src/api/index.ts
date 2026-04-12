@@ -29,6 +29,7 @@ import type {
   SuccessResponseDTO,
   TeamDTO,
   TeamResponseDTO,
+  TeamUpdateDTO,
   UserDTO,
   UserListDto,
 } from "./types/dto";
@@ -272,7 +273,7 @@ export class ApiClient {
    * @param team.teamImg The team's image
    * @param team.owner The team's owner
    */
-  public async updateTeam(team: TeamDTO): Promise<void> {
+  public async updateTeam(team: TeamUpdateDTO): Promise<void> {
     await this.put<ApplicationControllerMethods["updateTeam"]>(
       "/application/team",
       team,
@@ -314,7 +315,6 @@ export class ApiClient {
   ): Promise<void> {
     await this.delete<ApplicationControllerMethods["removeUserFromTeam"]>(
       `/application/team/${teamId}/members/${userId}`,
-      {} as never,
     );
   }
 
