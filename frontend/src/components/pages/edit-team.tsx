@@ -6,7 +6,7 @@ import { RoundedImage } from "../base/image";
 import { Spacer } from "../base/flex";
 import { TextInput, TextInputType } from "../base/text-input";
 import { api, useApi } from "../../hooks/use-api";
-import { Card, CardContent, TextField, Stack } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import { UserListDto, TeamResponseDTO } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
@@ -16,11 +16,17 @@ import { PageHeader } from "../base/page-header";
 import { useNotificationContext } from "../../contexts/notification-context";
 import { StackWithBorder } from "../base/stack-with-border";
 
+interface TeamMemberRequestProps {
+  user: UserListDto;
+  updateTeamInProgress: boolean;
+  acceptUserToTeam: (user: UserListDto) => void;
+}
+
 const TeamMemberRequest = ({
   user,
   updateTeamInProgress,
   acceptUserToTeam,
-}) => {
+}: TeamMemberRequestProps) => {
   return (
     <StackWithBorder text={user.firstName}>
       <Button
@@ -38,14 +44,21 @@ const TeamMemberRequest = ({
   );
 };
 
-// TODO types
+interface TeamMemberProps {
+  team: TeamResponseDTO;
+  user: UserListDto;
+  updateTeamInProgress: boolean;
+  onSetOwner: (user: UserListDto) => void;
+  onRemove: (user: UserListDto) => void;
+}
+
 const TeamMember = ({
   team,
   user,
   updateTeamInProgress,
   onSetOwner,
   onRemove,
-}) => {
+}: TeamMemberProps) => {
   const { user: loginStateUser } = useLoginContext();
   const loggedInAsAdmin = loginStateUser?.role === UserRole.Root;
   const loggedInAsOwner = loginStateUser?.id === team.owner?.id;
@@ -129,7 +142,6 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
         await apiClient.updateTeam({
-          ...team,
           id: team.id,
           title,
           description,

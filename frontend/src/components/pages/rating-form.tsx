@@ -4,7 +4,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Tooltip,
 } from "@mui/material";
 import { api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
