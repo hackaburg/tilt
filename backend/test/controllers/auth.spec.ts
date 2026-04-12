@@ -1,4 +1,6 @@
+import { hash } from "bcrypt";
 import * as http from "http";
+import * as dotenv from "dotenv";
 import { createExpressServer, useContainer } from "routing-controllers";
 import { RatingController } from "../../src/controllers/rating-controller";
 import { UsersController } from "../../src/controllers/users-controller";
@@ -6,21 +8,32 @@ import { User } from "../../src/entities/user";
 import { UserRole } from "../../src/entities/user-role";
 import { HttpService } from "../../src/services/http-service";
 import { IRatingService } from "../../src/services/rating-service";
-import { IUserService } from "../../src/services/user-service";
+import { TokenService, ITokenService } from "../../src/services/token-service";
+import { ConfigurationService, IConfigurationService } from "../../src/services/config-service";
+import { UserService, IUserService } from "../../src/services/user-service";
 import { IApplicationService } from "../../src/services/application-service";
 import { MockedService } from "../services/mock";
 import { MockRatingService } from "../services/mock/mock-rating-service";
-import { MockUserService } from "../services/mock/mock-user-service";
 import { MockApplicationService } from "../services/mock/mock-application-service";
+import { MockEmailTemplateService } from "../services/mock/mock-email-template-service";
+import { MockLoggerService } from "../services/mock/mock-logger-service";
+import { MockHaveibeenpwnedService } from "../services/mock/mock-haveibeenpwned-service";
+import { Repository } from "typeorm";
+import { TestDatabaseService } from "../services/mock/mock-database-service";
+import * as path from 'path';
 
 /*
  * These tests just check that UserRoles and stuff work as expected.
  * And that the backend can actually receive http requests
  */
 describe("Auth", () => {
+  let database: TestDatabaseService;
   let ratingService: MockedService<IRatingService>;
-  let userService: MockedService<IUserService>;
   let applicationService: MockedService<IApplicationService>;
+  // An actual userService that talks to the in-memory test database
+  let userService: IUserService;
+  let configurationService: IConfigurationService;
+  let tokenService: ITokenService<any>;
 
   beforeEach(() => {
     ratingService = new MockRatingService();
@@ -30,70 +43,106 @@ describe("Auth", () => {
   let port: number;
   let baseUrl: string;
 
-  const rootUser = Object.assign(new User(), {
-    id: 1,
-    role: UserRole.Root,
-    createdAt: new Date("2026-01-01"),
-    updatedAt: new Date("2026-04-12"),
-    firstName: "rootFirst",
-    lastName: "rootLast",
-    email: "root@root.rot",
-    password: "hashed_password_here",
-    tokenSecret: "secret_token_key_abc123",
-    verifyToken: "verify_token_xyz789",
-    forgotPasswordToken: "forgot_password_token_def456",
-    initialProfileFormSubmittedAt: new Date("2026-02-01"),
-    confirmationExpiresAt: new Date("2026-05-01"),
-    profileSubmitted: true,
-    admitted: true,
-    confirmed: true,
-    declined: false,
-    checkedIn: true,
-  });
+  let userRepo: Repository<User>;
 
-  const regularUser = Object.assign(new User(), {
-    id: 2,
-    role: UserRole.User,
-    createdAt: new Date("2026-01-01"),
-    updatedAt: new Date("2026-04-12"),
-    firstName: "regularFirst",
-    lastName: "regularLast",
-    email: "regular@regular.regular",
-    password: "hashed_password_here",
-    tokenSecret: "secret_token_key_abc123",
-    verifyToken: "verify_token_xyz789",
-    forgotPasswordToken: "forgot_password_token_def456",
-    initialProfileFormSubmittedAt: new Date("2026-02-01"),
-    confirmationExpiresAt: new Date("2026-05-01"),
-    profileSubmitted: true,
-    admitted: true,
-    confirmed: true,
-    declined: false,
-    checkedIn: true,
-  });
+  let rootUser: User;
+  let regularUser: User;
 
-  const tokenMap: Record<string, User> = {
-    "root-token": rootUser,
-    "user-token": regularUser,
-  };
+  let rootToken: string;
+  let regularUserToken: string;
+
+  const password = "test1234";
+
+  // const tokenMap: Record<string, User> = {
+  //   "root-token": rootUser,
+  //   "user-token": regularUser,
+  // };
+
+  // const emailMap: Record<string, User> = {
+  //   [rootUser.email]: rootUser,
+  //   [regularUser.email]: regularUser,
+  // };
 
   beforeAll(async () => {
-    ratingService = new MockRatingService();
-    userService = new MockUserService();
-    applicationService = new MockApplicationService();
+    rootUser = Object.assign(new User(), {
+      id: 1,
+      role: UserRole.Root,
+      createdAt: new Date("2026-01-01"),
+      updatedAt: new Date("2026-04-12"),
+      firstName: "rootFirst",
+      lastName: "rootLast",
+      email: "root@root.root",
+      password: await hash(password, 10),
+      tokenSecret: "secret_token_key_abc123",
+      verifyToken: "",
+      forgotPasswordToken: "forgot_password_token_def456",
+      initialProfileFormSubmittedAt: new Date("2026-02-01"),
+      confirmationExpiresAt: new Date("2026-05-01"),
+      profileSubmitted: true,
+      admitted: true,
+      confirmed: true,
+      declined: false,
+      checkedIn: true,
+    });
 
-    userService.mocks.findUserByLoginToken.mockImplementation(
-      async (token: string) => tokenMap[token] ?? null,
+    regularUser = Object.assign(new User(), {
+      id: 2,
+      role: UserRole.User,
+      createdAt: new Date("2026-01-01"),
+      updatedAt: new Date("2026-04-12"),
+      firstName: "regularFirst",
+      lastName: "regularLast",
+      email: "regular@regular.regular",
+      password: await hash(password, 10),
+      tokenSecret: "secret_token_key_abc123",
+      verifyToken: "",
+      forgotPasswordToken: "forgot_password_token_def456",
+      initialProfileFormSubmittedAt: new Date("2026-02-01"),
+      confirmationExpiresAt: new Date("2026-05-01"),
+      profileSubmitted: true,
+      admitted: true,
+      confirmed: true,
+      declined: false,
+      checkedIn: true,
+    });
+
+    dotenv.config({ path: path.resolve(__dirname, '../../.env.example') });
+
+    database = new TestDatabaseService();
+    await database.bootstrap();
+
+    userRepo = database.getRepository(User);
+    await userRepo.save([rootUser, regularUser]);
+
+    ratingService = new MockRatingService();
+    applicationService = new MockApplicationService();
+    configurationService = new ConfigurationService();
+    tokenService = new TokenService(configurationService);
+    userService = new UserService(
+      new MockHaveibeenpwnedService().instance,
+      database,
+      new MockLoggerService().instance,
+      tokenService,
+      new MockEmailTemplateService().instance,
     );
 
-    userService.mocks.getAllUsers.mockResolvedValue([rootUser, regularUser]);
+    await tokenService.bootstrap();
+    await configurationService.bootstrap();
+    await userService.bootstrap();
 
-    userService.mocks.findUserWithCredentials.mockResolvedValue(rootUser);
+    rootToken = tokenService.sign({ secret: rootUser.tokenSecret })
+    regularUserToken = tokenService.sign({ secret: regularUser.tokenSecret })
+
+    // jest
+    //   .spyOn(userService, 'findUserWithCredentials')
+    //   .mockImplementation(async (email: string, password: string): Promise<User> => {
+    //     return emailMap[email]
+    //   });
 
     const httpService = new HttpService(
       null as any,
       null as any,
-      userService.instance,
+      userService,
     );
 
     useContainer({
@@ -103,7 +152,7 @@ describe("Auth", () => {
         }
         if (target === UsersController) {
           return new UsersController(
-            userService.instance,
+            userService,
             applicationService.instance,
           );
         }
@@ -152,7 +201,7 @@ describe("Auth", () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer user-token",
+        Authorization: `Bearer ${regularUserToken}`,
       },
       body: JSON.stringify({
         data: { rating: 3, project: { id: 1 }, criterion: { id: 2 } },
@@ -179,7 +228,7 @@ describe("Auth", () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer root-token",
+        Authorization: `Bearer ${rootToken}`,
       },
       body: JSON.stringify({ data: {} }),
     });
@@ -189,15 +238,16 @@ describe("Auth", () => {
   });
 
   describe("user controller", () => {
-    it("/login should not expose sensitive data", async () => {
+    it("logs in and does not expose sensitive data", async () => {
       const response = await fetch(`${baseUrl}/api/user/login`, {
         method: "POST",
         body: JSON.stringify({
-          data: { email: "test@test.test", password: "test1234" },
+          data: { email: regularUser.email, password },
         }),
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
+      console.dir(data, { depth: null })
       expect(data.user).toHaveProperty("id");
       expect(data.user).toHaveProperty("firstName");
       expect(data.user).toHaveProperty("lastName");
@@ -212,7 +262,7 @@ describe("Auth", () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer root-token",
+          Authorization: `Bearer ${rootToken}`,
         },
       });
       const data = await response.json();
@@ -230,10 +280,16 @@ describe("Auth", () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer root-token",
+          Authorization: `Bearer ${rootToken}`,
         },
       });
       const data = await response.json();
+      console.dir(data, { depth: null })
+      expect(data.length).toEqual(2);
+      const ids = data.map((user: any) => user.id)
+      expect(ids).toContain(rootUser.id)
+      expect(ids).toContain(regularUser.id)
+
       for (const user of data) {
         expect(user).toHaveProperty("id");
         expect(user).toHaveProperty("firstName");

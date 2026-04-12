@@ -128,7 +128,7 @@ export interface IUserService extends IService {
  */
 export const UserServiceToken = new Token<IUserService>();
 
-interface ITokenContent {
+export interface ITokenContent {
   secret: string;
 }
 
