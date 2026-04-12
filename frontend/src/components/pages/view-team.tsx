@@ -25,6 +25,10 @@ export const ViewTeam = () => {
     return team?.users?.some((u) => u.id === user?.id) ?? false;
   }, [team, user?.id]);
 
+  const reloadTeam = async () => {
+    await api.getTeamByID(teamId).then((team_) => setTeam(team_));
+  };
+
   const isAdmin = user?.role === UserRole.Root;
 
   if (!team) {
@@ -32,7 +36,7 @@ export const ViewTeam = () => {
   }
 
   return isTeamMember || isAdmin ? (
-    <EditTeam team={team} />
+    <EditTeam onChange={reloadTeam} team={team} />
   ) : (
     <ReadOnlyTeam team={team} />
   );

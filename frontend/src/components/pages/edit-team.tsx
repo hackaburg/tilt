@@ -82,9 +82,7 @@ const TeamMember = ({
     >
       <Button
         loading={updateTeamInProgress}
-        disable={
-          updateTeamInProgress || !editAllowed || (thisIsYou && memberIsOwner)
-        }
+        disable={updateTeamInProgress || (thisIsYou && memberIsOwner)}
         onClick={() => {
           onRemove(user);
         }}
@@ -100,7 +98,7 @@ const TeamMember = ({
       ) : (
         <Button
           loading={updateTeamInProgress}
-          disable={updateTeamInProgress || !editAllowed}
+          disable={updateTeamInProgress}
           onClick={() => {
             onSetOwner(user);
           }}
@@ -117,7 +115,13 @@ const TeamMember = ({
 /**
  * A settings dashboard to configure all parts of tilt.
  */
-export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
+export const EditTeam = ({
+  onChange,
+  team,
+}: {
+  onChange: () => void;
+  team: TeamResponseDTO;
+}) => {
   if (team == null) {
     return null;
   }
@@ -157,23 +161,20 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
 
   const acceptUserToTeam = async (userToAccept: UserListDto) => {
     await api.acceptUserToTeam(team.id, userToAccept.id);
-    // TODO tell parent to reload team instead of history.go(0)
-    history.go(0);
     showNotification("Accepted user");
+    onChange();
   };
 
   const removeUserFromTeam = async (userToRemove: UserListDto) => {
     await api.removeUserFromTeam(team.id, userToRemove.id);
-    // TODO tell parent to reload team
-    history.go(0);
     showNotification("Removed user");
+    onChange();
   };
 
   const onSetOwner = async (newOwner: UserListDto) => {
     await api.setOwner(team.id, newOwner.id);
-    // TODO tell parent to reload team
-    history.go(0);
     showNotification("Changed owner");
+    onChange();
   };
 
   const {
@@ -201,8 +202,7 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   const didDeleteDone = Boolean(didDelete) && !deleteInProgress && !deleteError;
 
   if (updateTeamDone) {
-    const history = useHistory();
-    history.go(0);
+    onChange();
   }
 
   if (didDeleteDone) {
@@ -269,6 +269,23 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
 
         <div style={{ width: "100%", marginTop: "4rem" }}>
           <h1>Team Members</h1>
+          {
+            // Team Owners have to chose a different owner first.
+            // Admins shouldn't be part of the team. If they are, they can still
+            // use the "Remove" button to leave.
+            !isAdmin && !isTeamOwner && user && (
+              <Button
+                loading={updateTeamInProgress}
+                disable={updateTeamInProgress}
+                onClick={() => {
+                  removeUserFromTeam(user);
+                }}
+                primary
+              >
+                Leave team
+              </Button>
+            )
+          }
           <div style={{ marginTop: "1.5rem" }}>
             {team.users.map((teamMember) => (
               <React.Fragment key={teamMember.id}>
