@@ -61,7 +61,9 @@ describe("ApplicationController", () => {
       const teams = await controller.getAllTeams();
 
       // Simulate the ResponseInterceptor which serializes with excludeAll
-      const serialized = classToPlain(teams, { strategy: "excludeAll" }) as any[];
+      const serialized = classToPlain(teams, {
+        strategy: "excludeAll",
+      }) as any[];
 
       expect(serialized).toHaveLength(1);
       expect(serialized[0].users[0]).not.toHaveProperty("email");
