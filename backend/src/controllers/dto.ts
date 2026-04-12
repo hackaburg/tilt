@@ -512,7 +512,18 @@ export class UserListDto {
   @Expose()
   public id!: number;
   @Expose()
-  public name!: string;
+  public firstName!: string;
+  @Expose()
+  public lastName!: string;
+}
+
+export class UserResponseDto {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public firstName!: string;
+  @Expose()
+  public lastName!: string;
 }
 
 export class ApplicationDTO {
@@ -534,13 +545,6 @@ export class IDsRequestDTO implements IApiRequest<readonly number[]> {
 export class IDRequestDTO implements IApiRequest<number> {
   @IsInt()
   public data!: number;
-}
-
-export class UserResponseDto {
-  @Expose()
-  public id!: number;
-  @Expose()
-  public name!: string;
 }
 
 export class TeamDTO {
@@ -593,8 +597,6 @@ export class TeamUpdateDTO {
   public id!: number;
   @Expose()
   public title!: string;
-  @Expose()
-  public users?: number[];
   @Expose()
   public teamImg!: string;
   @Expose()

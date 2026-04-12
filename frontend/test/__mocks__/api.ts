@@ -31,6 +31,7 @@ export const api: IMockedApi = {
   updateTeam: jest.fn(),
   requestToJoinTeam: jest.fn(),
   acceptUserToTeam: jest.fn(),
+  removeUserFromTeam: jest.fn(),
   deleteTeam: jest.fn(),
   getAllTeams: jest.fn(),
   getTeamByID: jest.fn(),

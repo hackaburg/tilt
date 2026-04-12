@@ -6,16 +6,7 @@ import { RoundedImage } from "../base/image";
 import { Spacer } from "../base/flex";
 import { TextInput, TextInputType } from "../base/text-input";
 import { api, useApi } from "../../hooks/use-api";
-import {
-  Autocomplete,
-  Box,
-  Card,
-  CardContent,
-  InputLabel,
-  TextField,
-  Stack,
-} from "@mui/material";
-import { MdDeleteOutline } from "react-icons/md";
+import { Card, CardContent, TextField, Stack } from "@mui/material";
 import { UserListDto, TeamResponseDTO } from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { useHistory } from "react-router-dom";
@@ -24,46 +15,44 @@ import { UserRole } from "../../api/types/enums";
 import { PageHeader } from "../base/page-header";
 import { useNotificationContext } from "../../contexts/notification-context";
 
-const TeamMemberRequest = ({ user, updateTeamInProgress, acceptUserToTeam }) => {
+const TeamMemberRequest = ({
+  user,
+  updateTeamInProgress,
+  acceptUserToTeam,
+}) => {
   return (
     <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
-      <TextField
-        label={user.name}
-        value={user.name}
-        disabled
-        style={{ width: "90%" }}
-      />
+      <TextField label={user.firstName} disabled style={{ width: "90%" }} />
       <Button
         loading={updateTeamInProgress}
         disable={updateTeamInProgress}
-        onClick={() => { acceptUserToTeam(user) }}
+        onClick={() => {
+          acceptUserToTeam(user);
+        }}
         primary={true}
       >
         Add to Team
       </Button>
     </Stack>
-  )
+  );
 };
 
 const TeamMember = ({ user, updateTeamInProgress, onRemove }) => {
   return (
     <Stack direction={{ sm: "column", md: "row" }} spacing={{ xs: 1, sm: 2 }}>
-      <TextField
-        label={JSON.stringify(user)}
-        value={user.name}
-        disabled
-        style={{ width: "90%" }}
-      />
+      <TextField label={user.firstName} disabled style={{ width: "90%" }} />
       <Button
         loading={updateTeamInProgress}
         disable={updateTeamInProgress}
-        onClick={() => { onRemove(user) }}
+        onClick={() => {
+          onRemove(user);
+        }}
         primary={true}
       >
         Remove
       </Button>
     </Stack>
-  )
+  );
 };
 
 /**
@@ -93,39 +82,37 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await apiClient.updateTeam(
-          id,
-          title,
-          description,
-          image,
-        );
+        await apiClient.updateTeam(id, title, description, image);
         showNotification("Saved");
         return true;
       }
       return false;
     },
-    [currentUserId, isTeamOwner, id, title, description, image, users, requests],
+    [
+      currentUserId,
+      isTeamOwner,
+      id,
+      title,
+      description,
+      image,
+      users,
+      requests,
+    ],
   );
 
-  const acceptUserToTeam = async (user) => {
-    await api.acceptUserToTeam(
-      team.id,
-      user.id,
-    );
+  const acceptUserToTeam = async (userToAccept) => {
+    await api.acceptUserToTeam(team.id, userToAccept.id);
     // TODO tell parent to reload team instead of history.go(0)
     history.go(0);
     showNotification("Accepted user");
-  }
+  };
 
-  const removeUserFromTeam = async (user) => {
-    await api.removeUserFromTeam(
-      team.id,
-      user.id,
-    );
+  const removeUserFromTeam = async (userToRemove: UserListDto) => {
+    await api.removeUserFromTeam(team.id, userToRemove.id);
     // TODO tell parent to reload team
     history.go(0);
     showNotification("Removed user");
-  }
+  };
 
   const {
     value: didDelete,
@@ -141,13 +128,6 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
     }
     return false;
   }, []);
-
-  const { value: allUsers } = useApi(
-    async (apiClient) => apiClient.getAllUsers(),
-    [],
-  );
-
-  const userList = allUsers ?? [];
 
   const handleSubmit = React.useCallback((event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -168,22 +148,6 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
     history.push("/teams");
   }
 
-  function addMember() {
-    setUsers([...users, { id: 0, name: "" }]);
-  }
-
-  function onChange(index: number, value: UserListDto) {
-    setUsers((uList) => {
-      const newUsers = [...uList];
-      newUsers[index] = value;
-      return newUsers;
-    });
-  }
-
-  function alreadyInList(singleUser: UserListDto) {
-    return users.some((u) => u.id === singleUser.id);
-  }
-
   React.useEffect(() => {
     if (team) {
       setCurrentUserId(team.id);
@@ -199,8 +163,6 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
   }, [team]);
 
   const isAdmin = user?.role === UserRole.Root;
-
-  console.log("team", team)
 
   return (
     <Page>
@@ -250,46 +212,42 @@ export const EditTeam = ({ team }: { team: TeamResponseDTO }) => {
         </div>
 
         <div style={{ width: "100%", marginTop: "4rem" }}>
-          <h1>
-            Team Members
-          </h1>
-          TODO show users + users who requested and button to accept them
-          TODO button to leave team (here and in read-only)
+          <h1>Team Members</h1>
+          TODO show users + users who requested and button to accept them TODO
+          button to leave team (here and in read-only)
           <div style={{ marginTop: "1.5rem" }}>
-            These users requested to join this team (can only be changed by
-            the team owner)
-            {team.requests.length > 0 && <h3>Requests</h3>}
-            {(isTeamOwner || isAdmin) && team.requests.map((user) => (
-              <React.Fragment key={user.id}>
-                <TeamMemberRequest
-                  user={user}
-                  acceptUserToTeam={acceptUserToTeam}
-                  updateTeamInProgress={updateTeamInProgress}
-                />
-                <Spacer />
-              </React.Fragment>
-            ))}
-            {team.users.length > 0 && <h3>Users</h3>}
-            {team.users.map((user) => (
-              <React.Fragment key={user.id}>
+            {team.users.map((teamMember) => (
+              <React.Fragment key={teamMember.id}>
                 <TeamMember
-                  user={user}
+                  user={teamMember}
                   onRemove={removeUserFromTeam}
                   updateTeamInProgress={updateTeamInProgress}
                 />
                 <Spacer />
               </React.Fragment>
             ))}
+            {team.requests.length > 0 && <h3>Requests</h3>}
+            {(isTeamOwner || isAdmin) &&
+              team.requests.map((requestingUser) => (
+                <React.Fragment key={requestingUser.id}>
+                  <TeamMemberRequest
+                    user={requestingUser}
+                    acceptUserToTeam={acceptUserToTeam}
+                    updateTeamInProgress={updateTeamInProgress}
+                  />
+                  <Spacer />
+                </React.Fragment>
+              ))}
           </div>
         </div>
-        {(isTeamOwner || isAdmin) ? (
+        {isTeamOwner || isAdmin ? (
           <div style={{ marginTop: "2rem" }}>
             <Card variant="outlined" style={{ background: "#ffcdd2" }}>
               <CardContent>
                 <Subheading text={"Danger Zone"} />
                 <p>
-                  Please be aware if you delete a team it is gone. We will not
-                  recover it.
+                  Please be aware: if you delete a team it is gone. We will not
+                  be able to recover it.
                 </p>
                 <div style={{ marginTop: "1rem", width: "15rem" }}>
                   <Button

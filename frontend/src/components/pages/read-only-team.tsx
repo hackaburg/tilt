@@ -84,7 +84,7 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
           <div style={{ marginTop: "1.5rem" }}>
             {team?.users?.map((singleUser, index) => (
               <div key={index} style={{ display: "flex" }}>
-                {singleUser.name}
+                {singleUser.firstName}
               </div>
             ))}
           </div>

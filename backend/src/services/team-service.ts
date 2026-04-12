@@ -278,7 +278,6 @@ export class TeamService implements ITeamService {
     }
 
     // TODO ownerId
-    console.log(team)
     if (team?.users[0].id !== requestedBy.id) {
       throw new Error("You are not the owner of this team");
     }

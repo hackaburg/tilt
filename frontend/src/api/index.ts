@@ -277,14 +277,12 @@ export class ApiClient {
     title: string,
     description: string,
     teamImg: string,
-    users: number[],
   ): Promise<void> {
     await this.put<ApplicationControllerMethods["updateTeam"]>(
       "/application/team",
       {
         id,
         title,
-        users,
         teamImg,
         description,
       },
@@ -320,7 +318,10 @@ export class ApiClient {
    * @param teamId The team's id
    * @param userId The user's id
    */
-  public async removeUserFromTeam(teamId: number, userId: number): Promise<void> {
+  public async removeUserFromTeam(
+    teamId: number,
+    userId: number,
+  ): Promise<void> {
     await this.delete<ApplicationControllerMethods["acceptUserToTeam"]>(
       `/application/team/${teamId}/members/${userId}`,
       {} as never,
