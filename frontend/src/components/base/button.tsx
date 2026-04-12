@@ -67,7 +67,7 @@ interface IButtonProps {
   primary?: boolean;
   loading?: boolean;
   color?: string;
-  style?: Record<string, any>;
+  style?: React.CSSProperties;
 }
 
 /**

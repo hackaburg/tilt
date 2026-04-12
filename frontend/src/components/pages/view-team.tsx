@@ -25,9 +25,9 @@ export const ViewTeam = () => {
     return team?.users?.some((u) => u.id === user?.id) ?? false;
   }, [team, user?.id]);
 
-  const reloadTeam = async () => {
+  const reloadTeam = React.useCallback(async () => {
     await api.getTeamByID(teamId).then((team_) => setTeam(team_));
-  };
+  }, []);
 
   const isAdmin = user?.role === UserRole.Root;
 

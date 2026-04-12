@@ -158,7 +158,7 @@ export const EditTeam = ({
       }
       return false;
     },
-    [team, title, description, image, showNotification],
+    [team, title, description, image, showNotification, onChange],
   );
 
   const acceptUserToTeam = async (userToAccept: UserListDto) => {

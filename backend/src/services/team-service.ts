@@ -122,7 +122,11 @@ export class TeamService implements ITeamService {
 
     const originalTeamUserIds = originalTeam?.userIds();
 
-    if (!originalTeamUserIds!.includes(user.id)) {
+    // TODO test that admins and members can change the title, but not othe users
+    if (
+      user.role !== UserRole.Root &&
+      !originalTeamUserIds!.includes(user.id)
+    ) {
       throw new Error("You are not a member of this team");
     }
 

@@ -76,7 +76,7 @@ services:
       # a tilt example
       - MARIADB_DATABASE=tilt
       - MARIADB_USER=tilt
-      # genereate a password, as this one is shown publicly
+      # generate a password, as this one is shown publicly
       # in this repository
       - MARIADB_PASSWORD=this_is_not_secure_generate_something
 
