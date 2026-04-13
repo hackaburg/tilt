@@ -14,7 +14,7 @@ import { PageHeader } from "../base/page-header";
  */
 export const CreateTeam = () => {
   const loginState = useLoginContext();
-  const { user } = loginState;
+  const { user, updateUser } = loginState;
 
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -28,7 +28,11 @@ export const CreateTeam = () => {
   } = useApi(
     async (api, wasTriggeredManually) => {
       if (wasTriggeredManually) {
-        await api.createTeam(title, description, teamImg);
+        const team = await api.createTeam(title, description, teamImg);
+        await updateUser(() => ({
+          ...user!,
+          team,
+        }));
         return true;
       }
       return false;

@@ -254,8 +254,8 @@ export class ApiClient {
     title: string,
     description: string,
     teamImg: string,
-  ): Promise<void> {
-    await this.post<ApplicationControllerMethods["createTeam"]>(
+  ): Promise<TeamDTO> {
+    return await this.post<ApplicationControllerMethods["createTeam"]>(
       "/application/team",
       {
         title,
