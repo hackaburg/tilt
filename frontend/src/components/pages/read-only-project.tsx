@@ -6,7 +6,12 @@ import { RoundedImage } from "../base/image";
 import { api } from "../../hooks/use-api";
 import { PageHeader } from "../base/page-header";
 import { RatingForm } from "./rating-form";
-import { CriterionDTO, RatingDTO, ProjectDTO, SettingsDTO } from "../../api/types/dto";
+import {
+  CriterionDTO,
+  RatingDTO,
+  ProjectDTO,
+  SettingsDTO,
+} from "../../api/types/dto";
 import { useLoginContext } from "../../contexts/login-context";
 import { UserRole } from "../../api/types/enums";
 
