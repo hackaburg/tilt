@@ -88,17 +88,13 @@ describe(ProjectService.name, () => {
       // Create teams with projects
       const team1 = new Team();
       team1.title = "Team 1";
-      team1.users = [regularUser.id.toString()];
       team1.teamImg = "";
       team1.description = "";
-      team1.requests = [];
 
       const team2 = new Team();
       team2.title = "Team 2";
-      team2.users = [regularUser.id.toString()];
       team2.teamImg = "";
       team2.description = "";
-      team2.requests = [];
 
       const teamRepo = database.getRepository(Team);
       const savedTeams = await teamRepo.save([team1, team2]);
@@ -139,10 +135,8 @@ describe(ProjectService.name, () => {
       // Create a team and project that the regular user is not part of
       const team = new Team();
       team.title = "Other Team";
-      team.users = []; // Regular user is not part of this team
       team.teamImg = "";
       team.description = "";
-      team.requests = [];
 
       const teamRepo = database.getRepository(Team);
       const savedTeam = await teamRepo.save(team);
@@ -161,55 +155,42 @@ describe(ProjectService.name, () => {
       expect(allProjects).toHaveLength(0);
     });
 
-    it("regular user, part of two teams, gets 3 projects", async () => {
-      expect.assertions(4);
+    it("regular user in a team with 2 projects gets 2 projects", async () => {
+      expect.assertions(3);
 
       // Create two teams with the regular user
       const team1 = new Team();
       team1.title = "Team 1";
-      team1.users = [regularUser.id.toString()];
       team1.teamImg = "";
       team1.description = "";
-      team1.requests = [];
-
-      const team2 = new Team();
-      team2.title = "Team 2";
-      team2.users = [regularUser.id.toString()];
-      team2.teamImg = "";
-      team2.description = "";
-      team2.requests = [];
 
       const teamRepo = database.getRepository(Team);
-      const savedTeams = await teamRepo.save([team1, team2]);
+      const savedTeam = await teamRepo.save(team1);
 
-      // Create 2 projects for team1 and 1 project for team2
+      regularUser.team = savedTeam;
+      const userRepo = database.getRepository(User);
+      await userRepo.save(regularUser);
+
       const project1 = new Project();
-      project1.team = savedTeams[0];
+      project1.team = savedTeam;
       project1.title = "Project 1 - Team 1";
       project1.description = "Description 1";
       project1.allowRating = true;
 
       const project2 = new Project();
-      project2.team = savedTeams[0];
+      project2.team = savedTeam;
       project2.title = "Project 2 - Team 1";
       project2.description = "Description 2";
       project2.allowRating = false;
 
-      const project3 = new Project();
-      project3.team = savedTeams[1];
-      project3.title = "Project 1 - Team 2";
-      project3.description = "Description 3";
-      project3.allowRating = true;
-
       const projectRepo = database.getRepository(Project);
-      await projectRepo.save([project1, project2, project3]);
+      await projectRepo.save([project1, project2]);
 
       const allProjects = await service.getAllProjects(regularUser);
 
-      expect(allProjects).toHaveLength(3);
+      expect(allProjects).toHaveLength(2);
       expect(allProjects[0]).toEqual(project1);
       expect(allProjects[1]).toEqual(project2);
-      expect(allProjects[2]).toEqual(project3);
     });
 
     it("regular user without team gets projects that can be rated", async () => {
@@ -220,10 +201,8 @@ describe(ProjectService.name, () => {
       // Create a team with no users
       const team = new Team();
       team.title = "Public Team";
-      team.users = [];
       team.teamImg = "";
       team.description = "";
-      team.requests = [];
 
       const teamRepo = database.getRepository(Team);
       const savedTeam = await teamRepo.save(team);

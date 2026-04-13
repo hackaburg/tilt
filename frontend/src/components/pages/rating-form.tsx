@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import {
-  Stack,
   FormControl,
   RadioGroup,
   FormControlLabel,
   Radio,
-  Tooltip,
 } from "@mui/material";
 import { api } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { Button } from "../base/button";
 import { CriterionDTO, ProjectDTO, RatingDTO } from "../../api/types/dto";
 import { useNotificationContext } from "../../contexts/notification-context";
+import { StackWithBorder } from "../base/stack-with-border";
 
 interface IRatingFormProps {
   rating?: RatingDTO;
@@ -58,51 +57,32 @@ export const RatingForm = ({
   };
 
   return (
-    <div
-      style={{
-        border: "1px solid grey",
-        borderRadius: "5px",
-        padding: "10px",
-        margin: "1rem auto",
-      }}
-    >
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={{ xs: 1, sm: 4 }}
-        alignItems={{ xs: "flex-start", sm: "center" }}
-        justifyContent="center"
-      >
-        <div style={{ flex: 1, textAlign: "right" }}>
-          <Tooltip title={criterion.description}>
-            <span style={{ fontSize: "1.25rem" }}>{criterion.title}</span>
-          </Tooltip>
-        </div>
-        <FormControl component="fieldset">
-          <RadioGroup
-            row
-            value={ratingValue?.toString()}
-            onChange={(e) => setRatingValue(parseInt(e.target.value, 10))}
-          >
-            {[1, 2, 3, 4, 5].map((value) => (
-              <FormControlLabel
-                key={value.toString()}
-                value={value.toString()}
-                control={<Radio disabled={isSubmitting} />}
-                label={value.toString()}
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
-        <div style={{ flex: 1 }}>
-          <Button
-            onClick={handleSubmit}
-            disable={isSubmitting}
-            loading={isSubmitting}
-          >
-            Submit
-          </Button>
-        </div>
-      </Stack>
-    </div>
+    <StackWithBorder text={criterion.title} tooltip={criterion.description}>
+      <FormControl component="fieldset">
+        <RadioGroup
+          row
+          value={ratingValue?.toString()}
+          onChange={(e) => setRatingValue(parseInt(e.target.value, 10))}
+        >
+          {[1, 2, 3, 4, 5].map((value) => (
+            <FormControlLabel
+              key={value.toString()}
+              value={value.toString()}
+              control={<Radio disabled={isSubmitting} />}
+              label={value.toString()}
+            />
+          ))}
+        </RadioGroup>
+      </FormControl>
+      <div style={{ flex: 1 }}>
+        <Button
+          onClick={handleSubmit}
+          disable={isSubmitting}
+          loading={isSubmitting}
+        >
+          Submit
+        </Button>
+      </div>
+    </StackWithBorder>
   );
 };

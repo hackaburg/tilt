@@ -9,6 +9,8 @@ const UL = styled.ul`
   padding: 0;
   list-style: none;
   padding-left: 0.5rem;
+  flex: 1;
+  overflow-y: auto;
 `;
 
 interface ISidebarMenuProps {

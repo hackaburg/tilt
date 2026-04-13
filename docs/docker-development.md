@@ -37,6 +37,7 @@ docker exec backend yarn run backend::test
 ## Lint
 
 ```sh
+docker exec backend yarn audit --groups dependencies
 docker exec backend node ./node_modules/.bin/prettier --config .prettierrc.js '{backend,frontend}/{src,test}/**/*.{ts,tsx}' --write
 docker exec backend yarn run lint
 docker exec frontend yarn run frontend::typecheck

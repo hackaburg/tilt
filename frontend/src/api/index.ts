@@ -29,6 +29,7 @@ import type {
   SuccessResponseDTO,
   TeamDTO,
   TeamResponseDTO,
+  TeamUpdateDTO,
   UserDTO,
   UserListDto,
 } from "./types/dto";
@@ -253,13 +254,11 @@ export class ApiClient {
     title: string,
     description: string,
     teamImg: string,
-    users: number[],
-  ): Promise<void> {
-    await this.post<ApplicationControllerMethods["createTeam"]>(
+  ): Promise<TeamDTO> {
+    return await this.post<ApplicationControllerMethods["createTeam"]>(
       "/application/team",
       {
         title,
-        users,
         teamImg,
         description,
       },
@@ -268,28 +267,12 @@ export class ApiClient {
 
   /**
    * Update new team
-   * @param id The team's id
-   * @param title The team's title
-   * @param description The team's description
-   * @param teamImg The team's image
-   * @param users The team's users
+   * @param team containing id, title, description and teamImg
    */
-  public async updateTeam(
-    id: number,
-    title: string,
-    description: string,
-    teamImg: string,
-    users: number[],
-  ): Promise<void> {
+  public async updateTeam(team: TeamUpdateDTO): Promise<void> {
     await this.put<ApplicationControllerMethods["updateTeam"]>(
       "/application/team",
-      {
-        id,
-        title,
-        users,
-        teamImg,
-        description,
-      },
+      team,
     );
   }
 
@@ -313,6 +296,32 @@ export class ApiClient {
   public async acceptUserToTeam(teamId: number, userId: number): Promise<void> {
     await this.put<ApplicationControllerMethods["acceptUserToTeam"]>(
       `/application/team/${teamId}/accept/${userId}`,
+      {} as never,
+    );
+  }
+
+  /**
+   * Remove a user from a team.
+   * @param teamId The team's id
+   * @param userId The user's id
+   */
+  public async removeUserFromTeam(
+    teamId: number,
+    userId: number,
+  ): Promise<void> {
+    await this.delete<ApplicationControllerMethods["removeUserFromTeam"]>(
+      `/application/team/${teamId}/members/${userId}`,
+    );
+  }
+
+  /**
+   * Set the owner of a team.
+   * @param teamId The team's id
+   * @param userId The user's id
+   */
+  public async setOwner(teamId: number, userId: number): Promise<void> {
+    await this.put<ApplicationControllerMethods["setOwner"]>(
+      `/application/team/${teamId}/owner/${userId}`,
       {} as never,
     );
   }

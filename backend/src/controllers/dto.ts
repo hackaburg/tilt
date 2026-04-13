@@ -407,6 +407,10 @@ export class UserDetailsRepsonseDTO {
   public email!: string;
   @Expose()
   public role!: UserRole;
+  @Expose()
+  public teamRequest!: TeamDTO | null;
+  @Expose()
+  public team!: TeamDTO | null;
 }
 
 export class UserDTO {
@@ -445,12 +449,22 @@ export class UserDTO {
   public checkedIn!: boolean;
   @Expose()
   public profileSubmitted!: boolean;
+  @Expose()
+  @Type(() => TeamDTO)
+  @ValidateNested()
+  public teamRequest!: TeamDTO | null;
+  @Expose()
+  @Type(() => TeamDTO)
+  @ValidateNested()
+  public team!: TeamDTO | null;
 }
 
 export class UserTokenResponseDTO {
   @Expose()
   public token!: string;
   @Expose()
+  @Type(() => UserDTO)
+  @ValidateNested()
   public user!: UserDTO;
 }
 
@@ -498,15 +512,24 @@ export class UserListDto {
   @Expose()
   public id!: number;
   @Expose()
-  public name!: string;
+  public firstName!: string;
+  @Expose()
+  public lastName!: string;
+}
+
+export class UserResponseDto {
+  @Expose()
+  public id!: number;
+  @Expose()
+  public firstName!: string;
+  @Expose()
+  public lastName!: string;
 }
 
 export class ApplicationDTO {
   @Expose()
   @Type(() => UserDTO)
   public user!: UserDTO;
-  @Expose()
-  public teams!: string[];
   @Expose()
   @Type(() => AnswerDTO)
   public answers!: AnswerDTO[];
@@ -522,20 +545,22 @@ export class IDRequestDTO implements IApiRequest<number> {
   public data!: number;
 }
 
-export class UserResponseDto {
-  @Expose()
-  public id!: number;
-  @Expose()
-  public name!: string;
-}
-
 export class TeamDTO {
   @Expose()
   public id!: number;
   @Expose()
   public title!: string;
   @Expose()
-  public users?: string[];
+  @Type(() => UserResponseDto)
+  public owner!: UserResponseDto;
+  @Expose()
+  @Type(() => UserResponseDto)
+  @ValidateNested()
+  public users!: UserResponseDto[];
+  @Expose()
+  @Type(() => UserResponseDto)
+  @ValidateNested()
+  public requests!: UserResponseDto[];
   @Expose()
   public teamImg!: string;
   @Expose()
@@ -548,22 +573,23 @@ export class TeamResponseDTO {
   @Expose()
   public title!: string;
   @Expose()
-  @Type(() => UserResponseDto)
-  public users?: UserResponseDto[];
-  @Expose()
   public teamImg!: string;
   @Expose()
   public description!: string;
   @Expose()
   @Type(() => UserResponseDto)
-  public requests?: UserResponseDto[];
+  public owner!: UserResponseDto;
+  @Expose()
+  @Type(() => UserResponseDto)
+  public users!: UserResponseDto[];
+  @Expose()
+  @Type(() => UserResponseDto)
+  public requests!: UserResponseDto[];
 }
 
 export class TeamRequestDTO {
   @Expose()
   public title!: string;
-  @Expose()
-  public users?: number[];
   @Expose()
   public teamImg!: string;
   @Expose()
@@ -575,8 +601,6 @@ export class TeamUpdateDTO {
   public id!: number;
   @Expose()
   public title!: string;
-  @Expose()
-  public users?: number[];
   @Expose()
   public teamImg!: string;
   @Expose()
@@ -626,9 +650,9 @@ export class RatingDTO {
   @Expose()
   public readonly id!: number;
   @Expose()
-  @Type(() => UserDTO)
+  @Type(() => UserResponseDto)
   @ValidateNested()
-  public user!: UserDTO;
+  public user!: UserResponseDto;
   @Expose()
   @Type(() => ProjectDTO)
   @ValidateNested()

@@ -17,7 +17,9 @@ const RegularButton = styled.button`
 
   font-size: 0.8rem;
   font-weight: bold;
+  white-space: nowrap;
   text-transform: uppercase;
+
   cursor: pointer;
 
   background: #333;
@@ -65,6 +67,7 @@ interface IButtonProps {
   primary?: boolean;
   loading?: boolean;
   color?: string;
+  style?: React.CSSProperties;
 }
 
 /**
@@ -77,6 +80,7 @@ export const Button = ({
   primary = false,
   loading = false,
   color,
+  style = {},
 }: IButtonProps) => {
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
@@ -90,7 +94,11 @@ export const Button = ({
   const Component = primary ? PrimaryButton : RegularButton;
 
   return (
-    <Component disabled={disable || loading} onClick={handleClick}>
+    <Component
+      style={style}
+      disabled={disable || loading}
+      onClick={handleClick}
+    >
       {children}
       {loading && (
         <SpinnerContainer>

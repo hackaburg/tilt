@@ -260,9 +260,10 @@ export class ApplicationController {
   @Authorized(UserRole.User)
   public async createTeam(
     @Body() { data: teamDTO }: { data: TeamRequestDTO },
+    @CurrentUser() user: User,
   ): Promise<TeamDTO> {
     const team = convertBetweenEntityAndDTO(teamDTO, Team);
-    const createdTeam = await this._teams.createTeam(team);
+    const createdTeam = await this._teams.createTeam(team, user);
     return convertBetweenEntityAndDTO(createdTeam, TeamDTO);
   }
 
@@ -309,6 +310,42 @@ export class ApplicationController {
     @CurrentUser() user: User,
   ): Promise<SuccessResponseDTO> {
     await this._teams.acceptUserToTeam(teamId, userId, user);
+    const response = new SuccessResponseDTO();
+    response.success = true;
+    return response;
+  }
+
+  /**
+   * Remove a user from a team.
+   * @param teamId The id of the team
+   * @param userId The id of the user
+   */
+  @Delete("/team/:teamId/members/:userId")
+  @Authorized(UserRole.User)
+  public async removeUserFromTeam(
+    @Param("teamId") teamId: number,
+    @Param("userId") userId: number,
+    @CurrentUser() user: User,
+  ): Promise<SuccessResponseDTO> {
+    await this._teams.removeUserFromTeam(teamId, userId, user);
+    const response = new SuccessResponseDTO();
+    response.success = true;
+    return response;
+  }
+
+  /**
+   * Set the owner of a team
+   * @param teamId The id of the team
+   * @param userId The id of the new owner
+   */
+  @Put("/team/:teamId/owner/:userId")
+  @Authorized(UserRole.User)
+  public async setOwner(
+    @Param("teamId") teamId: number,
+    @Param("userId") userId: number,
+    @CurrentUser() user: User,
+  ): Promise<SuccessResponseDTO> {
+    await this._teams.setOwner(teamId, userId, user);
     const response = new SuccessResponseDTO();
     response.success = true;
     return response;

@@ -26,6 +26,7 @@ import { MdSupportAgent } from "react-icons/md";
 const BackgroundContainer = styled(NonGrowingFlexContainer)`
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   background: linear-gradient(
     to top right,
     ${variables.colorGradientStart},
@@ -106,8 +107,7 @@ export const Sidebar = () => {
         <H1 style={{ color: "white" }}>HACKABURG</H1>
         <H2 style={{ color: "white" }}>CONTROL CENTER</H2>
         <p style={{ color: "white" }}>
-          All important information about <br></br>the <b>Hackaburg 2026</b>{" "}
-          event
+          Everything important about <br></br>the <b>Hackaburg 2026</b> event
         </p>
       </div>
 
@@ -198,7 +198,7 @@ export const Sidebar = () => {
           </>
         )}
       </SidebarMenu>
-      <div style={{ bottom: "8rem", position: "absolute", width: "90%" }}>
+      <div style={{ bottom: "8rem", width: "90%" }}>
         <a href="mailto:support@hackaburg.de">
           <Button
             variant="outlined"
@@ -231,7 +231,7 @@ export const Sidebar = () => {
         </Button>
       </div>
       <SimpleDialog open={open} onClose={handleClose} />
-      <div style={{ bottom: "1rem", position: "absolute" }}>
+      <div>
         <LI>
           <div style={{ display: "flex", padding: "1rem" }}>
             <a

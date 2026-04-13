@@ -7,6 +7,7 @@ import { useApi } from "../../hooks/use-api";
 import { useLoginContext } from "../../contexts/login-context";
 import { PageHeader } from "../base/page-header";
 import { TeamResponseDTO } from "../../api/types/dto";
+import { useNotificationContext } from "../../contexts/notification-context";
 
 /**
  * A team view component. This is only displayed, if the user is not part
@@ -20,10 +21,13 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
   const [isTeamOwner, setIsTeamOwner] = React.useState(false);
   const [, setIsTeamMember] = React.useState(false);
 
+  const { showNotification } = useNotificationContext();
+
   const { forcePerformRequest: sendRequestToJoin } = useApi(
     async (apiClient, wasTriggeredManually) => {
       if (wasTriggeredManually) {
         await apiClient.requestToJoinTeam(Number(params.get("id")));
+        showNotification("Request sent");
         return true;
       }
       return false;
@@ -31,19 +35,17 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
     [],
   );
 
-  function notInUserList() {
-    return (
-      !team?.users?.some((u) => u.id === user?.id) &&
-      !team?.requests?.some((u) => u.id === user?.id)
-    );
-  }
-
   React.useEffect(() => {
     if (team) {
       setIsTeamOwner(user?.id === Number(team?.users?.[0]?.id));
       setIsTeamMember(team.users?.some((u) => u.id === user?.id) ?? false);
     }
   }, [team, user?.id]);
+
+  // When leaving a team, the parent component will reload team, and be more
+  // up to date than user.
+  const inTeam = team?.users.some(({ id }) => id === user?.id);
+  const hasRequested = team?.requests.some(({ id }) => id === user?.id);
 
   return (
     <Page>
@@ -62,29 +64,21 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
           <p>{team?.description}</p>
         </FlexRowContainer>
         <Spacer />
-        {!isTeamOwner && notInUserList() ? (
-          <div>
-            <Button onClick={sendRequestToJoin} primary={true}>
-              Request to join
-            </Button>
-          </div>
-        ) : null}
-
-        <div style={{ width: "100%", marginTop: "1rem" }}>
-          <h3
-            style={{
-              fontWeight: "bold",
-              color: "black",
-              marginBottom: "0.5rem",
-            }}
-            id="demo-multiple-name-label"
-          >
-            Team Members
-          </h3>
+        <div style={{ width: "100%", marginTop: "4rem" }}>
+          <h2>Team Members</h2>
+          {!isTeamOwner && !inTeam && !hasRequested ? (
+            <div>
+              <Button onClick={sendRequestToJoin} primary={true}>
+                Request to join
+              </Button>
+            </div>
+          ) : null}
+          {hasRequested && "You requested to join this team"}
           <div style={{ marginTop: "1.5rem" }}>
             {team?.users?.map((singleUser, index) => (
               <div key={index} style={{ display: "flex" }}>
-                {singleUser.name}
+                {singleUser.firstName}{" "}
+                {singleUser.id === team.owner?.id && " (Owner)"}
               </div>
             ))}
           </div>

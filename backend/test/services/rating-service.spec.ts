@@ -14,6 +14,9 @@ import { ISettingsService } from "../../src/services/settings-service";
 import { MockedService } from "./mock";
 import { MockSettingsService } from "./mock/mock-settings-service";
 import { TestDatabaseService } from "./mock/mock-database-service";
+import { validate } from "class-validator";
+import { plainToClass } from "class-transformer";
+import { RatingDTO } from "../../src/controllers/dto";
 
 describe("RatingService", () => {
   let database: TestDatabaseService;
@@ -29,6 +32,7 @@ describe("RatingService", () => {
   let ratingUser: User;
   let teamMember: User;
   let mockTeam: Team;
+  let mockTeam2: Team;
   let mockProject: Project;
   let mockCriterion: Criterion;
 
@@ -48,6 +52,18 @@ describe("RatingService", () => {
     criterionRepo = database.getRepository(Criterion);
     ratingRepo = database.getRepository(Rating);
 
+    mockTeam = new Team();
+    mockTeam.title = "Test Team";
+    mockTeam.teamImg = "";
+    mockTeam.description = "";
+    mockTeam = await teamRepo.save(mockTeam);
+
+    mockTeam2 = new Team();
+    mockTeam2.title = "Test Team 2";
+    mockTeam2.teamImg = "";
+    mockTeam2.description = "";
+    mockTeam2 = await teamRepo.save(mockTeam2);
+
     // A user who will submit ratings (not in the project's team)
     ratingUser = new User();
     ratingUser.firstName = "Rater";
@@ -59,6 +75,7 @@ describe("RatingService", () => {
     ratingUser.tokenSecret = "";
     ratingUser.forgotPasswordToken = "";
     ratingUser.admitted = true;
+    ratingUser.team = mockTeam2;
 
     // A user who is a member of the project team
     teamMember = new User();
@@ -71,16 +88,10 @@ describe("RatingService", () => {
     teamMember.tokenSecret = "";
     teamMember.forgotPasswordToken = "";
     teamMember.admitted = true;
+    teamMember.team = mockTeam;
+    teamMember.teamRequest = null;
 
     [ratingUser, teamMember] = await userRepo.save([ratingUser, teamMember]);
-
-    mockTeam = new Team();
-    mockTeam.title = "Test Team";
-    mockTeam.users = [teamMember.id.toString()];
-    mockTeam.teamImg = "";
-    mockTeam.description = "";
-    mockTeam.requests = [];
-    mockTeam = await teamRepo.save(mockTeam);
 
     mockProject = new Project();
     mockProject.team = mockTeam;
@@ -96,6 +107,95 @@ describe("RatingService", () => {
 
     ratingService = new RatingService(database, settingsService.instance);
     await ratingService.bootstrap();
+  });
+
+  describe("getUsersRatingsForProject", () => {
+    it("returns ratings for the specified project and user", async () => {
+      expect.assertions(2);
+
+      settingsService.mocks.getSettings.mockResolvedValue({
+        project: { allowRatingProjects: true },
+      } as any);
+
+      const rating = Object.assign(new Rating(), {
+        project: mockProject,
+        user: ratingUser,
+        criterion: mockCriterion,
+        rating: 4,
+      });
+      await ratingService.upsertRating(rating, ratingUser);
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(1);
+      expect(results[0].rating).toBe(4);
+    });
+
+    it("returns an empty list when no ratings exist for the project", async () => {
+      expect.assertions(1);
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(0);
+    });
+
+    it("does not return ratings belonging to other users", async () => {
+      expect.assertions(1);
+
+      await ratingRepo.save(
+        Object.assign(new Rating(), {
+          project: mockProject,
+          user: teamMember,
+          criterion: mockCriterion,
+          rating: 3,
+        }),
+      );
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(0);
+    });
+
+    it("does not return ratings for other projects", async () => {
+      expect.assertions(1);
+
+      settingsService.mocks.getSettings.mockResolvedValue({
+        project: { allowRatingProjects: true },
+      } as any);
+
+      const otherProject = await projectRepo.save(
+        Object.assign(new Project(), {
+          team: mockTeam,
+          title: "Other Project",
+          description: "",
+          allowRating: true,
+        }),
+      );
+
+      const rating = Object.assign(new Rating(), {
+        project: otherProject,
+        user: ratingUser,
+        criterion: mockCriterion,
+        rating: 3,
+      });
+      await ratingService.upsertRating(rating, ratingUser);
+
+      const results = await ratingService.getUsersRatingsForProject(
+        mockProject.id,
+        ratingUser,
+      );
+
+      expect(results).toHaveLength(0);
+    });
   });
 
   describe("checkPermission", () => {
@@ -362,6 +462,48 @@ describe("RatingService", () => {
       const resultB = results.find((r) => r.project.id === projectB.id)!;
       expect(resultB).toBeDefined();
       expect(resultB.averagesPerCriterion[0].average).toEqual(4);
+    });
+  });
+
+  describe("rating value validation", () => {
+    it("rejects a rating of 0", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 0 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors.length).toBeGreaterThan(0);
+    });
+
+    it("rejects a rating of 6", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 6 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors.length).toBeGreaterThan(0);
+    });
+
+    it("accepts a rating of 1", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 1 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors).toHaveLength(0);
+    });
+
+    it("accepts a rating of 5", async () => {
+      expect.assertions(1);
+
+      const dto = plainToClass(RatingDTO, { rating: 5 });
+      const errors = await validate(dto, { skipMissingProperties: true });
+      const ratingErrors = errors.filter((e) => e.property === "rating");
+
+      expect(ratingErrors).toHaveLength(0);
     });
   });
 });

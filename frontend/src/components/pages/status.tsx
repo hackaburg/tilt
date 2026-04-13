@@ -548,7 +548,7 @@ export const Status = () => {
                   WebkitBoxOrient: "vertical",
                 }}
               >
-                New <b>Feature</b> this year. You can create or join a team.
+                You can create or join a team.
               </p>
               <InternalLink to={Routes.Teams}>
                 <Button>Teams</Button>

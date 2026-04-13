@@ -10,6 +10,7 @@ import { ReadOnlyProject } from "./read-only-project";
 import { PageHeader } from "../base/page-header";
 import { RoundedImage } from "../base/image";
 import { ProjectDTO } from "../../api/types/dto";
+import { useNotificationContext } from "../../contexts/notification-context";
 
 /**
  * A gate component that checks if the current user is part of the team.
@@ -26,11 +27,8 @@ export const ViewProject = () => {
     api.getProjectByID(projectId).then((project_) => setProject(project_));
   }, []);
 
-  const isTeamMember = React.useMemo(() => {
-    return (
-      project?.team?.users?.some((id) => id === user?.id.toString()) ?? false
-    );
-  }, [project, user?.id]);
+  const isTeamMember = project?.team?.id === user?.team?.id;
+  // TODO test that the refreshToken and login endpoints respond with user.team.id
 
   const isAdmin = user?.role === UserRole.Root;
 
@@ -47,10 +45,13 @@ export const ViewProject = () => {
 
 /**
  * Team members may edit the project
+ * TODO move into separate file
  */
 const EditProject = ({ project }: { project: ProjectDTO }) => {
   const loginState = useLoginContext();
   const { user } = loginState;
+
+  const { showNotification } = useNotificationContext();
 
   const [id] = React.useState(project.id);
   const [title, setTitle] = React.useState(project.title);
@@ -71,6 +72,7 @@ const EditProject = ({ project }: { project: ProjectDTO }) => {
           image,
           allowRating,
         } as unknown as ProjectDTO);
+        showNotification("Saved");
         return true;
       }
       return false;

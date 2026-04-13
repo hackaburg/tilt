@@ -23,11 +23,9 @@ export const Teams = () => {
         buttonText="Create New Team"
         buttonHref={Routes.CreateTeam}
         subTitle="Create or join a team"
-        collapsibleText="You can create or join a team. You can
-          add other users to your team and remove them as well. The team owner can
-          delete the team and remove users from the team. If you want to join a
-          team you can send a request to join the team and the team owner can
-          accept or reject the request."
+        collapsibleText="You can create or join a team. As the team owner you can
+          accept users who want to join, remove users, or delete the whole team.
+          If you want to join a team, go to the teams page and hit the button."
       />
       <Grid container spacing={3}>
         {Array.from(teams).map((team: TeamDTO, index) => (
