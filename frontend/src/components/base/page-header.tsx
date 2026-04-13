@@ -3,7 +3,6 @@ import * as React from "react";
 import { NonGrowingFlexContainer } from "../base/flex";
 import { Heading, Subheading } from "../base/headings";
 import { Button } from "../base/button";
-import { InternalLink } from "../base/link";
 import { Collapsible } from "../base/collapsible";
 import { Routes } from "../../routes";
 import { Divider } from "../base/divider";

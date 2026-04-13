@@ -29,7 +29,7 @@ export const StackWithBorder = ({
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={1}
-        alignItems={{ xs: "flex-start", sm: "center" }}
+        alignItems="center"
         justifyContent="center"
       >
         {text && (

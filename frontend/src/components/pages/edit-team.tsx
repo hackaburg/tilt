@@ -127,7 +127,7 @@ export const EditTeam = ({
   }
 
   const loginState = useLoginContext();
-  const { user, setUser } = loginState;
+  const { user, updateUser } = loginState;
 
   const { showNotification } = useNotificationContext();
 
@@ -169,10 +169,10 @@ export const EditTeam = ({
 
   const removeTeamFromUser = async () => {
     if (user?.team?.id === team.id) {
-      await setUser({
+      await updateUser(() => ({
         ...user,
         team: null,
-      });
+      }));
     }
   };
 
