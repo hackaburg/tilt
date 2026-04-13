@@ -10,6 +10,7 @@ import { MockedService } from "../services/mock";
 import { MockApplicationService } from "../services/mock/mock-application-service";
 import { MockTeamsService } from "../services/mock/mock-teams-service";
 import { MockUserService } from "../services/mock/mock-user-service";
+import { TeamRequestDTO, TeamDTO } from "../../src/controllers/dto";
 
 describe("ApplicationController", () => {
   let applicationService: MockedService<IApplicationService>;

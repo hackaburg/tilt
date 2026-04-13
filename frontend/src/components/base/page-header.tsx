@@ -7,10 +7,21 @@ import { InternalLink } from "../base/link";
 import { Collapsible } from "../base/collapsible";
 import { Routes } from "../../routes";
 import { Divider } from "../base/divider";
+import { mediaBreakpoints } from "../../config";
 
 const HeaderContainer = styled(NonGrowingFlexContainer)`
   justify-content: space-between;
+  flex-direction: column;
+`;
+
+const HeadingButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   flex-direction: row;
+
+  @media screen and (max-width: ${mediaBreakpoints.tablet}) {
+    flex-direction: column;
+  }
 `;
 
 interface IPageHeaderProps {
@@ -54,16 +65,18 @@ export const PageHeader = ({
   );
 
   return (
-    <HeaderContainer style={{ flexDirection: "column", marginBottom }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <HeaderContainer style={{ marginBottom }}>
+      <HeadingButtonContainer>
         <Heading text={pageTitle} />
         {buttonText &&
           (buttonHref ? (
-            <InternalLink to={buttonHref}>{button}</InternalLink>
+            <a href={buttonHref} style={{ width: "fit-content" }}>
+              {button}
+            </a>
           ) : (
             button
           ))}
-      </div>
+      </HeadingButtonContainer>
       <Divider />
       {collapsibleText ? (
         <Collapsible title={subTitle ?? ""}>{collapsibleText}</Collapsible>

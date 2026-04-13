@@ -127,7 +127,7 @@ export const EditTeam = ({
   }
 
   const loginState = useLoginContext();
-  const { user } = loginState;
+  const { user, setUser } = loginState;
 
   const { showNotification } = useNotificationContext();
 
@@ -167,8 +167,18 @@ export const EditTeam = ({
     onChange();
   };
 
+  const removeTeamFromUser = async () => {
+    if (user?.team?.id === team.id) {
+      await setUser({
+        ...user,
+        team: null,
+      });
+    }
+  };
+
   const removeUserFromTeam = async (userToRemove: UserListDto) => {
     await api.removeUserFromTeam(team.id, userToRemove.id);
+    await removeTeamFromUser();
     showNotification("Removed user");
     onChange();
   };
@@ -184,6 +194,7 @@ export const EditTeam = ({
       if (wasTriggeredManually) {
         if (confirm("Are you sure you want to delete this team?")) {
           await apiClient.deleteTeam(team.id);
+          await removeTeamFromUser();
           history.push("/teams");
           return true;
         }

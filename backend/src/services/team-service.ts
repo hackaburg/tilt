@@ -23,7 +23,7 @@ export interface ITeamService extends IService {
   /**
    * Create new team
    */
-  createTeam(team: Team, user: User): Promise<Team>;
+  createTeam(team: Team, user: User): Promise<TeamResponseDTO>;
   /**
    *  Update team
    */
@@ -143,7 +143,7 @@ export class TeamService implements ITeamService {
    * @param team The team to create
    * @param user The user who wants to create a team
    */
-  public async createTeam(team: Team, user: User): Promise<Team> {
+  public async createTeam(team: Team, user: User): Promise<TeamResponseDTO> {
     const placeholder_img = [
       "https://i.imgur.com/CWwOYnr.png",
       "https://i.imgur.com/ZpFOtqy.png",
@@ -195,7 +195,17 @@ export class TeamService implements ITeamService {
     project.allowRating = false;
     await this._projects.save(project);
 
-    return createdTeam;
+    return {
+      ...createdTeam,
+      owner: {
+        // Ensure there is no circular reference. Use TeamResponseDTO and its
+        // UserResponseDto (team.owner.team.owner.team...) Otherwise
+        // convertBetweenEntityAndDTO will fail with an recursion depth error
+        id: createdTeam.owner.id,
+        firstName: createdTeam.owner.firstName,
+        lastName: createdTeam.owner.lastName,
+      },
+    };
   }
 
   /**
