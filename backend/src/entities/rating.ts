@@ -14,7 +14,7 @@ import { User } from "./user";
 export class Rating {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
-  @ManyToOne(() => User, { eager: true, onDelete: "CASCADE" })
+  @ManyToOne(() => User, { eager: true, onDelete: "SET NULL" })
   public user!: User;
   @ManyToOne(() => Project, { eager: true, onDelete: "CASCADE" })
   public project!: Project;
