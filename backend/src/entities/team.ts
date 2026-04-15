@@ -24,7 +24,7 @@ export class Team {
   // Beware that this is not eagerly loaded, because it will throw recursion depth
   // errors due to user.team being eagerly loaded already. Add it to "relations"
   // when doing database queries instead.
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: "SET NULL" })
   @JoinColumn()
   public owner!: User;
   @OneToMany(() => User, (user) => user.teamRequest)
