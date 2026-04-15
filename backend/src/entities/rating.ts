@@ -14,11 +14,11 @@ import { User } from "./user";
 export class Rating {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
-  @ManyToOne(() => User, { eager: true })
+  @ManyToOne(() => User, { eager: true, onDelete: "CASCADE" })
   public user!: User;
-  @ManyToOne(() => Project, { eager: true })
+  @ManyToOne(() => Project, { eager: true, onDelete: "CASCADE" })
   public project!: Project;
-  @ManyToOne(() => Criterion, { eager: true })
+  @ManyToOne(() => Criterion, { eager: true, onDelete: "CASCADE" })
   public criterion!: Criterion;
   @Column()
   // 1 - 5
