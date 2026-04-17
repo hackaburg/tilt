@@ -46,7 +46,7 @@ export const RatingForm = ({
   }, [rating]);
 
   const handleSubmit = async () => {
-    if (ratingValue == NOT_RATED) {
+    if (ratingValue === NOT_RATED) {
       return;
     }
 
