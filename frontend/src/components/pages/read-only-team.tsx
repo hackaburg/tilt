@@ -25,12 +25,19 @@ export const ReadOnlyTeam = ({ team }: { team: TeamResponseDTO }) => {
 
   const { forcePerformRequest: sendRequestToJoin } = useApi(
     async (apiClient, wasTriggeredManually) => {
-      if (wasTriggeredManually) {
+      if (!wasTriggeredManually) {
+        return false;
+      }
+
+      try {
         await apiClient.requestToJoinTeam(Number(params.get("id")));
         showNotification("Request sent");
         return true;
+      } catch (error) {
+        if (error instanceof Error) {
+          showNotification(error.message);
+        }
       }
-      return false;
     },
     [],
   );
