@@ -248,6 +248,17 @@ export class TeamService implements ITeamService {
       );
     }
 
+    if (user.team != null) {
+      const oldTeam = await this._teams.findOne({
+        where: { id: user.team.id },
+        relations: ["users", "requests", "owner"],
+      });
+
+      if (oldTeam?.owner?.id === user.id) {
+        throw new Error("Make someone else owner of your other team first");
+      }
+    }
+
     await this._users.save({
       ...user,
       teamRequest: team,

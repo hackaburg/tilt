@@ -18,6 +18,8 @@ interface IRatingFormProps {
   project: ProjectDTO;
 }
 
+const NOT_RATED = -1;
+
 /**
  * Component that allows users to submit and edit ratings for projects.
  * Only for one criterion, use multiple of this to cover all of them.
@@ -32,7 +34,9 @@ export const RatingForm = ({
 
   const { showNotification } = useNotificationContext();
 
-  const [ratingValue, setRatingValue] = useState<number>(rating?.rating || 3);
+  const [ratingValue, setRatingValue] = useState<number>(
+    rating?.rating || NOT_RATED,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   React.useEffect(() => {
@@ -42,6 +46,10 @@ export const RatingForm = ({
   }, [rating]);
 
   const handleSubmit = async () => {
+    if (ratingValue == NOT_RATED) {
+      return;
+    }
+
     setIsSubmitting(true);
 
     await api.createRating({
@@ -64,6 +72,13 @@ export const RatingForm = ({
           value={ratingValue?.toString()}
           onChange={(e) => setRatingValue(parseInt(e.target.value, 10))}
         >
+          <FormControlLabel
+            key="hidden"
+            value={NOT_RATED.toString()}
+            control={<Radio disabled={isSubmitting} />}
+            label=""
+            style={{ display: "none" }}
+          />
           {[1, 2, 3, 4, 5].map((value) => (
             <FormControlLabel
               key={value.toString()}

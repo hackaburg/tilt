@@ -88,6 +88,23 @@ describe("TeamService", () => {
     });
   });
 
+  describe("requestToJoinTeam", () => {
+    it("throws when the requester is owner of a team", async () => {
+      expect.assertions(1);
+
+      const requestingUser = await userRepo.save(makeUser("req@test.com"));
+      const createdTeam = await teamService.createTeam(
+        makeTeam(),
+        requestingUser,
+      );
+      await userRepo.save({ ...requestingUser, team: createdTeam });
+
+      await expect(
+        teamService.requestToJoinTeam(createdTeam.id, requestingUser),
+      ).rejects.toThrow("Make someone else owner of your other team first");
+    });
+  });
+
   describe("acceptUserToTeam", () => {
     it("throws when the requester is neither owner nor admin", async () => {
       expect.assertions(1);

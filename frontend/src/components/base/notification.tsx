@@ -9,6 +9,8 @@ const NotificationContainer = styled(NonGrowingFlexContainer)`
   right: -5rem;
   opacity: 0;
 
+  pointer-events: none;
+
   padding: 0.75rem 1.5rem;
 
   text-transform: uppercase;
