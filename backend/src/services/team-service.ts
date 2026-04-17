@@ -167,10 +167,6 @@ export class TeamService implements ITeamService {
       throw new Error("Team description cannot be empty");
     }
 
-    // TODO leaving team should make someone else owner
-    // TODO order of team.users not guaranteed anymore I guess,
-    //  - you can only own one team, just like you can only be part of one team
-
     if (user.team) {
       throw new Error("You are already part of a team");
     }
@@ -185,6 +181,7 @@ export class TeamService implements ITeamService {
     const createdTeam = await this._teams.save(team);
 
     user.team = createdTeam;
+    user.teamRequest = null;
     await this._users.save(user);
 
     // Every team gets one project by default

@@ -77,6 +77,21 @@ describe("TeamService", () => {
       expect(foundTeam!.owner.id).toEqual(user.id);
     });
 
+    it("clears the users team request", async () => {
+      expect.assertions(1);
+
+      const team = await teamRepo.save(makeTeam("Team 1"));
+
+      const user = await userRepo.save({
+        ...makeUser("member@test.com"),
+        teamRequest: team,
+      });
+      await teamService.createTeam(makeTeam(), user);
+
+      const updatedUser = await userRepo.findOne({ where: { id: user.id } });
+      expect(updatedUser!.teamRequest).toBeNull();
+    });
+
     it("assigns the newly created team to the user", async () => {
       expect.assertions(1);
 
