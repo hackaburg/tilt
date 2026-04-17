@@ -313,7 +313,18 @@ export class TeamService implements ITeamService {
     }
 
     if (!team.requestUserIds().includes(userId)) {
-      throw new Error(`user ${userId} did not request to join team ${teamId}`);
+      throw new Error(`User ${userId} did not request to join team ${teamId}`);
+    }
+
+    const oldTeam = await this._teams.findOne({
+      where: { id: userId },
+      relations: ["users", "requests", "owner"],
+    });
+
+    if (oldTeam?.owner?.id === userId) {
+      throw new Error(
+        "The user needs to select a new owner for their old team first",
+      );
     }
 
     await this._users.update({ id: userId }, { team, teamRequest: null });
