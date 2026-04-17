@@ -77,6 +77,21 @@ describe("TeamService", () => {
       expect(foundTeam!.owner.id).toEqual(user.id);
     });
 
+    it("clears the users team request", async () => {
+      expect.assertions(1);
+
+      const team = await teamRepo.save(makeTeam("Team 1"));
+
+      const user = await userRepo.save({
+        ...makeUser("member@test.com"),
+        teamRequest: team,
+      });
+      await teamService.createTeam(makeTeam(), user);
+
+      const updatedUser = await userRepo.findOne({ where: { id: user.id } });
+      expect(updatedUser!.teamRequest).toBeNull();
+    });
+
     it("assigns the newly created team to the user", async () => {
       expect.assertions(1);
 
@@ -106,7 +121,7 @@ describe("TeamService", () => {
   });
 
   describe("acceptUserToTeam", () => {
-    it("throws when the requester is neither owner nor admin", async () => {
+    it("throws when the accepting user is neither owner nor admin", async () => {
       expect.assertions(1);
 
       const owner = await userRepo.save(makeUser("owner@test.com"));
@@ -124,6 +139,24 @@ describe("TeamService", () => {
           randomUser,
         ),
       ).rejects.toThrow("You are not the owner of this team");
+    });
+
+    it("throws when the requester is owner of another team", async () => {
+      expect.assertions(1);
+
+      const team1Owner = await userRepo.save(makeUser("owner@test.com"));
+      const team1 = await teamService.createTeam(makeTeam(), team1Owner);
+
+      const team2Owner = await userRepo.save(makeUser("req@test.com"));
+      const team2 = await teamService.createTeam(makeTeam(), team2Owner);
+
+      await userRepo.save({ ...team2Owner, team: team2, teamRequest: team1 });
+
+      await expect(
+        teamService.acceptUserToTeam(team1.id, team2Owner.id, team1Owner),
+      ).rejects.toThrow(
+        "The user needs to select a new owner for their old team first",
+      );
     });
 
     it("allows the team owner to accept a join request", async () => {
