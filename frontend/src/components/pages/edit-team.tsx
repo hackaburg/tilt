@@ -3,7 +3,6 @@ import { Subheading } from "../base/headings";
 import { Page } from "./page";
 import { Button } from "../base/button";
 import { RoundedImage } from "../base/image";
-import { Spacer } from "../base/flex";
 import { TextInput, TextInputType } from "../base/text-input";
 import { api, useApi } from "../../hooks/use-api";
 import { Card, CardContent } from "@mui/material";
@@ -15,6 +14,7 @@ import { UserRole } from "../../api/types/enums";
 import { PageHeader } from "../base/page-header";
 import { useNotificationContext } from "../../contexts/notification-context";
 import { StackWithBorder } from "../base/stack-with-border";
+import { JoinTeamButton } from "./join-team-button";
 
 interface TeamMemberRequestProps {
   user: UserListDto;
@@ -265,6 +265,7 @@ export const EditTeam = ({
 
         <div style={{ width: "100%", marginTop: "4rem" }}>
           <h1>Team Members</h1>
+          <JoinTeamButton team={team} />
           {
             // Team Owners have to chose a different owner first.
             // Admins shouldn't be part of the team. If they are, they can still
@@ -297,14 +298,12 @@ export const EditTeam = ({
             {team.requests.length > 0 && <h3>Requests</h3>}
             {(isTeamOwner || isAdmin) &&
               team.requests.map((requestingUser) => (
-                <React.Fragment key={requestingUser.id}>
-                  <TeamMemberRequest
-                    user={requestingUser}
-                    acceptUserToTeam={acceptUserToTeam}
-                    updateTeamInProgress={updateTeamInProgress}
-                  />
-                  <Spacer />
-                </React.Fragment>
+                <TeamMemberRequest
+                  key={requestingUser.id}
+                  user={requestingUser}
+                  acceptUserToTeam={acceptUserToTeam}
+                  updateTeamInProgress={updateTeamInProgress}
+                />
               ))}
           </div>
         </div>
