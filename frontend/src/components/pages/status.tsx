@@ -376,7 +376,7 @@ export const Status = () => {
                   and tell us what you need (team members, ideas, hardware etc.)
                 </p>
                 <a
-                  href="https://discord.gg/hackaburg"
+                  href="https://discord.com/invite/NF3DA2xghD"
                   target="_blank"
                   style={{
                     color: "black",
