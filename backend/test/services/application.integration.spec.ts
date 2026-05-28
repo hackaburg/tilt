@@ -102,6 +102,8 @@ describe("Application Service Integration Spec", () => {
   });
 
   it("does not clear team and teamRequest on admit", async () => {
+    // Based on a bug. team relation was not included in findUsersByIDs,
+    // team got overwritten with null on update
     expect.assertions(1);
     await controller.admit({ data: [user.id] });
 
