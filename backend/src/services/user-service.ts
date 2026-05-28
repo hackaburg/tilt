@@ -1,6 +1,6 @@
 import { compare, genSalt, hash } from "bcrypt";
 import { Inject, Service, Token } from "typedi";
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import { IService } from ".";
 import { User } from "../entities/user";
 import { UserRole } from "../entities/user-role";
@@ -384,7 +384,12 @@ export class UserService implements IUserService {
   public async findUsersByIDs(
     userIDs: readonly number[],
   ): Promise<ReadonlyArray<User | null>> {
-    const users = await this._users.findByIds(userIDs as number[]);
+    const users = await this._users.find({
+      where: {
+        id: In(userIDs),
+      },
+      relations: ["team", "teamRequest"],
+    });
     return users.map((user) => user ?? null);
   }
 

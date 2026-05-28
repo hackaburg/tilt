@@ -1,5 +1,7 @@
 import { Repository } from "typeorm";
 import { User } from "../../src/entities/user";
+import { Team } from "../../src/entities/team";
+import { UserRole } from "../../src/entities/user-role";
 import { IDatabaseService } from "../../src/services/database-service";
 import { IEmailTemplateService } from "../../src/services/email-template-service";
 import { IHaveibeenpwnedService } from "../../src/services/haveibeenpwned-service";
@@ -16,6 +18,7 @@ import { MockTokenService } from "./mock/mock-token-service";
 describe("UserService", () => {
   let database: IDatabaseService;
   let userRepo: Repository<User>;
+  let teamRepo: Repository<Team>;
   let logger: MockedService<ILoggerService>;
   let tokens: MockedService<ITokenService<any>>;
   let haveibeenpwned: MockedService<IHaveibeenpwnedService>;
@@ -27,6 +30,7 @@ describe("UserService", () => {
     await database.bootstrap();
 
     userRepo = database.getRepository(User);
+    teamRepo = database.getRepository(Team);
   });
 
   beforeEach(async () => {
@@ -328,19 +332,29 @@ describe("UserService", () => {
   });
 
   it("finds users by their id", async () => {
-    expect.assertions(1);
+    expect.assertions(2);
 
-    const email = "test@foo.bar";
-    const firstName = "john";
-    const lastName = "doe";
-    const user = await userService.signup(
-      firstName,
-      lastName,
-      email,
-      "password",
-    );
+    const team = new Team();
+    team.title = "Other Team";
+    team.teamImg = "";
+    team.description = "";
+    const savedTeam = await teamRepo.save(team);
+
+    const user = new User();
+    user.email = "test@foo.bar";
+    user.firstName = "john";
+    user.lastName = "doe";
+    user.team = savedTeam;
+    user.password = "a";
+    user.tokenSecret = "a";
+    user.role = UserRole.User;
+    user.verifyToken = "";
+    user.forgotPasswordToken = "";
+    await userRepo.save([user]);
+
     const result = await userService.findUsersByIDs([user.id]);
 
-    return expect(result[0]?.email).toBe(user.email);
+    expect(result[0]?.email).toBe(user.email);
+    expect(result[0]?.team?.id).toBe(team.id);
   });
 });

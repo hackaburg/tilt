@@ -128,7 +128,6 @@ describe(ApplicationService.name, () => {
     await settings.bootstrap();
 
     const users = new MockUserService();
-
     emails = new MockEmailTemplateService();
     service = new ApplicationService(
       questionGraph,
