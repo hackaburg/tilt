@@ -2,6 +2,8 @@ FROM node:alpine AS build
 
 WORKDIR /app
 
+RUN apk add yarn
+
 # bcrypt depends on node-pre-gyp
 RUN apk add --no-cache --virtual .gyp python3 make g++
 
