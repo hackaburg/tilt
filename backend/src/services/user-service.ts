@@ -20,6 +20,12 @@ import {
 } from "./haveibeenpwned-service";
 import { UserListDto } from "../controllers/dto";
 
+// To partially update a user (not insert, enforce id to be present).
+// Beware that if you hvaen't loaded the team and teamRequest relations (they are not
+// eagerly loaded), they are null and will therefore be cleared in the database on save.
+// Prefer partial updates with only those fields you want to update.
+export type PartialUser = { id: number } & Partial<Omit<User, "id">>;
+
 /**
  * An interface describing user handling.
  */
@@ -103,13 +109,13 @@ export interface IUserService extends IService {
    * Updates the given user.
    * @param user The user to update
    */
-  updateUser(user: User): Promise<void>;
+  updateUser(user: PartialUser): Promise<void>;
 
   /**
    * Updates all given users.
    * @param users The users to update
    */
-  updateUsers(users: readonly User[]): Promise<void>;
+  updateUsers(users: readonly PartialUser[]): Promise<void>;
 
   /**
    * Finds all users.
@@ -396,14 +402,14 @@ export class UserService implements IUserService {
   /**
    * @inheritdoc
    */
-  public async updateUser(user: User): Promise<void> {
+  public async updateUser(user: PartialUser): Promise<void> {
     await this._users.save(user);
   }
 
   /**
    * @inheritdoc
    */
-  public async updateUsers(users: readonly User[]): Promise<void> {
+  public async updateUsers(users: readonly PartialUser[]): Promise<void> {
     await this._users.save(users as User[]);
   }
 

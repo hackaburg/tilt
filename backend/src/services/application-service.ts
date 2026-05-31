@@ -17,7 +17,7 @@ import {
   QuestionGraphServiceToken,
 } from "./question-service";
 import { ISettingsService, SettingsServiceToken } from "./settings-service";
-import { IUserService, UserServiceToken } from "./user-service";
+import { IUserService, UserServiceToken, PartialUser } from "./user-service";
 
 /**
  * A form containing questions and given answers.
@@ -402,14 +402,19 @@ export class ApplicationService implements IApplicationService {
 
     await this.replaceAnswers(user, questions, answers);
 
+    // partial updates to avoid accidentally setting relations that haven't been loaded
+    // to null.
+    const userUpdate: PartialUser = {
+      id: user.id,
+    };
+
     if (user.initialProfileFormSubmittedAt == null) {
-      user.initialProfileFormSubmittedAt = new Date();
+      userUpdate.initialProfileFormSubmittedAt = new Date();
       // send mail to user about successful submission
       await this._email.sendSubmissionEmail(user);
-      await this._users.updateUser(user);
     }
-    user.profileSubmitted = true;
-    await this._users.updateUser(user);
+    userUpdate.profileSubmitted = true;
+    await this._users.updateUser(userUpdate);
   }
 
   /**
@@ -420,15 +425,18 @@ export class ApplicationService implements IApplicationService {
     const now = Date.now();
     const millisecondsInHour = 60 * 60 * 1000;
 
-    for (const user of users) {
-      user.confirmationExpiresAt = new Date(
-        now + settings.application.hoursToConfirm * millisecondsInHour,
-      );
-
-      user.admitted = true;
+    const updates: PartialUser[] = [];
+    for (const { id } of users) {
+      updates.push({
+        id,
+        confirmationExpiresAt: new Date(
+          now + settings.application.hoursToConfirm * millisecondsInHour,
+        ),
+        admitted: true,
+      });
     }
 
-    await this._users.updateUsers(users);
+    await this._users.updateUsers(updates);
 
     const emailPromises = users.map((user) =>
       this._email.sendAdmittedEmail(user),
@@ -515,8 +523,10 @@ export class ApplicationService implements IApplicationService {
     await this.replaceAnswers(user, questions, answers);
 
     if (!user.confirmed) {
-      user.confirmed = true;
-      await this._users.updateUser(user);
+      await this._users.updateUser({
+        id: user.id,
+        confirmed: true,
+      });
     }
   }
 
@@ -568,16 +578,20 @@ export class ApplicationService implements IApplicationService {
    * @inheritdoc
    */
   public async declineSpot(user: User): Promise<void> {
-    user.declined = true;
-    await this._users.updateUser(user);
+    await this._users.updateUser({
+      id: user.id,
+      declined: true,
+    });
   }
 
   /**
    * @inheritdoc
    */
   public async checkIn(user: User): Promise<void> {
-    user.checkedIn = true;
-    await this._users.updateUser(user);
+    await this._users.updateUser({
+      id: user.id,
+      checkedIn: true,
+    });
   }
 }
 

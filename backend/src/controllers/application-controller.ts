@@ -153,8 +153,8 @@ export class ApplicationController {
   @Authorized(UserRole.Moderator)
   public async admit(@Body() { data: userIDs }: IDsRequestDTO): Promise<void> {
     const users = await this._users.findUsersByIDs(userIDs);
-    const firstMissingIndex = users.findIndex((user) => user == null);
 
+    const firstMissingIndex = users.findIndex((user) => user == null);
     if (firstMissingIndex !== -1) {
       throw new NotFoundError(
         `no user with id ${userIDs[firstMissingIndex]} found`,

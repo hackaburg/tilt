@@ -18,7 +18,7 @@ import { ApplicationController } from "../../src/controllers/application-control
 
 // To reproduce this particular bug, we need a test setup that uses a proper
 // application service and user service.
-describe("Application Service Integration Spec", () => {
+describe("Application, User and Team Integration Spec", () => {
   let applicationService: IApplicationService;
   let database: TestDatabaseService;
 
