@@ -5,14 +5,14 @@
 ```sh
 # prep
 cp backend/.env.example backend/.env
-docker run -v $(pwd):/app -w /app node:alpine yarn install
+docker run -v $(pwd):/app -w /app node:alpine npm install
 
 # start everything (make sure your cwd is the project root)
 docker compose up db phpmyadmin maildev
 docker run --name backend --network host -v $(pwd):/app -w /app node:alpine sh \
-  -c "yarn backend::start"
+  -c "npm run backend::start"
 docker run --name frontend --network host -v $(pwd):/app -w /app node:alpine sh \
-  -c "API_BASE_URL='http://localhost:3000/api' yarn frontend::start"
+  -c "API_BASE_URL='http://localhost:3000/api' npm run frontend::start"
 ```
 
 1. Visit tilt http://localhost:8080/
@@ -23,7 +23,7 @@ docker run --name frontend --network host -v $(pwd):/app -w /app node:alpine sh 
 
 ```sh
 # Make yourself admin
-docker exec backend yarn run backend::usermod test@test.test root
+docker exec backend npm run backend::usermod test@test.test root
 ```
 
 Edit code, frontend and backend restart automatically.
@@ -31,16 +31,16 @@ Edit code, frontend and backend restart automatically.
 ## Tests
 
 ```sh
-docker exec backend yarn run backend::test
+docker exec backend npm run backend::test
 ```
 
 ## Lint
 
 ```sh
-docker exec backend yarn audit --groups dependencies
+docker exec backend npm audit --production
 docker exec backend node ./node_modules/.bin/prettier --config .prettierrc.js '{backend,frontend}/{src,test}/**/*.{ts,tsx}' --write
-docker exec backend yarn run lint
-docker exec frontend yarn run frontend::typecheck
+docker exec backend npm run lint
+docker exec frontend npm run frontend::typecheck
 ```
 
 ## Stop
