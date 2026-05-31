@@ -572,7 +572,6 @@ describe(ApplicationService.name, () => {
     await service.storeProfileFormAnswers(user, []);
 
     await service.admit([user]);
-
     const { questions } = await service.getConfirmationForm(user);
 
     expect(questions).toHaveLength(1);
@@ -600,7 +599,6 @@ describe(ApplicationService.name, () => {
     await service.admit([user]);
 
     const { questions } = await service.getConfirmationForm(user);
-
     expect(questions).toHaveLength(2);
 
     const updatedSettings = await settings.getSettings();
@@ -693,7 +691,6 @@ describe(ApplicationService.name, () => {
   it("prevents updating profile answers after admission", async () => {
     expect.assertions(1);
     await service.admit([user]);
-
     await expect(
       service.storeProfileFormAnswers(user, []),
     ).rejects.toBeDefined();
