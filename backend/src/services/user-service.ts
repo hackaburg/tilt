@@ -20,10 +20,12 @@ import {
 } from "./haveibeenpwned-service";
 import { UserListDto } from "../controllers/dto";
 
-// To partially update a user (not insert, enforce id to be present).
-// Beware that if you hvaen't loaded the team and teamRequest relations (they are not
-// eagerly loaded), they are null and will therefore be cleared in the database on save.
-// Prefer partial updates with only those fields you want to update.
+/**
+ * To partially update a user (not insert, enforce id to be present).
+ * Beware that if you hvaen't loaded the team and teamRequest relations (they are not
+ * eagerly loaded), they are null and will therefore be cleared in the database on save.
+ * Prefer partial updates with only those fields you want to update.
+ */
 export type PartialUser = { id: number } & Partial<Omit<User, "id">>;
 
 /**
