@@ -40,6 +40,11 @@ describe(ApplicationService.name, () => {
   let settings: ISettingsService;
   let user: User;
 
+  const refreshUser = async (): Promise<void> => {
+    const userRepo = database.getRepository(User);
+    user = (await userRepo.findOne({ where: { id: 1 } }))!;
+  };
+
   const createQuestion = <T>(): Question<T> => {
     const question = new Question<T>();
     question.description = "";
@@ -128,7 +133,6 @@ describe(ApplicationService.name, () => {
     await settings.bootstrap();
 
     const users = new MockUserService();
-
     emails = new MockEmailTemplateService();
     service = new ApplicationService(
       questionGraph,
@@ -137,6 +141,23 @@ describe(ApplicationService.name, () => {
       users.instance,
       emails.instance,
     );
+
+    users.mocks.updateUser.mockImplementation(async (update) => {
+      if (update.id !== user.id) {
+        throw new Error("test bug");
+      }
+      await userRepo.save(update);
+      await refreshUser();
+    });
+
+    users.mocks.updateUsers.mockImplementation(async (updates) => {
+      if (updates.length !== 1 && updates[0].id !== updates[0].id) {
+        throw new Error("test bug");
+      }
+      await userRepo.save(updates);
+      await refreshUser();
+    });
+
     await service.bootstrap();
   });
 
@@ -576,8 +597,8 @@ describe(ApplicationService.name, () => {
     await patchSettingsServiceToReturnProfileFormQuestionsFromTheFuture();
 
     await service.admit([user]);
-    const { questions } = await service.getConfirmationForm(user);
 
+    const { questions } = await service.getConfirmationForm(user);
     expect(questions).toHaveLength(2);
 
     const updatedSettings = await settings.getSettings();

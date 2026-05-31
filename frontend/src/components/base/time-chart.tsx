@@ -3,27 +3,52 @@ import * as React from "react";
 import { useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import { chartColors, transparentChartColors } from "../../config";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import "chartjs-adapter-date-fns";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 const options = {
-  scales: {
-    xAxes: [
-      {
-        time: {
-          unit: "month",
-        },
-        type: "time",
-      },
-    ],
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-          stepSize: 10,
-        },
-      },
-    ],
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const,
+    },
   },
-} as ChartOptions;
+  scales: {
+    x: {
+      type: "time",
+      time: {
+        unit: "month",
+      },
+    },
+    y: {
+      beginAtZero: true,
+      ticks: {
+        stepSize: 10,
+      },
+    },
+  },
+} as ChartOptions<"line">;
 
 interface IValue {
   x: Date;
@@ -39,17 +64,17 @@ interface ITimeChartProps {
  * A time-based line chart.
  */
 export const TimeChart = ({ title, values }: ITimeChartProps) => {
-  const data = useMemo(() => {
+  const data = useMemo((): ChartData<"line"> => {
     return {
       datasets: [
         {
           backgroundColor: transparentChartColors[1],
           borderColor: chartColors[0],
-          data: values as IValue[],
+          data: values.map(({ x, y }) => ({ x: x.valueOf(), y })),
           label: title,
         },
       ],
-    } as ChartData;
+    };
   }, [title, values]);
 
   return <Line data={data} height={100} options={options} />;
